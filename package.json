@@ -15,6 +15,7 @@
     "expo-router": "~3.4.1",
     "expo-splash-screen": "~0.26.1",
     "expo-status-bar": "~1.11.1",
+    "iconsax-react-native": "^0.0.8",
     "nativewind": "^4.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
