@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "axios": "^1.6.7",
     "class-variance-authority": "^0.7.0",
     "expo": "^50.0.1",
     "expo-constants": "~15.4.2",
