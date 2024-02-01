@@ -27,8 +27,8 @@ module.exports = {
         "md": '24px',
         "lg": '32px',
       },
-      dropShadow:{
-        "dropShadow": '0px 8px 20px rgba(60, 60, 60, 0.18)'
+      boxShadow:{
+        "boxShadow": '0px 4px 12px rgba(60, 60, 60, 0.10)'
       },
       colors: {
         baseWhite: '#FFFFFF',
