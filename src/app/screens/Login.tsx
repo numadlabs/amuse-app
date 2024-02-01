@@ -1,44 +1,48 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native'
-import Button from '../components/ui/Button'
-import { EyeSlash } from 'iconsax-react-native'
-import Divider from '../components/atom/Divider'
-import { Link } from 'expo-router'
-
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import Button from '../components/ui/Button';
+import { EyeSlash, Eye } from 'iconsax-react-native'; // Assuming you have Eye icon imported as well
+import Divider from '../components/atom/Divider';
+import { Link } from 'expo-router';
 
 function Login() {
-    const [loading, setLoading] = useState(false)
-    const [hidePass, setHidePass] = useState(true)
+    const [loading, setLoading] = useState(false);
+    const [hidePass, setHidePass] = useState(true);
     const [password, setPassword] = useState('');
 
     const dismiss = () => {
-        Keyboard.dismiss()
-    }
+        Keyboard.dismiss();
+    };
+
+
+    const handleLogin = () => {
+        // Implement your login logic here
+        console.log('Login button pressed');
+    };
+
     return (
         <TouchableWithoutFeedback onPress={dismiss}>
-            <View className='flex flex-1 justify-center items-center px-4 bg-baseWhite'>
-                <View className='px-4 py-6 rounded-xl w-full  border border-baseBlack '>
-                    <View className='flex justify-center flex-row '>
-                        <Text className='text-2xl font-bold'>
-                            Welcome
-                        </Text>
-                    </View>
-                    <View className='flex flex-row justify-center'>
-                        <Text className='text-gray400 text-sm'>
-                            Enter your phone number and password
-                        </Text>
-                    </View>
-                    <View className='my-6 gap-3'>
-                        <TextInput inputMode='numeric' placeholder='Phone number' className='h-12 border border-gray50 focus:border-gray600 text-gray600 rounded-xl px-4 py-2' />
-                        <View className='relative'>
-                            <TextInput secureTextEntry={true} placeholder='Password' className='h-12 border border-gray50 focus:border-gray600 text-gray600 rounded-xl px-4 py-2' />
-                            <View className='absolute right-3 top-3 flex-row items-center'>
-                                <EyeSlash color='#212121' size={20} />
-                            </View>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20, backgroundColor: 'white' }}>
+                <View style={{ padding: 20, borderRadius: 20, width: '100%', borderWidth: 1, borderColor: 'black' }}>
+                    <Text style={{ fontSize: 24, fontWeight: 'bold', textAlign: 'center' }}>Welcome</Text>
+                    <Text style={{ fontSize: 14, color: 'gray', textAlign: 'center', marginTop: 10 }}>Enter your phone number and password</Text>
+                    <View style={{ marginTop: 20 }}>
+                        <TextInput inputMode='numeric' placeholder='Phone number' style={{ height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 20, paddingHorizontal: 10 }} />
+                        <View style={{ position: 'relative', marginTop: 10 }}>
+                            <TextInput
+                                secureTextEntry={hidePass}
+                                placeholder='Password'
+                                style={{ height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 20, paddingHorizontal: 10 }}
+                                value={password}
+                                onChangeText={setPassword}
+                            />
+                                
+                                 <EyeSlash color='#212121' size={20} /> 
+                          
                         </View>
                     </View>
-                    <View className='gap-3'>
-                        <Button variant='primary' textStyle='primary' onPress={alert} size='default'>
+                    <View style={{ marginTop: 20 }}>
+                        <Button variant='primary' textStyle='primary' size='default'>
                             Log in
                         </Button>
                         <Button variant='text' textStyle='text' size='default'>
@@ -52,8 +56,7 @@ function Login() {
                 </View>
             </View>
         </TouchableWithoutFeedback>
-    )
+    );
 }
 
-export default Login
-
+export default Login;
