@@ -1,19 +1,21 @@
-import AnimatedTouchableOpacity from 'globalComponents/AnimatedTouchableOpacity';
-import { CRHeading } from 'globalComponents/atoms';
-import { Box } from 'layouts';
-import React from 'react';
-import { ViewStyle } from 'react-native';
-import { MaterialIndicator } from 'react-native-indicators';
-import { Colors, Utils } from 'styles';
+import AnimatedTouchableOpacity from "../../AnimatedTouchableOpacity";
+import CRHeading from "../typography/CRHeading";
+// import { Box } from "layouts";
+import React from "react";
+import { ViewStyle, View } from "react-native";
+import { MaterialIndicator } from "react-native-indicators";
+// import { Utils } from "styles";
+import Color from "@/app/constants/Color";
+import { scaleSize } from "@/lib/utils";
 
-const { scaleSize } = Utils;
+// const { scaleSize } = Utils;
 
 const PrimaryButtonDefaultProps = {
   disabled: false,
   onPress: () => {},
-  bgColor: Colors.SECONDARY,
-  shadowColor: Colors.PRIMARY,
-  labelColor: Colors.WHITE,
+  bgColor: Color.base.Black,
+  shadowColor: Color.Gray.gray100,
+  labelColor: Color.base.White,
   height: scaleSize(48),
   labelLevel: 4,
   customStyle: {},
@@ -57,18 +59,18 @@ function PrimaryButton({
     >
       <CRHeading label={label} level={labelLevel || 4} color={labelColor} />
       {isLoading && (
-        <Box
+        <View
           style={{
-            position: 'absolute',
+            position: "absolute",
             right: scaleSize(labelLevel == 5 ? 6 : 24),
           }}
         >
           <MaterialIndicator
             size={scaleSize(labelLevel == 5 ? 12 : 24)}
-            color={Colors.WHITE}
+            color={Color.base.White}
             trackWidth={2}
           />
-        </Box>
+        </View>
       )}
     </AnimatedTouchableOpacity>
   );

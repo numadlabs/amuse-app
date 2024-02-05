@@ -1,29 +1,31 @@
-import AnimatedTouchableOpacity from 'globalComponents/AnimatedTouchableOpacity';
-import { CRHeading } from 'globalComponents/atoms';
-import { Box } from 'globalComponents/layouts';
-import React from 'react';
-import { StyleSheet, ViewStyle } from 'react-native';
-import { Colors, Utils } from 'styles';
-import { MaterialIndicator } from 'react-native-indicators';
+import AnimatedTouchableOpacity from "../../AnimatedTouchableOpacity";
+import CRHeading from "../typography/CRHeading";
+// import { Box } from 'globalComponents/layouts';
+import React from "react";
+import { StyleSheet, ViewStyle, View } from "react-native";
+import Color from "@/app/constants/Color";
+// import { Colors, Utils } from "styles";
+import { scaleSize } from "@/app/lib/utils";
+import { MaterialIndicator } from "react-native-indicators";
 
-const { scaleSize } = Utils;
+// const { scaleSize } = Utils;
 const styles = StyleSheet.create({
   button: {
-    borderColor: Colors.DARK_200,
+    borderColor: Color.base.Black,
     borderWidth: scaleSize(1),
   },
   leftIcon: {
-    position: 'absolute',
+    position: "absolute",
     left: scaleSize(16),
   },
 });
 
 const SecondaryButtonDefaultProps = {
-  backgroundColor: Colors.WHITE,
-  labelColor: Colors.DARK_800,
-  label: '',
+  backgroundColor: Color.base.White,
+  labelColor: Color.Gray.gray600,
+  label: "",
   customStyle: {},
-  innerStyle: {},
+  // innerStyle: {},
   labelLevel: 4,
   height: scaleSize(48),
   disabled: false,
@@ -34,7 +36,7 @@ type SecondaryButtonProps = {
   label?: string;
   labelColor?: string;
   customStyle?: ViewStyle;
-  innerStyle?: ViewStyle;
+  // innerStyle?: ViewStyle;
   leftIcon?: React.ReactNode;
   labelLevel?: number;
   height?: number;
@@ -49,7 +51,7 @@ function SecondaryButton({
   backgroundColor,
   leftIcon,
   customStyle,
-  innerStyle,
+  // innerStyle,
   onPress,
   height,
   disabled,
@@ -62,23 +64,23 @@ function SecondaryButton({
       borderRadius={scaleSize(8)}
       height={height}
       bgColor={backgroundColor}
-      shadowColor={Colors.DARK_200}
+      shadowColor={Color.Gray.gray300}
       customStyle={{ ...customStyle }}
-      innerStyle={[styles.button, { ...innerStyle }]}
+      // innerStyle={[styles.button, { ...innerStyle }]}
       disabled={disabled}
     >
-      {leftIcon && <Box style={styles.leftIcon}>{leftIcon}</Box>}
+      {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
       {!!label && (
         <CRHeading color={labelColor} label={label} level={labelLevel || 4} />
       )}
       {isLoading && (
-        <Box style={{ position: 'absolute', right: scaleSize(24) }}>
+        <View style={{ position: "absolute", right: scaleSize(24) }}>
           <MaterialIndicator
             size={scaleSize(24)}
-            color={Colors.WHITE}
+            color={Color.base.White}
             trackWidth={2}
           />
-        </Box>
+        </View>
       )}
     </AnimatedTouchableOpacity>
   );
