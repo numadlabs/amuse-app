@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, TextInput, SafeAreaView, Text, View, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, Platform } from 'react-native';
-import Header from '../../components/layout/Header';
-import Steps from '../../components/atom/Steps';
-import Color from '../../constants/Color';
-import Button from '../../components/ui/Button';
+import Header from '../components/layout/Header';
+import Steps from '../components/atom/Steps';
+import Color from '../constants/Color';
+import Button from '../components/ui/Button';
 import { useNavigation } from 'expo-router';
 import FpLayout from './_layout';
 

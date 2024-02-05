@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import Button from '../components/ui/Button';
+import Button from './components/ui/Button';
 import { EyeSlash, Eye } from 'iconsax-react-native'; // Assuming you have Eye icon imported as well
-import Divider from '../components/atom/Divider';
+import Divider from './components/atom/Divider';
 import { Link, useNavigation } from 'expo-router';
-import Color from '../constants/Color';
+import Color from './constants/Color';
 
 function Login() {
     const [loading, setLoading] = useState(false);
@@ -47,7 +47,7 @@ function Login() {
                             Log in
                         </Button>
                         <Button variant='text' textStyle='text' size='default'>
-                            <Link href={'/screens/forgotPassword/ForgotPassword'}>
+                            <Link href={'/forgotPassword/ForgotPassword'}>
                                 Forgot password?
                             </Link>
                         </Button>

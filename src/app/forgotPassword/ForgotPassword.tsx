@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, KeyboardAvoidingView, Keyboard, Platform, TouchableWithoutFeedback, StyleSheet } from 'react-native';
-import Button from '../../components/ui/Button';
-import Color from '../../constants/Color';
+import Button from '../components/ui/Button';
+import Color from '../constants/Color';
 import { useNavigation } from 'expo-router';
 import FpLayout from './_layout';
 import Steps from '@/app/components/atom/Steps';
