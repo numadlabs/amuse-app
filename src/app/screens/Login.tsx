@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableWithoutFeedback, Keyboard } from 'react
 import Button from '../components/ui/Button';
 import { EyeSlash, Eye } from 'iconsax-react-native'; // Assuming you have Eye icon imported as well
 import Divider from '../components/atom/Divider';
-import { Link } from 'expo-router';
+import { Link, useNavigation } from 'expo-router';
 import Color from '../constants/Color';
 
 function Login() {
@@ -14,6 +14,8 @@ function Login() {
     const dismiss = () => {
         Keyboard.dismiss();
     };
+
+    const navigation = useNavigation()
 
 
     const handleLogin = () => {
@@ -37,9 +39,7 @@ function Login() {
                                 value={password}
                                 onChangeText={setPassword}
                             />
-
                             <EyeSlash color='#212121' size={20} />
-
                         </View>
                     </View>
                     <View style={{ marginTop: 20 }}>
@@ -47,12 +47,12 @@ function Login() {
                             Log in
                         </Button>
                         <Button variant='text' textStyle='text' size='default'>
-                            <Link href={'./screens/ForgotPassword'}>
+                            <Link href={'/screens/forgotPassword/ForgotPassword'}>
                                 Forgot password?
                             </Link>
                         </Button>
                         <Divider />
-                        <Button variant='tertiary' size='default' textStyle='secondary'>Sign up</Button>
+                        <Button variant='tertiary' size='default' textStyle='secondary' onPress={() => navigation.navigate('/screens/signup/phonenumber')}>Sign up</Button>
                     </View>
                 </View>
             </View>
