@@ -13,9 +13,17 @@
         {
           "origin": "https://n"
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "name": "amuse-app",
-    "slug": "amuse-app"
+    "slug": "amuse-app",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.numadLabs.amuse",
+      "config": {
+        "googleMapsApiKey": "AIzaSyDLFwoZfCSJErsQQwNwFiqRDmLVICrnjdg"
+      }
+    }
   }
 }
