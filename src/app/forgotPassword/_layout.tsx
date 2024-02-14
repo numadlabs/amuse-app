@@ -7,7 +7,6 @@ export default function FpLayout({ children }) {
   return (
     <>
       <Header title='Forgot password?' />
-     
       {children}
       <Slot />
     </>

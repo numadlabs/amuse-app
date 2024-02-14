@@ -8,7 +8,8 @@
         "./src/app/screens/*",
         "./src/app/components/*",
         "./src/app/lib/service/*",
-        "./src/app/lib/types/*"
+        "./src/app/lib/types/*",
+        "./src/app/validators"
       ],
       "appConstants/*": ["./constants/*"],
       "appConstants": ["./constants"],

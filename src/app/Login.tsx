@@ -5,48 +5,48 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from "react-native";
 import Button from "./components/ui/Button";
-import { EyeSlash, Eye } from "iconsax-react-native"; // Assuming you have Eye icon imported as well
 import Divider from "./components/atom/Divider";
-import { Link, useNavigation } from "expo-router";
-import Color from "./constants/Color";
+import { Link, router } from "expo-router";
 import { useAuth } from "./context/AuthContext";
+import LoginSchema from "./validators/LoginSchema";
 
 function Login() {
-  const [loading, setLoading] = useState(false);
-  const [hidePass, setHidePass] = useState(true);
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState<number | null>(null);
-  const { onLogin, onRegister } = useAuth();
+  const { onLogin } = useAuth();
 
-  const dismiss = () => {
-    Keyboard.dismiss();
-  };
-
-  const navigation = useNavigation();
-
-  const handleLogin = () => {
-    // Implement your login logic here
-    console.log("Login button pressed");
-  };
-
-  const login = async () => {
-    const result = await onLogin!(phoneNumber, password);
-    if (result && result.error) alert(result.msg);
-  };
-  // We automatically call the login after a successful registration
-  const register = async () => {
-    const result = await onRegister!(phoneNumber, password);
-    if (result && result.error) {
-      alert(result.msg);
-    } else {
-      login();
+  const handleLogin = async () => {
+    try {
+      const loginData = LoginSchema.parse({
+        prefix: "976",
+        telNumber: phoneNumber,
+        password: password,
+      })
+      const response = await onLogin(loginData.prefix, loginData.telNumber, loginData.password);
+      if (response) {
+        alert("Login Error");
+        console.log(response);
+      } else {
+        console.log("Welcome my nugget!");
+        router.push('/Home')
+      }
+    } catch (error) {
+      alert("Login Error: Catch block");
+      console.log("Error response from server:", error.response);
     }
   };
 
+
+
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <TouchableWithoutFeedback onPress={dismiss}>
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View
         style={{
           flex: 1,
@@ -68,7 +68,7 @@ function Login() {
           <Text
             style={{
               fontSize: 24,
-              color: Color.Gray.gray500,
+              color: "gray",
               fontWeight: "bold",
               textAlign: "center",
             }}
@@ -78,7 +78,7 @@ function Login() {
           <Text
             style={{
               fontSize: 14,
-              color: Color.Gray.gray400,
+              color: "gray",
               textAlign: "center",
               marginTop: 10,
             }}
@@ -96,39 +96,37 @@ function Login() {
                 borderRadius: 16,
                 paddingHorizontal: 10,
               }}
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
             />
-            <View style={{ position: "relative", marginTop: 10 }}>
-              <TextInput
-                secureTextEntry={hidePass}
-                placeholder="Password"
-                style={{
-                  height: 40,
-                  borderColor: "gray",
-                  borderWidth: 1,
-                  borderRadius: 16,
-                  paddingHorizontal: 10,
-                }}
-                value={password}
-                onChangeText={setPassword}
-              />
-              <EyeSlash color="#212121" size={20} />
-            </View>
+            <TextInput
+              secureTextEntry={true}
+              placeholder="Password"
+              style={{
+                height: 40,
+                borderColor: "gray",
+                borderWidth: 1,
+                borderRadius: 16,
+                paddingHorizontal: 10,
+                marginTop: 10,
+              }}
+              value={password}
+              onChangeText={setPassword}
+            />
           </View>
           <View style={{ marginTop: 20 }}>
-            <Button variant="primary" textStyle="primary" size="default">
+            <Button variant="primary" onPress={handleLogin}>
               Log in
             </Button>
-            <Button variant="text" textStyle="text" size="default">
-              <Link href={"/forgotPassword/ForgotPassword"}>
-                Forgot password?
-              </Link>
+            <Button variant="text" onPress={() => router.push('/forgotpassword/ForgotPassword')}>
+
+              Forgot password?
+
             </Button>
             <Divider />
             <Button
               variant="tertiary"
-              size="default"
-              textStyle="secondary"
-              onPress={() => navigation.navigate("/signup/phonenumber")}
+              onPress={() => router.push("/signUp/PhoneNumber")}
             >
               Sign up
             </Button>
