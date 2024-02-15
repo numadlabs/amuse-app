@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import { PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
+import * as Location from "expo-location";
+import { useQuery } from "react-query";
+import { restaurantKeys } from "./lib/service/keysHelper";
+import { getRestaurants } from "./lib/service/queryHelper";
+import { baseUrl } from "./lib/axios";
 
 export default function RestaurantMapView() {
   const navigation = useNavigation();
+
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [initialRegion, setInitialRegion] = useState(null);
 
   const [location, setLocation] = useState({
     latitude: 47.91173006997436,
@@ -16,6 +24,47 @@ export default function RestaurantMapView() {
     longitudeDelta: 0.02,
   });
 
+  useEffect(() => {
+    const getLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation(location.coords);
+
+      setInitialRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
+      });
+    };
+
+    getLocation();
+  }, []);
+
+  const { data } = useQuery({
+    queryKey: restaurantKeys.all,
+    queryFn: () => {
+      return getRestaurants({
+        page: 1,
+        limit: 10,
+        distance: 5000,
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
+      });
+    },
+    // onError(error):{
+    //   console.log(error)
+    // }
+
+    enabled: !!currentLocation,
+  });
+  // console.log(baseUrl);
+  console.log("🚀 ~ RestaurantMapView ~ data:", data.data.restaurants);
   // console.log(process.env.EXPO_PUBLIC_GOOGLE_API_KEY);
 
   return (
@@ -61,9 +110,31 @@ export default function RestaurantMapView() {
       <MapView
         style={styles.map}
         provider={PROVIDER_GOOGLE}
-        showsUserLocation={true}
+        initialRegion={initialRegion}
+        // showsUserLocation={true}
         region={location}
-      />
+      >
+        {currentLocation && (
+          <Marker
+            coordinate={{
+              latitude: currentLocation.latitude,
+              longitude: currentLocation.longitude,
+            }}
+            title="Your Location"
+          />
+        )}
+        {data.data.restaurants.map((restaurant) => (
+          <Marker
+            key={restaurant.id}
+            coordinate={{
+              latitude: restaurant.latitude,
+              longitude: restaurant.longitude,
+            }}
+            title={restaurant.name}
+            description={restaurant.description}
+          />
+        ))}
+      </MapView>
       <View style={styles.absoluteBox}>
         <TouchableOpacity
           style={styles.button}
