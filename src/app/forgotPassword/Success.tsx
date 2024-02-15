@@ -3,7 +3,7 @@ import React from 'react'
 import Color from '@/app/constants/Color'
 import TickCircle from '@/app/components/TickCircle'
 import Button from '@/app/components/ui/Button'
-import { useNavigation } from 'expo-router'
+import { router, useNavigation } from 'expo-router'
 
 const Success = () => {
   const navigation = useNavigation()
@@ -21,7 +21,7 @@ const Success = () => {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <Button variant='primary' textStyle='primary' size='default' onPress={() => navigation.navigate('VerificationCode')}>Continue</Button>
+        <Button variant='primary' textStyle='primary' size='default' onPress={() => router.navigate('/Home')}>Cotinue</Button>
       </View>
     </View>
   )

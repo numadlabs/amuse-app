@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: any) => {
 
   const register = async (telNumber: string, password: string) => {
     try {
-      return await axios.post(`${API_URL}/users`, { telNumber, password });
+      return await axios.post(`${API_URL}/auth/register`, { telNumber, password });
     } catch (e) {
       return { error: true, msg: (e as any).response.data.msg };
     }
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }: any) => {
   
         await SecureStore.setItemAsync(TOKEN_KEY, result.data.token);
         console.log("Response from server:", result);
-  
+        
         return result;
       } else {
         // Login failed

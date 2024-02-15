@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, KeyboardAvoidingView, Keyboard, Platform, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import Button from '../components/ui/Button';
 import Color from '../constants/Color';
-import { useNavigation } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import FpLayout from './_layout';
 import Steps from '@/app/components/atom/Steps';
 
@@ -29,7 +29,7 @@ function ForgotPassword() {
   }, []);
 
   return (
-    <FpLayout>
+    <>
       <Steps activeStep={1}/>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -44,12 +44,12 @@ function ForgotPassword() {
               </View>
             </View>
             <View style={[styles.buttonContainer, buttonPosition === 'bottom' ? styles.bottomPosition : styles.topPosition]}>
-              <Button variant='primary' textStyle='primary' size='default' onPress={() => navigation.navigate('VerificationCode')}>Send code</Button>
+              <Button variant='primary' textStyle='primary' size='default' onPress={() => router.navigate('/forgotpassword/VerificationCode')}>Send code</Button>
             </View>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </FpLayout>
+    </>
   );
 }
 

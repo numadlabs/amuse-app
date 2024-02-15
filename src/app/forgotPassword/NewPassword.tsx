@@ -2,7 +2,7 @@ import { View, Text, TextInput, KeyboardAvoidingView, Keyboard, Platform, Toucha
 import React, { useEffect, useState } from 'react'
 import FpLayout from './_layout'
 import Color from '@/app/constants/Color'
-import { useNavigation } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import Button from '@/app/components/ui/Button';
 import Steps from '@/app/components/atom/Steps';
 import { EyeSlash } from 'iconsax-react-native';
@@ -58,7 +58,7 @@ const NewPassword = () => {
   }, []);
 
   return (
-    <FpLayout>
+    <>
       <Steps activeStep={3} />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -105,12 +105,12 @@ const NewPassword = () => {
               </View>
             </View>
             <View style={[styles.buttonContainer, buttonPosition === 'bottom' ? styles.bottomPosition : styles.topPosition]}>
-              <Button variant='primary' textStyle='primary' size='default' onPress={() => navigation.navigate('VerificationCode')}>Continue</Button>
+              <Button variant='primary' textStyle='primary' size='default' onPress={() => router.navigate('/forgotpassword/Success')}>Continue</Button>
             </View>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </FpLayout>
+    </>
   );
 };
 

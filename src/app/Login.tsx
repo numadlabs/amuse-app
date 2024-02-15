@@ -14,8 +14,8 @@ import { useAuth } from "./context/AuthContext";
 import LoginSchema from "./validators/LoginSchema";
 
 function Login() {
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const { onLogin } = useAuth();
 
   const handleLogin = async () => {
@@ -26,15 +26,16 @@ function Login() {
         password: password,
       })
       const response = await onLogin(loginData.prefix, loginData.telNumber, loginData.password);
-      if (response) {
-        alert("Login Error");
+      if (response.success === false) {
+        alert("error bro");
         console.log(response);
-      } else {
-        console.log("Welcome my nugget!");
+      } else if(phoneNumber === null && response.success === false && password === null) {
+        console.log("Bro where password!");
+      }else{
         router.push('/Home')
       }
     } catch (error) {
-      alert("Login Error: Catch block");
+      alert("Login Error");
       console.log("Error response from server:", error.response);
     }
   };

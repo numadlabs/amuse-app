@@ -4,13 +4,15 @@ import SuLayout from './_layout'
 import Steps from '@/app/components/atom/Steps'
 import Color from '@/app/constants/Color'
 import Button from '@/app/components/ui/Button'
-import { useNavigation } from 'expo-router'
+import { useNavigation, useRouter } from 'expo-router'
+import { useAuth } from '../context/AuthContext'
 const PhoneNumber = () => {
   const [buttonPosition, setButtonPosition] = useState('bottom');
   const [isFocused, setIsFocused] = useState(false)
+  const router = useRouter()
+  const {onRegister} = useAuth()
 
-  //add number checker
-  
+
   const navigation = useNavigation()
 
   useEffect(() => {
@@ -29,8 +31,8 @@ const PhoneNumber = () => {
     };
   }, []);
   return (
-    <SuLayout>
-      <Steps activeStep={1}/>
+    <>
+      <Steps activeStep={1} />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{ flex: 1, backgroundColor: Color.base.White }}>
@@ -40,24 +42,24 @@ const PhoneNumber = () => {
                   <Text style={styles.topText}>Phone Number</Text>
                   <Text style={styles.bottomText}>This data will not be shared.</Text>
                 </View>
-                <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} defaultValue='+971' keyboardType='phone-pad' placeholder='Phone number' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, }} />
+                <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} keyboardType='phone-pad' placeholder='+971 XXXXXXXX' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, }} />
               </View>
             </View>
             <View style={[styles.buttonContainer, buttonPosition === 'bottom' ? styles.bottomPosition : styles.topPosition]}>
-              <Button variant='primary' textStyle='primary' size='default' onPress={() => navigation.navigate('VerificationCode')}>Send code</Button>
+              <Button variant='primary' textStyle='primary' size='default' onPress={() => router.push('signUp/Password')}>Send code</Button>
             </View>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </SuLayout>
+    </>
   )
 }
 
 export default PhoneNumber
 
 const styles = StyleSheet.create({
-  body:{
-    paddingHorizontal:16
+  body: {
+    paddingHorizontal: 16
   },
   textContainer: {
     marginTop: 20,

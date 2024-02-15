@@ -4,7 +4,7 @@ import Header from '../components/layout/Header';
 import Steps from '../components/atom/Steps';
 import Color from '../constants/Color';
 import Button from '../components/ui/Button';
-import { useNavigation } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import FpLayout from './_layout';
 
 export enum KeyBoardTypes {
@@ -69,8 +69,8 @@ const SplitOTP = () => {
     , [text, isFocused]);
 
   return (
-    <>
-      <FpLayout>
+  
+      <>
         <Steps activeStep={2}/>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -99,13 +99,13 @@ const SplitOTP = () => {
                 </SafeAreaView>
               </View>
               <View style={[styles.buttonContainer, buttonPosition === 'bottom' ? styles.bottomPosition : styles.topPosition]}>
-                <Button variant='primary' textStyle='primary' size='default' onPress={() => navigation.navigate('VerificationCode')}>Continue</Button>
+                <Button variant='primary' textStyle='primary' size='default' onPress={() => router.navigate('/forgotpassword/NewPassword')}>Continue</Button>
               </View>
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
-      </FpLayout>
-    </>
+      </>
+   
   );
 };
 

@@ -4,7 +4,7 @@ import SuLayout from './_layout'
 import Steps from '@/app/components/atom/Steps'
 import Color from '@/app/constants/Color'
 import Button from '@/app/components/ui/Button'
-import { useNavigation } from 'expo-router'
+import { router, useNavigation } from 'expo-router'
 const NickName = () => {
   const [buttonPosition, setButtonPosition] = useState('bottom');
   const [isFocused, setIsFocused] = useState(false)
@@ -29,7 +29,7 @@ const NickName = () => {
     };
   }, []);
   return (
-    <SuLayout>
+    <>
       <Steps activeStep={3} />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -44,12 +44,12 @@ const NickName = () => {
               </View>
             </View>
             <View style={[styles.buttonContainer, buttonPosition === 'bottom' ? styles.bottomPosition : styles.topPosition]}>
-              <Button variant='primary' textStyle='primary' size='default' onPress={() => navigation.navigate('VerificationCode')}>Continue</Button>
+              <Button variant='primary' textStyle='primary' size='default' onPress={() => router.navigate('/Home')}>Continue</Button>
             </View>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </SuLayout>
+    </>
   )
 }
 
