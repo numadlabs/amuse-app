@@ -1,13 +1,18 @@
 import "../global.css";
-import { Slot, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { QueryClient, QueryClientProvider } from "react-query";
 // import useQu
 // import QueryClien
 const queryClient = new QueryClient();
 
+export const unstable_settings = {
+  // Ensure any route can link back to `/`
+  initialRouteName: 'Index',
+};
 export default function Layout() {
   const { authState, onLogout } = useAuth();
+  
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

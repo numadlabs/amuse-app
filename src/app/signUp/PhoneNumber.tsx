@@ -10,10 +10,7 @@ const PhoneNumber = () => {
   const [buttonPosition, setButtonPosition] = useState('bottom');
   const [isFocused, setIsFocused] = useState(false)
   const router = useRouter()
-  const {onRegister} = useAuth()
-
-
-  const navigation = useNavigation()
+  const { onRegister } = useAuth()
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(

@@ -20,25 +20,25 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const loginData = LoginSchema.parse({
-        prefix: "976",
-        telNumber: phoneNumber,
-        password: password,
-      })
-      const response = await onLogin(loginData.prefix, loginData.telNumber, loginData.password);
-      if (response.success === false) {
-        alert("error bro");
-        console.log(response);
-      } else if(phoneNumber === null && response.success === false && password === null) {
-        console.log("Bro where password!");
-      }else{
-        router.push('/Home')
+      const response = await onLogin("976", phoneNumber, password);
+      if (response.success) {
+        // Successful login
+        console.log("Login successful:", response.data);
+        const accessToken = response.data.auth.accessToken;
+        router.push('/Home');
+      } else {
+        // Login failed
+        console.log("Login failed:", response.data);
+        console.log(phoneNumber, password, response)
+        alert("Invalid credentials. Please check your phone number and password and try again.");
       }
     } catch (error) {
-      alert("Login Error");
-      console.log("Error response from server:", error.response);
+      // Network error or other exception
+      console.error("Error during login:", error);
+      alert("Login Error. Please try again later.");
     }
   };
+  
 
 
 
@@ -88,7 +88,7 @@ function Login() {
           </Text>
           <View style={{ marginTop: 20 }}>
             <TextInput
-              inputMode="numeric"
+              inputMode="tel"
               placeholder="Phone number"
               style={{
                 height: 40,
