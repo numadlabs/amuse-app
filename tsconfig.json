@@ -16,7 +16,8 @@
       "appConstants/*": ["./constants/*"],
       "appConstants": ["./constants"],
       "atoms": ["./components/atoms"],
-      "layouts": ["./components/layouts"]
+      "layouts": ["./components/layouts"],
+      "public": ["./src/public/*"]
     }
   },
   "extends": "expo/tsconfig.base",

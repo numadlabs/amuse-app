@@ -8,23 +8,23 @@ const queryClient = new QueryClient();
 
 export const unstable_settings = {
   // Ensure any route can link back to `/`
-  initialRouteName: 'Index',
+  initialRouteName: "Index",
 };
 export default function Layout() {
   const { authState, onLogout } = useAuth();
-  
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="RestaurantMapView" />
           {authState?.authenticated ? (
-            <Stack.Screen name="(tabs)/index"/>
+            <Stack.Screen name="(tabs)/index" />
           ) : (
-            <Stack.Screen name="Login"/>
+            <Stack.Screen name="Login" />
           )}
 
-          <Stack.Screen name="QrModal" options={{presentation: 'modal'}}/>
+          <Stack.Screen name="QrModal" options={{ presentation: "modal" }} />
         </Stack>
       </AuthProvider>
     </QueryClientProvider>

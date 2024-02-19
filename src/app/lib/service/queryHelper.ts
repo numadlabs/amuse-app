@@ -36,7 +36,6 @@ export async function getRestaurants({
       `/restaurants?page=${page}&limit=${limit}&distance=${distance}&latitude=${latitude}&longitude=${longitude}`
     )
     .then((response) => {
-      console.log("🚀 ~ returnaxiosClient.get ~ response:", response.data);
       if (response.data.success) {
         return response?.data;
       } else {

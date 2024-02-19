@@ -2,7 +2,7 @@
   "expo": {
     "scheme": "acme",
     "userInterfaceStyle": "automatic",
-    "orientation": "default",
+    "orientation": "portrait",
     "web": {
       "output": "static",
       "bundler": "metro"
@@ -16,13 +16,32 @@
       ],
       "expo-secure-store"
     ],
-    "name": "amuse-app",
+    "name": "Amuse Bouche",
     "slug": "amuse-app",
+    "version": "0.1.0",
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.numadLabs.amuse",
       "config": {
-        "googleMapsApiKey": "AIzaSyDLFwoZfCSJErsQQwNwFiqRDmLVICrnjdg"
+        "googleMaps": {
+          "apiKey": "AIzaSyDLFwoZfCSJErsQQwNwFiqRDmLVICrnjdg"
+        }
+      }
+    },
+    "android": {
+      "package": "com.numadLabs.amuse",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDLFwoZfCSJErsQQwNwFiqRDmLVICrnjdg"
+        }
+      }
+    },
+    "extra": {
+      "router": {
+        "origin": "https://n"
+      },
+      "eas": {
+        "projectId": "648167f4-9c73-40b4-8123-d4b1eeea1c63"
       }
     }
   }

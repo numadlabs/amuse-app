@@ -26,3 +26,15 @@ export type User = {
   location: string | null;
   createdAt: Generated<Timestamp>;
 };
+
+export type RestaurantType = {
+  id: string;
+  name: string;
+  location: string;
+  closesAt: string;
+  description: string;
+  latitude: number;
+  longitude: number;
+  opensAt: string;
+  category: string;
+};
