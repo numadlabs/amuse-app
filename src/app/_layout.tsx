@@ -17,13 +17,14 @@ export default function Layout() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Stack screenOptions={{ headerShown: false }}>
-          <Slot />
           <Stack.Screen name="RestaurantMapView" />
           {authState?.authenticated ? (
-            <Stack.Screen name="home"></Stack.Screen>
+            <Stack.Screen name="(tabs)/index"/>
           ) : (
-            <Stack.Screen name="Login"></Stack.Screen>
+            <Stack.Screen name="Login"/>
           )}
+
+          <Stack.Screen name="QrModal" options={{presentation: 'modal'}}/>
         </Stack>
       </AuthProvider>
     </QueryClientProvider>

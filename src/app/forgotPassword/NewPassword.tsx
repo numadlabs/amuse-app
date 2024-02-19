@@ -6,7 +6,7 @@ import { router, useNavigation } from 'expo-router';
 import Button from '@/app/components/ui/Button';
 import Steps from '@/app/components/atom/Steps';
 import { EyeSlash } from 'iconsax-react-native';
-import Tick from '@/app/components/Tick';
+import Tick from '@/app/components/icons/Tick';
 
 const validatePassword = (password: string): boolean => {
   if (password.length < 8) {

@@ -1,31 +1,70 @@
-import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
-import { Home2, Map1, ScanBarcode } from 'iconsax-react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { Barcode, Home2, ScanBarcode } from 'iconsax-react-native';
+import Color from '@/app/constants/Color';
+import Acard from '../icons/Acard';
+import { Link, router } from 'expo-router';
 
-function BottomTab() {
+const Footer = ({ navigation }) => {
+  const [isActive, setIsActive] = useState('/')
+  const handleTabPress = (route) => {
+    router.navigate(route.name);
+    setIsActive(route.name);
+  };
+  const isTabActive = (route) => {
+    return isActive === route;
+  };
+
+
   return (
-    
-      <View className={'flex justify-between mx-auto flex-row w-[375px]  h-20 relative'}>
-        <View className='flex justify-center items-center pb-4 pl-12 pt-1 gap-y-1'>
-          <Home2 size={24} color='#212121' />
-          <Text className='text-baseBlack'>Home</Text>
+    <View style={styles.container}>
+      <TouchableOpacity style={styles.button} onPress={() => handleTabPress({ name: '/' })}>
+        <Home2 size={24} color={isTabActive('/') ? Color.Gray.gray600 : Color.Gray.gray400} variant={isTabActive('/') ? 'Bold' : 'Linear'} />
+        <Text>Home</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => router.navigate('/(modals)/QrModal')}>
+        <View style={styles.qr}>
+          <ScanBarcode size={32} color={Color.base.White} />
         </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => handleTabPress({ name: 'Acards' })}>
+        <Acard variant={isTabActive('Acards') ? 'Bold' : 'Linear'} size={24} color={isTabActive('Acards') ? Color.Gray.gray600 : Color.Gray.gray400} />
+        <Text>Acards</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
-        <TouchableOpacity>
-          <View>
-            <View className='relative mx-auto bottom-[40px] p-4 w-[64px] h-[64px] flex items-center rounded-full bg-baseBlack'>
-              <ScanBarcode size={32} color='#FFFFFF' />
-            </View>
-          </View>
-        </TouchableOpacity>
+export default Footer;
 
-        <View className='flex justify-center items-center pb-4 pr-12 pt-1 gap-y-1'>
-          <Map1 />
-          <Text>Map</Text>
-        </View>
-      </View>
-  
-  )
-}
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 80,
+    flexDirection: 'row',
+    backgroundColor: Color.base.White,
+    paddingHorizontal: 44
+  },
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    bottom: 10,
+    padding: 12
+  },
 
-export default BottomTab
+  qr: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    backgroundColor: Color.Gray.gray600,
+    borderRadius: 32,
+    bottom: 40,
+    position: 'relative',
+    left: 5,
+    right: 10,
+    alignSelf: 'center',
+    marginHorizontal: 'auto'
+  }
+})

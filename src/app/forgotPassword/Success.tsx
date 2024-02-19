@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Color from '@/app/constants/Color'
-import TickCircle from '@/app/components/TickCircle'
+import TickCircle from '@/app/components/icons/TickCircle'
 import Button from '@/app/components/ui/Button'
 import { router, useNavigation } from 'expo-router'
 

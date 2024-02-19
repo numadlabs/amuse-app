@@ -6,10 +6,12 @@
         "./src/*",
         "./src/app/*",
         "./src/app/screens/*",
+        "./src/app/(tabs)/*",
         "./src/app/components/*",
         "./src/app/lib/service/*",
         "./src/app/lib/types/*",
-        "./src/app/validators"
+        "./src/app/validators",
+        "./src/app/components/icons"
       ],
       "appConstants/*": ["./constants/*"],
       "appConstants": ["./constants"],
