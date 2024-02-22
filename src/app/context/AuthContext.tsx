@@ -1,11 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import React from "react";
 
 interface AuthProps {
   authState?: { token: string | null; authenticated: boolean | null };
   onRegister?: (nickname: string, preFix: string, telNumber: string, password: string) => Promise<any>;
-  onLogin?: (preFix: string, telNumber: string, password: string) => Promise<any>;
+  onLogin: (preFix: string, telNumber: string, password: string) => Promise<any>;
   onLogout?: () => Promise<any>;
 }
 

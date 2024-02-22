@@ -2,6 +2,7 @@ import "../global.css";
 import { Stack } from "expo-router";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { QueryClient, QueryClientProvider } from "react-query";
+import React from "react";
 // import useQu
 // import QueryClien
 const queryClient = new QueryClient();
@@ -19,9 +20,9 @@ export default function Layout() {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="RestaurantMapView" />
           {authState?.authenticated ? (
-            <Stack.Screen name="(tabs)/index" />
-          ) : (
             <Stack.Screen name="Login" />
+          ) : (
+            <Stack.Screen name="(tabs)/index" />
           )}
 
           <Stack.Screen name="QrModal" options={{ presentation: "modal" }} />

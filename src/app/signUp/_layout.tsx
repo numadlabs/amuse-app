@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '@/app/components/layout/Header';
+import Header from '../components/layout/Header'
 
 import { Slot, Stack } from 'expo-router';
 

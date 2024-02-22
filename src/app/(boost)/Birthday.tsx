@@ -1,17 +1,17 @@
-import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import SuLayout from './_layout'
 import Steps from '../components/atom/Steps'
 import Color from '../constants/Color'
+import PrimaryButton from '../components/atom/button/PrimaryButton'
 import Button from '../components/ui/Button'
-import { router, useNavigation } from 'expo-router'
-const NickName = () => {
+import { router, useRouter } from 'expo-router'
+import { useAuth } from '../context/AuthContext'
+import DateTimePicker from '@react-native-community/datetimepicker'
+const Email = () => {
   const [buttonPosition, setButtonPosition] = useState('bottom');
   const [isFocused, setIsFocused] = useState(false)
-
-  //add number checker
-
-  const navigation = useNavigation()
+  const router = useRouter()
+  const { onRegister } = useAuth()
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -28,23 +28,24 @@ const NickName = () => {
       keyboardDidHideListener.remove();
     };
   }, []);
+
   return (
     <>
       <Steps activeStep={3} />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={{ flex: 1, backgroundColor: Color.base.White }}>
+        <View style={{ flex: 1, backgroundColor: Color.base.White }}>
             <View style={styles.body}>
               <View style={styles.textContainer}>
                 <View style={{ gap: 8 }}>
-                  <Text style={styles.topText}>Nickname</Text>
-                  <Text style={styles.bottomText}>This data will not be shared.</Text>
+                  <Text style={styles.topText}>Birthday</Text>
+                  <Text style={styles.bottomText}>For exclusive invites and special gifts.</Text>
                 </View>
-                <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} placeholder='Nickname' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, fontSize: 16 } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, fontSize: 16 }} />
+                <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} placeholder='Birthday' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, }} />
               </View>
             </View>
             <View style={[styles.buttonContainer, buttonPosition === 'bottom' ? styles.bottomPosition : styles.topPosition]}>
-              <Button variant='primary' textStyle='primary' size='default' onPress={() => router.navigate('/Home')}>Continue</Button>
+              <Button variant='primary' textStyle='primary' size='default' onPress={() => router.push('(boost)/Success')}>Continue</Button>
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -53,7 +54,7 @@ const NickName = () => {
   )
 }
 
-export default NickName
+export default Email
 
 const styles = StyleSheet.create({
   body: {

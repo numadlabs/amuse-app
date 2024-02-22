@@ -11,7 +11,9 @@
         "./src/app/lib/service/*",
         "./src/app/lib/types/*",
         "./src/app/validators",
-        "./src/app/components/icons"
+        "./src/app/components/icons/*",
+        "./src/app/constants/*",
+        "./src/app/components/layout/*"
       ],
       "appConstants/*": ["./constants/*"],
       "appConstants": ["./constants"],

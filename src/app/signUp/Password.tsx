@@ -1,12 +1,12 @@
 import { View, Text, TextInput, KeyboardAvoidingView, Keyboard, Platform, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react'
 import FpLayout from './_layout'
-import Color from '@/app/constants/Color'
+import Color from '../constants/Color';
 import { router, useNavigation } from 'expo-router';
-import Button from '@/app/components/ui/Button';
-import Steps from '@/app/components/atom/Steps';
+import Button from '../components/ui/Button';
+import Steps from '../components/atom/Steps';
 import { EyeSlash } from 'iconsax-react-native';
-import Tick from '@/app/components/icons/Tick';
+import Tick from '../components/icons/Tick'
 
 const validatePassword = (password: string): boolean => {
   if (password.length < 8) {
