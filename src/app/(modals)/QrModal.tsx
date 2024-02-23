@@ -11,6 +11,9 @@ import React, { useEffect, useState } from "react";
 import { CameraView, Camera } from "expo-camera/next";
 import Color from "../constants/Color";
 import { useRouter } from "expo-router";
+import { useMutation } from "react-query";
+import { generateTap, redeemTap } from "../lib/service/mutationHelper";
+import { useAuth } from "../context/AuthContext";
 
 const { width, height } = Dimensions.get("window");
 
@@ -18,9 +21,13 @@ const markerSize = 250;
 const halfMarkerSize = markerSize / 2;
 
 const QrModal = () => {
+  const { onTestLogin } = useAuth();
+
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
+  const [encryptedTap, setEncryptedTap] = useState("");
+  console.log("🚀 ~ QrModal ~ encryptedTap:", encryptedTap);
   const router = useRouter();
   useEffect(() => {
     const getCameraPermissions = async () => {
@@ -30,6 +37,32 @@ const QrModal = () => {
 
     getCameraPermissions();
   }, []);
+
+  const {
+    data,
+    error,
+    isLoading,
+    status,
+    mutateAsync: createMapMutation,
+  } = useMutation({
+    mutationFn: generateTap,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (data, variables) => {
+      console.log("🚀 ~ QrModal ~ data:", data);
+      setEncryptedTap(data.data.data);
+    },
+  });
+  const { mutateAsync: createRedeemMutation } = useMutation({
+    mutationFn: redeemTap,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (data, variables) => {
+      console.log("🚀 ~ QrModal ~ data:", data);
+    },
+  });
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
@@ -48,7 +81,7 @@ const QrModal = () => {
     size: number,
     borderLength: number,
     thickness: number = 2,
-    borderRadius: number = 0,
+    borderRadius: number = 0
   ): JSX.Element {
     return (
       <View style={{ height: size, width: size }}>
@@ -112,7 +145,7 @@ const QrModal = () => {
     overlayWidth,
     overlayHeight,
     marginTop = 0,
-    marginLeft = 0,
+    marginLeft = 0
   ) => ({
     ...styles.overlay,
     width: overlayWidth,
@@ -138,7 +171,14 @@ const QrModal = () => {
           style={overlayStyles(
             width,
             (height - markerSize) / 2,
-            (height + markerSize) / 2,
+            (height + markerSize) / 2
+          )}
+        />
+        <View
+          style={overlayStyles(
+            (width - markerSize) / 2,
+            markerSize,
+            (height - markerSize) / 2
           )}
         />
         <View
@@ -146,14 +186,7 @@ const QrModal = () => {
             (width - markerSize) / 2,
             markerSize,
             (height - markerSize) / 2,
-          )}
-        />
-        <View
-          style={overlayStyles(
-            (width - markerSize) / 2,
-            markerSize,
-            (height - markerSize) / 2,
-            (width + markerSize) / 2,
+            (width + markerSize) / 2
           )}
         />
         <View style={styles.markerContainer}>
@@ -166,6 +199,30 @@ const QrModal = () => {
             }}
           >
             <Image source={require("@/public/icons/flash.png")} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.flashButton]}
+            onPress={() => {
+              createMapMutation("7fad6e44-9f29-4dea-9196-666895710f12");
+            }}
+          >
+            <Text>Test tap</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.flashButton]}
+            onPress={() => {
+              createRedeemMutation(encryptedTap);
+            }}
+          >
+            <Text>Test redeem</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.flashButton]}
+            onPress={() => {
+              onTestLogin();
+            }}
+          >
+            <Text>Test login</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity
