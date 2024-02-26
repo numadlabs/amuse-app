@@ -3,7 +3,7 @@ import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet } from "react-na
 import { useNavigation } from "@react-navigation/native";
 import { ArrowLeft } from 'iconsax-react-native';
 import { StatusBar } from "expo-status-bar";
-import Color from "@/app/constants/Color";
+import Color from "../../constants/Color";
 
 interface NavbarProps {
     title: string;

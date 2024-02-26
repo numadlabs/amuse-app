@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 import { Barcode, Home2, ScanBarcode } from 'iconsax-react-native';
-import Color from '@/app/constants/Color';
+import Color from '../../constants/Color';
 import Acard from '../icons/Acard';
 import { Link, router } from 'expo-router';
 

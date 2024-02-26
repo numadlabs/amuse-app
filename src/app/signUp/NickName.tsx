@@ -1,9 +1,9 @@
 import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import SuLayout from './_layout'
-import Steps from '@/app/components/atom/Steps'
-import Color from '@/app/constants/Color'
-import Button from '@/app/components/ui/Button'
+import Steps from '../components/atom/Steps'
+import Color from '../constants/Color'
+import Button from '../components/ui/Button'
 import { router, useNavigation } from 'expo-router'
 const NickName = () => {
   const [buttonPosition, setButtonPosition] = useState('bottom');

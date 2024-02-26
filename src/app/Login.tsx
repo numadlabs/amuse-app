@@ -23,7 +23,7 @@ function Login() {
       const response = await onLogin("976", phoneNumber, password);
       if (response.success) {
         // Successful login
-        console.log("Login successful:", response.data);
+        console.log("Login successful:", response.data.data);
         const accessToken = response.data.auth.accessToken;
         router.push('/Home');
       } else {

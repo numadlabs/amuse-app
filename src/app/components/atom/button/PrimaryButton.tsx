@@ -5,8 +5,8 @@ import React from "react";
 import { ViewStyle, View } from "react-native";
 import { MaterialIndicator } from "react-native-indicators";
 // import { Utils } from "styles";
-import Color from "@/app/constants/Color";
-import { scaleSize } from "@/lib/utils";
+import Color from "../../../constants/Color";
+import { scaleSize } from "../../../lib/utils";
 
 // const { scaleSize } = Utils;
 
