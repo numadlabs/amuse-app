@@ -1,6 +1,10 @@
 {
   "expo": {
     "scheme": "acme",
+    "splash": {
+      "image": "./src/public/images/logo.png",
+      "backgroundColor": "#FFFFFF"
+    },
     "userInterfaceStyle": "automatic",
     "orientation": "portrait",
     "web": {

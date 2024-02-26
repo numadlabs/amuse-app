@@ -23,14 +23,15 @@ function Login() {
       const response = await onLogin("976", phoneNumber, password);
       if (response.success) {
         // Successful login
-        console.log("Login successful:", response.data.data);
-        const accessToken = response.data.auth.accessToken;
-        router.push('/Home');
+        console.log("Login successful:", response.data);
+        router.push("/(tabs)");
       } else {
         // Login failed
         console.log("Login failed:", response.data);
-        console.log(phoneNumber, password, response)
-        alert("Invalid credentials. Please check your phone number and password and try again.");
+        console.log(phoneNumber, password, response);
+        alert(
+          "Invalid credentials. Please check your phone number and password and try again."
+        );
       }
     } catch (error) {
       // Network error or other exception
@@ -38,9 +39,6 @@ function Login() {
       alert("Login Error. Please try again later.");
     }
   };
-  
-
-
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -119,10 +117,11 @@ function Login() {
             <Button variant="primary" onPress={handleLogin}>
               Log in
             </Button>
-            <Button variant="text" onPress={() => router.push('/forgotpassword/ForgotPassword')}>
-
+            <Button
+              variant="text"
+              onPress={() => router.push("/forgotpassword/ForgotPassword")}
+            >
               Forgot password?
-
             </Button>
             <Divider />
             <Button

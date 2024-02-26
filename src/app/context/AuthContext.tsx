@@ -1,10 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import { axiosClient } from "../lib/axios";
-import React from "react";
+import { useRouter } from "expo-router";
 
 interface AuthProps {
-  authState?: { token: string | null; authenticated: boolean | null };
+  authState?: {
+    token: string | null;
+    authenticated: boolean | null;
+    loading: boolean;
+  };
   onRegister?: (
     nickname: string,
     preFix: string,
@@ -31,18 +35,21 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: any) => {
+  const router = useRouter();
+
   const [authState, setAuthState] = useState<{
     token: string | null;
     authenticated: boolean | null;
+    loading: boolean;
   }>({
     token: null,
     authenticated: null,
+    loading: true,
   });
 
   useEffect(() => {
     const loadToken = async () => {
       const token = await SecureStore.getItemAsync(TOKEN_KEY);
-      console.log("🚀 ~ loadToken ~ token:", token);
       if (token) {
         axiosClient.defaults.headers.common[
           "Authorization"
@@ -50,6 +57,14 @@ export const AuthProvider = ({ children }: any) => {
         setAuthState({
           token: token,
           authenticated: true,
+          loading: false,
+        });
+      } else {
+        // Reset auth state
+        setAuthState({
+          token: null,
+          authenticated: false,
+          loading: false,
         });
       }
     };
@@ -86,6 +101,7 @@ export const AuthProvider = ({ children }: any) => {
         setAuthState({
           token: result.data.data.auth,
           authenticated: true,
+          loading: false,
         });
 
         axiosClient.defaults.headers.common[
@@ -142,7 +158,10 @@ export const AuthProvider = ({ children }: any) => {
     setAuthState({
       token: null,
       authenticated: false,
+      loading: false,
     });
+
+    router.push("/Login");
   };
 
   const value = {

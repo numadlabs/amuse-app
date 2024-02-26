@@ -2,9 +2,6 @@ import "../global.css";
 import { Stack } from "expo-router";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { QueryClient, QueryClientProvider } from "react-query";
-import React from "react";
-// import useQu
-// import QueryClien
 const queryClient = new QueryClient();
 
 export const unstable_settings = {
@@ -12,21 +9,21 @@ export const unstable_settings = {
   initialRouteName: "Index",
 };
 export default function Layout() {
-  const { authState, onLogout } = useAuth();
-
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="RestaurantMapView" />
-          {authState?.authenticated ? (
+        {/* <Stack screenOptions={{ headerShown: false }}>
+          {authState?.loading ? (
+            <Text>Loading</Text>
+          ) : authState?.authenticated ? (
+            <Stack.Screen name="(tabs)/index" />
+          ) : (
             <Stack.Screen name="Login" />
           ) : (
             <Stack.Screen name="(tabs)/index" />
           )}
-          <Stack.Screen name="(modals)/QrModal" options={{ presentation: "modal" }} />
-          <Stack.Screen name="profileSection/Profile"/>
-        </Stack>
+        </Stack> */}
+        <Stack screenOptions={{ headerShown: false }} />
       </AuthProvider>
     </QueryClientProvider>
   );
