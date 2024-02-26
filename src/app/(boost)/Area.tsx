@@ -7,7 +7,7 @@ import Button from '../components/ui/Button'
 import { router, useRouter } from 'expo-router'
 import { useAuth } from '../context/AuthContext'
 
-const Email = () => {
+const Area = () => {
   const [buttonPosition, setButtonPosition] = useState('bottom');
   const [isFocused, setIsFocused] = useState(false)
   const router = useRouter()
@@ -31,21 +31,21 @@ const Email = () => {
 
   return (
     <>
-      <Steps activeStep={3} />
+      <Steps activeStep={2} />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1, backgroundColor: Color.base.White }}>
             <View style={styles.body}>
               <View style={styles.textContainer}>
                 <View style={{ gap: 8 }}>
-                  <Text style={styles.topText}>Birthday</Text>
-                  <Text style={styles.bottomText}>For exclusive invites and special gifts.</Text>
+                  <Text style={styles.topText}>Area</Text>
+                  <Text style={styles.bottomText}>This helps nearby restaurants give you special offers.</Text>
                 </View>
-                <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} placeholder='Birthday' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, }} />
+                <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} placeholder='Area (ex. Dubai Marina)' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, }} />
               </View>
             </View>
             <View style={[styles.buttonContainer, buttonPosition === 'bottom' ? styles.bottomPosition : styles.topPosition]}>
-              <Button variant='primary' textStyle='primary' size='default' onPress={() => router.push('(boost)/Success')}>Continue</Button>
+              <Button variant='primary' textStyle='primary' size='default' onPress={() => router.push('(boost)/Birthday')}>Continue</Button>
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -54,7 +54,7 @@ const Email = () => {
   )
 }
 
-export default Email
+export default Area
 
 const styles = StyleSheet.create({
   body: {
