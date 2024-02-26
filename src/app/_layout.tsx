@@ -23,8 +23,8 @@ export default function Layout() {
           ) : (
             <Stack.Screen name="Login" />
           )}
-
-          <Stack.Screen name="QrModal" options={{ presentation: "modal" }} />
+          <Stack.Screen name="(modals)/QrModal" options={{ presentation: "modal" }} />
+          <Stack.Screen name="profileSection/Profile"/>
         </Stack>
       </AuthProvider>
     </QueryClientProvider>
