@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Dimensions } from "react-native";
-import DeviceInfo from "react-native-device-info";
 import { createRef } from "react";
 import { CommonActions } from "@react-navigation/native";
 
@@ -10,7 +9,6 @@ const guidlineBaseWith = 375;
 
 const scaleSize = (size: number): number => (width / guidlineBaseWith) * size;
 const styledScaleSize = (size: number): string => `${scaleSize(size)}px`;
-const deviceHasNotch = DeviceInfo.hasNotch();
 
 type DimensionProperty = "margin" | "padding";
 
@@ -211,7 +209,7 @@ function validatePhoneNumber(phoneNumber: string) {
 export {
   width,
   height,
-  deviceHasNotch,
+  // deviceHasNotch,
   scaleSize,
   styledScaleSize,
   resize,
