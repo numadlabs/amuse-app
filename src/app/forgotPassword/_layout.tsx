@@ -1,6 +1,6 @@
 import React from 'react';
-import Header from '@/app/components/layout/Header';
-import Steps from '@/app/components/atom/Steps';
+import Header from '../components/layout/Header';
+import Steps from '../components/atom/Steps';
 import { Slot, Stack } from 'expo-router';
 
 export default function FpLayout() {
