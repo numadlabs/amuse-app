@@ -2,12 +2,19 @@ import { createContext, useContext, useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import { axiosClient } from "../lib/axios";
 import { useRouter } from "expo-router";
-
+import { SERVER_SETTING } from "../constants/serverSettings";
+import {
+  deleteUserId,
+  loadUserId,
+  saveUserId,
+} from "../lib/service/asyncStorageHelper";
+// impor
 interface AuthProps {
   authState?: {
     token: string | null;
     authenticated: boolean | null;
     loading: boolean;
+    userId: string | null;
   };
   onRegister?: (
     nickname: string,
@@ -24,10 +31,6 @@ interface AuthProps {
   onTestLogin?: () => Promise<any>;
 }
 
-const TOKEN_KEY = "my-jwt";
-
-const testAccessToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFmMWNiNzE4LTgwNjctNDU5NS1iN2M2LTEwM2ZiY2VlMjNmYSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzA4NjgyNzc3LCJleHAiOjE3NDAyMTg3Nzd9.3H62Q2N3Y2B3fWZTJzCVy3Gxa7y3rS7K5wETK8zva_4";
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {
@@ -41,16 +44,19 @@ export const AuthProvider = ({ children }: any) => {
     token: string | null;
     authenticated: boolean | null;
     loading: boolean;
+    userId: string | null;
   }>({
     token: null,
     authenticated: null,
     loading: true,
+    userId: null,
   });
 
   useEffect(() => {
     const loadToken = async () => {
-      const token = await SecureStore.getItemAsync(TOKEN_KEY);
+      const token = await SecureStore.getItemAsync(SERVER_SETTING.TOKEN_KEY);
       if (token) {
+        const userId = await loadUserId();
         axiosClient.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${token}`;
@@ -58,6 +64,7 @@ export const AuthProvider = ({ children }: any) => {
           token: token,
           authenticated: true,
           loading: false,
+          userId: userId,
         });
       } else {
         // Reset auth state
@@ -65,6 +72,7 @@ export const AuthProvider = ({ children }: any) => {
           token: null,
           authenticated: false,
           loading: false,
+          userId: null,
         });
       }
     };
@@ -102,6 +110,7 @@ export const AuthProvider = ({ children }: any) => {
           token: result.data.data.auth,
           authenticated: true,
           loading: false,
+          userId: result.data.data.user.id,
         });
 
         axiosClient.defaults.headers.common[
@@ -109,9 +118,10 @@ export const AuthProvider = ({ children }: any) => {
         ] = `Bearer ${result.data.data.auth.accessToken}`;
 
         await SecureStore.setItemAsync(
-          TOKEN_KEY,
+          SERVER_SETTING.TOKEN_KEY,
           result.data.data.auth.accessToken
         );
+        await saveUserId(result.data.data.user.id);
 
         return result.data;
       } else {
@@ -143,13 +153,9 @@ export const AuthProvider = ({ children }: any) => {
     }
   };
 
-  const setTestAccessToken = async () => {
-    await SecureStore.setItemAsync(TOKEN_KEY, testAccessToken);
-  };
-
   const logout = async () => {
     // Delete token from storage
-    await SecureStore.deleteItemAsync(TOKEN_KEY);
+    await SecureStore.deleteItemAsync(SERVER_SETTING.TOKEN_KEY);
 
     // Update HTTP Headers
     axiosClient.defaults.headers.common["Authorization"] = "";
@@ -159,8 +165,9 @@ export const AuthProvider = ({ children }: any) => {
       token: null,
       authenticated: false,
       loading: false,
+      userId: null,
     });
-
+    await deleteUserId();
     router.push("/Login");
   };
 
@@ -168,7 +175,6 @@ export const AuthProvider = ({ children }: any) => {
     onRegister: register,
     onLogin: login,
     onLogout: logout,
-    onTestLogin: setTestAccessToken,
     authState,
   };
 

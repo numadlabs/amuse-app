@@ -43,3 +43,13 @@ export async function getRestaurants({
       }
     });
 }
+
+export async function getRestaurantCardById(id: string) {
+  return axiosClient.get(`/cards/${id}/restaurants`).then((response) => {
+    if (response.data.success) {
+      return response?.data;
+    } else {
+      throw new Error(response.data.error);
+    }
+  });
+}

@@ -37,4 +37,6 @@ export type RestaurantType = {
   longitude: number;
   opensAt: string;
   category: string;
+  isOwned: boolean;
+  cardId: string;
 };
