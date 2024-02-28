@@ -13,7 +13,6 @@ import Color from "../constants/Color";
 import { useRouter } from "expo-router";
 import { useMutation } from "react-query";
 import { generateTap, redeemTap } from "../lib/service/mutationHelper";
-import { useAuth } from "../context/AuthContext";
 
 const { width, height } = Dimensions.get("window");
 
@@ -21,8 +20,6 @@ const markerSize = 250;
 const halfMarkerSize = markerSize / 2;
 
 const QrModal = () => {
-  const { onTestLogin } = useAuth();
-
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
@@ -215,14 +212,6 @@ const QrModal = () => {
             }}
           >
             <Text>Test redeem</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, styles.flashButton]}
-            onPress={() => {
-              onTestLogin();
-            }}
-          >
-            <Text>Test login</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity

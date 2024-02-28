@@ -23,3 +23,17 @@ export function redeemTap(encryptedData: string) {
       return response;
     });
 }
+
+export function getAcard({
+  userId,
+  cardId,
+}: {
+  userId: string;
+  cardId: string;
+}) {
+  return axiosClient
+    .post("/userCards/buy", { userId, cardId })
+    .then((response) => {
+      return response;
+    });
+}

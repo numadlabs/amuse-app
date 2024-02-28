@@ -15,18 +15,30 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import * as Location from "expo-location";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { restaurantKeys } from "@/app/lib/service/keysHelper";
-import { getRestaurants } from "@/app/lib/service/queryHelper";
+import {
+  getRestaurantCardById,
+  getRestaurants,
+} from "@/app/lib/service/queryHelper";
 import { baseUrl } from "@/app/lib/axios";
 import { RestaurantType } from "@/app/lib/types";
+import { GetRestaurantsResponseType } from "@/app/lib/types/apiResponseType";
+import FloatingRestaurantCard from "../atom/cards/FloatingRestCard";
+import { getAcard } from "@/app/lib/service/mutationHelper";
+import { useAuth } from "@/app/context/AuthContext";
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
 const CARD_WIDTH = width * 0.8;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
+const mapLatitudeDelta = 0.008;
+const mapLongitudeDelta = 0.008;
+
 export default function RestaurantMapView() {
+  const { authState } = useAuth();
+  const queryClient = useQueryClient();
   const navigation = useNavigation();
   const mapRef = useRef(null);
   const scrollViewRef = useRef(null);
@@ -35,11 +47,12 @@ export default function RestaurantMapView() {
   const [initialRegion, setInitialRegion] = useState(null);
   const [scrollViewHidden, setScrollViewHidden] = useState(true);
   const [selectedMarkerId, setSelectedMarkerId] = useState(null);
+  const [isClaimLoading, setIsClaimLoading] = useState(false);
 
   let mapIndex = 0;
   let mapAnimation = new Animated.Value(0);
 
-  const { data } = useQuery({
+  const { data: restaurantsData } = useQuery<GetRestaurantsResponseType>({
     queryKey: restaurantKeys.all,
     queryFn: () => {
       return getRestaurants({
@@ -57,11 +70,19 @@ export default function RestaurantMapView() {
     enabled: !!currentLocation,
   });
 
+  const { mutateAsync: createGetAcardMutation } = useMutation({
+    mutationFn: getAcard,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (data, variables) => {},
+  });
+
   useEffect(() => {
     mapAnimation.addListener(({ value }) => {
       let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
-      if (index >= data?.data?.restaurants.length) {
-        index = data?.data?.restaurants.length - 1;
+      if (index >= restaurantsData?.data?.restaurants.length) {
+        index = restaurantsData?.data?.restaurants.length - 1;
       }
       if (index <= 0) {
         index = 0;
@@ -70,13 +91,14 @@ export default function RestaurantMapView() {
       // const regionTimeout = setTimeout(() => {
       if (mapIndex !== index) {
         mapIndex = index;
-        const { longitude, latitude } = data?.data?.restaurants[index];
-        setSelectedMarkerId(data?.data?.restaurants[index].id);
+        const { longitude, latitude } =
+          restaurantsData?.data?.restaurants[index];
+        setSelectedMarkerId(restaurantsData?.data?.restaurants[index].id);
         const region = {
           latitude: latitude,
           longitude: longitude,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
+          latitudeDelta: mapLatitudeDelta,
+          longitudeDelta: mapLongitudeDelta,
         };
         mapRef.current.animateToRegion(region, 350);
       }
@@ -99,8 +121,8 @@ export default function RestaurantMapView() {
       setInitialRegion({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05,
+        latitudeDelta: mapLatitudeDelta,
+        longitudeDelta: mapLongitudeDelta,
       });
     };
 
@@ -117,15 +139,15 @@ export default function RestaurantMapView() {
       const region = {
         latitude: selectedMarker.latitude,
         longitude: selectedMarker.longitude,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05,
+        latitudeDelta: mapLatitudeDelta,
+        longitudeDelta: mapLongitudeDelta,
       };
       // mapRef.current.animate
       mapRef.current.animateToRegion(region, 150);
       console.log("Callout pressed for:", selectedMarker);
 
       // Find the index of the selected marker
-      const index = data?.data?.restaurants.findIndex(
+      const index = restaurantsData?.data?.restaurants.findIndex(
         (restaurant) => restaurant.id === selectedMarker.id
       );
 
@@ -137,6 +159,29 @@ export default function RestaurantMapView() {
       setSelectedMarkerId(selectedMarker.id);
     }
     // You can set the selected marker state here if needed
+  };
+
+  const handleGetAcard = async (acardId: string) => {
+    console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
+    setIsClaimLoading(true);
+    if (authState.userId) {
+      // const data
+      // try {
+      // const response = await getRestaurantCardById(restaurantId);
+
+      // console.log(
+      //   "🚀 ~ handleGetAcard ~ response.data.cards[0].id:",
+      //   response.data.cards[0].id
+      // );
+      const data = await createGetAcardMutation({
+        userId: authState.userId,
+        cardId: acardId,
+      });
+      if (data.data.success) {
+        queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
+        setIsClaimLoading(false);
+      }
+    }
   };
 
   return (
@@ -198,10 +243,10 @@ export default function RestaurantMapView() {
             <Image source={require("@/public/images/locationPin.png")} />
           </Marker>
         )}
-        {data?.data?.restaurants.map((restaurant) => {
+        {restaurantsData?.data?.restaurants.map((restaurant) => {
           return (
             <Marker
-              key={restaurant.id}
+              key={`marker-${restaurant.id}`}
               coordinate={{
                 latitude: restaurant.latitude,
                 longitude: restaurant.longitude,
@@ -216,7 +261,6 @@ export default function RestaurantMapView() {
                   style={{ width: 30, height: 30 }}
                 />
               )}
-              {/* <CustomCallout marker={restaurant} /> */}
             </Marker>
           );
         })}
@@ -254,47 +298,19 @@ export default function RestaurantMapView() {
         )}
       >
         {!scrollViewHidden &&
-          data?.data?.restaurants.map((marker, index) => (
-            <View style={styles.card} key={index}>
-              {/* <Image
-              source={marker.image}
-              style={styles.cardImage}
-              resizeMode="cover"
-            /> */}
-              <View style={styles.textContent}>
-                <Text numberOfLines={1} style={styles.cardtitle}>
-                  {marker.name}
-                </Text>
-                {/* <StarRating ratings={marker.rating} reviews={marker.reviews} /> */}
-                <Text numberOfLines={1} style={styles.cardDescription}>
-                  {marker.description}
-                </Text>
-
-                <View style={styles.button}>
-                  <TouchableOpacity
-                    onPress={() => {}}
-                    style={[
-                      styles.signIn,
-                      {
-                        borderColor: "#FF6347",
-                        borderWidth: 1,
-                      },
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.textSign,
-                        {
-                          color: "#FF6347",
-                        },
-                      ]}
-                    >
-                      Add a-card
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
+          restaurantsData?.data?.restaurants &&
+          restaurantsData.data.restaurants.map((marker) => (
+            <FloatingRestaurantCard
+              marker={marker}
+              key={`card-${marker.id}`}
+              isClaimLoading={isClaimLoading}
+              onPress={() => {
+                // Get the aCardId from the marker object
+                const aCardId = marker.cardId;
+                // Call the handleGetAcard function with the aCardId
+                handleGetAcard(aCardId);
+              }}
+            />
           ))}
       </Animated.ScrollView>
 
