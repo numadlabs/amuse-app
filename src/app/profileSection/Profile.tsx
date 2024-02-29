@@ -4,8 +4,10 @@ import Header from '../components/layout/Header'
 import Color from '../constants/Color'
 import { ArrowRight2, Lock1, MessageQuestion, NoteText, Sms, User } from 'iconsax-react-native'
 import { router } from 'expo-router'
+import { useAuth } from '../context/AuthContext'
 
 const Profile = () => {
+  const { authState, onLogout } = useAuth();
   return (
     <>
       <Header title='Profile' />
@@ -64,6 +66,12 @@ const Profile = () => {
               <Text style={{ fontSize: 16 }}>Privacy Policy</Text>
             </View>
             <ArrowRight2 color={Color.Gray.gray600} />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => onLogout()}>
+            <View>
+              <Text>sign out</Text>
+            </View>
           </TouchableOpacity>
         </View>
       </View>

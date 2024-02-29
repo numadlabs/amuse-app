@@ -32,14 +32,17 @@ const Layout = ({ navigation }) => {
         options={{
           headerStyle: { shadowOpacity: 0 },
           headerLeft: () => (
-            <TouchableOpacity onPress={() => onLogout()}>
+            <TouchableOpacity onPress={() => 
+              // onLogout()
+              router.push('/profileSection/Profile')
+              }>
               <View style={{ paddingHorizontal: 20 }}>
                 <User color={Color.Gray.gray600} />
               </View>
             </TouchableOpacity>
           ),
           headerRight: () => (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/Notification')}>
               <View style={{ paddingHorizontal: 20 }}>
                 <Notification color={Color.Gray.gray600} />
               </View>

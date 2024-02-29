@@ -8,7 +8,6 @@ import StackedCard from '../components/sections/StackedCard'
 
 const Page = () => {
   return (
-
     <View style={styles.container}>
       <Balance />
       <QuickInfo />
