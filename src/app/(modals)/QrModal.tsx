@@ -19,6 +19,8 @@ const { width, height } = Dimensions.get("window");
 const markerSize = 250;
 const halfMarkerSize = markerSize / 2;
 
+const overlayAdjusting = 5;
+
 const QrModal = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -48,6 +50,7 @@ const QrModal = () => {
     },
     onSuccess: (data, variables) => {
       console.log("🚀 ~ QrModal ~ data:", data);
+      createRedeemMutation(data.data.data);
       setEncryptedTap(data.data.data);
     },
   });
@@ -150,6 +153,9 @@ const QrModal = () => {
     marginTop,
     marginLeft,
   });
+
+  console.log(overlayStyles(width, (height - markerSize) / 2));
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
@@ -162,42 +168,51 @@ const QrModal = () => {
           flash={flashMode == true ? "on" : "off"}
           // flash="on"
         />
+        <View
+          style={[
+            styles.overlay,
+            {
+              height: (height - markerSize) / 2 - overlayAdjusting,
+              width: width,
+            },
+          ]}
+        />
+        <View
+          style={[
+            styles.overlay,
+            {
+              height: (height - markerSize) / 2,
+              marginTop: (height + markerSize) / 2 - overlayAdjusting * 3,
+              width: width,
+            },
+          ]}
+        />
 
-        <View style={overlayStyles(width, (height - markerSize) / 2)} />
         <View
-          style={overlayStyles(
-            width,
-            (height - markerSize) / 2,
-            (height + markerSize) / 2
-          )}
+          style={[
+            styles.overlay,
+            {
+              width: (width - markerSize) / 2,
+              height: markerSize - overlayAdjusting * 2,
+              marginTop: (height - markerSize) / 2 - overlayAdjusting,
+            },
+          ]}
         />
         <View
-          style={overlayStyles(
-            (width - markerSize) / 2,
-            markerSize,
-            (height - markerSize) / 2
-          )}
-        />
-        <View
-          style={overlayStyles(
-            (width - markerSize) / 2,
-            markerSize,
-            (height - markerSize) / 2,
-            (width + markerSize) / 2
-          )}
+          style={[
+            styles.overlay,
+            {
+              width: (width - markerSize) / 2,
+              height: markerSize - overlayAdjusting * 2,
+              marginLeft: (width + markerSize) / 2,
+              marginTop: (height - markerSize) / 2 - overlayAdjusting,
+            },
+          ]}
         />
         <View style={styles.markerContainer}>
-          {marker("white", 257, 60, 4, 12)}
+          {marker("white", markerSize, 60, 4, 12)}
 
-          <TouchableOpacity
-            style={[styles.button, styles.flashButton]}
-            onPress={() => {
-              setFlashMode(!flashMode);
-            }}
-          >
-            <Image source={require("@/public/icons/flash.png")} />
-          </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.button, styles.flashButton]}
             onPress={() => {
               createMapMutation("7fad6e44-9f29-4dea-9196-666895710f12");
@@ -212,8 +227,21 @@ const QrModal = () => {
             }}
           >
             <Text>Test redeem</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
+
+        <TouchableOpacity
+          style={[styles.button, styles.flashButton]}
+          // onPress={() => {
+          //   setFlashMode(!flashMode);
+          // }}
+          onPress={() => {
+            createMapMutation("0d6145c7-d83c-45b3-90cb-479e21ebde6b");
+          }}
+        >
+          <Text>Scan</Text>
+          {/* <Image source={require("@/public/icons/flash.png")} /> */}
+        </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.closeButton]}
           onPress={() => {
@@ -265,7 +293,11 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   flashButton: {
-    marginTop: 100,
+    position: "absolute",
+    right: "38%",
+    bottom: "0%",
+    marginRight: 16,
+    marginBottom: 100,
   },
 });
 
