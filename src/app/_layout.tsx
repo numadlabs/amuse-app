@@ -38,6 +38,7 @@ export default function Layout() {
         </Stack> */}
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="restaurants/[id]" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="restaurants/details/[id]" options={{ presentation: 'modal' }} />
           <Stack.Screen name="restaurants/Mock" options={{ presentation: 'modal' }} />
           <Stack.Screen name="(modals)/QrModal" options={{ presentation: 'modal' }} />
           <Stack.Screen name="/SuccessScreen" />

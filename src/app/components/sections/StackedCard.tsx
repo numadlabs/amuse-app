@@ -32,7 +32,7 @@ const StackedCard = () => {
 
   const handleNavigation = (restaurant) => {
     router.push({
-      pathname: `/restaurants/${restaurant.id}`,
+      pathname: `/restaurants/details/${restaurant.id}`,
       params: {
         name: restaurant.name,
         location: restaurant.location,
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
     width: "100%",
     marginBottom: "-80%",
     borderWidth: 1,
+    borderColor: Color.Gray.gray400
   },
   titleText: {
     color: Color.Gray.gray400,
