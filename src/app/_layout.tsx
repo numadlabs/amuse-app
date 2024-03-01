@@ -1,7 +1,10 @@
-import "../global.css";
+import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { AuthProvider, useAuth } from "./context/AuthContext";
 import { QueryClient, QueryClientProvider } from "react-query";
+import "../global.css";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+// import useQu
+// import QueryClien
 const queryClient = new QueryClient();
 
 export const unstable_settings = {
@@ -9,6 +12,16 @@ export const unstable_settings = {
   initialRouteName: "Index",
 };
 export default function Layout() {
+  const { authState, onLogout } = useAuth();
+  const [fontsLoaded] = useFonts({
+    "Sora-Regular": require("../public/fonts/Sora-Regular.ttf"),
+    "Sora-Bold": require("../public/fonts/Sora-Regular.ttf"),
+    // Add more fonts if needed
+  });
+  if (!fontsLoaded) {
+    return null; // or a loading indicator
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

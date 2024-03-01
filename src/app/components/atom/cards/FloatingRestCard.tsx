@@ -2,12 +2,12 @@
 import { RestaurantType } from "@/app/lib/types";
 import React from "react";
 import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
   Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 const { width } = Dimensions.get("window");
@@ -31,29 +31,55 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
   isClaimLoading,
 }) => {
   // console.log("🚀 ~ marker:", key);
+  const opensAt = new Date(marker.opensAt);
+  const closesAt = new Date(marker.closesAt);
+  const currentTime = new Date();
+
+  const isOpen =
+    currentTime.getTime() >= opensAt.getTime() &&
+    currentTime.getTime() <= closesAt.getTime();
+
   return (
     <View style={styles.card}>
-      {/* <Image
-        source={marker.image} // Assuming the marker object has an image property
+      <Image
+        source={require("@/public/images/restaurantPin.png")}
         style={styles.cardImage}
-        resizeMode="cover"
-      /> */}
+        // resizeMode="cover"
+      />
       <View style={styles.textContent}>
-        <Text numberOfLines={1} style={styles.cardtitle}>
-          {marker.name}
-        </Text>
-        <Text numberOfLines={1} style={styles.cardDescription}>
-          {marker.description}
-        </Text>
+        <View>
+          <Text numberOfLines={1} style={styles.cardtitle}>
+            {marker.name}
+          </Text>
+          <Text numberOfLines={1} style={styles.cardDescription}>
+            {marker.category}
+          </Text>
+        </View>
 
         <View style={styles.button}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={[
+                styles.dot,
+                { backgroundColor: isOpen ? "red" : "green" },
+              ]}
+            />
+            <Text style={{ color: isOpen ? "red" : "green" }}>
+              {isOpen ? "Closed" : "Open"}
+            </Text>
+          </View>
+
           <TouchableOpacity
             onPress={onPress}
             style={[
               styles.signIn,
               {
-                borderColor: "#FF6347",
+                borderColor: "#000",
                 borderWidth: 1,
+                backgroundColor: "#000",
+                width: 96,
+                height: 32,
+                borderRadius: 48,
               },
             ]}
             disabled={isClaimLoading}
@@ -62,7 +88,7 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
               style={[
                 styles.textSign,
                 {
-                  color: "#FF6347",
+                  color: "#FFF",
                 },
               ]}
             >
@@ -81,55 +107,64 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    // padding: 10,
-    elevation: 2,
     backgroundColor: "#FFF",
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
+    justifyContent: "space-between",
     marginHorizontal: 10,
-    shadowColor: "#000",
-    shadowRadius: 5,
-    shadowOpacity: 0.3,
-    // shadowOffset: { x: 2, y: -2 },
-    height: CARD_HEIGHT,
     width: CARD_WIDTH,
     overflow: "hidden",
-  },
-  button: {
-    backgroundColor: "#212121",
-    padding: 16,
-    margin: 16,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    flexDirection: "row",
     alignItems: "center",
-    borderRadius: 8,
+    padding: 12,
+    gap: 16,
   },
+
   cardImage: {
-    flex: 3,
-    width: "100%",
-    height: "100%",
+    width: 92,
+    height: 92,
     alignSelf: "center",
+    resizeMode: "cover",
   },
+
   textContent: {
-    flex: 2,
-    padding: 10,
+    flex: 1,
+    gap: 30,
+    // backgroundColor: "red",
   },
+
+  button: {
+    // backgroundColor: "#FFF",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5, // To make it a circle
+    marginRight: 5, // Adjust the margin as needed
+  },
+
   cardtitle: {
-    fontSize: 12,
-    // marginTop: 5,
+    fontSize: 18,
+
     fontWeight: "bold",
   },
   cardDescription: {
-    fontSize: 12,
-    color: "#444",
+    fontSize: 14,
+    color: "#656565",
   },
   signIn: {
-    width: "100%",
     padding: 5,
-    justifyContent: "center",
+
     alignItems: "center",
     borderRadius: 3,
   },
   textSign: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "bold",
   },
 });
