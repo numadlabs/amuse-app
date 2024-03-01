@@ -11,13 +11,24 @@ const StackedCard = () => {
   const { authState } = useAuth();
   const router = useRouter();
 
-  const { data: cards = []} = useQuery(
-    ["userCards", authState.userId],
-    async () => {
-      const response = await getUserCard(authState.userId);
-      return response.data.cards;
-    }
-  );
+  // const { data: cards = [] } = useQuery(
+  //   ["userCards", authState.userId],
+  //   async () => {
+  //     const response = await getUserCard(authState.userId);
+  //     return response.data.cards;
+  //   }
+  // );
+
+  const { data: cards = [] } = useQuery({
+    queryKey: ["userCards"],
+    queryFn: () => {
+      return getUserCard(authState.userId);
+    },
+    // onError(error):{
+    //   console.log(error)
+    // }
+  });
+  console.log("🚀 ~ StackedCard ~ cards:", cards);
 
   const handleNavigation = (restaurant) => {
     router.push({
@@ -31,7 +42,6 @@ const StackedCard = () => {
       },
     });
   };
-
 
   return (
     <View style={styles.container}>
@@ -49,19 +59,20 @@ const StackedCard = () => {
         </View>
       ) : (
         <View style={{ alignItems: "center" }}>
-          {cards.map((card, index) => (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={[
-                styles.aCardContainer,
-                { marginTop: index !== 0 ? -20 : 0 },
-              ]}
-              key={card.id}
-              onPress={() => handleNavigation(card)}
-            >
-              <Text style={styles.titleText}>{card.name}</Text>
-            </TouchableOpacity>
-          ))}
+          {cards &&
+            cards.data.cards.map((card, index) => (
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={[
+                  styles.aCardContainer,
+                  { marginTop: index !== 0 ? -20 : 0 },
+                ]}
+                key={card.id}
+                onPress={() => handleNavigation(card)}
+              >
+                <Text style={styles.titleText}>{card.name}</Text>
+              </TouchableOpacity>
+            ))}
         </View>
       )}
     </View>
