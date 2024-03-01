@@ -17,6 +17,7 @@
     "expo-blur": "~12.9.2",
     "expo-camera": "~14.0.5",
     "expo-constants": "~15.4.2",
+    "expo-font": "~11.10.3",
     "expo-linking": "~6.2.1",
     "expo-location": "~16.5.3",
     "expo-router": "~3.4.7",
