@@ -1,46 +1,39 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { EmojiHappy } from "iconsax-react-native";
 import Color from "../../constants/Color";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "expo-router";
-import { RestaurantType } from "@/app/lib/types";
+import { useQuery } from "react-query";
 import { getUserCard } from "@/app/lib/service/queryHelper";
 
 const StackedCard = () => {
-  const [cards, setCards] = useState<RestaurantType[]>([]); // Initialize cards as an empty array
-  console.log("🚀 ~ StackedCard ~ cards:", cards);
   const { authState } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getUserCard(authState.userId);
-        console.log("🚀 ~ response:", response);
-        setCards(response.data.cards);
-      } catch (error) {
-        console.error("Error fetching cards:", error);
-      }
-    };
-    fetchData();
-  }, []);
+  const { data: cards = []} = useQuery(
+    ["userCards", authState.userId],
+    async () => {
+      const response = await getUserCard(authState.userId);
+      return response.data.cards;
+    }
+  );
 
-  const handleNavigation = () => {
+  const handleNavigation = (restaurant) => {
     router.push({
-      pathname: `/restaurants/Mock`,
-      // params: {
-      //   name: restaurant.name,
-      //   location: restaurant.location,
-      //   about: restaurant.description,
-      //   category: restaurant.category,
-      //   isOwned: restaurant.isOwned,
-      // }
+      pathname: `/restaurants/${restaurant.id}`,
+      params: {
+        name: restaurant.name,
+        location: restaurant.location,
+        about: restaurant.description,
+        category: restaurant.category,
+        isOwned: restaurant.isOwned,
+      },
     });
   };
 
+
   return (
-    // <Text>hi</Text>
     <View style={styles.container}>
       {cards.length === 0 ? (
         <View style={styles.container1}>
@@ -56,7 +49,7 @@ const StackedCard = () => {
         </View>
       ) : (
         <View style={{ alignItems: "center" }}>
-          {cards?.map((card, index) => (
+          {cards.map((card, index) => (
             <TouchableOpacity
               activeOpacity={0.7}
               style={[
@@ -64,10 +57,9 @@ const StackedCard = () => {
                 { marginTop: index !== 0 ? -20 : 0 },
               ]}
               key={card.id}
-              onPress={() => handleNavigation()}
+              onPress={() => handleNavigation(card)}
             >
               <Text style={styles.titleText}>{card.name}</Text>
-              {/* <Image source={{ uri: card }} style={styles.cardImage} /> */}
             </TouchableOpacity>
           ))}
         </View>
@@ -110,12 +102,6 @@ const styles = StyleSheet.create({
     color: Color.Gray.gray400,
     fontSize: 16,
     marginBottom: 10,
-  },
-  cardImage: {
-    width: 300,
-    height: 300,
-    borderRadius: 10,
-    resizeMode: "cover",
   },
   button: {
     paddingHorizontal: 20,
