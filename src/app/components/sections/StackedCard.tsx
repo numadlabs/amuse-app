@@ -19,7 +19,7 @@ const StackedCard = () => {
   //   }
   // );
 
-  const { data: cards = [] } = useQuery({
+  const { data: cards = [], isLoading } = useQuery({
     queryKey: ["userCards"],
     queryFn: () => {
       return getUserCard(authState.userId);
@@ -45,7 +45,7 @@ const StackedCard = () => {
 
   return (
     <View style={styles.container}>
-      {cards.length === 0 ? (
+      {cards?.data?.cards.length === 0 ? (
         <View style={styles.container1}>
           <View style={{ justifyContent: "center" }}>
             <EmojiHappy size={48} color={Color.Gray.gray400} />
@@ -60,7 +60,7 @@ const StackedCard = () => {
       ) : (
         <View style={{ alignItems: "center" }}>
           {cards &&
-            cards.data.cards.map((card, index) => (
+            cards?.data?.cards.map((card, index) => (
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={[
@@ -71,7 +71,10 @@ const StackedCard = () => {
                 onPress={() => handleNavigation(card)}
               >
                 <Text style={styles.titleText}>{card.name}</Text>
-                <Image style={styles.image} source={require("@/public/images/Image1.png")} />
+                <Image
+                  style={styles.image}
+                  source={require("@/public/images/Image1.png")}
+                />
               </TouchableOpacity>
             ))}
         </View>
@@ -109,14 +112,14 @@ const styles = StyleSheet.create({
     width: "100%",
     marginBottom: "-80%",
     borderWidth: 1,
-    borderColor: Color.Gray.gray400
+    borderColor: Color.Gray.gray400,
   },
   titleText: {
     color: Color.Gray.gray400,
     fontSize: 16,
     marginBottom: 10,
-    alignSelf:'flex-start',
-    fontWeight:'bold'
+    alignSelf: "flex-start",
+    fontWeight: "bold",
   },
   button: {
     paddingHorizontal: 20,
@@ -131,8 +134,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   image: {
-    width:300,
-    height:300,
-    borderRadius:32
-  }
+    width: 300,
+    height: 300,
+    borderRadius: 32,
+  },
 });
