@@ -1,32 +1,26 @@
-import React, { useEffect, useState, useRef } from "react";
-import {
-  Image,
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Animated,
-  Dimensions,
-  Platform,
-} from "react-native";
-import MapView, { Marker } from "react-native-maps";
-import { PROVIDER_GOOGLE } from "react-native-maps";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, useRouter } from "expo-router";
-import * as Location from "expo-location";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useAuth } from "@/app/context/AuthContext";
 import { restaurantKeys } from "@/app/lib/service/keysHelper";
-import {
-  getRestaurantCardById,
-  getRestaurants,
-} from "@/app/lib/service/queryHelper";
-import { baseUrl } from "@/app/lib/axios";
+import { getAcard } from "@/app/lib/service/mutationHelper";
+import { getRestaurants } from "@/app/lib/service/queryHelper";
 import { RestaurantType } from "@/app/lib/types";
 import { GetRestaurantsResponseType } from "@/app/lib/types/apiResponseType";
+import { Ionicons } from "@expo/vector-icons";
+import * as Location from "expo-location";
+import { useNavigation, useRouter } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Animated,
+  Dimensions,
+  Image,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import FloatingRestaurantCard from "../atom/cards/FloatingRestCard";
-import { getAcard } from "@/app/lib/service/mutationHelper";
-import { useAuth } from "@/app/context/AuthContext";
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
@@ -75,7 +69,7 @@ export default function RestaurantMapView() {
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => { },
+    onSuccess: (data, variables) => {},
   });
 
   useEffect(() => {
@@ -183,19 +177,19 @@ export default function RestaurantMapView() {
       }
     }
   };
-  const router = useRouter()
-  const handleNavigation = (restaurant : RestaurantType) => {
+  const router = useRouter();
+  const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
       pathname: `/restaurants/${restaurant.id}`,
-      params:{
+      params: {
         name: restaurant.name,
         location: restaurant.location,
         about: restaurant.description,
         category: restaurant.category,
         isOwned: restaurant.isOwned,
-      }
-    })
-  }
+      },
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -243,7 +237,7 @@ export default function RestaurantMapView() {
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         initialRegion={initialRegion}
-      // showsUserLocation={true}
+        // showsUserLocation={true}
       >
         {currentLocation && (
           <Marker
@@ -251,7 +245,7 @@ export default function RestaurantMapView() {
               latitude: currentLocation.latitude,
               longitude: currentLocation.longitude,
             }}
-          // title="Your Location"
+            // title="Your Location"
           >
             <Image source={require("@/public/images/locationPin.png")} />
           </Marker>
@@ -326,7 +320,6 @@ export default function RestaurantMapView() {
               />
             </TouchableOpacity>
           ))}
-
       </Animated.ScrollView>
 
       {/* <View style={styles.absoluteBox}>
