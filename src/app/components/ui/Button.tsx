@@ -23,7 +23,6 @@ const textStyles = {
     text:'text-gray600 font-bold'
 };
 
-// Define props for the Button component
 export interface ButtonProps extends React.ComponentProps<typeof TouchableOpacity> {
     variant?: keyof typeof buttonVariants['variant'];
     size?: keyof typeof buttonVariants['size'];
@@ -43,7 +42,7 @@ const Button = React.forwardRef<TouchableOpacity, ButtonProps>(
                 ref={ref}
                 {...props}
             >
-                <View className='flex items-center justify-center'>
+                <View style={{alignItems:'center', justifyContent:'center', gap:8}}>
                     <Text className={`${textStyles[textStyle]}`}>{children}</Text>
                 </View>
             </TouchableOpacity>
