@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { EmojiHappy } from "iconsax-react-native";
 import Color from "../../constants/Color";
 import { useAuth } from "@/app/context/AuthContext";
@@ -71,6 +71,7 @@ const StackedCard = () => {
                 onPress={() => handleNavigation(card)}
               >
                 <Text style={styles.titleText}>{card.name}</Text>
+                <Image style={styles.image} source={require("@/public/images/Image1.png")} />
               </TouchableOpacity>
             ))}
         </View>
@@ -113,6 +114,8 @@ const styles = StyleSheet.create({
     color: Color.Gray.gray400,
     fontSize: 16,
     marginBottom: 10,
+    alignSelf:'flex-start',
+    fontWeight:'bold'
   },
   button: {
     paddingHorizontal: 20,
@@ -126,4 +129,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "bold",
   },
+  image: {
+    width:300,
+    height:300,
+    borderRadius:32
+  }
 });
