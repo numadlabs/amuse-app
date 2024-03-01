@@ -13,6 +13,8 @@ import Color from "../constants/Color";
 import { useRouter } from "expo-router";
 import { useMutation } from "react-query";
 import { generateTap, redeemTap } from "../lib/service/mutationHelper";
+import Popup from "../components/(feedback)/Popup";
+import QrPopup from "../components/(feedback)/QrPopup";
 
 const { width, height } = Dimensions.get("window");
 
@@ -22,6 +24,17 @@ const halfMarkerSize = markerSize / 2;
 const overlayAdjusting = 5;
 
 const QrModal = () => {
+  const [isPopupVisible, setPopupVisible] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(true);
+
+  const togglePopup = () => {
+    setPopupVisible(!isPopupVisible); 
+  };
+  
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
@@ -52,6 +65,7 @@ const QrModal = () => {
       console.log("🚀 ~ QrModal ~ data:", data);
       createRedeemMutation(data.data.data);
       setEncryptedTap(data.data.data);
+      togglePopup();
     },
   });
   const { mutateAsync: createRedeemMutation } = useMutation({
@@ -61,6 +75,7 @@ const QrModal = () => {
     },
     onSuccess: (data, variables) => {
       console.log("🚀 ~ QrModal ~ data:", data);
+      toggleModal(); // Close the modal screen when mutation is successful
     },
   });
 
@@ -68,6 +83,12 @@ const QrModal = () => {
     setScanned(true);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
+
+  useEffect(() => {
+    if (isPopupVisible) {
+      toggleModal(); // Close the modal screen when the popup is visible
+    }
+  }, [isPopupVisible]);
 
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
@@ -157,6 +178,8 @@ const QrModal = () => {
   console.log(overlayStyles(width, (height - markerSize) / 2));
 
   return (
+    <>
+    {isModalVisible && (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         <CameraView
@@ -215,7 +238,7 @@ const QrModal = () => {
           {/* <TouchableOpacity
             style={[styles.button, styles.flashButton]}
             onPress={() => {
-              createMapMutation("7fad6e44-9f29-4dea-9196-666895710f12");
+              createMapMutation("0ce6d927-8e17-4c0b-902b-f2c5b882e922");
             }}
           >
             <Text>Test tap</Text>
@@ -252,6 +275,9 @@ const QrModal = () => {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
+    )}
+    <QrPopup isVisible={isPopupVisible} onClose={togglePopup} />
+    </>
   );
 };
 

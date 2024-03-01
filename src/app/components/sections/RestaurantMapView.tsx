@@ -13,7 +13,7 @@ import MapView, { Marker } from "react-native-maps";
 import { PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import * as Location from "expo-location";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { restaurantKeys } from "@/app/lib/service/keysHelper";
@@ -75,7 +75,7 @@ export default function RestaurantMapView() {
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => {},
+    onSuccess: (data, variables) => { },
   });
 
   useEffect(() => {
@@ -183,6 +183,19 @@ export default function RestaurantMapView() {
       }
     }
   };
+  const router = useRouter()
+  const handleNavigation = (restaurant : RestaurantType) => {
+    router.push({
+      pathname: `/restaurants/${restaurant.id}`,
+      params:{
+        name: restaurant.name,
+        location: restaurant.location,
+        about: restaurant.description,
+        category: restaurant.category,
+        isOwned: restaurant.isOwned,
+      }
+    })
+  }
 
   return (
     <View style={styles.container}>
@@ -230,7 +243,7 @@ export default function RestaurantMapView() {
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         initialRegion={initialRegion}
-        // showsUserLocation={true}
+      // showsUserLocation={true}
       >
         {currentLocation && (
           <Marker
@@ -238,7 +251,7 @@ export default function RestaurantMapView() {
               latitude: currentLocation.latitude,
               longitude: currentLocation.longitude,
             }}
-            // title="Your Location"
+          // title="Your Location"
           >
             <Image source={require("@/public/images/locationPin.png")} />
           </Marker>
@@ -300,18 +313,20 @@ export default function RestaurantMapView() {
         {!scrollViewHidden &&
           restaurantsData?.data?.restaurants &&
           restaurantsData.data.restaurants.map((marker) => (
-            <FloatingRestaurantCard
-              marker={marker}
-              key={`card-${marker.id}`}
-              isClaimLoading={isClaimLoading}
-              onPress={() => {
-                // Get the aCardId from the marker object
-                const aCardId = marker.cardId;
-                // Call the handleGetAcard function with the aCardId
-                handleGetAcard(aCardId);
-              }}
-            />
+            <TouchableOpacity onPress={() => handleNavigation(marker)}>
+              <FloatingRestaurantCard
+                marker={marker}
+                key={`card-${marker.id}`}
+                isClaimLoading={isClaimLoading}
+                onPress={() => {
+                  // Get the aCardId from the marker object
+                  const aCardId = marker.cardId;
+                  handleGetAcard(aCardId);
+                }}
+              />
+            </TouchableOpacity>
           ))}
+
       </Animated.ScrollView>
 
       {/* <View style={styles.absoluteBox}>

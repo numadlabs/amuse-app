@@ -36,7 +36,13 @@ export default function Layout() {
             <Stack.Screen name="(tabs)/index" />
           )}
         </Stack> */}
-        <Stack screenOptions={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="restaurants/[id]" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="restaurants/Mock" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="(modals)/QrModal" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="/SuccessScreen" />
+        </Stack>
+
       </AuthProvider>
     </QueryClientProvider>
   );
