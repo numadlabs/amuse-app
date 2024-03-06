@@ -1,4 +1,5 @@
 export const SERVER_SETTING = {
   TOKEN_KEY: "JWT",
+  REFRESH_TOKEN_KEY: "REFRESH_TOKEN_KEY",
   USER_ID: "USER_ID",
 };

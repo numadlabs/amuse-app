@@ -24,9 +24,6 @@ const StackedCard = () => {
     queryFn: () => {
       return getUserCard(authState.userId);
     },
-    // onError(error):{
-    //   console.log(error)
-    // }
   });
   console.log("🚀 ~ StackedCard ~ cards:", cards);
 

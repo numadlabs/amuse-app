@@ -121,6 +121,10 @@ export const AuthProvider = ({ children }: any) => {
           SERVER_SETTING.TOKEN_KEY,
           result.data.data.auth.accessToken
         );
+        await SecureStore.setItemAsync(
+          SERVER_SETTING.REFRESH_TOKEN_KEY,
+          result.data.data.auth.refreshToken
+        );
         await saveUserId(result.data.data.user.id);
 
         return result.data;
@@ -156,6 +160,7 @@ export const AuthProvider = ({ children }: any) => {
   const logout = async () => {
     // Delete token from storage
     await SecureStore.deleteItemAsync(SERVER_SETTING.TOKEN_KEY);
+    await SecureStore.deleteItemAsync(SERVER_SETTING.REFRESH_TOKEN_KEY);
 
     // Update HTTP Headers
     axiosClient.defaults.headers.common["Authorization"] = "";
