@@ -1,16 +1,22 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image, SafeAreaView, ScrollView } from 'react-native'
-import React, { useState } from 'react'
-import { router, useLocalSearchParams } from 'expo-router'
-import Color from '../constants/Color'
-import { RestaurantType } from '../lib/types'
-import Tick from '../components/icons/Tick'
-import { Location, TicketExpired, User, WalletAdd } from 'iconsax-react-native'
-import Button from '../components/ui/Button'
-import Popup from '../components/(feedback)/Popup'
+import { router, useLocalSearchParams } from "expo-router";
+import { Location, TicketExpired, User, WalletAdd } from "iconsax-react-native";
+import React, { useState } from "react";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Popup from "../components/(feedback)/Popup";
+import Tick from "../components/icons/Tick";
+import Button from "../components/ui/Button";
+import Color from "../constants/Color";
 
 const Restaurant = () => {
   const { name, location, category, about, isOwned } = useLocalSearchParams();
-   const [isPopupVisible, setPopupVisible] = useState(false);
+  const [isPopupVisible, setPopupVisible] = useState(false);
 
   const openPopup = () => {
     setPopupVisible(true);
@@ -35,84 +41,125 @@ const Restaurant = () => {
       <ScrollView style={styles.container}>
         <View style={styles.textImageContainer}>
           <View style={styles.textContainer}>
-            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{name}</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16 }}>{name}</Text>
             <Text style={{ fontSize: 12 }}>{category}</Text>
           </View>
-          <Image style={styles.image} source={require("@/public/images/Image1.png")} />
+          <Image
+            style={styles.image}
+            source={require("@/public/images/Image1.png")}
+          />
         </View>
         <View style={styles.attrContainer}>
-          <View style={{gap:32}}>
+          <View style={{ gap: 32 }}>
             <View style={{ gap: 16 }}>
-              <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Benefits</Text>
+              <Text style={{ fontWeight: "bold", fontSize: 16 }}>Benefits</Text>
               <View>
                 <View style={styles.attribute}>
                   <Tick />
-                  <Text style={styles.attributeText}>Earn BTC for every visit</Text>
+                  <Text style={styles.attributeText}>
+                    Earn BTC for every visit
+                  </Text>
                 </View>
                 <View style={styles.attribute}>
                   <Tick />
-                  <Text style={styles.attributeText}>Earn BTC for every visit</Text>
+                  <Text style={styles.attributeText}>
+                    Earn BTC for every visit
+                  </Text>
                 </View>
               </View>
             </View>
             <View style={{ gap: 16 }}>
-              <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Locations</Text>
+              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                Locations
+              </Text>
               <View>
                 <View style={styles.attribute}>
-                  <Location color={Color.Gray.gray600}/>
-                  <Text style={styles.attributeText}>{location}</Text>
+                  <Location color={Color.Gray.gray600} />
+                  <Text
+                    style={
+                      (styles.attributeText,
+                      { textDecorationLine: "underline" })
+                    }
+                  >
+                    "{location}"
+                  </Text>
                 </View>
               </View>
             </View>
-            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Memberships</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+              Memberships
+            </Text>
             <View style={styles.membershipContainer}>
-              <View style={{ flexDirection: 'row', alignItems: 'center',  gap: 12, }}>
-                <TicketExpired color={Color.Gray.gray600}/>
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
+              >
+                <TicketExpired color={Color.Gray.gray600} />
                 <Text>Expiry</Text>
               </View>
               <View>
                 <Text>1 year/ free to renew</Text>
               </View>
             </View>
+            <View //this is divider
+              style={{
+                flex: 1,
+                height: 1,
+                backgroundColor: Color.Gray.gray100,
+              }}
+            />
             <View style={styles.membershipContainer}>
-              <View style={{ flexDirection: 'row', alignItems: 'center',  gap: 12, }}>
-                <User color={Color.Gray.gray600}/>
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
+              >
+                <User color={Color.Gray.gray600} />
                 <Text>Artist</Text>
               </View>
+
               <View>
                 <Text>Chun Maru</Text>
               </View>
             </View>
-            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>About</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16 }}>About</Text>
             <Text>{about}</Text>
-            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>How it works</Text>
-            <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et justo sit amet nisl semper placerat id in arcu. </Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+              How it works
+            </Text>
+            <Text>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et
+              justo sit amet nisl semper placerat id in arcu.{" "}
+            </Text>
+            <View style={styles.imageContainer}>
+              <Image
+                source={require("@/public/images/qr.png")}
+                style={{ width: "100%", height: "100%", borderRadius: 32 }}
+              ></Image>
+            </View>
           </View>
         </View>
       </ScrollView>
       <View style={styles.buttonContainer}>
-      <Button 
-        variant='primary' 
-        textStyle='primary' 
-        size='default' 
-        onPress={() => {
-          if (router.canGoBack()) {
-            openPopup();
-          } else {
-            // Handle the case when router can't go back
-          }
-        }}
-      >
-        <WalletAdd color={Color.Gray.gray50}/>
-        {isOwned ? "Owned" : "Add a-card"}
-      </Button>
-      <Popup isVisible={isPopupVisible} onClose={closePopup} />
+        <Button
+          variant="primary"
+          textStyle="primary"
+          size="default"
+          onPress={() => {
+            if (router.canGoBack()) {
+              openPopup();
+            } else {
+              // Handle the case when router can't go back
+            }
+          }}
+        >
+          <WalletAdd color={Color.Gray.gray50} />
+          {isOwned ? "Owned" : "Add a-card"}
+        </Button>
+        <Popup isVisible={isPopupVisible} onClose={closePopup} />
       </View>
     </>
-  )
-}
+  );
+};
 
-export default Restaurant
+export default Restaurant;
 
 const styles = StyleSheet.create({
   button: {
@@ -123,18 +170,22 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     backgroundColor: Color.Gray.gray50,
   },
-  closeButton: {
-
+  imageContainer: {
+    width: "100%",
+    height: 200,
+    marginBottom: 80,
   },
+  closeButton: {},
   closeButtonContainer: {
-    width: '100%',
-    justifyContent: 'flex-end',
-    flexDirection: 'row',
+    width: "100%",
+    justifyContent: "flex-end",
+    flexDirection: "row",
     paddingHorizontal: 16,
-    paddingVertical: 4
+    paddingVertical: 4,
   },
   container: {
     marginTop: 16,
+    marginBottom: 80,
     paddingHorizontal: 16,
     flex: 1,
   },
@@ -143,14 +194,14 @@ const styles = StyleSheet.create({
     gap: 20,
     backgroundColor: Color.Gray.gray200,
     borderRadius: 32,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   textContainer: {
-    justifyContent: 'flex-start',
-    flexDirection: 'column',
-    width: '100%',
-    gap: 4
+    justifyContent: "flex-start",
+    flexDirection: "column",
+    width: "100%",
+    gap: 4,
   },
   image: {
     width: 300,
@@ -161,26 +212,25 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   attribute: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
-    alignItems: 'center'
+    alignItems: "center",
   },
   attributeText: {
     color: Color.Gray.gray600,
-    fontSize: 16
+    fontSize: 16,
   },
   membershipContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    
+    flexDirection: "row",
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   buttonContainer: {
-    position: 'absolute',
+    position: "absolute",
     zIndex: 20,
     bottom: 30,
-    width: '100%',
-    paddingHorizontal: 16
-  }
-})
+    width: "100%",
+    paddingHorizontal: 16,
+  },
+});
