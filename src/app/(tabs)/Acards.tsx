@@ -32,6 +32,7 @@ const Acards = () => {
     </SafeAreaView>
   );
 };
+export default Acards;
 
 const styles = StyleSheet.create({
   container: {
