@@ -33,8 +33,6 @@ const Acards = () => {
   );
 };
 
-export default Acards;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -28,7 +28,6 @@ interface AuthProps {
     password: string
   ) => Promise<any>;
   onLogout?: () => Promise<any>;
-  onTestLogin?: () => Promise<any>;
 }
 
 const AuthContext = createContext<AuthProps>({});
