@@ -54,12 +54,14 @@ export async function getRestaurantCardById(id: string) {
   });
 }
 
-export async function getUserCard(id: string) {
-  return axiosClient.get(`/users/cards`).then((response) => {
-    if (response.data.success) {
-      return response?.data;
-    } else {
-      throw new Error(response.data.error);
-    }
-  });
+export async function getUserCard({ latitude, longitude }) {
+  return axiosClient
+    .get(`/users/cards?latitude=${latitude}&longitude=${longitude}`)
+    .then((response) => {
+      if (response.data.success) {
+        return response?.data;
+      } else {
+        throw new Error(response.data.error);
+      }
+    });
 }

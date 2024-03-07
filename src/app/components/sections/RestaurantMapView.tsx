@@ -21,6 +21,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import FloatingRestaurantCard from "../atom/cards/FloatingRestCard";
+import useLocationStore from "@/app/lib/store/userLocation";
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
@@ -32,12 +33,12 @@ const mapLongitudeDelta = 0.008;
 
 export default function RestaurantMapView() {
   const { authState } = useAuth();
+  const { currentLocation } = useLocationStore();
   const queryClient = useQueryClient();
   const navigation = useNavigation();
   const mapRef = useRef(null);
   const scrollViewRef = useRef(null);
 
-  const [currentLocation, setCurrentLocation] = useState(null);
   const [initialRegion, setInitialRegion] = useState(null);
   const [scrollViewHidden, setScrollViewHidden] = useState(true);
   const [selectedMarkerId, setSelectedMarkerId] = useState(null);
@@ -45,6 +46,17 @@ export default function RestaurantMapView() {
 
   let mapIndex = 0;
   let mapAnimation = new Animated.Value(0);
+
+  useEffect(() => {
+    if (currentLocation) {
+      setInitialRegion({
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
+        latitudeDelta: mapLatitudeDelta,
+        longitudeDelta: mapLongitudeDelta,
+      });
+    }
+  }, [currentLocation]);
 
   const { data: restaurantsData } = useQuery<GetRestaurantsResponseType>({
     queryKey: restaurantKeys.all,
@@ -101,28 +113,6 @@ export default function RestaurantMapView() {
     });
   });
 
-  useEffect(() => {
-    const getLocation = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
-        return;
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setCurrentLocation(location.coords);
-
-      setInitialRegion({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: mapLatitudeDelta,
-        longitudeDelta: mapLongitudeDelta,
-      });
-    };
-
-    getLocation();
-  }, []);
-
   // console.log(process.env.EXPO_PUBLIC_GOOGLE_API_KEY);
 
   const handleCalloutPress = (selectedMarker: RestaurantType) => {
@@ -178,6 +168,7 @@ export default function RestaurantMapView() {
     }
   };
   const router = useRouter();
+
   const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
       pathname: `/restaurants/${restaurant.id}`,

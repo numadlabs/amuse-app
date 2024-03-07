@@ -12,7 +12,6 @@ export const unstable_settings = {
   initialRouteName: "Index",
 };
 export default function Layout() {
-  const { authState, onLogout } = useAuth();
   const [fontsLoaded] = useFonts({
     "Sora-Regular": require("../public/fonts/Sora-Regular.ttf"),
     "Sora-Bold": require("../public/fonts/Sora-Regular.ttf"),
@@ -25,25 +24,25 @@ export default function Layout() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        {/* <Stack screenOptions={{ headerShown: false }}>
-          {authState?.loading ? (
-            <Text>Loading</Text>
-          ) : authState?.authenticated ? (
-            <Stack.Screen name="(tabs)/index" />
-          ) : (
-            <Stack.Screen name="Login" />
-          ) : (
-            <Stack.Screen name="(tabs)/index" />
-          )}
-        </Stack> */}
         <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="restaurants/[id]" options={{ presentation: 'modal' }} />
-          <Stack.Screen name="restaurants/details/[id]" options={{ presentation: 'modal' }} />
-          <Stack.Screen name="restaurants/Mock" options={{ presentation: 'modal' }} />
-          <Stack.Screen name="(modals)/QrModal" options={{ presentation: 'modal' }} />
+          <Stack.Screen
+            name="restaurants/[id]"
+            options={{ presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="restaurants/details/[id]"
+            options={{ presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="restaurants/Mock"
+            options={{ presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="(modals)/QrModal"
+            options={{ presentation: "modal" }}
+          />
           <Stack.Screen name="SuccessScreen" />
         </Stack>
-
       </AuthProvider>
     </QueryClientProvider>
   );

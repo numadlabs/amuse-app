@@ -6,9 +6,10 @@ import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "expo-router";
 import { useQuery } from "react-query";
 import { getUserCard } from "@/app/lib/service/queryHelper";
+import useLocationStore from "@/app/lib/store/userLocation";
 
 const StackedCard = () => {
-  const { authState } = useAuth();
+  const { currentLocation } = useLocationStore();
   const router = useRouter();
 
   // const { data: cards = [] } = useQuery(
@@ -22,8 +23,12 @@ const StackedCard = () => {
   const { data: cards = [], isLoading } = useQuery({
     queryKey: ["userCards"],
     queryFn: () => {
-      return getUserCard(authState.userId);
+      return getUserCard({
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
+      });
     },
+    enabled: !!currentLocation,
   });
   console.log("🚀 ~ StackedCard ~ cards:", cards);
 
