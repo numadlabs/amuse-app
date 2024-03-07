@@ -1,22 +1,27 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { Location, TicketExpired, User, WalletAdd } from "iconsax-react-native";
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   Image,
+  ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { BlurView } from 'expo-blur';
 import Popup from "../components/(feedback)/Popup";
 import Tick from "../components/icons/Tick";
 import Button from "../components/ui/Button";
 import Color from "../constants/Color";
+import Close from "../components/icons/Close";
 
 const Restaurant = () => {
-  const { name, location, category, about, isOwned } = useLocalSearchParams();
+  const { name, location, category, about, isOwned, benefits, artistInfo, expiryInfo, instruction, nftImageUrl } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const openPopup = () => {
     setPopupVisible(true);
@@ -24,10 +29,11 @@ const Restaurant = () => {
 
   const closePopup = () => {
     setPopupVisible(false);
+    router.back();
   };
 
   return (
-    <>
+    <View style={{ backgroundColor: Color.base.White, flex: 1 }}>
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity
           style={[styles.button, styles.closeButton]}
@@ -35,35 +41,38 @@ const Restaurant = () => {
             router.back();
           }}
         >
-          <Image source={require("@/public/icons/close.png")} />
+          <Close />
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.container}>
-        <View style={styles.textImageContainer}>
-          <View style={styles.textContainer}>
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>{name}</Text>
-            <Text style={{ fontSize: 12 }}>{category}</Text>
+      {loading ? ( // Conditionally render loading indicator
+          <View style={{backgroundColor:'red', width:'100%'}}>
+            <ActivityIndicator/>
           </View>
-          <Image
-            style={styles.image}
-            source={require("@/public/images/Image1.png")}
-          />
-        </View>
+        ) : (
+        <ImageBackground source={{uri: nftImageUrl as string}} style={styles.textImageContainer}>
+          <BlurView intensity={24} style={styles.textImageContainer1}>
+            <View style={styles.textContainer}>
+              <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White, }}>{name}</Text>
+              <Text style={{ fontSize: 12, color: Color.Gray.gray50 }}>{category}</Text>
+            </View>
+            <Image
+              style={styles.image}
+              source={{uri: nftImageUrl as string}}
+            />
+          </BlurView>
+        </ImageBackground>
+        )}
         <View style={styles.attrContainer}>
           <View style={{ gap: 32 }}>
             <View style={{ gap: 16 }}>
               <Text style={{ fontWeight: "bold", fontSize: 16 }}>Benefits</Text>
               <View>
+
                 <View style={styles.attribute}>
                   <Tick />
                   <Text style={styles.attributeText}>
-                    Earn BTC for every visit
-                  </Text>
-                </View>
-                <View style={styles.attribute}>
-                  <Tick />
-                  <Text style={styles.attributeText}>
-                    Earn BTC for every visit
+                    {benefits}
                   </Text>
                 </View>
               </View>
@@ -78,7 +87,7 @@ const Restaurant = () => {
                   <Text
                     style={
                       (styles.attributeText,
-                      { textDecorationLine: "underline" })
+                        { textDecorationLine: "underline" })
                     }
                   >
                     "{location}"
@@ -97,7 +106,7 @@ const Restaurant = () => {
                 <Text>Expiry</Text>
               </View>
               <View>
-                <Text>1 year/ free to renew</Text>
+                <Text>{expiryInfo} / free to renew</Text>
               </View>
             </View>
             <View //this is divider
@@ -116,7 +125,7 @@ const Restaurant = () => {
               </View>
 
               <View>
-                <Text>Chun Maru</Text>
+                <Text>{artistInfo}</Text>
               </View>
             </View>
             <Text style={{ fontWeight: "bold", fontSize: 16 }}>About</Text>
@@ -125,8 +134,7 @@ const Restaurant = () => {
               How it works
             </Text>
             <Text>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et
-              justo sit amet nisl semper placerat id in arcu.{" "}
+              {instruction}
             </Text>
             <View style={styles.imageContainer}>
               <Image
@@ -146,7 +154,7 @@ const Restaurant = () => {
             if (router.canGoBack()) {
               openPopup();
             } else {
-              // Handle the case when router can't go back
+
             }
           }}
         >
@@ -155,7 +163,7 @@ const Restaurant = () => {
         </Button>
         <Popup isVisible={isPopupVisible} onClose={closePopup} />
       </View>
-    </>
+    </View>
   );
 };
 
@@ -175,13 +183,15 @@ const styles = StyleSheet.create({
     height: 200,
     marginBottom: 80,
   },
-  closeButton: {},
+  closeButton: {
+    marginTop: 12
+  },
   closeButtonContainer: {
     width: "100%",
     justifyContent: "flex-end",
     flexDirection: "row",
     paddingHorizontal: 16,
-    paddingVertical: 4,
+
   },
   container: {
     marginTop: 16,
@@ -190,18 +200,26 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textImageContainer: {
-    padding: 20,
-    gap: 20,
-    backgroundColor: Color.Gray.gray200,
     borderRadius: 32,
+    overflow: 'hidden',
     justifyContent: "center",
     alignItems: "center",
+  },
+  textImageContainer1: {
+    padding: 20,
+    gap: 20,
+    borderRadius: 32,
+    width: '100%',
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1
   },
   textContainer: {
     justifyContent: "flex-start",
     flexDirection: "column",
     width: "100%",
     gap: 4,
+
   },
   image: {
     width: 300,

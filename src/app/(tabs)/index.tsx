@@ -5,11 +5,13 @@ import Color from "../constants/Color";
 import Balance from "../components/sections/Balance";
 import QuickInfo from "../components/sections/QuickInfo";
 import StackedCard from "../components/sections/StackedCard";
+import { useAuth } from "../context/AuthContext";
 
 const Page = () => {
   return (
     <View style={styles.container}>
       <Balance />
+      
       <QuickInfo />
       <StackedCard />
     </View>

@@ -25,7 +25,7 @@ const Restaurant = () => {
   };
 
   return (
-    <>
+    <View style={{backgroundColor: Color.base.White}}>
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity
           style={[styles.button, styles.closeButton]}
@@ -115,7 +115,7 @@ const Restaurant = () => {
         </View>
       </ScrollView>
       <View style={styles.buttonContainer}></View>
-    </>
+    </View>
   );
 };
 
@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingHorizontal: 16,
     flex: 1,
+    backgroundColor: Color.base.White
   },
   textImageContainer: {
     padding: 20,

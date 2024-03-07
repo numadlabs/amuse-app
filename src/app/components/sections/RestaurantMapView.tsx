@@ -187,6 +187,12 @@ export default function RestaurantMapView() {
         about: restaurant.description,
         category: restaurant.category,
         isOwned: restaurant.isOwned,
+        benefits: [restaurant.benefits],
+        locations: restaurant.location,
+        artistInfo: restaurant.artistInfo,
+        expiryInfo: restaurant.expiryInfo,
+        instruction: restaurant.instruction,
+        nftImageUrl: restaurant.nftImageUrl
       },
     });
   };
@@ -313,7 +319,6 @@ export default function RestaurantMapView() {
                 key={`card-${marker.id}`}
                 isClaimLoading={isClaimLoading}
                 onPress={() => {
-                  // Get the aCardId from the marker object
                   const aCardId = marker.cardId;
                   handleGetAcard(aCardId);
                 }}
