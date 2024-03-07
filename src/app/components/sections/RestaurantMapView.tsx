@@ -18,11 +18,15 @@ import {
   View,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, {
+  Marker,
+  PROVIDER_GOOGLE,
+  PROVIDER_DEFAULT,
+} from "react-native-maps";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import FloatingRestaurantCard from "../atom/cards/FloatingRestCard";
 import useLocationStore from "@/app/lib/store/userLocation";
-
+import SvgMarker from "../atom/svgMarker";
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
 const CARD_WIDTH = width * 0.8;
@@ -30,6 +34,185 @@ const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
 const mapLatitudeDelta = 0.008;
 const mapLongitudeDelta = 0.008;
+
+const mapStyle = [
+  {
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#f5f5f5",
+      },
+    ],
+  },
+  {
+    elementType: "labels.icon",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#616161",
+      },
+    ],
+  },
+  {
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#f5f5f5",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.land_parcel",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#bdbdbd",
+      },
+    ],
+  },
+  {
+    featureType: "landscape.man_made",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        visibility: "on",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#eeeeee",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#757575",
+      },
+    ],
+  },
+  {
+    featureType: "poi.business",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#e5e5e5",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#9e9e9e",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#ffffff",
+      },
+    ],
+  },
+  {
+    featureType: "road.arterial",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#757575",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#dadada",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#616161",
+      },
+    ],
+  },
+  {
+    featureType: "road.local",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#9e9e9e",
+      },
+    ],
+  },
+  {
+    featureType: "transit.line",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#e5e5e5",
+      },
+    ],
+  },
+  {
+    featureType: "transit.station",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#eeeeee",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#c9c9c9",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#9e9e9e",
+      },
+    ],
+  },
+];
 
 export default function RestaurantMapView() {
   const { authState } = useAuth();
@@ -183,7 +366,7 @@ export default function RestaurantMapView() {
         artistInfo: restaurant.artistInfo,
         expiryInfo: restaurant.expiryInfo,
         instruction: restaurant.instruction,
-        nftImageUrl: restaurant.nftImageUrl
+        nftImageUrl: restaurant.nftImageUrl,
       },
     });
   };
@@ -234,6 +417,7 @@ export default function RestaurantMapView() {
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         initialRegion={initialRegion}
+        customMapStyle={mapStyle}
         // showsUserLocation={true}
       >
         {currentLocation && (
@@ -258,11 +442,15 @@ export default function RestaurantMapView() {
               onPress={() => handleCalloutPress(restaurant)}
             >
               {selectedMarkerId === restaurant.id ? (
-                <Image source={require("@/public/images/restaurantPin.png")} />
+                // <Image
+                //   source={require("@/public/images/restaurantPin.png")}
+                //   style={{ width: 32, height: 32 }}
+                // />
+                <SvgMarker imageUrl={restaurant.nftImageUrl as string} />
               ) : (
                 <Image
                   source={require("@/public/images/map_marker.png")}
-                  style={{ width: 30, height: 30 }}
+                  style={{ width: 32, height: 32 }}
                 />
               )}
             </Marker>
@@ -304,10 +492,12 @@ export default function RestaurantMapView() {
         {!scrollViewHidden &&
           restaurantsData?.data?.restaurants &&
           restaurantsData.data.restaurants.map((marker) => (
-            <TouchableOpacity onPress={() => handleNavigation(marker)}>
+            <TouchableOpacity
+              key={`card-${marker.id}`}
+              onPress={() => handleNavigation(marker)}
+            >
               <FloatingRestaurantCard
                 marker={marker}
-                key={`card-${marker.id}`}
                 isClaimLoading={isClaimLoading}
                 onPress={() => {
                   const aCardId = marker.cardId;
