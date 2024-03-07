@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground } from "react-native";
 import { EmojiHappy } from "iconsax-react-native";
 import Color from "../../constants/Color";
 import { useAuth } from "@/app/context/AuthContext";
@@ -56,6 +56,7 @@ const StackedCard = () => {
         </View>
       ) : (
         <View style={{ alignItems: "center" }}>
+
           {cards &&
             cards?.data?.cards.map((card, index) => (
               <TouchableOpacity
@@ -74,6 +75,7 @@ const StackedCard = () => {
                 />
               </TouchableOpacity>
             ))}
+
         </View>
       )}
     </View>

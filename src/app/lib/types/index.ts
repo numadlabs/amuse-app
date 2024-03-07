@@ -30,13 +30,19 @@ export type User = {
 export type RestaurantType = {
   id: string;
   name: string;
-  location: string;
-  closesAt: string;
   description: string;
+  category: string;
+  location: string;
   latitude: number;
   longitude: number;
   opensAt: string;
-  category: string;
-  isOwned: boolean;
+  closesAt: string;
+  logo: string;
   cardId: string;
+  benefits: string;
+  artistInfo: string;
+  expiryInfo: string;
+  instruction: string;
+  nftImageUrl: string | string[];
+  isOwned: true;
 };
