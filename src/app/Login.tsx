@@ -1,5 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { ActivityIndicator } from "react-native";
+
 import React, { useState } from "react";
 import {
   Keyboard,
@@ -18,15 +20,19 @@ function Login() {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [phonePlaceholder, setPhonePlaceholder] =
+    useState<string>("Phone number");
+  const [passwordPlaceholder, setPasswordPlaceholder] =
+    useState<string>("Password");
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
   const { onLogin } = useAuth();
 
   const handleLogin = async () => {
     try {
-      setError(null); // Reset error message
-
+      setLoading(true);
       const response = await onLogin("976", phoneNumber, password);
-
       if (response.success) {
         console.log("Login successful:", response.data);
         router.push("/(tabs)");
@@ -39,6 +45,8 @@ function Login() {
     } catch (error) {
       console.error("Error during login:", error);
       setError("Login Error. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,6 +56,22 @@ function Login() {
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
+  };
+
+  const onFocusPhone = () => {
+    setPhonePlaceholder("");
+  };
+
+  const onBlurPhone = () => {
+    setPhonePlaceholder("Phone number");
+  };
+
+  const onFocusPassword = () => {
+    setPasswordPlaceholder("");
+  };
+
+  const onBlurPassword = () => {
+    setPasswordPlaceholder("Password");
   };
 
   return (
@@ -83,7 +107,7 @@ function Login() {
           <Text
             style={{
               fontSize: 24,
-              color: "black",
+              color: "gray",
               fontWeight: "bold",
               textAlign: "center",
             }}
@@ -103,7 +127,10 @@ function Login() {
           <View style={{ marginTop: 20 }}>
             <TextInput
               inputMode="tel"
-              placeholder="Phone number"
+              placeholder={phonePlaceholder}
+              placeholderTextColor="gray"
+              onFocus={onFocusPhone}
+              onBlur={onBlurPhone}
               style={{
                 height: 40,
                 borderColor: "gray",
@@ -128,7 +155,10 @@ function Login() {
             >
               <TextInput
                 secureTextEntry={!showPassword}
-                placeholder="Password"
+                placeholder={passwordPlaceholder}
+                placeholderTextColor="gray"
+                onFocus={onFocusPassword}
+                onBlur={onBlurPassword}
                 style={{ flex: 1 }}
                 value={password}
                 onChangeText={setPassword}
@@ -150,12 +180,16 @@ function Login() {
             )}
           </View>
           <View style={{ marginTop: 20 }}>
-            <Button variant="primary" onPress={handleLogin}>
-              <Text
-                style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
-              >
-                Log in
-              </Text>
+            <Button variant="primary" onPress={handleLogin} disabled={loading}>
+              {loading ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Text
+                  style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                >
+                  Log in
+                </Text>
+              )}
             </Button>
             <Button
               variant="text"
