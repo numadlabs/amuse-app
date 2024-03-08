@@ -1,43 +1,49 @@
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
-  View,
+  Keyboard,
+  Platform,
   Text,
   TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
-  Keyboard,
-  Alert,
+  View,
 } from "react-native";
-import Button from "./components/ui/Button";
 import Divider from "./components/atom/Divider";
-import { Link, router } from "expo-router";
+import Button from "./components/ui/Button";
 import { useAuth } from "./context/AuthContext";
-import LoginSchema from "./validators/LoginSchema";
 
 function Login() {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const { onLogin } = useAuth();
 
   const handleLogin = async () => {
     try {
+      setError(null); // Reset error message
+
       const response = await onLogin("976", phoneNumber, password);
+
       if (response.success) {
-        // Successful login
         console.log("Login successful:", response.data);
         router.push("/(tabs)");
       } else {
-        // Login failed
         console.log("Login failed:", response.data);
-        console.log(phoneNumber, password, response);
-        alert(
+        setError(
           "Invalid credentials. Please check your phone number and password and try again."
         );
       }
     } catch (error) {
-      // Network error or other exception
       console.error("Error during login:", error);
-      alert("Login Error. Please try again later.");
+      setError("Login Error. Please try again later.");
     }
+  };
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   const dismissKeyboard = () => {
@@ -60,14 +66,24 @@ function Login() {
             padding: 20,
             borderRadius: 20,
             width: "100%",
-            borderWidth: 1,
-            borderColor: "black",
+            backgroundColor: "white",
+            ...Platform.select({
+              ios: {
+                shadowColor: "black",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.2,
+                shadowRadius: 4,
+              },
+              android: {
+                elevation: 8,
+              },
+            }),
           }}
         >
           <Text
             style={{
               fontSize: 24,
-              color: "gray",
+              color: "black",
               fontWeight: "bold",
               textAlign: "center",
             }}
@@ -98,10 +114,10 @@ function Login() {
               value={phoneNumber}
               onChangeText={setPhoneNumber}
             />
-            <TextInput
-              secureTextEntry={true}
-              placeholder="Password"
+            <View
               style={{
+                flexDirection: "row",
+                alignItems: "center",
                 height: 40,
                 borderColor: "gray",
                 borderWidth: 1,
@@ -109,26 +125,58 @@ function Login() {
                 paddingHorizontal: 10,
                 marginTop: 10,
               }}
-              value={password}
-              onChangeText={setPassword}
-            />
+            >
+              <TextInput
+                secureTextEntry={!showPassword}
+                placeholder="Password"
+                style={{ flex: 1 }}
+                value={password}
+                onChangeText={setPassword}
+              />
+              <TouchableOpacity onPress={toggleShowPassword}>
+                <Ionicons
+                  name={showPassword ? "eye-outline" : "eye-off-outline"}
+                  size={24}
+                  color="black"
+                />
+              </TouchableOpacity>
+            </View>
+            {error && (
+              <Text
+                style={{ color: "red", marginTop: 10, textAlign: "center" }}
+              >
+                {error}
+              </Text>
+            )}
           </View>
           <View style={{ marginTop: 20 }}>
             <Button variant="primary" onPress={handleLogin}>
-              Log in
+              <Text
+                style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+              >
+                Log in
+              </Text>
             </Button>
             <Button
               variant="text"
               onPress={() => router.push("/forgotpassword/ForgotPassword")}
             >
-              Forgot password?
+              <Text
+                style={{ color: "black", fontSize: 14, fontWeight: "bold" }}
+              >
+                Forgot password?
+              </Text>
             </Button>
             <Divider />
             <Button
               variant="tertiary"
               onPress={() => router.push("/signUp/PhoneNumber")}
             >
-              Sign up
+              <Text
+                style={{ color: "black", fontSize: 16, fontWeight: "bold" }}
+              >
+                Sign up
+              </Text>
             </Button>
           </View>
         </View>
