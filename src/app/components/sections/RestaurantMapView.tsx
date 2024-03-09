@@ -373,7 +373,7 @@ export default function RestaurantMapView() {
 
   return (
     <View style={styles.container}>
-      <GooglePlacesAutocomplete
+      {/* <GooglePlacesAutocomplete
         placeholder="Search or move the map"
         fetchDetails={true}
         onPress={(data, details) => {
@@ -410,7 +410,7 @@ export default function RestaurantMapView() {
             backgroundColor: "#fff",
           },
         }}
-      />
+      /> */}
       {/* <Header title="Map" /> */}
       <MapView
         ref={mapRef}

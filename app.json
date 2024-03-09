@@ -2,7 +2,7 @@
   "expo": {
     "scheme": "acme",
     "splash": {
-      "image": "./src/public/images/logo.png",
+      "image": "./src/public/images/Image.png",
       "backgroundColor": "#FFFFFF"
     },
     "userInterfaceStyle": "automatic",

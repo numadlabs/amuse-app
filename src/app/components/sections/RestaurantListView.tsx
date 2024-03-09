@@ -40,7 +40,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
       {restaurantsData?.data?.restaurants && (
         <FlatList
           data={restaurantsData.data.restaurants}
-          keyExtractor={(item) => item.id.toString()} // Ensure each list item has a unique key
+          keyExtractor={(item) => item.id.toString()} 
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {
