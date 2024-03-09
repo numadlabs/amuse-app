@@ -4,19 +4,20 @@ import { useNavigation } from "@react-navigation/native";
 import { ArrowLeft } from 'iconsax-react-native';
 import { StatusBar } from "expo-status-bar";
 import Color from "../../constants/Color";
+import { useRouter } from "expo-router";
 
 interface NavbarProps {
     title: string;
 }
 
 const Header: React.FC<NavbarProps> = ({ title }) => {
-    const navigation = useNavigation();
+    const router = useRouter();
 
     return (
         <>
         <SafeAreaView style={{backgroundColor:Color.base.White}}>
             <View style={styles.container}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
+                <TouchableOpacity onPress={() => router.back()} style={styles.icon}>
                     <ArrowLeft size={24} color={Color.base.Black}/>
                 </TouchableOpacity>
                 <Text style={styles.title}>{title}</Text>

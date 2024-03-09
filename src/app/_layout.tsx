@@ -29,8 +29,8 @@ export default function Layout() {
             name="restaurants/[id]"
             options={{ presentation: "modal" }}
           />
-          <Stack.Screen
-            name="restaurants/details/[id]"
+            <Stack.Screen
+            name="Acards/[id]"
             options={{ presentation: "modal" }}
           />
           <Stack.Screen
@@ -42,6 +42,8 @@ export default function Layout() {
             options={{ presentation: "modal" }}
           />
           <Stack.Screen name="SuccessScreen" />
+          <Stack.Screen name="BottomSheet" options={{presentation:'formSheet'}}/>
+          <Stack.Screen name="MyAcards" />
         </Stack>
       </AuthProvider>
     </QueryClientProvider>

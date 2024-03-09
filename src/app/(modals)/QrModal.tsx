@@ -76,6 +76,7 @@ const QrModal = () => {
     onSuccess: (data, variables) => {
       console.log("🚀 ~ QrModal ~ data:", data);
       toggleModal(); // Close the modal screen when mutation is successful
+      router.back();
     },
   });
 

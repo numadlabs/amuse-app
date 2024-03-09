@@ -45,4 +45,5 @@ export type RestaurantType = {
   instruction: string;
   nftImageUrl: string | string[];
   isOwned: true;
+  visitCount: number;
 };

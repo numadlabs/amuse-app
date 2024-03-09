@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1.41,
     elevation: 2,
     borderRadius: 16,
-    marginHorizontal: 16,
+   
     marginTop: 32
   },
   container1: {

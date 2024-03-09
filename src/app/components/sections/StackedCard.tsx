@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground, ScrollView } from "react-native";
 import { EmojiHappy } from "iconsax-react-native";
 import Color from "../../constants/Color";
 import { useAuth } from "@/app/context/AuthContext";
@@ -7,6 +7,10 @@ import { useRouter } from "expo-router";
 import { useQuery } from "react-query";
 import { getUserCard } from "@/app/lib/service/queryHelper";
 import useLocationStore from "@/app/lib/store/userLocation";
+import Button from "../ui/Button";
+import { BlurView } from "expo-blur";
+import { RestaurantType } from "@/app/lib/types";
+
 
 const StackedCard = () => {
   const { currentLocation } = useLocationStore();
@@ -32,21 +36,24 @@ const StackedCard = () => {
   });
   console.log("🚀 ~ StackedCard ~ cards:", cards);
 
-  const handleNavigation = (restaurant) => {
+  const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
-      pathname: `/restaurants/details/${restaurant.id}`,
+      pathname: `/Acards/${restaurant.id}`,
       params: {
         name: restaurant.name,
         location: restaurant.location,
         about: restaurant.description,
         category: restaurant.category,
         isOwned: restaurant.isOwned,
+        nftImageUrl: restaurant.nftImageUrl,
+        taps: restaurant.visitCount,
+        artistInfo: restaurant.artistInfo,
       },
     });
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {cards?.data?.cards.length === 0 ? (
         <View style={styles.container1}>
           <View style={{ justifyContent: "center" }}>
@@ -60,30 +67,34 @@ const StackedCard = () => {
           </TouchableOpacity>
         </View>
       ) : (
-        <View style={{ alignItems: "center" }}>
-
+        <View>
           {cards &&
-            cards?.data?.cards.map((card, index) => (
+            cards?.data?.cards.slice(0, 4).map((card, index) => (
               <TouchableOpacity
                 activeOpacity={0.7}
-                style={[
-                  styles.aCardContainer,
-                  { marginTop: index !== 0 ? -20 : 0 },
-                ]}
                 key={card.id}
                 onPress={() => handleNavigation(card)}
               >
-                <Text style={styles.titleText}>{card.name}</Text>
-                <Image
-                  style={styles.image}
-                  source={require("@/public/images/Image1.png")}
-                />
+
+                <ImageBackground resizeMode='cover' source={{ uri: card.nftImageUrl }}
+                  style={[
+                    styles.aCardContainer,
+                    { marginTop: index !== 0 ? -20 : 0 },
+                  ]}>
+                  <View style={styles.overlay} />
+                  <BlurView intensity={24} style={styles.blurContainer}>
+                    <Text style={styles.titleText}>{card.name}</Text>
+                    <View style={{ alignItems: 'center' }}>
+                      <Image style={styles.image} source={{ uri: card.nftImageUrl }} />
+                    </View>
+                  </BlurView>
+                </ImageBackground>
               </TouchableOpacity>
             ))}
-
         </View>
       )}
-    </View>
+
+    </ScrollView>
   );
 };
 
@@ -92,12 +103,10 @@ export default StackedCard;
 const styles = StyleSheet.create({
   container: {
     marginTop: 32,
-    marginHorizontal: 16,
     backgroundColor: Color.Gray.gray50,
-    height: "100%",
     borderTopRightRadius: 32,
     borderTopLeftRadius: 32,
-    overflow: "hidden",
+    height: 560
   },
   container1: {
     marginTop: 80,
@@ -109,6 +118,14 @@ const styles = StyleSheet.create({
   },
   aCardContainer: {
     backgroundColor: Color.Gray.gray50,
+    borderRadius: 32,
+    alignItems: "center",
+    marginBottom: "-80%",
+    borderColor: Color.Gray.gray400,
+    overflow: 'hidden'
+  },
+  aCardContainer1: {
+    backgroundColor: Color.Gray.gray50,
     padding: 20,
     borderRadius: 32,
     alignItems: "center",
@@ -118,12 +135,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Color.Gray.gray400,
   },
+  blurContainer: {
+    width: '100%',
+    flex: 1,
+    padding: 20
+  },
   titleText: {
-    color: Color.Gray.gray400,
+    color: Color.base.White,
     fontSize: 16,
     marginBottom: 10,
     alignSelf: "flex-start",
     fontWeight: "bold",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(33, 33, 33, 0.32)',
   },
   button: {
     paddingHorizontal: 20,
