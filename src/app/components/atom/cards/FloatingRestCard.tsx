@@ -1,6 +1,7 @@
 // Import React and other necessary libraries
 import Color from "@/app/constants/Color";
 import { RestaurantType } from "@/app/lib/types";
+import moment from "moment";
 import React from "react";
 import {
   Dimensions,
@@ -32,14 +33,23 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
   isClaimLoading,
 }) => {
   // console.log("🚀 ~ marker:", key);
-  const opensAt = new Date(marker.opensAt);
-  const closesAt = new Date(marker.closesAt);
-  const currentTime = new Date();
+  // Example: Set opening time to 9:00 AM and closing time to 5:00 PM
 
-  const isOpen =
-    currentTime.getTime() >= opensAt.getTime() &&
-    currentTime.getTime() <= closesAt.getTime();
+  // Convert opensAt and closesAt strings to Date objects
+  const currentTime = moment();
 
+  // Parse opensAt and closesAt strings using moment
+  const opensAt = moment(marker.opensAt, "HH:mm");
+  let closesAt = moment(marker.closesAt, "HH:mm");
+
+  // Adjust closesAt if it's before or equal to opensAt to consider the next day
+  if (closesAt.isSameOrBefore(opensAt)) {
+    closesAt = closesAt.add(1, "day");
+  }
+
+  const isOpen = currentTime.isBetween(opensAt, closesAt, null, "[]");
+
+  // console.log(isOpen, opensAt, closesAt);
   return (
     <View style={styles.card}>
       <Image
@@ -62,11 +72,11 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
             <View
               style={[
                 styles.dot,
-                { backgroundColor: isOpen ? `${Color.System.systemError}` : `${Color.System.systemSuccess}` },
+                { backgroundColor: isOpen ? "green" : "red" },
               ]}
             />
-            <Text style={{ color: isOpen ? `${Color.System.systemError}` : `${Color.System.systemSuccess}` }}>
-              {isOpen ? "Closed" : "Open"}
+            <Text style={{ color: isOpen ? "green" : "red" }}>
+              {isOpen ? "Open" : "Closed"}
             </Text>
           </View>
           <TouchableOpacity
