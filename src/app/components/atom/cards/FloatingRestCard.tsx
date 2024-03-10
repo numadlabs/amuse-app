@@ -1,4 +1,5 @@
 // Import React and other necessary libraries
+import Color from "@/app/constants/Color";
 import { RestaurantType } from "@/app/lib/types";
 import moment from "moment";
 import React from "react";
@@ -14,7 +15,7 @@ import {
 const { width } = Dimensions.get("window");
 
 const CARD_HEIGHT = 150;
-const CARD_WIDTH = width * 0.8;
+const CARD_WIDTH = width * 0.80;
 
 // Define the props for the FloatingRestaurantCard component
 interface FloatingRestaurantCardProps {
@@ -52,7 +53,7 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
   return (
     <View style={styles.card}>
       <Image
-        source={require("@/public/images/restaurantPin.png")}
+        source={{uri: marker.nftImageUrl as string}}
         style={styles.cardImage}
         // resizeMode="cover"
       />
@@ -78,7 +79,6 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
               {isOpen ? "Open" : "Closed"}
             </Text>
           </View>
-
           <TouchableOpacity
             onPress={onPress}
             style={[
@@ -117,7 +117,7 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#FFF",
+    backgroundColor: Color.base.White,
     justifyContent: "space-between",
     marginHorizontal: 10,
     width: CARD_WIDTH,
@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
     height: 92,
     alignSelf: "center",
     resizeMode: "cover",
+    borderRadius: 8
   },
 
   textContent: {
@@ -154,8 +155,8 @@ const styles = StyleSheet.create({
   dot: {
     width: 10,
     height: 10,
-    borderRadius: 5, // To make it a circle
-    marginRight: 5, // Adjust the margin as needed
+    borderRadius: 5,
+    marginRight: 5,
   },
 
   cardtitle: {

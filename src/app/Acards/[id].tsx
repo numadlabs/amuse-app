@@ -20,10 +20,12 @@ import Close from "../components/icons/Close";
 import PowerUp from "../components/(feedback)/PowerUp";
 import PowerUpCard from "../components/atom/cards/PowerUpCard";
 import DetailsSheet from "../components/sections/DetailsSheet";
+import BottomSheetDetails from "../components/sections/BottomDetailsSheet";
 
 const Restaurant = () => {
-  const { name, location, category, about, isOwned, benefits, artistInfo, expiryInfo, instruction, nftImageUrl, taps } = useLocalSearchParams();
+  const { name, location, category, about, isOwned, benefits, artistInfo, membership, instruction, nftImageUrl, taps } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
+  console.log(instruction)
   const [loading, setLoading] = useState(false)
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
 
@@ -90,15 +92,30 @@ const Restaurant = () => {
               </Text>
             </View>
           </TouchableOpacity>
-
+          {/* <BottomSheetDetails visible={bottomSheetVisible} onClose={toggleBottomSheet} benefits={benefits}/> */}
+          <DetailsSheet isVisible={bottomSheetVisible} onClose={toggleBottomSheet} benefits={benefits} locations={location} memberships={membership} artistInfo={artistInfo} about={about} instruction={instruction}/>
           <Text style={{ fontWeight: "bold", fontSize: 16, marginTop: 32 }}>Power ups</Text>
           <View style={styles.powerUpGrid}>
-            <PowerUpCard title="Priority seating on Fridays" date="2024/01/03" onPress={() => router.push('')} />
-            <PowerUpCard title="2 for 1 appetizers" date="2024/01/03" onPress={() => console.log('pressed')} />
-            <PowerUpCard title="Holiday cheers" date="2024/02/28" onPress={() => console.log('h')} />
+            <PowerUpCard title="Priority seating on Fridays" date="2024/01/03" onPress={() => router.navigate({
+              pathname: '/PowerUp',
+              params: {
+                benefits
+              }
+            })} />
+             <PowerUpCard title="Priority seating on Fridays" date="2024/01/03" onPress={() => router.navigate({
+              pathname: '/PowerUp',
+              params: {
+                benefits
+              }
+            })} />
+             <PowerUpCard title="Priority seating on Fridays" date="2024/01/03" onPress={() => router.navigate({
+              pathname: '/PowerUp',
+              params: {
+                benefits
+              }
+            })} />
           </View>
         </View>
-        <DetailsSheet isVisible={bottomSheetVisible} onClose={toggleBottomSheet} benefits={benefits} locations={location} memberships={"2year"} about={about} instruction={instruction} />
       </ScrollView>
     </View>
   );
@@ -118,7 +135,6 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: "100%",
     height: 200,
-    marginBottom: 80,
   },
   closeButton: {
     marginTop: 12
@@ -132,7 +148,6 @@ const styles = StyleSheet.create({
   },
   container: {
     marginTop: 16,
-    marginBottom: 80,
     paddingHorizontal: 16,
     flex: 1,
   },

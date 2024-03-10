@@ -15,6 +15,7 @@ import { useMutation } from "react-query";
 import { generateTap, redeemTap } from "../lib/service/mutationHelper";
 import Popup from "../components/(feedback)/Popup";
 import QrPopup from "../components/(feedback)/QrPopup";
+import PowerUp from "../components/(feedback)/PowerUp";
 
 const { width, height } = Dimensions.get("window");
 
@@ -75,7 +76,7 @@ const QrModal = () => {
     },
     onSuccess: (data, variables) => {
       console.log("🚀 ~ QrModal ~ data:", data);
-      toggleModal(); // Close the modal screen when mutation is successful
+      toggleModal(); 
       router.back();
     },
   });
@@ -277,7 +278,7 @@ const QrModal = () => {
       </View>
     </SafeAreaView>
     )}
-    <QrPopup isVisible={isPopupVisible} onClose={togglePopup} />
+    <PowerUp title="Congrats!" subText="You recieved power-up." isVisible={isPopupVisible} onClose={togglePopup} />
     </>
   );
 };

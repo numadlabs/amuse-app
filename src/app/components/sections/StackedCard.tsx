@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground, ScrollView } from "react-native";
 import { EmojiHappy } from "iconsax-react-native";
 import Color from "../../constants/Color";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "expo-router";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { getUserCard } from "@/app/lib/service/queryHelper";
 import useLocationStore from "@/app/lib/store/userLocation";
 import Button from "../ui/Button";
@@ -15,14 +15,7 @@ import { RestaurantType } from "@/app/lib/types";
 const StackedCard = () => {
   const { currentLocation } = useLocationStore();
   const router = useRouter();
-
-  // const { data: cards = [] } = useQuery(
-  //   ["userCards", authState.userId],
-  //   async () => {
-  //     const response = await getUserCard(authState.userId);
-  //     return response.data.cards;
-  //   }
-  // );
+  const queryClient = useQueryClient()
 
   const { data: cards = [], isLoading } = useQuery({
     queryKey: ["userCards"],
@@ -36,6 +29,12 @@ const StackedCard = () => {
   });
   console.log("🚀 ~ StackedCard ~ cards:", cards);
 
+  useEffect(() => {
+    queryClient.invalidateQueries("userCards");
+  }, []); 
+
+
+
   const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
       pathname: `/Acards/${restaurant.id}`,
@@ -48,6 +47,9 @@ const StackedCard = () => {
         nftImageUrl: restaurant.nftImageUrl,
         taps: restaurant.visitCount,
         artistInfo: restaurant.artistInfo,
+        benefits: restaurant.benefits,
+        membership: restaurant.expiryInfo,
+        instruction: restaurant.instruction
       },
     });
   };
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray50,
     borderTopRightRadius: 32,
     borderTopLeftRadius: 32,
-    height: 560
+    height:500
   },
   container1: {
     marginTop: 80,
