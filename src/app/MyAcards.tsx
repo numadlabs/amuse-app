@@ -39,6 +39,8 @@ const MyAcards = () => {
         nftImageUrl: restaurant.nftImageUrl,
         taps: restaurant.visitCount,
         artistInfo: restaurant.artistInfo,
+        benefits: restaurant.benefits,
+        membership: restaurant.expiryInfo
       },
     });
   };

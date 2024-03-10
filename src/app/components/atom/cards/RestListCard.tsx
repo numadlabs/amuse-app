@@ -1,16 +1,17 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { RestaurantType } from '@/app/lib/types'
 import { useLocalSearchParams } from 'expo-router'
 import Color from '@/app/constants/Color'
 import { Reserve } from 'iconsax-react-native'
-// Restaurant desc endpoint deeree nemeh
 
-interface OwnedAcardsProp {
+
+interface ResListCardProp {
   marker: RestaurantType,
-  onPress: () => void
+  onPress: () => void,
+  isClaimLoading: boolean;
 }
-const OwnedAcards: React.FC<OwnedAcardsProp> = ({ marker, onPress }) => {
+const ResListCard: React.FC<ResListCardProp> = ({ marker, onPress, isClaimLoading }) => {
   const opensAt = new Date(marker.opensAt);
   const closesAt = new Date(marker.closesAt);
   const currentTime = new Date();
@@ -20,7 +21,7 @@ const OwnedAcards: React.FC<OwnedAcardsProp> = ({ marker, onPress }) => {
     currentTime.getTime() <= closesAt.getTime();
   return (
     <View>
-      <TouchableOpacity onPress={onPress}>
+   
         <View style={styles.container}>
           <Image source={{ uri: marker.nftImageUrl as string }} style={styles.image} />
           <View style={{ gap: 28 }}>
@@ -44,19 +45,33 @@ const OwnedAcards: React.FC<OwnedAcardsProp> = ({ marker, onPress }) => {
               </View>
 
               <View style={{ width: 1, height: 14, backgroundColor: Color.Gray.gray50 }} />
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                <Reserve color={Color.Gray.gray600} size={16} />
-                <Text>{marker.visitCount} visits</Text>
-              </View>
+              {marker.isOwned ? (
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                  <Reserve color={Color.Gray.gray600} size={16} />
+                  <Text>{marker.visitCount} visits</Text>
+                </View>
+              ) : (
+                <TouchableOpacity onPress={onPress}>
+                  <View style={{ position: 'relative', backgroundColor: Color.Gray.gray600, paddingVertical: 8, paddingHorizontal: 16, borderRadius: 48, marginLeft: 49 }}>
+                    <Text style={{ color: Color.Gray.gray50, fontWeight: 'bold', fontSize: 11 }}>
+                      {isClaimLoading
+                        ? "Loading"
+                        : marker.isOwned
+                          ? "Owned"
+                          : " Add a-card"}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </View>
-      </TouchableOpacity>
+
     </View>
   )
 }
 
-export default OwnedAcards
+export default ResListCard
 
 const styles = StyleSheet.create({
   container: {

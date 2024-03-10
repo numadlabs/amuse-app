@@ -556,6 +556,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingVertical: 10,
+    marginBottom:36
   },
   endPadding: {
     paddingRight: width - CARD_WIDTH,

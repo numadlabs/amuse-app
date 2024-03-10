@@ -1,20 +1,29 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Color from "../constants/Color";
 import Balance from "../components/sections/Balance";
 import QuickInfo from "../components/sections/QuickInfo";
 import StackedCard from "../components/sections/StackedCard";
 import { useAuth } from "../context/AuthContext";
-import { useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 
 const Page = () => {
   const router = useRouter()
+  const [refreshPage, setRefreshPage] = useState<boolean>(false);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      setRefreshPage(prevState => !prevState); 
+    });
+    return unsubscribe;
+  }, [router]);
   return (
     <ScrollView style={styles.container}>
       <Balance />
       <QuickInfo />
-      <StackedCard />
+      <StackedCard key={refreshPage.toString()} />
       <View style={{ width: '100%', alignItems: 'center', marginBottom: 50 }}>
         <TouchableOpacity onPress={() => router.push('/MyAcards')}>
           <View style={{ backgroundColor: Color.Gray.gray50, marginTop: 16, paddingVertical: 12, paddingHorizontal:16, borderRadius: 32 }}>

@@ -34,16 +34,12 @@ export default function Layout() {
             options={{ presentation: "modal" }}
           />
           <Stack.Screen
-            name="restaurants/Mock"
-            options={{ presentation: "modal" }}
-          />
-          <Stack.Screen
             name="(modals)/QrModal"
             options={{ presentation: "modal" }}
           />
           <Stack.Screen name="SuccessScreen" />
-          <Stack.Screen name="BottomSheet" options={{presentation:'formSheet'}}/>
           <Stack.Screen name="MyAcards" />
+          <Stack.Screen name="PowerUp" options={{presentation: 'modal'}}/>
         </Stack>
       </AuthProvider>
     </QueryClientProvider>

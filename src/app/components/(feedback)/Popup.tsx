@@ -8,9 +8,10 @@ import Animated, { withSpring, useSharedValue, ReduceMotion } from 'react-native
 interface PopupProps {
   isVisible: boolean;
   onClose: () => void;
+  title: string
 }
 
-const Popup: React.FC<PopupProps> = ({ isVisible, onClose }) => {
+const Popup: React.FC<PopupProps> = ({ isVisible, onClose, title }) => {
   const translateY = useSharedValue(0);
 
   useEffect(() => {
@@ -38,7 +39,7 @@ const Popup: React.FC<PopupProps> = ({ isVisible, onClose }) => {
             <TickCircle size={72} color={Color.System.systemSuccess} />
             <View style={styles.textContainer}>
               <Text style={styles.title}>Success</Text>
-              <Text style={styles.message}>Successfully added A-card.</Text>
+              <Text style={styles.message}>{title}</Text>
             </View>
             <View style={styles.buttonContainer}>
             <Button

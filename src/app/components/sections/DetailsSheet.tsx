@@ -12,12 +12,13 @@ interface BottomSheetProps {
   onClose: () => void;
   benefits: string | string[],
   locations: string | string[],
-  memberships: string,
+  memberships: string | string[],
   about: string | string[],
-  instruction: string | string[]
+  instruction: string | string[],
+  artistInfo: string | string[]
 }
 
-const DetailsSheet: React.FC<BottomSheetProps> = ({ isVisible, onClose, benefits, locations, memberships, about, instruction }) => {
+const DetailsSheet: React.FC<BottomSheetProps> = ({ isVisible, onClose, benefits, locations, memberships, about, instruction, artistInfo }) => {
   const translateY = useSharedValue(0);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ isVisible, onClose, benefits
           <Animated.View style={[styles.bottomSheet, { transform: [{ translateY }] }]}>
             <View style={styles.content}>
               <Text style={{ fontWeight: "bold", fontSize: 16 }}>Benefits</Text>
-              <View>
+              <View style={{marginVertical:16}}>
                 <View style={styles.attribute}>
                   <Tick />
                   <Text style={styles.attributeText}>
@@ -58,7 +59,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ isVisible, onClose, benefits
               </View>
               <View style={{ gap: 16 }}>
                 <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                  Locations
+                  Locatons
                 </Text>
                 <View>
                   <View style={styles.attribute}>
@@ -69,7 +70,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ isVisible, onClose, benefits
                           { textDecorationLine: "underline" })
                       }
                     >
-                      "{"location"}"
+                      "{locations}"
                     </Text>
                   </View>
                 </View>
@@ -84,7 +85,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ isVisible, onClose, benefits
                     <Text>Expiry</Text>
                   </View>
                   <View>
-                    <Text>{"expiryInfo"} / free to renew</Text>
+                    <Text>{memberships} / free to renew</Text>
                   </View>
                 </View>
                 <View style={styles.membershipContainer}>
@@ -96,11 +97,9 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ isVisible, onClose, benefits
                   </View>
 
                   <View>
-                    <Text>{"artistInfo"}</Text>
+                    <Text>{artistInfo}</Text>
                   </View>
                 </View>
-                <Text style={{ fontWeight: "bold", fontSize: 16 }}>About</Text>
-                <Text>{about}</Text>
                 <Text style={{ fontWeight: "bold", fontSize: 16 }}>
                   How it works
                 </Text>

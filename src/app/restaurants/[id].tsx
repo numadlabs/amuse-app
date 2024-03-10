@@ -146,21 +146,20 @@ const Restaurant = () => {
         </View>
       </ScrollView>
       <View style={styles.buttonContainer}>
-        <Button
-          variant="primary"
-          textStyle="primary"
-          size="default"
-          onPress={() => {
+        <TouchableOpacity  onPress={() => {
             if (router.canGoBack()) {
               openPopup();
             } else {
 
             }
-          }}
-        >
+          }}>
+          <View style={styles.button1}>
           <WalletAdd color={Color.Gray.gray50} />
-          {isOwned ? "Owned" : "Add a-card"}
-        </Button>
+            <Text style={{color:  Color.Gray.gray50, fontSize: 15, fontWeight:'bold'}}>
+            {isOwned === "false" ? "Add A-card" : "Owned"}
+            </Text>
+          </View>
+        </TouchableOpacity>
         <Popup isVisible={isPopupVisible} onClose={closePopup} />
       </View>
     </View>
@@ -172,11 +171,25 @@ export default Restaurant;
 const styles = StyleSheet.create({
   button: {
     alignItems: "center",
+    alignContent:'center',
     justifyContent: "center",
     width: 48,
     padding: 12,
+    gap:12,
     borderRadius: 100,
     backgroundColor: Color.Gray.gray50,
+    flexDirection: 'row',
+  },
+  button1: {
+    alignItems: "center",
+    alignContent:'center',
+    justifyContent: "center",
+    width: '100%',
+    padding: 12,
+    gap:12,
+    borderRadius: 100,
+    backgroundColor: Color.Gray.gray600,
+    flexDirection: 'row',
   },
   imageContainer: {
     width: "100%",
@@ -191,11 +204,10 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     flexDirection: "row",
     paddingHorizontal: 16,
-
   },
   container: {
     marginTop: 16,
-    marginBottom: 80,
+
     paddingHorizontal: 16,
     flex: 1,
   },
@@ -251,4 +263,5 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 16,
   },
+  
 });
