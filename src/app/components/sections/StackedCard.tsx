@@ -73,7 +73,7 @@ const StackedCard = () => {
           {cards &&
             cards?.data?.cards.slice(0, 4).map((card, index) => (
               <TouchableOpacity
-                activeOpacity={0.7}
+                activeOpacity={0.9}
                 key={card.id}
                 onPress={() => handleNavigation(card)}
               >

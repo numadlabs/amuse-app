@@ -65,3 +65,15 @@ export async function getUserCard({ latitude, longitude }) {
       }
     });
 }
+
+export async function getUserTaps() {
+  return axiosClient
+    .get(`/users/taps`)
+    .then((response) => {
+      if (response.data.success) {
+        return response?.data;
+      } else {
+        throw new Error(response.data.error);
+      }
+    });
+}

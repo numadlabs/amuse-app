@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/layout/Header";
 import Color from "../constants/Color";
 import {
@@ -17,16 +17,47 @@ import {
   Sms,
   User,
 } from "iconsax-react-native";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 import { useAuth } from "../context/AuthContext";
+import { useQuery, useQueryClient } from "react-query";
+import { getUserCard, getUserTaps } from "../lib/service/queryHelper";
+import useLocationStore from "../lib/store/userLocation";
 
 const Profile = () => {
+  const { currentLocation } = useLocationStore();
+  const router = useRouter()
+  const {data: taps = []} = useQuery({
+    queryKey: ["userTaps"],
+    queryFn: () => {
+      return getUserTaps()
+    },
+  })
+
+  const { data: cards = [], isLoading } = useQuery({
+    queryKey: ["userCards"],
+    queryFn: () => {
+      return getUserCard({
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
+      });
+    },
+    enabled: !!currentLocation,
+  });
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    queryClient.invalidateQueries("userCards");
+  }, []); 
+
+
+
+  
   const { authState, onLogout } = useAuth();
   return (
     <>
       <Header title="Profile" />
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor:Color.base.White  }}>
+        <ScrollView style={{ flex: 1, backgroundColor:Color.base.White }}>
           <View style={styles.body}>
             <View style={styles.container}>
               <View style={styles.profileContainer}>
@@ -37,6 +68,9 @@ const Profile = () => {
               </View>
               <View style={styles.profileStatsContainer}>
                 <View style={styles.profileStats}>
+                  <TouchableOpacity onPress={() => router.push('/MyAcards')}>
+
+                
                   <Text style={{ color: Color.Gray.gray400, fontSize: 16 }}>
                     Taps
                   </Text>
@@ -47,13 +81,14 @@ const Profile = () => {
                       fontWeight: "bold",
                     }}
                   >
-                    00
+                    {taps?.data?.taps.length}
                   </Text>
+                  </TouchableOpacity>
                 </View>
                 <View
                   style={{ width: 1, backgroundColor: Color.Gray.gray50 }}
                 />
-                <TouchableOpacity style={styles.profileStats}>
+                <TouchableOpacity style={styles.profileStats} onPress={() => router.push('/MyAcards')}>
                   <Text style={{ color: Color.Gray.gray400, fontSize: 16 }}>
                     A-Cards
                   </Text>
@@ -64,7 +99,7 @@ const Profile = () => {
                       fontWeight: "bold",
                     }}
                   >
-                    00
+                    {cards?.data?.cards.length}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -139,11 +174,19 @@ const Profile = () => {
                 <ArrowRight2 color={Color.Gray.gray600} />
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => onLogout()}>
-                <View>
-                  <Text>sign out</Text>
+              <TouchableOpacity style={styles.configContainer} onPress={onLogout}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    gap: 12,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={{ fontSize: 16, color: Color.System.systemError, fontWeight:'bold' }}>Sign out</Text>
                 </View>
+                <ArrowRight2 color={Color.Gray.gray600} />
               </TouchableOpacity>
+
             </View>
           </View>
         </ScrollView>
@@ -161,6 +204,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   container: {
+    flex:1,
     marginTop: 16,
     paddingHorizontal: 16,
     paddingBottom: 16,
