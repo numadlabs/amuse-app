@@ -2,7 +2,13 @@ import { restaurantKeys } from "@/app/lib/service/keysHelper";
 import { getRestaurants } from "@/app/lib/service/queryHelper";
 import { GetRestaurantsResponseType } from "@/app/lib/types/apiResponseType";
 import React, { useState } from "react";
-import { FlatList, Text, TouchableOpacity, View,ScrollView } from "react-native";
+import {
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from "react-native";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import ResListCard from "../atom/cards/RestListCard";
 import { RestaurantType } from "@/app/lib/types";
@@ -10,13 +16,11 @@ import { useRouter } from "expo-router";
 import { useAuth } from "@/app/context/AuthContext";
 import { getAcard } from "@/app/lib/service/mutationHelper";
 
-
-interface RestaurantListViewProps {
-}
+interface RestaurantListViewProps {}
 
 const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
   const [isClaimLoading, setIsClaimLoading] = useState(false);
-  const { authState } = useAuth()
+  const { authState } = useAuth();
   const {
     data: restaurantsData,
     isLoading,
@@ -33,8 +37,6 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
       }), // Update with actual parameters
   });
 
-
-
   // if (data.data.success) {
   //   queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
   //   setIsClaimLoading(false);
@@ -48,7 +50,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
     return <Text>Error fetching data</Text>;
   }
 
-  const router = useRouter()
+  const router = useRouter();
   const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
       pathname: `/restaurants/${restaurant.id}`,
@@ -75,7 +77,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => { },
+    onSuccess: (data, variables) => {},
   });
 
   const handleGetAcard = async (acardId: string) => {
@@ -86,6 +88,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
         userId: authState.userId,
         cardId: acardId,
       });
+      console.log("🚀 ~ handleGetAcard ~ data:", data);
       if (data.data.success) {
         queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
         setIsClaimLoading(false);
@@ -95,9 +98,10 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
 
   return (
     <ScrollView style={{ flex: 1, height: "100%" }}>
-      {restaurantsData?.data?.restaurants && restaurantsData.data.restaurants.map((item) => (
-        <>
-          <TouchableOpacity
+      {restaurantsData?.data?.restaurants &&
+        restaurantsData.data.restaurants.map((item) => (
+          <>
+            <TouchableOpacity
               key={`card-${item.id}`}
               onPress={() => handleNavigation(item)}
             >
@@ -110,8 +114,8 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
                 isClaimLoading={isClaimLoading}
               />
             </TouchableOpacity>
-        </>
-      ))}
+          </>
+        ))}
     </ScrollView>
   );
 };
