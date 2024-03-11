@@ -81,7 +81,7 @@ const Profile = () => {
                       fontWeight: "bold",
                     }}
                   >
-                    {taps?.data?.taps.length}
+                    {taps?.data?.taps.length === 0 ? "00" : taps?.data?.taps.length}
                   </Text>
                   </TouchableOpacity>
                 </View>
@@ -99,7 +99,7 @@ const Profile = () => {
                       fontWeight: "bold",
                     }}
                   >
-                    {cards?.data?.cards.length}
+                    {cards?.data?.cards.length === 0 ? "00" : cards?.data?.cards.length}
                   </Text>
                 </TouchableOpacity>
               </View>
