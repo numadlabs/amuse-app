@@ -31,10 +31,11 @@ const QrModal = () => {
   const togglePopup = () => {
     setPopupVisible(!isPopupVisible); 
   };
+
+  const closeModal = () => {
+    router.back();
+  }
   
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
 
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -76,8 +77,6 @@ const QrModal = () => {
     },
     onSuccess: (data, variables) => {
       console.log("🚀 ~ QrModal ~ data:", data);
-      toggleModal(); 
-      router.back();
     },
   });
 
@@ -86,11 +85,6 @@ const QrModal = () => {
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
-  useEffect(() => {
-    if (isPopupVisible) {
-      toggleModal(); // Close the modal screen when the popup is visible
-    }
-  }, [isPopupVisible]);
 
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
@@ -276,9 +270,9 @@ const QrModal = () => {
           <Image source={require("@/public/icons/close.png")} />
         </TouchableOpacity>
       </View>
+      <PowerUp title="Congrats!" subText="You recieved power-up." isVisible={isPopupVisible} onClose={closeModal}/>
     </SafeAreaView>
     )}
-    <PowerUp title="Congrats!" subText="You recieved power-up." isVisible={isPopupVisible} onClose={togglePopup} />
     </>
   );
 };

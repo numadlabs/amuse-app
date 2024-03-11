@@ -1,7 +1,7 @@
 import Color from '@/app/constants/Color';
 import { TickCircle } from 'iconsax-react-native';
 import React, { useEffect } from 'react';
-import { View, Text, Modal, StyleSheet } from 'react-native';
+import { View, Text, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import Button from '../ui/Button';
 import Animated, { withSpring, useSharedValue, ReduceMotion } from 'react-native-reanimated';
 import PowerUpCard from '../atom/cards/PowerUpCard';
@@ -10,10 +10,10 @@ interface PopupProps {
   isVisible: boolean;
   onClose: () => void;
   title: string,
-  subText: string
+  subText: string,
 }
 
-const PowerUp: React.FC<PopupProps> = ({ isVisible, onClose, title, subText }) => {
+const PowerUp: React.FC<PopupProps> = ({ isVisible, title, subText, onClose }) => {
   const translateY = useSharedValue(0);
 
   useEffect(() => {
@@ -33,26 +33,25 @@ const PowerUp: React.FC<PopupProps> = ({ isVisible, onClose, title, subText }) =
       animationType="none"
       transparent={true}
       visible={isVisible}
-      onRequestClose={onClose}
     >
       <View style={styles.container}>
         <Animated.View style={[styles.popup, { transform: [{ translateY }] }]}>
           <View style={styles.content}>
-            <PowerUpCard title='Priority seating on Fridays' onPress={() => console.log('pressed')} date='2024/03/10'/>
+            <PowerUpCard title='Priority seating on Fridays' onPress={() => console.log('pressed')} date='2024/03/10' />
 
             <View style={styles.textContainer}>
               <Text style={styles.title}>{title}</Text>
               <Text style={styles.message}>{subText}</Text>
             </View>
             <View style={styles.buttonContainer}>
-            <Button
-              variant='primary'
-              textStyle='primary'
-              size='default'
-              onPress={onClose}
-            >
-              Done
-            </Button>
+                <Button
+                  variant='primary'
+                  textStyle='primary'
+                  size='default'
+                  onPress={onClose}
+                >
+                  Done
+                </Button>
             </View>
           </View>
         </Animated.View>
@@ -67,7 +66,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    padding:16
+    padding: 16
   },
   popup: {
     backgroundColor: 'white',
@@ -78,11 +77,11 @@ const styles = StyleSheet.create({
   },
   content: {
     alignItems: 'center',
-    gap:16
+    gap: 16
   },
   textContainer: {
     alignItems: 'center',
-    gap:8
+    gap: 8
   },
   title: {
     fontSize: 24,
@@ -94,9 +93,9 @@ const styles = StyleSheet.create({
     color: Color.Gray.gray400,
     fontWeight: 'normal',
   },
-  buttonContainer:{
-   marginTop:16,
-    width:'100%'
+  buttonContainer: {
+    marginTop: 16,
+    width: '100%'
   }
 });
 
