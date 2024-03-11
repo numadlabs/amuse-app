@@ -61,6 +61,7 @@ const Restaurant = () => {
           </View>
         ) : (
           <ImageBackground source={{ uri: nftImageUrl as string }} style={styles.textImageContainer}>
+            <View style={styles.overlay} />
             <BlurView intensity={24} style={styles.textImageContainer1}>
               <View style={styles.textContainer}>
                 <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White, }}>{name}</Text>
@@ -145,6 +146,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 16,
 
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(33, 33, 33, 0.32)',
   },
   container: {
     marginTop: 16,

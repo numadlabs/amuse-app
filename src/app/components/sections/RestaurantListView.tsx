@@ -16,7 +16,7 @@ import { useRouter } from "expo-router";
 import { useAuth } from "@/app/context/AuthContext";
 import { getAcard } from "@/app/lib/service/mutationHelper";
 
-interface RestaurantListViewProps {}
+interface RestaurantListViewProps { }
 
 const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
   const [isClaimLoading, setIsClaimLoading] = useState(false);
@@ -77,7 +77,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => {},
+    onSuccess: (data, variables) => { },
   });
 
   const handleGetAcard = async (acardId: string) => {
@@ -106,6 +106,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
               onPress={() => handleNavigation(item)}
             >
               <ResListCard
+                key={item.id}
                 marker={item}
                 onPress={() => {
                   const aCardId = item.cardId;
