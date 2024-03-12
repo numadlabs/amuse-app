@@ -21,6 +21,7 @@
       "expo-secure-store",
       "expo-font"
     ],
+    "icon": "./src/public/images/logo1024px.png",
     "name": "Amuse Bouche",
     "slug": "amuse-app",
     "version": "0.1.0",
