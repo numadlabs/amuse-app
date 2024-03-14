@@ -5,13 +5,16 @@ import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 
 // Constants.manifest2.
+const isRunningInExpoGo = Constants.appOwnership === "expo";
 
-const uri = Constants?.expoConfig?.hostUri
-  ? `http://${Constants.expoConfig.hostUri
-      .split(`:`)
-      .shift()
-      .concat(`:3001/api`)}`
-  : `yourapi.com`;
+// const uri = isRunningInExpoGo
+//   ? `http://${Constants.expoConfig.hostUri
+//       .split(`:`)
+//       .shift()
+//       .concat(`:3001/api`)}`
+//   : `https://amuse-backend-feb14ba0a8da.herokuapp.com/api`;
+
+const uri = "https://amuse-backend-feb14ba0a8da.herokuapp.com/api";
 
 export const baseUrl = uri;
 
