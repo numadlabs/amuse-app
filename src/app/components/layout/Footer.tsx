@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
-import { Barcode, Home2, ScanBarcode } from 'iconsax-react-native';
+import { Barcode, Home2, Map, ScanBarcode } from 'iconsax-react-native';
 import Color from '../../constants/Color';
 import Acard from '../icons/Acard';
 import { Link, router } from 'expo-router';
@@ -28,8 +28,8 @@ const Footer = ({ navigation }) => {
         </View>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={() => handleTabPress({ name: 'Acards' })}>
-        <Acard variant={isTabActive('Acards') ? 'Bold' : 'Linear'} size={24} color={isTabActive('Acards') ? Color.Gray.gray600 : Color.Gray.gray400} />
-        <Text>Acards</Text>
+        <Map variant={isTabActive('Acards') ? 'Bold' : 'Linear'} size={24} color={isTabActive('Acards') ? Color.Gray.gray600 : Color.Gray.gray400} />
+        <Text style={{fontSize:13}}>Discover</Text>
       </TouchableOpacity>
     </View>
   );
@@ -51,7 +51,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     bottom: 10,
-    padding: 12
+    width:68,
+    columnGap:4,
+    height:68,
   },
 
   qr: {
