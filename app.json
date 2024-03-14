@@ -27,7 +27,7 @@
     "version": "0.1.0",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.numadLabs.amuse",
+      "bundleIdentifier": "com.numadLabs.amuseApp",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDLFwoZfCSJErsQQwNwFiqRDmLVICrnjdg"
@@ -35,7 +35,7 @@
       }
     },
     "android": {
-      "package": "com.numadLabs.amuse",
+      "package": "com.numadLabs.amuseApp",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDLFwoZfCSJErsQQwNwFiqRDmLVICrnjdg"
@@ -54,6 +54,10 @@
         "YourFont-Regular": ["./public/fonts/Sora-Regular.ttf"],
         "YourFont-Bold": ["./public/fonts/Sora-Bold.ttf"]
       }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/648167f4-9c73-40b4-8123-d4b1eeea1c63"
     }
   }
 }
