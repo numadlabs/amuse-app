@@ -12,6 +12,7 @@ import Color from "../constants/Color";
 import {
   ArrowRight2,
   Lock1,
+  LogoutCurve,
   MessageQuestion,
   NoteText,
   Sms,
@@ -26,7 +27,7 @@ import useLocationStore from "../lib/store/userLocation";
 const Profile = () => {
   const { currentLocation } = useLocationStore();
   const router = useRouter()
-  const {data: taps = []} = useQuery({
+  const { data: taps = [] } = useQuery({
     queryKey: ["userTaps"],
     queryFn: () => {
       return getUserTaps()
@@ -47,17 +48,17 @@ const Profile = () => {
 
   useEffect(() => {
     queryClient.invalidateQueries("userCards");
-  }, []); 
+  }, []);
 
 
 
-  
+
   const { authState, onLogout } = useAuth();
   return (
     <>
       <Header title="Profile" />
-      <SafeAreaView style={{ flex: 1, backgroundColor:Color.base.White  }}>
-        <ScrollView style={{ flex: 1, backgroundColor:Color.base.White }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Color.base.White }}>
+        <ScrollView style={{ flex: 1, backgroundColor: Color.base.White }}>
           <View style={styles.body}>
             <View style={styles.container}>
               <View style={styles.profileContainer}>
@@ -69,26 +70,28 @@ const Profile = () => {
               <View style={styles.profileStatsContainer}>
                 <View style={styles.profileStats}>
                   <TouchableOpacity onPress={() => router.push('/MyAcards')}>
-
-                
-                  <Text style={{ color: Color.Gray.gray400, fontSize: 16 }}>
-                    Taps
-                  </Text>
-                  <Text
-                    style={{
-                      color: Color.Gray.gray600,
-                      fontSize: 24,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {taps?.data?.taps.length === 0 ? "00" : taps?.data?.taps.length}
-                  </Text>
+                    <View style={{ justifyContent: 'center',gap:8, alignItems: 'center', paddingHorizontal: 10 }}>
+                      <Text style={{ color: Color.Gray.gray400, fontSize: 16 }}>
+                        Visits
+                      </Text>
+                      <Text
+                        style={{
+                          color: Color.Gray.gray600,
+                          fontSize: 24,
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        {taps?.data?.taps.length === 0 ? '00' : taps?.data?.taps.length}
+                      </Text>
+                    </View>
                   </TouchableOpacity>
+
                 </View>
                 <View
                   style={{ width: 1, backgroundColor: Color.Gray.gray50 }}
                 />
                 <TouchableOpacity style={styles.profileStats} onPress={() => router.push('/MyAcards')}>
+                <View style={{ justifyContent: 'center',gap:8, alignItems: 'center', paddingHorizontal: 10 }}>
                   <Text style={{ color: Color.Gray.gray400, fontSize: 16 }}>
                     A-Cards
                   </Text>
@@ -101,6 +104,7 @@ const Profile = () => {
                   >
                     {cards?.data?.cards.length === 0 ? "00" : cards?.data?.cards.length}
                   </Text>
+                  </View>
                 </TouchableOpacity>
               </View>
             </View>
@@ -160,31 +164,14 @@ const Profile = () => {
                 </View>
                 <ArrowRight2 color={Color.Gray.gray600} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.configContainer}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 12,
-                    alignItems: "center",
-                  }}
-                >
-                  <Lock1 size={24} color={Color.Gray.gray600} />
-                  <Text style={{ fontSize: 16 }}>Privacy Policy</Text>
-                </View>
-                <ArrowRight2 color={Color.Gray.gray600} />
-              </TouchableOpacity>
 
-              <TouchableOpacity style={styles.configContainer} onPress={onLogout}>
+              <TouchableOpacity onPress={onLogout}>
                 <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 12,
-                    alignItems: "center",
-                  }}
+                  style={styles.logout}
                 >
-                  <Text style={{ fontSize: 16, color: Color.System.systemError, fontWeight:'bold' }}>Sign out</Text>
+                  <LogoutCurve color={Color.Gray.gray600}/>
+                  <Text style={{ fontSize: 16, color: Color.Gray.gray600, fontWeight: 'bold' }}>Log out</Text>
                 </View>
-                <ArrowRight2 color={Color.Gray.gray600} />
               </TouchableOpacity>
 
             </View>
@@ -204,7 +191,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   container: {
-    flex:1,
+    flex: 1,
     marginTop: 16,
     paddingHorizontal: 16,
     paddingBottom: 16,
@@ -219,6 +206,15 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
+  },
+  logout:{
+    borderRadius: 48,
+    justifyContent:'center',
+    flexDirection:'row',
+    alignItems:'center',
+    gap:12,
+    backgroundColor:Color.Gray.gray50,
+    paddingVertical:12
   },
   profilePic: {
     alignItems: "center",
@@ -239,13 +235,12 @@ const styles = StyleSheet.create({
   profileStatsContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    gap: 16,
   },
   profileStats: {
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
-    gap: 8,
+  
   },
   profileConfig: {
     gap: 16,
