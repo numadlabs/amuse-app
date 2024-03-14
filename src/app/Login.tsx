@@ -15,6 +15,7 @@ import {
 import Divider from "./components/atom/Divider";
 import Button from "./components/ui/Button";
 import { useAuth } from "./context/AuthContext";
+import { baseUrl } from "./lib/axios";
 
 function Login() {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -112,7 +113,7 @@ function Login() {
               textAlign: "center",
             }}
           >
-            Welcome
+            Welcome {baseUrl}
           </Text>
           <Text
             style={{
