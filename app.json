@@ -1,5 +1,6 @@
 {
   "expo": {
+    "version": "0.1.1",
     "scheme": "acme",
     "splash": {
       "image": "./src/public/images/Image.png",
@@ -24,7 +25,6 @@
     "icon": "./src/public/images/logo1024px.png",
     "name": "Amuse Bouche",
     "slug": "amuse-app",
-    "version": "0.1.0",
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.numadLabs.amuseApp",
