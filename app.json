@@ -1,6 +1,7 @@
 {
   "expo": {
     "version": "0.1.1",
+    "runtimeVersion": "1.0.1",
     "scheme": "acme",
     "splash": {
       "image": "./src/public/images/Image.png",
@@ -55,7 +56,6 @@
         "YourFont-Bold": ["./public/fonts/Sora-Bold.ttf"]
       }
     },
-    "runtimeVersion": "1.0.0",
     "updates": {
       "url": "https://u.expo.dev/648167f4-9c73-40b4-8123-d4b1eeea1c63"
     }
