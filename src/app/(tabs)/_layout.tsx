@@ -7,29 +7,31 @@ import Logo from "../components/icons/Logo";
 import Color from "../constants/Color";
 import { useAuth } from "../context/AuthContext";
 import * as SplashScreen from "expo-splash-screen";
-import * as Location from "expo-location";
 import useLocationStore from "../lib/store/userLocation";
 
-SplashScreen.preventAutoHideAsync();
-
 const Layout = ({ navigation }) => {
-  const { authState, onLogout } = useAuth();
+  const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState(false);
   const { getLocation, currentLocation } = useLocationStore();
 
-  const handleSplashScreen = async () => {
-    await SplashScreen.hideAsync();
-  };
 
   useEffect(() => {
-    if (currentLocation == null) {
-      getLocation();
-    } else if (!authState.loading) {
-      handleSplashScreen();
+    async function prepareApp() {
+      SplashScreen.preventAutoHideAsync();
+      if (currentLocation == null) {
+        getLocation();
+      } else if (!authState.loading) {
+        await SplashScreen.hideAsync()
+        setAppIsReady(true);
+      }
     }
+    prepareApp();
   }, [currentLocation, authState.loading]);
+  if (!appIsReady) {
+    return null; 
+  }
 
-  if (authState.authenticated == false) {
+  if (authState.authenticated === false) {
     return <Redirect href={"/Login"} />;
   }
 
@@ -42,7 +44,6 @@ const Layout = ({ navigation }) => {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() =>
-                // onLogout()
                 router.push("/profileSection/Profile")
               }
             >

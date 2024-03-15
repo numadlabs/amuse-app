@@ -53,20 +53,30 @@ export const AuthProvider = ({ children }: any) => {
 
   useEffect(() => {
     const loadToken = async () => {
-      const token = await SecureStore.getItemAsync(SERVER_SETTING.TOKEN_KEY);
-      if (token) {
-        const userId = await loadUserId();
-        axiosClient.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${token}`;
-        setAuthState({
-          token: token,
-          authenticated: true,
-          loading: false,
-          userId: userId,
-        });
-      } else {
-        // Reset auth state
+      try {
+        const token = await SecureStore.getItemAsync(SERVER_SETTING.TOKEN_KEY);
+        if (token) {
+          const userId = await loadUserId();
+          axiosClient.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${token}`;
+          setAuthState({
+            token: token,
+            authenticated: true,
+            loading: false,
+            userId: userId,
+          });
+        } else {
+          // Reset auth state
+          setAuthState({
+            token: null,
+            authenticated: false,
+            loading: false,
+            userId: null,
+          });
+        }
+      } catch (error) {
+        console.error("Error loading token:", error);
         setAuthState({
           token: null,
           authenticated: false,
@@ -75,7 +85,7 @@ export const AuthProvider = ({ children }: any) => {
         });
       }
     };
-
+  
     loadToken();
   }, []);
 
