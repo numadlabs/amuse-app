@@ -1,4 +1,4 @@
-package com.numadLabs.amuse
+package com.numadLabs.amuseApp
 
 import android.app.Application
 import android.content.res.Configuration

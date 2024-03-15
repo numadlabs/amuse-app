@@ -1,4 +1,4 @@
-package com.numadLabs.amuse
+package com.numadLabs.amuseApp
 
 import android.os.Build
 import android.os.Bundle
