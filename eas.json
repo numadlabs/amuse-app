@@ -21,7 +21,7 @@
       "channel": "preview"
     },
     "production": {
-      "channel": "production"
+      "channel": "main"
     }
   },
   "submit": {
