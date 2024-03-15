@@ -151,7 +151,7 @@ const Profile = () => {
                 </View>
                 <ArrowRight2 color={Color.Gray.gray600} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.configContainer}>
+              <TouchableOpacity style={styles.configContainer} onPress={() => router.navigate('/TermsAndCondo')}>
                 <View
                   style={{
                     flexDirection: "row",

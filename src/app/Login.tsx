@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { ActivityIndicator } from "react-native";
+import { Link, router } from "expo-router";
+import { ActivityIndicator, Image } from "react-native";
 
 import React, { useState } from "react";
 import {
@@ -16,6 +16,7 @@ import Divider from "./components/atom/Divider";
 import Button from "./components/ui/Button";
 import { useAuth } from "./context/AuthContext";
 import { baseUrl } from "./lib/axios";
+import Color from "./constants/Color";
 
 function Login() {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -77,142 +78,150 @@ function Login() {
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          paddingHorizontal: 20,
-          backgroundColor: "white",
-        }}
-      >
+      <View style={{ backgroundColor: Color.base.White, flex: 1 }}>
         <View
           style={{
-            padding: 20,
-            borderRadius: 20,
-            width: "100%",
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingHorizontal: 20,
+            paddingVertical:24,
             backgroundColor: "white",
-            ...Platform.select({
-              ios: {
-                shadowColor: "black",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.2,
-                shadowRadius: 4,
-              },
-              android: {
-                elevation: 8,
-              },
-            }),
           }}
         >
-          <Text
+          <View
             style={{
-              fontSize: 24,
-              color: "gray",
-              fontWeight: "bold",
-              textAlign: "center",
+              padding: 20,
+              borderRadius: 20,
+              width: "100%",
+              backgroundColor: "white",
+              ...Platform.select({
+                ios: {
+                  shadowColor: Color.Gray.gray500,
+                  shadowOffset: { width: 0, height: 4 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 4,
+                  elevation:12
+                },
+                android: {
+                  elevation: 12,
+                },
+              }),
             }}
           >
-            Welcome {baseUrl}
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              color: "gray",
-              textAlign: "center",
-              marginTop: 10,
-            }}
-          >
-            Enter your phone number and password
-          </Text>
-          <View style={{ marginTop: 20 }}>
-            <TextInput
-              inputMode="tel"
-              placeholder={phonePlaceholder}
-              placeholderTextColor="gray"
-              onFocus={onFocusPhone}
-              onBlur={onBlurPhone}
+            <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 24 }}>
+              <Image source={require('@/public/images/LogoWhite.png')} style={{ width: 96, height: 96 }} />
+            </View>
+
+            <Text
               style={{
-                height: 40,
-                borderColor: "gray",
-                borderWidth: 1,
-                borderRadius: 16,
-                paddingHorizontal: 10,
+                fontSize: 24,
+                color: "gray",
+                fontWeight: "bold",
+                textAlign: "center",
               }}
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
-            />
-            <View
+            >
+              Welcome
+            </Text>
+            <Text
               style={{
-                flexDirection: "row",
-                alignItems: "center",
-                height: 40,
-                borderColor: "gray",
-                borderWidth: 1,
-                borderRadius: 16,
-                paddingHorizontal: 10,
+                fontSize: 14,
+                color: "gray",
+                textAlign: "center",
                 marginTop: 10,
               }}
             >
+              Enter your phone number and password
+            </Text>
+            <View style={{ marginTop: 20 }}>
               <TextInput
-                secureTextEntry={!showPassword}
-                placeholder={passwordPlaceholder}
+                inputMode="tel"
+                placeholder={phonePlaceholder}
                 placeholderTextColor="gray"
-                onFocus={onFocusPassword}
-                onBlur={onBlurPassword}
-                style={{ flex: 1 }}
-                value={password}
-                onChangeText={setPassword}
+                onFocus={onFocusPhone}
+                onBlur={onBlurPhone}
+                style={{
+                  height: 40,
+                  borderColor: Color.Gray.gray50,
+                  borderWidth: 1,
+                  borderRadius: 16,
+                  paddingHorizontal: 10,
+                }}
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
               />
-              <TouchableOpacity onPress={toggleShowPassword}>
-                <Ionicons
-                  name={showPassword ? "eye-outline" : "eye-off-outline"}
-                  size={24}
-                  color="black"
-                />
-              </TouchableOpacity>
-            </View>
-            {error && (
-              <Text
-                style={{ color: "red", marginTop: 10, textAlign: "center" }}
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  height: 40,
+                  borderColor: Color.Gray.gray50,
+                  borderWidth: 1,
+                  borderRadius: 16,
+                  paddingHorizontal: 10,
+                  marginTop: 10,
+                }}
               >
-                {error}
-              </Text>
-            )}
-          </View>
-          <View style={{ marginTop: 20 }}>
-            <Button variant="primary" onPress={handleLogin} disabled={loading}>
-              {loading ? (
-                <ActivityIndicator size="small" color="white" />
-              ) : (
+                <TextInput
+                  secureTextEntry={!showPassword}
+                  placeholder={passwordPlaceholder}
+                  placeholderTextColor="gray"
+                  onFocus={onFocusPassword}
+                  onBlur={onBlurPassword}
+                  style={{ flex: 1 }}
+                  value={password}
+                  onChangeText={setPassword}
+                />
+                <TouchableOpacity onPress={toggleShowPassword}>
+                  <Ionicons
+                    name={showPassword ? "eye-outline" : "eye-off-outline"}
+                    size={24}
+                    color="black"
+                  />
+                </TouchableOpacity>
+              </View>
+              {error && (
                 <Text
-                  style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                  style={{ color: "red", marginTop: 10, textAlign: "center" }}
                 >
-                  Log in
+                  {error}
                 </Text>
               )}
-            </Button>
-            <Button
-              variant="text"
-              onPress={() => router.push("/forgotpassword/ForgotPassword")}
-            >
-              <Text
-                style={{ color: "black", fontSize: 14, fontWeight: "bold" }}
+            </View>
+            <View style={{ marginTop: 20 }}>
+              <Button variant="primary" onPress={handleLogin} disabled={loading}>
+                {loading ? (
+                  <ActivityIndicator size="small" color="white" />
+                ) : (
+                  <Text
+                    style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                  >
+                    Log in
+                  </Text>
+                )}
+              </Button>
+              <Button
+                variant="text"
+                onPress={() => router.push("/forgotpassword/ForgotPassword")}
               >
-                Forgot password?
-              </Text>
-            </Button>
-            <Divider />
-            <Button
-              variant="tertiary"
-              onPress={() => router.push("/signUp/PhoneNumber")}
-            >
-              <Text
-                style={{ color: "black", fontSize: 16, fontWeight: "bold" }}
+                <Text
+                  style={{ color: "black", fontSize: 14, fontWeight: "bold" }}
+                >
+                  Forgot password?
+                </Text>
+              </Button>
+              <Divider />
+              <Button
+                variant="tertiary"
+                onPress={() => router.push("/signUp/PhoneNumber")}
               >
-                Sign up
-              </Text>
-            </Button>
+                <Text
+                  style={{ color: "black", fontSize: 16, fontWeight: "bold" }}
+                >
+                  Sign up
+                </Text>
+              </Button>
+            </View>
           </View>
         </View>
       </View>
