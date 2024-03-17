@@ -10,7 +10,7 @@ const QuickInfo = () => {
       <View style={styles.container1}>
         <View style={styles.textContainer}>
           <Text style={styles.topTitle}>Earn more rewards</Text>
-          <Text style={styles.bottomTitle}>Complete your profile,</Text>
+          <Text style={styles.bottomTitle}>Complete your profile,,</Text>
         </View>
         <TouchableOpacity onPress={() => router.push("(boost)/Email")}>
           <View style={styles.button}>
