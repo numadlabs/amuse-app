@@ -21,7 +21,10 @@
       "channel": "preview"
     },
     "production": {
-      "channel": "main"
+      "channel": "main",
+      "env": {
+        "EXPO_PUBLIC_GOOGLE_API_KEY": "AIzaSyDLFwoZfCSJErsQQwNwFiqRDmLVICrnjdg"
+      }
     }
   },
   "submit": {

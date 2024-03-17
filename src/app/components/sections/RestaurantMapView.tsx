@@ -17,7 +17,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
@@ -311,7 +310,6 @@ export default function RestaurantMapView() {
       };
       // mapRef.current.animate
       mapRef.current.animateToRegion(region, 150);
-      console.log("Callout pressed for:", selectedMarker);
 
       // Find the index of the selected marker
       const index = restaurantsData?.data?.restaurants.findIndex(
@@ -556,7 +554,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingVertical: 10,
-    marginBottom:36
+    marginBottom: 36,
   },
   endPadding: {
     paddingRight: width - CARD_WIDTH,
