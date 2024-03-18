@@ -97,8 +97,10 @@ export const AuthProvider = ({ children }: any) => {
   ) => {
     try {
       return await axiosClient.post(`/auth/register`, {
+        preFix,
         telNumber,
         password,
+        nickname
       });
     } catch (e) {
       return { error: true, msg: (e as any).response.data.msg };

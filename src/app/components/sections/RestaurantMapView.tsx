@@ -354,6 +354,7 @@ export default function RestaurantMapView() {
     router.push({
       pathname: `/restaurants/${restaurant.id}`,
       params: {
+        id: restaurant.id,
         name: restaurant.name,
         location: restaurant.location,
         about: restaurant.description,

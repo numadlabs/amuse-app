@@ -7,7 +7,6 @@ import { useRouter } from "expo-router";
 import { useQuery, useQueryClient } from "react-query";
 import { getUserCard } from "@/app/lib/service/queryHelper";
 import useLocationStore from "@/app/lib/store/userLocation";
-import Button from "../ui/Button";
 import { BlurView } from "expo-blur";
 import { RestaurantType } from "@/app/lib/types";
 
