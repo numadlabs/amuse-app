@@ -47,3 +47,15 @@ export type RestaurantType = {
   isOwned: true;
   visitCount: number;
 };
+
+export type UserBoostData = {
+  email: string;
+  area: string;
+  birthdate: string;
+};
+
+export type UserBoostRequestData = {
+  email: string;
+  location: string;
+  dateOfBirth: string;
+};

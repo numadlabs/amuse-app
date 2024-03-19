@@ -1,5 +1,13 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ImageBackground,
+  ScrollView,
+} from "react-native";
 import { EmojiHappy } from "iconsax-react-native";
 import Color from "../../constants/Color";
 import { useAuth } from "@/app/context/AuthContext";
@@ -10,11 +18,10 @@ import useLocationStore from "@/app/lib/store/userLocation";
 import { BlurView } from "expo-blur";
 import { RestaurantType } from "@/app/lib/types";
 
-
 const StackedCard = () => {
   const { currentLocation } = useLocationStore();
   const router = useRouter();
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const { data: cards = [], isLoading } = useQuery({
     queryKey: ["userCards"],
@@ -26,13 +33,10 @@ const StackedCard = () => {
     },
     enabled: !!currentLocation,
   });
-  console.log("🚀 ~ StackedCard ~ cards:", cards);
 
   useEffect(() => {
     queryClient.invalidateQueries("userCards");
-  }, []); 
-
-
+  }, []);
 
   const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
@@ -48,7 +52,7 @@ const StackedCard = () => {
         artistInfo: restaurant.artistInfo,
         benefits: restaurant.benefits,
         membership: restaurant.expiryInfo,
-        instruction: restaurant.instruction
+        instruction: restaurant.instruction,
       },
     });
   };
@@ -76,17 +80,22 @@ const StackedCard = () => {
                 key={card.id}
                 onPress={() => handleNavigation(card)}
               >
-
-                <ImageBackground resizeMode='cover' source={{ uri: card.nftImageUrl }}
+                <ImageBackground
+                  resizeMode="cover"
+                  source={{ uri: card.nftImageUrl }}
                   style={[
                     styles.aCardContainer,
                     { marginTop: index !== 0 ? -20 : 0 },
-                  ]}>
+                  ]}
+                >
                   <View style={styles.overlay} />
                   <BlurView intensity={24} style={styles.blurContainer}>
                     <Text style={styles.titleText}>{card.name}</Text>
-                    <View style={{ alignItems: 'center' }}>
-                      <Image style={styles.image} source={{ uri: card.nftImageUrl }} />
+                    <View style={{ alignItems: "center" }}>
+                      <Image
+                        style={styles.image}
+                        source={{ uri: card.nftImageUrl }}
+                      />
                     </View>
                   </BlurView>
                 </ImageBackground>
@@ -94,7 +103,6 @@ const StackedCard = () => {
             ))}
         </View>
       )}
-
     </ScrollView>
   );
 };
@@ -107,7 +115,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray50,
     borderTopRightRadius: 32,
     borderTopLeftRadius: 32,
-    height:500
+    height: 500,
   },
   container1: {
     marginTop: 80,
@@ -123,7 +131,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: "-80%",
     borderColor: Color.Gray.gray400,
-    overflow: 'hidden'
+    overflow: "hidden",
   },
   aCardContainer1: {
     backgroundColor: Color.Gray.gray50,
@@ -137,9 +145,9 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray400,
   },
   blurContainer: {
-    width: '100%',
+    width: "100%",
     flex: 1,
-    padding: 20
+    padding: 20,
   },
   titleText: {
     color: Color.base.White,
@@ -150,7 +158,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(33, 33, 33, 0.32)',
+    backgroundColor: "rgba(33, 33, 33, 0.32)",
   },
   button: {
     paddingHorizontal: 20,
