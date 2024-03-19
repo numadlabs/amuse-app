@@ -17,11 +17,52 @@ import Tick from "../components/icons/Tick";
 import Button from "../components/ui/Button";
 import Color from "../constants/Color";
 import Close from "../components/icons/Close";
+import { useAuth } from "../context/AuthContext";
+import { useMutation, useQueryClient } from "react-query";
+import { getAcard } from "../lib/service/mutationHelper";
+import { restaurantKeys } from "../lib/service/keysHelper";
 
 const Restaurant = () => {
-  const { name, location, category, about, isOwned, benefits, artistInfo, expiryInfo, instruction, nftImageUrl } = useLocalSearchParams();
+  const { id, name, location, category, about, isOwned, benefits, artistInfo, expiryInfo, instruction, nftImageUrl } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
+  console.log(id)
   const [loading, setLoading] = useState(false)
+  const [claimLoading, setIsClaimLoading] = useState(false)
+  const {authState} = useAuth()
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: createGetAcardMutation } = useMutation({
+    mutationFn: getAcard,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (data, variables) => {},
+  });
+  const handleGetAcard = async (acardId: string) => {
+    console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
+    setIsClaimLoading(true);
+    if (authState.userId) {
+      // const data
+      // try {
+      // const response = await getRestaurantCardById(restaurantId);
+
+      // console.log(
+      //   "🚀 ~ handleGetAcard ~ response.data.cards[0].id:",
+      //   response.data.cards[0].id
+      // );
+      const data = await createGetAcardMutation({
+        userId: authState.userId,
+        cardId: acardId,
+      });
+      if (data.data.success) {
+        queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
+        setIsClaimLoading(false);
+        openPopup();
+      }
+    }
+  };
+
+  
 
   const openPopup = () => {
     setPopupVisible(true);
@@ -110,7 +151,7 @@ const Restaurant = () => {
                 <Text>{expiryInfo} / free to renew</Text>
               </View>
             </View>
-            <View //this is divider
+            <View
               style={{
                 flex: 1,
                 height: 1,
@@ -148,11 +189,10 @@ const Restaurant = () => {
       </ScrollView>
       <View style={styles.buttonContainer}>
         <TouchableOpacity  onPress={() => {
-            if (router.canGoBack()) {
-              openPopup();
-            } else {
-
-            }
+           
+              handleGetAcard(id as string)
+            
+         
           }}>
           <View style={styles.button1}>
           <WalletAdd color={Color.Gray.gray50} />
@@ -161,7 +201,7 @@ const Restaurant = () => {
             </Text>
           </View>
         </TouchableOpacity>
-        <Popup isVisible={isPopupVisible} onClose={closePopup} />
+        <Popup title="" isVisible={isPopupVisible} onClose={closePopup} />
       </View>
     </View>
   );

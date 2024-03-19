@@ -28,7 +28,7 @@ export type User = {
 };
 
 export type RestaurantType = {
-  id: string;
+  id: string | string[];
   name: string;
   description: string;
   category: string;

@@ -39,7 +39,10 @@ const PhoneNumber = () => {
                   <Text style={styles.topText}>Phone Number</Text>
                   <Text style={styles.bottomText}>This data will not be shared.</Text>
                 </View>
-                <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} keyboardType='phone-pad' placeholder='+971 XXXXXXXX' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, }} />
+                <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} 
+                keyboardType='phone-pad' 
+                placeholder='+971 XXXXXXXX'  
+                style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, }} />
               </View>
             </View>
             <View style={[styles.buttonContainer, buttonPosition === 'bottom' ? styles.bottomPosition : styles.topPosition]}>

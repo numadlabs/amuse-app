@@ -11,11 +11,14 @@ import React, { useEffect, useState } from "react";
 import { CameraView, Camera } from "expo-camera/next";
 import Color from "../constants/Color";
 import { useRouter } from "expo-router";
-import { useMutation } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { generateTap, redeemTap } from "../lib/service/mutationHelper";
 import Popup from "../components/(feedback)/Popup";
 import QrPopup from "../components/(feedback)/QrPopup";
 import PowerUp from "../components/(feedback)/PowerUp";
+import { useAuth } from "../context/AuthContext";
+import { getUserCard } from "../lib/service/queryHelper";
+import useLocationStore from "../lib/store/userLocation";
 
 const { width, height } = Dimensions.get("window");
 
@@ -29,14 +32,27 @@ const QrModal = () => {
   const [isModalVisible, setModalVisible] = useState(true);
 
   const togglePopup = () => {
-    setPopupVisible(!isPopupVisible); 
+    setPopupVisible(!isPopupVisible);
   };
 
   const closeModal = () => {
     router.back();
   }
-  
+  const { currentLocation } = useLocationStore();
 
+  const { data: cards = [] } = useQuery({
+    queryKey: ["userCards"],
+    queryFn: () => {
+      return getUserCard({
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
+      });
+    },
+    enabled: !!currentLocation,
+  });
+
+  const firstCardId = cards?.data?.cards[1].restaurantId
+  console.log(firstCardId)
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
@@ -175,63 +191,63 @@ const QrModal = () => {
 
   return (
     <>
-    {isModalVisible && (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1 }}>
-        <CameraView
-          onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-          barcodeScannerSettings={{
-            barcodeTypes: ["qr", "pdf417"],
-          }}
-          style={StyleSheet.absoluteFillObject}
-          flash={flashMode == true ? "on" : "off"}
-          // flash="on"
-        />
-        <View
-          style={[
-            styles.overlay,
-            {
-              height: (height - markerSize) / 2 - overlayAdjusting,
-              width: width,
-            },
-          ]}
-        />
-        <View
-          style={[
-            styles.overlay,
-            {
-              height: (height - markerSize) / 2,
-              marginTop: (height + markerSize) / 2 - overlayAdjusting * 3,
-              width: width,
-            },
-          ]}
-        />
+      {isModalVisible && (
+        <SafeAreaView style={{ flex: 1 }}>
+          <View style={{ flex: 1 }}>
+            <CameraView
+              onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+              barcodeScannerSettings={{
+                barcodeTypes: ["qr", "pdf417"],
+              }}
+              style={StyleSheet.absoluteFillObject}
+              flash={flashMode == true ? "on" : "off"}
+            // flash="on"
+            />
+            <View
+              style={[
+                styles.overlay,
+                {
+                  height: (height - markerSize) / 2 - overlayAdjusting,
+                  width: width,
+                },
+              ]}
+            />
+            <View
+              style={[
+                styles.overlay,
+                {
+                  height: (height - markerSize) / 2,
+                  marginTop: (height + markerSize) / 2 - overlayAdjusting * 3,
+                  width: width,
+                },
+              ]}
+            />
 
-        <View
-          style={[
-            styles.overlay,
-            {
-              width: (width - markerSize) / 2,
-              height: markerSize - overlayAdjusting * 2,
-              marginTop: (height - markerSize) / 2 - overlayAdjusting,
-            },
-          ]}
-        />
-        <View
-          style={[
-            styles.overlay,
-            {
-              width: (width - markerSize) / 2,
-              height: markerSize - overlayAdjusting * 2,
-              marginLeft: (width + markerSize) / 2,
-              marginTop: (height - markerSize) / 2 - overlayAdjusting,
-            },
-          ]}
-        />
-        <View style={styles.markerContainer}>
-          {marker("white", markerSize, 60, 4, 12)}
+            <View
+              style={[
+                styles.overlay,
+                {
+                  width: (width - markerSize) / 2,
+                  height: markerSize - overlayAdjusting * 2,
+                  marginTop: (height - markerSize) / 2 - overlayAdjusting,
+                },
+              ]}
+            />
+            <View
+              style={[
+                styles.overlay,
+                {
+                  width: (width - markerSize) / 2,
+                  height: markerSize - overlayAdjusting * 2,
+                  marginLeft: (width + markerSize) / 2,
+                  marginTop: (height - markerSize) / 2 - overlayAdjusting,
+                },
+              ]}
+            />
+            <View style={styles.markerContainer}>
+              {marker("white", markerSize, 60, 4, 12)}
 
-          {/* <TouchableOpacity
+              {/* <TouchableOpacity
             style={[styles.button, styles.flashButton]}
             onPress={() => {
               createMapMutation("0ce6d927-8e17-4c0b-902b-f2c5b882e922");
@@ -247,32 +263,32 @@ const QrModal = () => {
           >
             <Text>Test redeem</Text>
           </TouchableOpacity> */}
-        </View>
+            </View>
 
-        <TouchableOpacity
-          style={[styles.button, styles.flashButton]}
-          // onPress={() => {
-          //   setFlashMode(!flashMode);
-          // }}
-          onPress={() => {
-            createMapMutation("0d6145c7-d83c-45b3-90cb-479e21ebde6b");
-          }}
-        >
-          <Text>Scan</Text>
-          {/* <Image source={require("@/public/icons/flash.png")} /> */}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.closeButton]}
-          onPress={() => {
-            router.back();
-          }}
-        >
-          <Image source={require("@/public/icons/close.png")} />
-        </TouchableOpacity>
-      </View>
-      <PowerUp title="Congrats!" subText="You recieved power-up." isVisible={isPopupVisible} onClose={closeModal}/>
-    </SafeAreaView>
-    )}
+            <TouchableOpacity
+              style={[styles.button, styles.flashButton]}
+              // onPress={() => {
+              //   setFlashMode(!flashMode);
+              // }}
+              onPress={() => {
+                createMapMutation(firstCardId as string);
+              }}
+            >
+              <Text>Scan</Text>
+              {/* <Image source={require("@/public/icons/flash.png")} /> */}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, styles.closeButton]}
+              onPress={() => {
+                router.back();
+              }}
+            >
+              <Image source={require("@/public/icons/close.png")} />
+            </TouchableOpacity>
+          </View>
+          <PowerUp title="Congrats!" subText="You recieved power-up." isVisible={isPopupVisible} onClose={closeModal} />
+        </SafeAreaView>
+      )}
     </>
   );
 };
