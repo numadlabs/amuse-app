@@ -1,4 +1,4 @@
-import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import SuLayout from './_layout'
 import Steps from '../components/atom/Steps'
@@ -16,19 +16,20 @@ const NickName = () => {
   const { onRegister } = useAuth()
   const [loading, setLoading] = useState(false)
 
-  
+
   const handleRegister = async () => {
     try {
       setLoading(true);
-      const response = await onRegister( nickname, prefix as string, phoneNumber as string , password as string);
-      if (response.success) {
-        console.log("Login successful:", response.data);
+      const response = await onRegister(nickname, prefix as string, phoneNumber as string, password as string);
+      console.log(phoneNumber, password, nickname, prefix)
+      if (response.data) {
+        console.log("Register successful:", response.data);
         router.push("/(tabs)");
       } else {
         console.log("Register failed:", response.data);
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      console.error("Error during register:", error);
     } finally {
       setLoading(false);
     }
@@ -49,7 +50,7 @@ const NickName = () => {
       keyboardDidHideListener.remove();
     };
   }, []);
-  
+
   return (
     <>
       <Steps activeStep={3} />
@@ -66,7 +67,17 @@ const NickName = () => {
               </View>
             </View>
             <View style={[styles.buttonContainer, buttonPosition === 'bottom' ? styles.bottomPosition : styles.topPosition]}>
-              <Button variant='primary' textStyle='primary' size='default' onPress={handleRegister}>Continue</Button>
+              <Button variant="primary" onPress={handleRegister} disabled={loading}>
+                {loading ? (
+                  <ActivityIndicator size="small" color="white" />
+                ) : (
+                  <Text
+                    style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                  >
+                    Continue
+                  </Text>
+                )}
+              </Button>
             </View>
           </View>
         </TouchableWithoutFeedback>

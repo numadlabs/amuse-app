@@ -21,6 +21,7 @@ import Color from "./constants/Color";
 function Login() {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [prefix, setPrefix] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [phonePlaceholder, setPhonePlaceholder] =
     useState<string>("Phone number");
@@ -34,7 +35,7 @@ function Login() {
   const handleLogin = async () => {
     try {
       setLoading(true);
-      const response = await onLogin("976", phoneNumber, password);
+      const response = await onLogin(prefix, phoneNumber, password);
       if (response.success) {
         console.log("Login successful:", response.data);
         router.push("/(tabs)");
@@ -85,7 +86,7 @@ function Login() {
             justifyContent: "center",
             alignItems: "center",
             paddingHorizontal: 20,
-            paddingVertical:24,
+            paddingVertical: 24,
             backgroundColor: "white",
           }}
         >
@@ -101,7 +102,7 @@ function Login() {
                   shadowOffset: { width: 0, height: 4 },
                   shadowOpacity: 0.1,
                   shadowRadius: 4,
-                  elevation:12
+                  elevation: 12
                 },
                 android: {
                   elevation: 12,
@@ -134,22 +135,39 @@ function Login() {
               Enter your phone number and password
             </Text>
             <View style={{ marginTop: 20 }}>
-              <TextInput
-                inputMode="tel"
-                placeholder={phonePlaceholder}
-                placeholderTextColor="gray"
-                onFocus={onFocusPhone}
-                onBlur={onBlurPhone}
-                style={{
-                  height: 40,
-                  borderColor: Color.Gray.gray50,
-                  borderWidth: 1,
-                  borderRadius: 16,
-                  paddingHorizontal: 10,
-                }}
-                value={phoneNumber}
-                onChangeText={setPhoneNumber}
-              />
+              <View style={{
+                flexDirection: 'row',
+                borderColor: Color.Gray.gray50,
+                borderWidth: 1,
+
+                borderRadius: 16,
+              }}>
+
+                <TextInput
+                  value={prefix}
+                  placeholder='+976'
+                  defaultValue='+'
+                  keyboardType='phone-pad'
+                  onChangeText={setPrefix}
+                  style={{
+                    height: 40,
+
+                    paddingHorizontal: 10,
+                  }} />
+                <TextInput
+                  inputMode="tel"
+                  placeholder={phonePlaceholder}
+                  placeholderTextColor="gray"
+                  onFocus={onFocusPhone}
+                  onBlur={onBlurPhone}
+                  style={{
+                    height: 40,
+                    paddingHorizontal: 10,
+                  }}
+                  value={phoneNumber}
+                  onChangeText={setPhoneNumber}
+                />
+              </View>
               <View
                 style={{
                   flexDirection: "row",

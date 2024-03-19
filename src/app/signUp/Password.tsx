@@ -58,12 +58,9 @@ const Password = () => {
     };
   }, []);
 
-  const handleSelection = (password: string) => {
-    console.log('Selected:', password, phoneNumber, prefix);
-    setPassword(password);
-  };
 
   const handleNavigation = () => {
+    console.log(phoneNumber, prefix, password)
     router.push({
       pathname: '/signUp/NickName',
       params: {

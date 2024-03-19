@@ -36,10 +36,6 @@ const PhoneNumber = () => {
   }, []);
 
 
-  const handleSelection = (prefix: string, phoneNumber: string ) => {
-    setPrefix(prefix);
-    setPhoneNumber(phoneNumber);
-  };
 
   const handleNavigation = () => {
     router.push({
