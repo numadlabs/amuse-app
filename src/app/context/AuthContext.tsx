@@ -85,25 +85,75 @@ export const AuthProvider = ({ children }: any) => {
         });
       }
     };
-  
+
     loadToken();
   }, []);
 
   const register = async (
     nickname: string,
-    preFix: string,
+    prefix: string,
     telNumber: string,
     password: string
   ) => {
     try {
-      return await axiosClient.post(`/auth/register`, {
-        preFix,
+      const result = await axiosClient.post(`/auth/register`, {
+        prefix,
         telNumber,
         password,
         nickname
       });
-    } catch (e) {
-      return { error: true, msg: (e as any).response.data.msg };
+      console.log(result.data.data);
+      if (result && result.data.data && result.data.data.auth) {
+        // Successful Register
+        setAuthState({
+          token: result.data.data.auth,
+          authenticated: true,
+          loading: false,
+          userId: result.data.data.user.id,
+        });
+
+        axiosClient.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${result.data.data.auth.accessToken}`;
+
+        await SecureStore.setItemAsync(
+          SERVER_SETTING.TOKEN_KEY,
+          result.data.data.auth.accessToken
+        );
+        await SecureStore.setItemAsync(
+          SERVER_SETTING.REFRESH_TOKEN_KEY,
+          result.data.data.auth.refreshToken
+        );
+        await saveUserId(result.data.data.user.id);
+        console.log(result.data)
+        return result.data;
+
+      } else {
+        // Register failed
+        return { error: true, msg: "Invalid response from server" };
+      }
+    } catch (error) {
+      // Network error or other exception
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error(
+          "Server responded with error status:",
+          error.response.status
+        );
+        return { error: true, msg: "Server error. Please try again later." };
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("No response received from server.");
+        return { error: true, msg: "No response received from server." };
+      } else {
+        // Other errors
+        console.error("An error occurred:", error.message);
+        return {
+          error: true,
+          msg: "An error occurred. Please try again later.",
+        };
+      }
     }
   };
 

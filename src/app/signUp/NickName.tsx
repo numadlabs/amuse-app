@@ -1,17 +1,39 @@
-import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import SuLayout from './_layout'
 import Steps from '../components/atom/Steps'
 import Color from '../constants/Color'
 import Button from '../components/ui/Button'
-import { router, useNavigation } from 'expo-router'
+import { router, useLocalSearchParams, useNavigation } from 'expo-router'
+import { useSignUpStore } from '../lib/store/signUpStore'
+import { useAuth } from '../context/AuthContext'
 const NickName = () => {
   const [buttonPosition, setButtonPosition] = useState('bottom');
+  const { password, phoneNumber, prefix } = useLocalSearchParams()
+  const { nickname, setNickname } = useSignUpStore()
   const [isFocused, setIsFocused] = useState(false)
 
-  //add number checker
+  const { onRegister } = useAuth()
+  const [loading, setLoading] = useState(false)
 
-  const navigation = useNavigation()
+
+  const handleRegister = async () => {
+    try {
+      setLoading(true);
+      const response = await onRegister(nickname, prefix as string, phoneNumber as string, password as string);
+      console.log(phoneNumber, password, nickname, prefix)
+      if (response.data) {
+        console.log("Register successful:", response.data);
+        router.push("/(tabs)");
+      } else {
+        console.log("Register failed:", response.data);
+      }
+    } catch (error) {
+      console.error("Error during register:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -28,6 +50,7 @@ const NickName = () => {
       keyboardDidHideListener.remove();
     };
   }, []);
+
   return (
     <>
       <Steps activeStep={3} />
@@ -40,11 +63,21 @@ const NickName = () => {
                   <Text style={styles.topText}>Nickname</Text>
                   <Text style={styles.bottomText}>This data will not be shared.</Text>
                 </View>
-                <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} placeholder='Nickname' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, fontSize: 16 } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, fontSize: 16 }} />
+                <TextInput value={nickname} onChangeText={setNickname} onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} placeholder='Nickname' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, fontSize: 16 } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, fontSize: 16 }} />
               </View>
             </View>
             <View style={[styles.buttonContainer, buttonPosition === 'bottom' ? styles.bottomPosition : styles.topPosition]}>
-              <Button variant='primary' textStyle='primary' size='default' onPress={() => router.navigate('/Home')}>Continue</Button>
+              <Button variant="primary" onPress={handleRegister} disabled={loading}>
+                {loading ? (
+                  <ActivityIndicator size="small" color="white" />
+                ) : (
+                  <Text
+                    style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                  >
+                    Continue
+                  </Text>
+                )}
+              </Button>
             </View>
           </View>
         </TouchableWithoutFeedback>

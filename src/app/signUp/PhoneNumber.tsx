@@ -6,7 +6,14 @@ import Color from '../constants/Color'
 import Button from '../components/ui/Button'
 import { useNavigation, useRouter } from 'expo-router'
 import { useAuth } from '../context/AuthContext'
+import { useSignUpStore } from '../lib/store/signUpStore'
+import { Map1 } from 'iconsax-react-native'
+import PrefixList from '../components/atom/cards/PrefixCard'
+
+
 const PhoneNumber = () => {
+  const { prefix, setPrefix, phoneNumber, setPhoneNumber } = useSignUpStore();
+
   const [buttonPosition, setButtonPosition] = useState('bottom');
   const [isFocused, setIsFocused] = useState(false)
   const router = useRouter()
@@ -27,6 +34,18 @@ const PhoneNumber = () => {
       keyboardDidHideListener.remove();
     };
   }, []);
+
+
+
+  const handleNavigation = () => {
+    router.push({
+      pathname: '/signUp/Password',
+      params: {
+        prefix: prefix,
+        phoneNumber: phoneNumber,
+      }
+    });
+  };
   return (
     <>
       <Steps activeStep={1} />
@@ -39,14 +58,27 @@ const PhoneNumber = () => {
                   <Text style={styles.topText}>Phone Number</Text>
                   <Text style={styles.bottomText}>This data will not be shared.</Text>
                 </View>
-                <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} 
-                keyboardType='phone-pad' 
-                placeholder='+971 XXXXXXXX'  
-                style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, }} />
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, alignContent: 'center', borderColor: Color.Gray.gray50, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, width: '100%' }}>
+                  <TextInput
+                    value={prefix}
+                    placeholder='+976'
+                    defaultValue='+'
+                    keyboardType='phone-pad'
+                    onChangeText={setPrefix}
+                    style={[styles.input, { width: '15%' }]} />
+                  <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)}
+                    keyboardType='phone-pad'
+                    placeholder='XXXXXXXX'
+                    value={phoneNumber}
+                    style={styles.input}
+                    onChangeText={setPhoneNumber}
+                  // style={isFocused ? {  } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, width: '100%' }} 
+                  />
+                </View>
               </View>
             </View>
             <View style={[styles.buttonContainer, buttonPosition === 'bottom' ? styles.bottomPosition : styles.topPosition]}>
-              <Button variant='primary' textStyle='primary' size='default' onPress={() => router.push('signUp/Password')}>Send code</Button>
+              <Button variant='primary' textStyle='primary' size='default' onPress={handleNavigation}>Send code</Button>
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -102,5 +134,9 @@ const styles = StyleSheet.create({
     color: Color.Gray.gray400,
     fontSize: 12,
     textAlign: 'center'
+  },
+  input: {
+    fontSize: 16,
+    fontWeight: 'normal'
   }
 })
