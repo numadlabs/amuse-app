@@ -1,6 +1,9 @@
 import LoginSchema from "@/app/validators/LoginSchema";
 import { axiosClient } from "../axios";
 import * as z from "zod";
+import { UserBoostData, UserBoostRequestData } from "../types";
+import { createBoostFormData } from "./formHelper";
+import { AxiosRequestConfig } from "axios";
 
 export function login(data: z.infer<typeof LoginSchema>) {
   return axiosClient.post("/api/login", { ...data }).then((response) => {
@@ -9,6 +12,7 @@ export function login(data: z.infer<typeof LoginSchema>) {
 }
 
 export function generateTap(id: string) {
+  console.log("🚀 ~ generateTap ~ id:", { restaurantId: id });
   return axiosClient
     .post("/taps/generate", { restaurantId: id })
     .then((response) => {
@@ -36,4 +40,27 @@ export function getAcard({
     .then((response) => {
       return response;
     });
+}
+
+export async function updateUserInfo({
+  userId,
+  data,
+}: {
+  userId: string;
+  data: UserBoostRequestData;
+}) {
+  const formData = createBoostFormData(data);
+
+  const config: AxiosRequestConfig = {
+    method: "put",
+    maxBodyLength: Infinity,
+    url: `/users/${userId}`,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    data: formData,
+  };
+
+  const response = await axiosClient.request(config);
+  return response.data;
 }

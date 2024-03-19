@@ -37,7 +37,7 @@ const QrModal = () => {
 
   const closeModal = () => {
     router.back();
-  }
+  };
   const { currentLocation } = useLocationStore();
 
   const { data: cards = [] } = useQuery({
@@ -51,13 +51,10 @@ const QrModal = () => {
     enabled: !!currentLocation,
   });
 
-  const firstCardId = cards?.data?.cards[1].restaurantId
-  console.log(firstCardId)
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
   const [encryptedTap, setEncryptedTap] = useState("");
-  console.log("🚀 ~ QrModal ~ encryptedTap:", encryptedTap);
   const router = useRouter();
   useEffect(() => {
     const getCameraPermissions = async () => {
@@ -81,9 +78,15 @@ const QrModal = () => {
     },
     onSuccess: (data, variables) => {
       console.log("🚀 ~ QrModal ~ data:", data);
-      createRedeemMutation(data.data.data);
-      setEncryptedTap(data.data.data);
-      togglePopup();
+      try {
+        const resp = createRedeemMutation(data.data.data);
+        console.log("Redeem successful:", resp);
+
+        setEncryptedTap(data.data.data);
+        togglePopup();
+      } catch (error) {
+        console.error("Redeem mutation failed:", error);
+      }
     },
   });
   const { mutateAsync: createRedeemMutation } = useMutation({
@@ -96,11 +99,26 @@ const QrModal = () => {
     },
   });
 
+  const handleScanButtonPress = async () => {
+    try {
+      const firstCardId = cards?.data?.cards[0].restaurantId;
+      console.log("🚀 ~ handleScanButtonPress ~ firstCardId:", firstCardId);
+      if (!firstCardId) {
+        return console.log("no card id");
+      }
+      const data = await createMapMutation(firstCardId);
+      // Handle the successful response from createMapMutation
+      console.log("Map mutation successful:", data);
+    } catch (error) {
+      // Handle the error from createMapMutation
+      console.log("Map mutation failed:", error);
+    }
+  };
+
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
-
 
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
@@ -187,8 +205,6 @@ const QrModal = () => {
     marginLeft,
   });
 
-  console.log(overlayStyles(width, (height - markerSize) / 2));
-
   return (
     <>
       {isModalVisible && (
@@ -201,7 +217,7 @@ const QrModal = () => {
               }}
               style={StyleSheet.absoluteFillObject}
               flash={flashMode == true ? "on" : "off"}
-            // flash="on"
+              // flash="on"
             />
             <View
               style={[
@@ -270,9 +286,7 @@ const QrModal = () => {
               // onPress={() => {
               //   setFlashMode(!flashMode);
               // }}
-              onPress={() => {
-                createMapMutation(firstCardId as string);
-              }}
+              onPress={handleScanButtonPress}
             >
               <Text>Scan</Text>
               {/* <Image source={require("@/public/icons/flash.png")} /> */}
@@ -286,7 +300,12 @@ const QrModal = () => {
               <Image source={require("@/public/icons/close.png")} />
             </TouchableOpacity>
           </View>
-          <PowerUp title="Congrats!" subText="You recieved power-up." isVisible={isPopupVisible} onClose={closeModal} />
+          <PowerUp
+            title="Congrats!"
+            subText="You recieved power-up."
+            isVisible={isPopupVisible}
+            onClose={closeModal}
+          />
         </SafeAreaView>
       )}
     </>

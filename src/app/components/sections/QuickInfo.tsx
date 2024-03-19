@@ -14,7 +14,7 @@ const QuickInfo = () => {
         </View>
         <TouchableOpacity onPress={() => router.push("(boost)/Email")}>
           <View style={styles.button}>
-            <Text style={styles.buttonText}>Boost.</Text>
+            <Text style={styles.buttonText}>Boost</Text>
           </View>
         </TouchableOpacity>
       </View>
