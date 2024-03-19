@@ -103,7 +103,7 @@ export const AuthProvider = ({ children }: any) => {
         nickname
       });
     } catch (e) {
-      return { error: true, msg: (e as any).response.data.msg };
+      return { error: true, msg: (e as any).response.data.data };
     }
   };
 

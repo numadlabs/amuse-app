@@ -77,3 +77,16 @@ export async function getUserTaps() {
       }
     });
 }
+
+
+export async function getPrefixAndCountry(){
+  return axiosClient
+  .get('https://restcountries.com/v2/all?fields=name,callingCodes')
+  .then((response) => {
+    if (response.status === 200) {
+      return response.data
+    }else{
+      throw new Error(response.data.error)
+    }
+  })
+}

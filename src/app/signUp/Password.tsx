@@ -2,11 +2,12 @@ import { View, Text, TextInput, KeyboardAvoidingView, Keyboard, Platform, Toucha
 import React, { useEffect, useState } from 'react'
 import FpLayout from './_layout'
 import Color from '../constants/Color';
-import { router, useNavigation } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import Button from '../components/ui/Button';
 import Steps from '../components/atom/Steps';
 import { EyeSlash } from 'iconsax-react-native';
 import Tick from '../components/icons/Tick'
+import { useSignUpStore } from '../lib/store/signUpStore';
 
 const validatePassword = (password: string): boolean => {
   if (password.length < 8) {
@@ -28,9 +29,9 @@ const validatePassword = (password: string): boolean => {
 const Password = () => {
   const [buttonPosition, setButtonPosition] = useState('bottom');
   const [isFocused, setIsFocused] = useState(false)
-  const navigation = useNavigation()
-  const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const { prefix, phoneNumber } = useLocalSearchParams()
+  const { password, setPassword } = useSignUpStore()
 
   const isPasswordValid = validatePassword(password);
   const doPasswordsMatch = password === confirmPassword;
@@ -57,12 +58,27 @@ const Password = () => {
     };
   }, []);
 
+  const handleSelection = (password: string) => {
+    console.log('Selected:', password, phoneNumber, prefix);
+    setPassword(password);
+  };
+
+  const handleNavigation = () => {
+    router.push({
+      pathname: '/signUp/NickName',
+      params: {
+        phoneNumber: phoneNumber,
+        prefix: prefix,
+        password: password
+      }
+    })
+  }
+
   return (
     <>
       <Steps activeStep={2} />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-
           <View style={styles.body}>
             <View style={styles.container}>
               <View style={styles.textContainer}>
@@ -114,7 +130,7 @@ const Password = () => {
               </View>
             </View>
             <View style={[styles.buttonContainer, buttonPosition === 'bottom' ? styles.bottomPosition : styles.topPosition]}>
-              <Button variant='primary' textStyle='primary' size='default' onPress={() => router.push('/signUp/NickName')}>Continue</Button>
+              <Button variant='primary' textStyle='primary' size='default' onPress={handleNavigation}>Continue</Button>
             </View>
           </View>
         </TouchableWithoutFeedback>
