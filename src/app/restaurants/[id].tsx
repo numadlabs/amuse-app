@@ -23,7 +23,7 @@ import { getAcard } from "../lib/service/mutationHelper";
 import { restaurantKeys } from "../lib/service/keysHelper";
 
 const Restaurant = () => {
-  const { id, name, location, category, about, isOwned, benefits, artistInfo, expiryInfo, instruction, nftImageUrl } = useLocalSearchParams();
+  const { id, name, location, category, about, isOwned, benefits, artistInfo, expiryInfo, instruction, logo } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
   console.log(id)
   const [loading, setLoading] = useState(false)
@@ -91,7 +91,7 @@ const Restaurant = () => {
             <ActivityIndicator/>
           </View>
         ) : (
-        <ImageBackground source={{uri: nftImageUrl as string}} style={styles.textImageContainer}>
+        <ImageBackground source={{uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${logo}` as string}} style={styles.textImageContainer}>
              <View style={styles.overlay} />
           <BlurView intensity={24} style={styles.textImageContainer1}>
             <View style={styles.textContainer}>
@@ -100,7 +100,7 @@ const Restaurant = () => {
             </View>
             <Image
               style={styles.image}
-              source={{uri: nftImageUrl as string}}
+              source={{uri:`https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${logo}` as string}}
             />
           </BlurView>
         </ImageBackground>

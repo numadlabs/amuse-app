@@ -23,7 +23,7 @@ import DetailsSheet from "../components/sections/DetailsSheet";
 import BottomSheetDetails from "../components/sections/BottomDetailsSheet";
 
 const Restaurant = () => {
-  const { name, location, category, about, isOwned, benefits, artistInfo, membership, instruction, nftImageUrl, taps } = useLocalSearchParams();
+  const { name, location, category, about, isOwned, benefits, artistInfo, membership, instruction, logo, taps } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
   console.log(instruction)
   const [loading, setLoading] = useState(false)
@@ -60,7 +60,7 @@ const Restaurant = () => {
             <ActivityIndicator />
           </View>
         ) : (
-          <ImageBackground source={{ uri: nftImageUrl as string }} style={styles.textImageContainer}>
+          <ImageBackground source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${logo}` as string }} style={styles.textImageContainer}>
             <View style={styles.overlay} />
             <BlurView intensity={24} style={styles.textImageContainer1}>
               <View style={styles.textContainer}>
@@ -69,7 +69,7 @@ const Restaurant = () => {
               </View>
               <Image
                 style={styles.image}
-                source={{ uri: nftImageUrl as string }}
+                source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${logo}` as string }}
               />
               <View style={styles.bottomDetailsContainer}>
                 <View style={styles.bottomDetails1}>

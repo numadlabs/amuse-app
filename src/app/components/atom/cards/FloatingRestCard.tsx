@@ -53,7 +53,7 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
   return (
     <View style={styles.card}>
       <Image
-        source={{uri: marker.nftImageUrl as string}}
+        source={{uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker.logo}` as string}}
         style={styles.cardImage}
         // resizeMode="cover"
       />

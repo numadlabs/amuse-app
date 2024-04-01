@@ -43,7 +43,7 @@ const StackedCard = () => {
         about: restaurant.description,
         category: restaurant.category,
         isOwned: restaurant.isOwned,
-        nftImageUrl: restaurant.nftImageUrl,
+        logo: restaurant.logo,
         taps: restaurant.visitCount,
         artistInfo: restaurant.artistInfo,
         benefits: restaurant.benefits,
@@ -77,7 +77,7 @@ const StackedCard = () => {
                 onPress={() => handleNavigation(card)}
               >
 
-                <ImageBackground resizeMode='cover' source={{ uri: card.nftImageUrl }}
+                <ImageBackground resizeMode='cover' source={{ uri:`https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${card.logo}` }}
                   style={[
                     styles.aCardContainer,
                     { marginTop: index !== 0 ? -20 : 0 },
@@ -86,7 +86,7 @@ const StackedCard = () => {
                   <BlurView intensity={24} style={styles.blurContainer}>
                     <Text style={styles.titleText}>{card.name}</Text>
                     <View style={{ alignItems: 'center' }}>
-                      <Image style={styles.image} source={{ uri: card.nftImageUrl }} />
+                      <Image style={styles.image} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${card.logo}` }} />
                     </View>
                   </BlurView>
                 </ImageBackground>

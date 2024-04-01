@@ -84,6 +84,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: Color.Gray.gray600,
     fontWeight: "bold",
-    marginLeft: 8, // Add some space between the progress bar and the percentage text
+    marginLeft: 8, 
   },
 });
