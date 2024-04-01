@@ -99,14 +99,14 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
   return (
     <ScrollView style={{ flex: 1, height: "100%" }}>
       {restaurantsData?.data?.restaurants &&
-        restaurantsData.data.restaurants.map((item) => (
+        restaurantsData.data.restaurants.map((item, index) => (
           <>
             <TouchableOpacity
               key={`card-${item.id}`}
               onPress={() => handleNavigation(item)}
             >
               <ResListCard
-                key={item.id}
+                key={index}
                 marker={item}
                 onPress={() => {
                   const aCardId = item.cardId;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import RestaurantListView from "../components/sections/RestaurantListView";
 import RestaurantMapView from "../components/sections/RestaurantMapView";
@@ -26,6 +26,7 @@ const Acards = () => {
 
   };
 
+
   return (
     <>
       <View style={styles.safeAreaView}>
@@ -39,7 +40,7 @@ const Acards = () => {
               <Setting4 color={Color.Gray.gray600} />
             </TouchableOpacity>
           </View>
-          <View style={{ padding: 16}}>
+          <View style={{ padding: 16 }}>
             <Animated.View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={[styles.toggleButton, !showMapView && styles.activeButton]}
@@ -55,7 +56,9 @@ const Acards = () => {
               </TouchableOpacity>
             </Animated.View>
           </View>
+
           {showMapView ? <RestaurantMapView /> : <RestaurantListView />}
+       
         </View>
       </View>
     </>
@@ -66,13 +69,13 @@ const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
     backgroundColor: Color.base.White,
-    paddingTop:50,
+    paddingTop: 50,
   },
   container: {
     flex: 1,
     backgroundColor: Color.base.White,
     borderBottomLeftRadius: 48,
- 
+
   },
   header: {
     flexDirection: "row",
@@ -122,6 +125,6 @@ const styles = StyleSheet.create({
   activeText: {
     color: Color.base.Black,
   },
-});
+  });
 
 export default Acards;

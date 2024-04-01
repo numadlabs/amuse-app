@@ -16,6 +16,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  Text
 } from "react-native";
 import MapView, {
   Marker,
@@ -26,6 +27,8 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import FloatingRestaurantCard from "../atom/cards/FloatingRestCard";
 import useLocationStore from "@/app/lib/store/userLocation";
 import SvgMarker from "../atom/svgMarker";
+import Color from "@/app/constants/Color";
+import { Gps } from "iconsax-react-native";
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
 const CARD_WIDTH = width * 0.8;
@@ -218,6 +221,7 @@ export default function RestaurantMapView() {
   const { currentLocation } = useLocationStore();
   const queryClient = useQueryClient();
   const navigation = useNavigation();
+  const [selectedLocation, setSelectedLocation] = useState("current");
   const mapRef = useRef(null);
   const scrollViewRef = useRef(null);
 
@@ -229,16 +233,62 @@ export default function RestaurantMapView() {
   let mapIndex = 0;
   let mapAnimation = new Animated.Value(0);
 
+  // useEffect(() => {
+  //   if (currentLocation) {
+  //     setInitialRegion({
+  //       latitude: currentLocation.latitude,
+  //       longitude: currentLocation.longitude,
+  //       latitudeDelta: mapLatitudeDelta,
+  //       longitudeDelta: mapLongitudeDelta,
+  //     });
+  //   }
+  // }, [currentLocation]);
   useEffect(() => {
-    if (currentLocation) {
+    if (selectedLocation === "current" && currentLocation) {
       setInitialRegion({
         latitude: currentLocation.latitude,
         longitude: currentLocation.longitude,
         latitudeDelta: mapLatitudeDelta,
         longitudeDelta: mapLongitudeDelta,
       });
+    } else if (selectedLocation === "dubai") {
+      setInitialRegion({
+        latitude: 25.276987,
+        longitude: 55.296249, // Longitude for Dubai
+        latitudeDelta: mapLatitudeDelta,
+        longitudeDelta: mapLongitudeDelta,
+      });
     }
-  }, [currentLocation]);
+  }, [currentLocation, selectedLocation]);
+
+  const toggleLocation = () => {
+    setSelectedLocation(prevLocation =>
+      prevLocation === "current" ? "dubai" : "current"
+    );
+
+    const coordinates = getLocationCoordinates();
+    setInitialRegion({
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude,
+      latitudeDelta: mapLatitudeDelta,
+      longitudeDelta: mapLongitudeDelta,
+    });
+  };
+
+  const getLocationCoordinates = () => {
+    if (selectedLocation === "current") {
+      return {
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
+      };
+    } else {
+      // Return the coordinates of Dubai
+      return {
+        latitude: 25.276987,
+        longitude: 55.296249,
+      };
+    }
+  };
 
   const { data: restaurantsData } = useQuery<GetRestaurantsResponseType>({
     queryKey: restaurantKeys.all,
@@ -263,7 +313,7 @@ export default function RestaurantMapView() {
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => {},
+    onSuccess: (data, variables) => { },
   });
 
   useEffect(() => {
@@ -326,6 +376,7 @@ export default function RestaurantMapView() {
     // You can set the selected marker state here if needed
   };
 
+
   const handleGetAcard = async (acardId: string) => {
     console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
     setIsClaimLoading(true);
@@ -372,6 +423,7 @@ export default function RestaurantMapView() {
 
   return (
     <View style={styles.container}>
+
       {/* <GooglePlacesAutocomplete
         placeholder="Search or move the map"
         fetchDetails={true}
@@ -411,21 +463,40 @@ export default function RestaurantMapView() {
         }}
       /> */}
       {/* <Header title="Map" /> */}
+
       <MapView
         ref={mapRef}
         style={styles.map}
         provider={PROVIDER_GOOGLE}
-        initialRegion={initialRegion}
+        initialRegion={{
+          latitude: 25.276987,
+          longitude: 55.296249,
+          latitudeDelta: 0.1, // Adjust the delta values for desired zoom level
+          longitudeDelta: 0.1,
+        }} // Pass the initialRegion prop here
         customMapStyle={mapStyle}
-        // showsUserLocation={true}
+        onPress={toggleLocation} // Add this onPress handler
       >
+        <View style={styles.locationToggleContainer}>
+          <TouchableOpacity onPress={toggleLocation} style={styles.locationToggle}>
+            <Text style={styles.locationToggleText}>
+              {selectedLocation === "current" ? "Dubai" : "Current Location"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.gpsButton}>
+          <TouchableOpacity >
+            <Gps size={24} color={Color.Gray.gray600} style={{ zIndex: 10 }} />
+          </TouchableOpacity>
+        </View>
+
         {currentLocation && (
           <Marker
             coordinate={{
               latitude: currentLocation.latitude,
               longitude: currentLocation.longitude,
             }}
-            // title="Your Location"
+          // title="Your Location"
           >
             <Image source={require("@/public/images/locationPin.png")} />
           </Marker>
@@ -445,7 +516,7 @@ export default function RestaurantMapView() {
                 //   source={require("@/public/images/restaurantPin.png")}
                 //   style={{ width: 32, height: 32 }}
                 // />
-                <SvgMarker imageUrl={restaurant.nftImageUrl as string} />
+                <SvgMarker key={restaurant.id as string} imageUrl={`https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${restaurant.logo}` as string} />
               ) : (
                 <Image
                   source={require("@/public/images/map_marker.png")}
@@ -496,6 +567,7 @@ export default function RestaurantMapView() {
               onPress={() => handleNavigation(marker)}
             >
               <FloatingRestaurantCard
+                key={marker.id as string}
                 marker={marker}
                 isClaimLoading={isClaimLoading}
                 onPress={() => {
@@ -605,4 +677,41 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
   },
+  gpsButton: {
+    backgroundColor: Color.base.White,
+    padding: 12,
+    borderRadius: 48,
+    zIndex: 10,
+    width: 48,
+    height: 48,
+    alignSelf: 'flex-end',
+    margin: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: Color.Gray.gray500,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 12
+      },
+      android: {
+        elevation: 12,
+      },
+    }),
+  },
+  locationToggleContainer: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+  },
+  locationToggle: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+  },
+  locationToggleText: {
+    color: '#333',
+  },
+
 });

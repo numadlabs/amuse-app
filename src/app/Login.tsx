@@ -17,6 +17,7 @@ import Button from "./components/ui/Button";
 import { useAuth } from "./context/AuthContext";
 import { baseUrl } from "./lib/axios";
 import Color from "./constants/Color";
+import PrefixCard from "./components/atom/cards/PrefixCard";
 
 function Login() {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -143,7 +144,9 @@ function Login() {
                 borderRadius: 16,
               }}>
 
-                <TextInput
+
+
+                {/* <TextInput
                   value={prefix}
                   placeholder='+976'
                   defaultValue='+'
@@ -153,7 +156,7 @@ function Login() {
                     height: 40,
 
                     paddingHorizontal: 10,
-                  }} />
+                  }} /> */}
                 <TextInput
                   inputMode="tel"
                   placeholder={phonePlaceholder}
