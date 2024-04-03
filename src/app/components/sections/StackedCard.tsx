@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground, ScrollView } from "react-native";
 import { EmojiHappy } from "iconsax-react-native";
 import Color from "../../constants/Color";
@@ -15,6 +15,10 @@ const StackedCard = () => {
   const { currentLocation } = useLocationStore();
   const router = useRouter();
   const queryClient = useQueryClient()
+  
+  const [scrollViewHeight, setScrollViewHeight] = useState(0);
+
+
 
   const { data: cards = [], isLoading } = useQuery({
     queryKey: ["userCards"],
@@ -26,6 +30,26 @@ const StackedCard = () => {
     },
     enabled: !!currentLocation,
   });
+
+ useEffect(() => {
+  if (cards && cards.data && cards.data.cards) {
+    const totalCardHeight = cards.data.cards.reduce((totalHeight, card, index) => {
+      const marginBottom = index !== 0 ? -80 : 0; 
+      const cardHeight = 470 + marginBottom; 
+      return totalHeight + cardHeight;
+    }, 0);
+
+  
+    const adjustedTotalHeight = totalCardHeight * (1 - 0.8); 
+
+    setScrollViewHeight(adjustedTotalHeight);
+  }
+}, [cards]);
+
+// Render only the latest four cards
+const latestCards = cards?.data?.cards.slice(0, 4);
+
+
 
   useEffect(() => {
     queryClient.invalidateQueries("userCards");
@@ -53,10 +77,10 @@ const StackedCard = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <>
       {cards?.data?.cards.length === 0 ? (
         <View style={styles.container1}>
-          <View style={{ justifyContent: "center" }}>
+          <View>
             <EmojiHappy size={48} color={Color.Gray.gray400} />
           </View>
           <Text>Collect A-cards to start earning.</Text>
@@ -67,9 +91,9 @@ const StackedCard = () => {
           </TouchableOpacity>
         </View>
       ) : (
-        <View>
+        <ScrollView style={{ height: scrollViewHeight }}>
           {cards &&
-            cards?.data?.cards.slice(0, 4).map((card, index) => (
+            latestCards.map((card, index) => (
               <TouchableOpacity
                 activeOpacity={0.9}
                 key={card.id}
@@ -91,10 +115,10 @@ const StackedCard = () => {
                 </ImageBackground>
               </TouchableOpacity>
             ))}
-        </View>
+        </ScrollView>
       )}
 
-    </ScrollView>
+    </>
   );
 };
 
@@ -105,10 +129,14 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray50,
     borderTopRightRadius: 32,
     borderTopLeftRadius: 32,
-    height:500
+    minHeight:380,
+    maxHeight:600,
   },
   container1: {
-    marginTop: 80,
+    backgroundColor: Color.Gray.gray50,
+    height:380,
+    borderTopRightRadius: 32,
+    borderTopLeftRadius: 32,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
