@@ -21,10 +21,11 @@ import {
 import { router, useRouter } from "expo-router";
 import { useAuth } from "../context/AuthContext";
 import { useQuery, useQueryClient } from "react-query";
-import { getUserCard, getUserTaps } from "../lib/service/queryHelper";
+import { getUserById, getUserCard, getUserTaps } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
 
 const Profile = () => {
+
   const { currentLocation } = useLocationStore();
   const router = useRouter()
   const { data: taps = [] } = useQuery({
@@ -50,10 +51,13 @@ const Profile = () => {
     queryClient.invalidateQueries("userCards");
   }, []);
 
-
-
-
   const { authState, onLogout } = useAuth();
+  const { data: user = [] } = useQuery({
+    queryKey: ["UserInfo"],
+    queryFn: () => {
+      return getUserById(authState.userId)
+    }
+  })
   return (
     <>
       <Header title="Profile" />
@@ -65,14 +69,14 @@ const Profile = () => {
                 <View style={styles.profilePic}>
                   <User size={48} color={Color.Gray.gray400} />
                 </View>
-                <Text style={styles.profileName}>Satorishu</Text>
+                <Text style={styles.profileName}>{user.nickname}</Text>
               </View>
               <View style={styles.profileStatsContainer}>
                 <View style={styles.profileStats}>
                   <TouchableOpacity onPress={() => router.push('/MyAcards')}>
                     <View style={{ justifyContent: 'center',gap:8, alignItems: 'center', paddingHorizontal: 10 }}>
                       <Text style={{ color: Color.Gray.gray400, fontSize: 16 }}>
-                        Visits
+                      Check Ins
                       </Text>
                       <Text
                         style={{
@@ -93,7 +97,7 @@ const Profile = () => {
                 <TouchableOpacity style={styles.profileStats} onPress={() => router.push('/MyAcards')}>
                 <View style={{ justifyContent: 'center',gap:8, alignItems: 'center', paddingHorizontal: 10 }}>
                   <Text style={{ color: Color.Gray.gray400, fontSize: 16 }}>
-                    A-Cards
+                  A-Passes
                   </Text>
                   <Text
                     style={{

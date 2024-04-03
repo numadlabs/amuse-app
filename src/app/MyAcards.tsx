@@ -52,7 +52,7 @@ const MyAcards = () => {
   };
   return (
     <SafeAreaView style={{ backgroundColor: Color.base.White }}>
-      <Header title="My Acards" />
+      <Header title="My A-Passes" />
       <View style={styles.searchBarContainer}>
         <View style={styles.searchBar}>
           <SearchNormal1 color={Color.Gray.gray600} />

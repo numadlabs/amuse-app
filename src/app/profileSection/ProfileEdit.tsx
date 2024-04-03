@@ -1,6 +1,6 @@
 import { Cake, Camera, Location, Sms, User } from "iconsax-react-native";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   SafeAreaView,
@@ -16,6 +16,7 @@ import { useMutation, useQuery } from "react-query";
 import { getUserById } from "../lib/service/queryHelper";
 import { useAuth } from "../context/AuthContext";
 import { updateUserInfo } from "../lib/service/mutationHelper";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "../components/ui/Button";
 
 
@@ -24,8 +25,27 @@ const ProfileEdit = () => {
   const { authState } = useAuth()
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [location, setLocation] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
+
+  const openDatePicker = () => {
+    setShowDatePicker(true);
+  };
+  const onDateChange = (event, selectedDate) => {
+    if (selectedDate) {
+      const currentDate = selectedDate;
+      // setDate(currentDate.toISOString().split("T")[0]);
+      setDateOfBirth(selectedDate.toISOString());
+    }
+    // setShowDatePicker(false);
+  };
+  useEffect(() => {
+    if (dateOfBirth) {
+      setShowDatePicker(true);
+    }
+  }, [dateOfBirth]);
+
 
   const { data: user = [] } = useQuery({
     queryKey: ["UserInfo"],
@@ -127,13 +147,24 @@ const ProfileEdit = () => {
               </View>
               <View style={styles.input}>
                 <Cake color={Color.Gray.gray600} />
-                <TextInput
-                  placeholder={user.dateOfBirth}
-                  placeholderTextColor={Color.Gray.gray200}
-                  value={dateOfBirth}
-                  onChangeText={setDateOfBirth}
-                  style={{ fontSize: 20 }}
-                ></TextInput>
+                 {showDatePicker ? (
+                  <DateTimePicker
+                    value={dateOfBirth ? new Date(dateOfBirth) : new Date()}
+                    mode="date"
+                    display="default"
+                    onChange={onDateChange}
+                    maximumDate={new Date(Date.now())}
+                  />
+                ) : (
+                  <Button
+                    onPress={openDatePicker}
+                    variant="secondary"
+                    textStyle="secondary"
+                    size="default"
+                  >
+                    {user.dateOfBirth ? new Date(user.dateOfBirth).toISOString().split('T')[0] : ''}
+                  </Button>
+                )}
               </View>
             </View>
           </View>

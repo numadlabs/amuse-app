@@ -57,7 +57,7 @@ const Area = () => {
                 <View style={{ gap: 8 }}>
                   <Text style={styles.topText}>Area</Text>
                   <Text style={styles.bottomText}>
-                    This helps nearby restaurants give you special offers.
+                  Restaurants love locals. Get rewarded extra for {"\n"} staying close to home.
                   </Text>
                 </View>
                 <TextInput

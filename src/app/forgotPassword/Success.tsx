@@ -16,7 +16,7 @@ const Success = () => {
             Success
           </Text>
           <Text style={styles.bottomText}>
-            You successfully changed your {"\n"} password.
+          Your password has been changed. 
           </Text>
         </View>
       </View>
@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
-    marginTop: 16,
     elevation: 4,
     borderRadius: 32
   },

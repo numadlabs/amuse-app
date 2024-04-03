@@ -56,7 +56,7 @@ const PhoneNumber = () => {
               <View style={styles.textContainer}>
                 <View style={{ gap: 8 }}>
                   <Text style={styles.topText}>Phone Number</Text>
-                  <Text style={styles.bottomText}>This data will not be shared.</Text>
+                  <Text style={styles.bottomText}>This will be kept private. No surprise DMs.</Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, alignContent: 'center', borderColor: Color.Gray.gray50, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, width: '100%' }}>
                   <TextInput
