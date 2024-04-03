@@ -31,7 +31,7 @@ const Acards = () => {
     <>
       <View style={styles.safeAreaView}>
         <View style={styles.container}>
-          <View style={styles.header}>
+          {/* <View style={styles.header}>
             <View style={styles.searchBar}>
               <SearchNormal1 color={Color.Gray.gray600} />
               <TextInput placeholder="Search..." style={styles.searchInput} />
@@ -39,7 +39,7 @@ const Acards = () => {
             <TouchableOpacity onPress={() => { }}>
               <Setting4 color={Color.Gray.gray600} />
             </TouchableOpacity>
-          </View>
+          </View> */}
           <View style={{ padding: 16 }}>
             <Animated.View style={styles.buttonContainer}>
               <TouchableOpacity
@@ -58,7 +58,7 @@ const Acards = () => {
           </View>
 
           {showMapView ? <RestaurantMapView /> : <RestaurantListView />}
-       
+
         </View>
       </View>
     </>
@@ -125,6 +125,6 @@ const styles = StyleSheet.create({
   activeText: {
     color: Color.base.Black,
   },
-  });
+});
 
 export default Acards;

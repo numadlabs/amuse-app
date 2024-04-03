@@ -26,7 +26,6 @@ const StackedCard = () => {
     },
     enabled: !!currentLocation,
   });
-  console.log("🚀 ~ StackedCard ~ cards:", cards);
 
   useEffect(() => {
     queryClient.invalidateQueries("userCards");
@@ -103,7 +102,6 @@ export default StackedCard;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 32,
     backgroundColor: Color.Gray.gray50,
     borderTopRightRadius: 32,
     borderTopLeftRadius: 32,

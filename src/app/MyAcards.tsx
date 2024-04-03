@@ -42,7 +42,7 @@ const MyAcards = () => {
         about: restaurant.description,
         category: restaurant.category,
         isOwned: restaurant.isOwned,
-        nftImageUrl: restaurant.nftImageUrl,
+        logo: restaurant.logo,
         taps: restaurant.visitCount,
         artistInfo: restaurant.artistInfo,
         benefits: restaurant.benefits,

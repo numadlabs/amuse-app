@@ -79,6 +79,19 @@ export async function getUserTaps() {
 }
 
 
+export async function getUserById(userID: string){
+  return axiosClient
+  .get(`/users/${userID}`)
+  .then((response) => {
+    if (response.data.success) {
+      return response?.data.data.user
+    } else {
+      throw new Error(response.data.error)
+    }
+  })
+}
+
+
 export async function getPrefixAndCountry(){
   return axiosClient
   .get('https://restcountries.com/v2/all?fields=name,callingCodes')

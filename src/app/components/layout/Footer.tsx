@@ -20,16 +20,17 @@ const Footer = ({ navigation }) => {
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={() => handleTabPress({ name: '/' })}>
         <Home2 size={24} color={isTabActive('/') ? Color.Gray.gray600 : Color.Gray.gray400} variant={isTabActive('/') ? 'Bold' : 'Linear'} />
-        <Text>Home</Text>
+        <Text style={{ fontSize: 13 }}>Home</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.navigate('/(modals)/QrModal')}>
+      <TouchableOpacity style={styles.button} onPress={() => router.navigate('/(modals)/QrModal')}>
         <View style={styles.qr}>
           <ScanBarcode size={32} color={Color.base.White} />
         </View>
+        <Text style={{ fontSize: 13,bottom:20 }}>Scan</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={() => handleTabPress({ name: 'Acards' })}>
         <Map variant={isTabActive('Acards') ? 'Bold' : 'Linear'} size={24} color={isTabActive('Acards') ? Color.Gray.gray600 : Color.Gray.gray400} />
-        <Text style={{fontSize:13}}>Discover</Text>
+        <Text style={{ fontSize: 13 }}>Discover</Text>
       </TouchableOpacity>
     </View>
   );
@@ -51,9 +52,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     bottom: 10,
-    width:68,
-    columnGap:4,
-    height:68,
+    width: 68,
+    columnGap: 4,
+    height: 68,
   },
 
   qr: {
@@ -62,11 +63,8 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: Color.Gray.gray600,
     borderRadius: 32,
-    bottom: 40,
+    bottom: 20,
     position: 'relative',
-    left: 5,
-    right: 10,
     alignSelf: 'center',
-    marginHorizontal: 'auto'
   }
 })

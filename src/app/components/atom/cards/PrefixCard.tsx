@@ -4,43 +4,61 @@ import { ArrowDown2 } from 'iconsax-react-native'
 import Color from '@/app/constants/Color'
 import PrefixPopup from '../../(feedback)/PreFixPopup'
 import { useQuery, useQueryClient } from 'react-query'
-import { getPrefixAndCountry } from '@/app/lib/service/queryHelper'
+import Animated, { useSharedValue } from 'react-native-reanimated'
 
-const PrefixCard = () => {
+
+interface PreFixProps {
+  onClose: () => void
+}
+const PrefixCard: React.FC<PreFixProps> = ({ onClose }) => {
   const [isPopupVisible, setPopupVisible] = useState(false);
-  const queryClient = useQueryClient()
+  const height = useSharedValue(200)
 
-  const { data: cards = [], isLoading } = useQuery({
-    queryKey: ["countryPrefix"],
-    queryFn: () => {
-      return getPrefixAndCountry();
-    }
-  });
+  const cards = [
+    {
+      prefix: "+976",
+      name: "Mongolia"
+    },
+    {
+      prefix: "+971",
+      name: "UAE"
+    },
+  ]
 
   const togglePopup = () => {
     setPopupVisible(!isPopupVisible);
     console.log(cards)
   };
 
+  const handlePrefixSelection = (selectedPrefix) => {
+    // Do something with the selected prefix, e.g., pass it to a parent component
+    console.log("Selected prefix:", selectedPrefix);
+    // Close the popup
+    togglePopup();
+  };
+
+
   return (
-    <TouchableOpacity onPress={togglePopup}>
-      <View style={styles.container}>
-        <Text style={styles.text}>+971</Text>
-        <ArrowDown2 color={Color.Gray.gray600} />
-      </View>
-      {isPopupVisible && (
-        <View>
-          {cards.map((card, index) => (
-            <PrefixPopup
-              key={index}
-              isVisible={isPopupVisible}
-              onClose={togglePopup}
-              countries={cards}
-            />
-          ))}
+    <>
+      <TouchableOpacity onPress={togglePopup}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Text style={{ fontWeight: '400', fontSize: 16, lineHeight: 20 }}>
+            {cards[0].prefix}
+          </Text>
+          <ArrowDown2 size={16} color={Color.Gray.gray600} />
         </View>
-      )}
-    </TouchableOpacity>
+      </TouchableOpacity>
+
+      <View style={{ position:'absolute' }}>
+        <PrefixPopup
+          isVisible={isPopupVisible}
+          cards={cards}
+          onClose={() => setPopupVisible(false)}
+          onSelect={handlePrefixSelection}
+        />
+      </View>
+
+    </>
   )
 }
 
@@ -48,6 +66,7 @@ export default PrefixCard
 
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8
