@@ -61,7 +61,7 @@ const NickName = () => {
               <View style={styles.textContainer}>
                 <View style={{ gap: 8 }}>
                   <Text style={styles.topText}>Nickname</Text>
-                  <Text style={styles.bottomText}>This data will not be shared.</Text>
+                  <Text style={styles.bottomText}>This will be shared with others. We want exclusive {"\n"}invites to feel special.</Text>
                 </View>
                 <TextInput value={nickname} onChangeText={setNickname} onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} placeholder='Nickname' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, fontSize: 16 } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, fontSize: 16 }} />
               </View>
@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
   bottomText: {
     color: Color.Gray.gray400,
     fontSize: 12,
+    lineHeight:16,
     textAlign: 'center'
   }
 })

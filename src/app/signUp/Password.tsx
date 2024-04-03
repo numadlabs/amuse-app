@@ -82,9 +82,6 @@ const Password = () => {
                 <Text style={styles.topText}>
                   New password
                 </Text>
-                <Text style={styles.bottomText}>
-                  This data will not be shared.
-                </Text>
               </View>
               <View style={styles.inputContainer}>
                 <TextInput

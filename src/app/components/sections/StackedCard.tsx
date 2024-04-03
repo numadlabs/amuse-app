@@ -83,10 +83,10 @@ const latestCards = cards?.data?.cards.slice(0, 4);
           <View>
             <EmojiHappy size={48} color={Color.Gray.gray400} />
           </View>
-          <Text>Collect A-cards to start earning.</Text>
+          <Text style={{textAlign:'center'}}>Discover restaurants, add an A-Pass, and start earning rewards every time you check in at a participating restaurant!</Text>
           <TouchableOpacity>
             <View style={styles.button}>
-              <Text style={styles.buttonText}>Add A-cards</Text>
+              <Text style={styles.buttonText}>Add A-Pass</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -103,7 +103,7 @@ const latestCards = cards?.data?.cards.slice(0, 4);
                 <ImageBackground resizeMode='cover' source={{ uri:`https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${card.logo}` }}
                   style={[
                     styles.aCardContainer,
-                    { marginTop: index !== 0 ? -20 : 0 },
+                    { marginTop: index !== 0 ? -5 : 0 },
                   ]}>
                   <View style={styles.overlay} />
                   <BlurView intensity={24} style={styles.blurContainer}>
@@ -135,6 +135,7 @@ const styles = StyleSheet.create({
   container1: {
     backgroundColor: Color.Gray.gray50,
     height:380,
+    paddingHorizontal:16,
     borderTopRightRadius: 32,
     borderTopLeftRadius: 32,
     flexDirection: "column",

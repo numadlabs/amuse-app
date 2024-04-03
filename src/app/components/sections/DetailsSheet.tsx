@@ -48,7 +48,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ isVisible, onClose, benefits
         <View style={styles.container}>
           <Animated.View style={[styles.bottomSheet, { transform: [{ translateY }] }]}>
             <View style={styles.content}>
-              <Text style={{ fontWeight: "bold", fontSize: 16 }}>Benefits</Text>
+              <Text style={{ fontWeight: "bold", fontSize: 16 }}>Rewards</Text>
               <View style={{marginVertical:16}}>
                 <View style={styles.attribute}>
                   <Tick />
@@ -74,32 +74,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ isVisible, onClose, benefits
                     </Text>
                   </View>
                 </View>
-                <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                  Memberships
-                </Text>
-                <View style={styles.membershipContainer}>
-                  <View
-                    style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
-                  >
-                    <TicketExpired color={Color.Gray.gray600} />
-                    <Text>Expiry</Text>
-                  </View>
-                  <View>
-                    <Text>{memberships} / free to renew</Text>
-                  </View>
-                </View>
-                <View style={styles.membershipContainer}>
-                  <View
-                    style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
-                  >
-                    <User color={Color.Gray.gray600} />
-                    <Text>Artist</Text>
-                  </View>
-
-                  <View>
-                    <Text>{artistInfo}</Text>
-                  </View>
-                </View>
+               
                 <Text style={{ fontWeight: "bold", fontSize: 16 }}>
                   How it works
                 </Text>

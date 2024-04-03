@@ -38,7 +38,7 @@ function ForgotPassword() {
               <View style={styles.textContainer}>
                 <View style={{ gap: 8 }}>
                   <Text style={styles.topText}>Phone Number</Text>
-                  <Text style={styles.bottomText}>We’ll send verification code to your number.</Text>
+                  <Text style={styles.bottomText}>We will send an SMS verification code.</Text>
                 </View>
                 <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} defaultValue='+971' keyboardType='phone-pad' placeholder='Phone number' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, }} />
               </View>

@@ -45,15 +45,15 @@ const PowerUp = () => {
         <TouchableOpacity onPress={togglePopup}>
           <Image style={{ width: 247, height: 247 }} source={require("@/public/images/pqr.png")} />
         </TouchableOpacity>
-          <Popup title="Successfully used power-up." isVisible={isPopupVisible} onClose={togglePopup}/>
+          <Popup title="Power-up consumed." isVisible={isPopupVisible} onClose={togglePopup}/>
         <View style={{ justifyContent: 'center', alignItems: 'center', gap: 32 }}>
           <AmuseBlackLogo />
           <View style={{ gap: 12 }}>
             <Text style={{ fontSize: 24, fontWeight: 'bold', color: Color.Gray.gray600 }}>
               {benefits}
             </Text>
-            <Text style={{ color: Color.Gray.gray400, fontSize: 16 }}>
-              Welcome! Show this to your waiter to redeem.
+            <Text style={{ color: Color.Gray.gray400, fontSize: 16, textAlign:'center', lineHeight:20 }}>
+            Show this to your waiter to redeem.{"\n"} Don't worry, they are pros.
             </Text>
           </View>
 

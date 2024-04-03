@@ -108,7 +108,7 @@ const Restaurant = () => {
         <View style={styles.attrContainer}>
           <View style={{ gap: 32 }}>
             <View style={{ gap: 16 }}>
-              <Text style={{ fontWeight: "bold", fontSize: 16 }}>Benefits</Text>
+              <Text style={{ fontWeight: "bold", fontSize: 16 }}>Rewards</Text>
               <View>
 
                 <View style={styles.attribute}>
@@ -137,46 +137,13 @@ const Restaurant = () => {
                 </View>
               </View>
             </View>
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-              Memberships
-            </Text>
-            <View style={styles.membershipContainer}>
-              <View
-                style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
-              >
-                <TicketExpired color={Color.Gray.gray600} />
-                <Text>Expiry</Text>
-              </View>
-              <View>
-                <Text>{expiryInfo} / free to renew</Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                height: 1,
-                backgroundColor: Color.Gray.gray100,
-              }}
-            />
-            <View style={styles.membershipContainer}>
-              <View
-                style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
-              >
-                <User color={Color.Gray.gray600} />
-                <Text>Artist</Text>
-              </View>
-
-              <View>
-                <Text>{artistInfo}</Text>
-              </View>
-            </View>
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>About</Text>
-            <Text>{about}</Text>
+            
+           
             <Text style={{ fontWeight: "bold", fontSize: 16 }}>
               How it works
             </Text>
             <Text>
-              {instruction}
+            Open your app to the homepage, scan the QR code from your waiter or hostess, and earn rewards for checking in. Activate power-ups for extra rewards.
             </Text>
             <View style={styles.imageContainer}>
               <Image

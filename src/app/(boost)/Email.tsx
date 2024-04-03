@@ -58,8 +58,7 @@ const Email = () => {
                 <View style={{ gap: 8 }}>
                   <Text style={styles.topText}>Email</Text>
                   <Text style={styles.bottomText}>
-                    This will be shared so restaurants can quickly reach you
-                    about important info.
+                  Restaurants will use this to get in touch for things like priority reservations. Spam is so 20th century.
                   </Text>
                 </View>
                 <TextInput

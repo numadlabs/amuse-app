@@ -14,8 +14,7 @@ const Success = () => {
           <TickCircle color={Color.System.systemSuccess} size={64} />
           <Text style={styles.topText}>Success</Text>
           <Text style={styles.bottomText}>
-            Every time you use an A-card, you will receive extra rewards. Manage
-            personal info in your settings.
+          You will earn extra rewards every time you use an A-Pass.
           </Text>
         </View>
       </View>
@@ -46,7 +45,8 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: 212,
-    paddingVertical: 16,
+    paddingHorizontal:16,
+
     paddingTop: 24,
     paddingBottom: 32,
     backgroundColor: Color.base.White,

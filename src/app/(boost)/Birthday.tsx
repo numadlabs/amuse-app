@@ -129,7 +129,7 @@ const Email = () => {
                 <View style={{ gap: 8 }}>
                   <Text style={styles.topText}>Birthday</Text>
                   <Text style={styles.bottomText}>
-                    For exclusive invites and special gifts.
+                  Rewarding the wise, the reckless, and everyone in between.
                   </Text>
                 </View>
                 {/* <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} placeholder='Birthday' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, }} /> */}
