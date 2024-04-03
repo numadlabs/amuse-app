@@ -19,6 +19,7 @@ import PowerUp from "../components/(feedback)/PowerUp";
 import { useAuth } from "../context/AuthContext";
 import { getUserCard } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
+import { Flash } from "iconsax-react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -261,7 +262,7 @@ const QrModal = () => {
               ]}
             />
             <View style={styles.markerContainer}>
-              {marker("white", markerSize, 60, 4, 12)}
+              {marker("white", markerSize, 40, 4, 12)}
 
               {/* <TouchableOpacity
             style={[styles.button, styles.flashButton]}
@@ -288,7 +289,7 @@ const QrModal = () => {
               // }}
               onPress={handleScanButtonPress}
             >
-              <Text>Scan</Text>
+              <Flash color={Color.Gray.gray600}/>
               {/* <Image source={require("@/public/icons/flash.png")} /> */}
             </TouchableOpacity>
             <TouchableOpacity

@@ -22,7 +22,7 @@ const OwnedAcards: React.FC<OwnedAcardsProp> = ({ marker, onPress }) => {
     <View>
       <TouchableOpacity onPress={onPress}>
         <View style={styles.container}>
-          <Image source={{ uri: marker.nftImageUrl as string }} style={styles.image} />
+          <Image source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker.logo}` as string }} style={styles.image} />
           <View style={{ gap: 28 }}>
             <View style={{ gap: 4 }}>
               <View style={{ flexDirection: 'row' }}>

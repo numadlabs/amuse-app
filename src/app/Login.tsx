@@ -38,7 +38,7 @@ function Login() {
       setLoading(true);
       const response = await onLogin(prefix, phoneNumber, password);
       if (response.success) {
-        console.log("Login successful:", response.data);
+        
         router.push("/(tabs)");
       } else {
         console.log("Login failed:", response.data);
@@ -118,49 +118,37 @@ function Login() {
             <Text
               style={{
                 fontSize: 24,
-                color: "gray",
+                color: Color.Gray.gray500,
                 fontWeight: "bold",
                 textAlign: "center",
+                marginBottom: 24
               }}
             >
               Welcome
             </Text>
-            <Text
-              style={{
-                fontSize: 14,
-                color: "gray",
-                textAlign: "center",
-                marginTop: 10,
-              }}
-            >
-              Enter your phone number and password
-            </Text>
-            <View style={{ marginTop: 20 }}>
+
+            <View style={{ gap: 12 }}>
               <View style={{
                 flexDirection: 'row',
                 borderColor: Color.Gray.gray50,
                 borderWidth: 1,
-
                 borderRadius: 16,
               }}>
-
-
-
-                {/* <TextInput
+                <TextInput
                   value={prefix}
                   placeholder='+976'
                   defaultValue='+'
+                  placeholderTextColor={Color.Gray.gray200}
                   keyboardType='phone-pad'
                   onChangeText={setPrefix}
                   style={{
                     height: 40,
-
                     paddingHorizontal: 10,
-                  }} /> */}
+                  }} />
                 <TextInput
                   inputMode="tel"
                   placeholder={phonePlaceholder}
-                  placeholderTextColor="gray"
+                  placeholderTextColor={Color.Gray.gray200}
                   onFocus={onFocusPhone}
                   onBlur={onBlurPhone}
                   style={{
@@ -186,7 +174,7 @@ function Login() {
                 <TextInput
                   secureTextEntry={!showPassword}
                   placeholder={passwordPlaceholder}
-                  placeholderTextColor="gray"
+                  placeholderTextColor={Color.Gray.gray200}
                   onFocus={onFocusPassword}
                   onBlur={onBlurPassword}
                   style={{ flex: 1 }}
@@ -209,7 +197,7 @@ function Login() {
                 </Text>
               )}
             </View>
-            <View style={{ marginTop: 20 }}>
+            <View style={{ marginTop: 24, gap: 12 }}>
               <Button variant="primary" onPress={handleLogin} disabled={loading}>
                 {loading ? (
                   <ActivityIndicator size="small" color="white" />
@@ -226,7 +214,7 @@ function Login() {
                 onPress={() => router.push("/forgotpassword/ForgotPassword")}
               >
                 <Text
-                  style={{ color: "black", fontSize: 14, fontWeight: "bold" }}
+                  style={{ color: "black", fontSize: 14, fontWeight: "bold", marginTop: 12 }}
                 >
                   Forgot password?
                 </Text>
@@ -244,6 +232,16 @@ function Login() {
               </Button>
             </View>
           </View>
+        </View>
+        <View style={{ alignContent: 'center', alignItems: 'center', justifyContent: 'center', marginBottom: 48, gap:0, }}>
+          <Text style={{ textAlign: 'center', fontSize: 14, color: Color.Gray.gray400, fontWeight: '400' }}>
+            By continuing, I agree with Amuse-Bouche's {"\n"}
+          </Text>
+          <TouchableOpacity style={{  }}>
+            <Text style={{ textDecorationLine: 'underline', color: Color.Gray.gray600,  fontSize: 14, fontWeight: '500' }}>
+              Terms and Conditions.
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </TouchableWithoutFeedback>

@@ -220,7 +220,6 @@ export default function RestaurantMapView() {
   const { authState } = useAuth();
   const { currentLocation } = useLocationStore();
   const queryClient = useQueryClient();
-  const navigation = useNavigation();
   const [selectedLocation, setSelectedLocation] = useState("current");
   const mapRef = useRef(null);
   const scrollViewRef = useRef(null);
@@ -416,7 +415,7 @@ export default function RestaurantMapView() {
         artistInfo: restaurant.artistInfo,
         expiryInfo: restaurant.expiryInfo,
         instruction: restaurant.instruction,
-        nftImageUrl: restaurant.nftImageUrl,
+        logo: restaurant.logo,
       },
     });
   };
@@ -501,10 +500,10 @@ export default function RestaurantMapView() {
             <Image source={require("@/public/images/locationPin.png")} />
           </Marker>
         )}
-        {restaurantsData?.data?.restaurants.map((restaurant) => {
+        {restaurantsData?.data?.restaurants.map((restaurant, index) => {
           return (
             <Marker
-              key={`marker-${restaurant.id}`}
+              key={`marker-${index}`}
               coordinate={{
                 latitude: restaurant.latitude,
                 longitude: restaurant.longitude,
@@ -561,7 +560,7 @@ export default function RestaurantMapView() {
       >
         {!scrollViewHidden &&
           restaurantsData?.data?.restaurants &&
-          restaurantsData.data.restaurants.map((marker) => (
+          restaurantsData.data.restaurants.map((marker, index) => (
             <TouchableOpacity
               key={`card-${marker.id}`}
               onPress={() => handleNavigation(marker)}

@@ -65,7 +65,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
         artistInfo: restaurant.artistInfo,
         expiryInfo: restaurant.expiryInfo,
         instruction: restaurant.instruction,
-        nftImageUrl: restaurant.nftImageUrl,
+        logo: restaurant.logo,
       },
     });
   };

@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "../global.css";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { StatusBar } from "expo-status-bar";
 // import useQu
 // import QueryClien
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ export default function Layout() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        <StatusBar style="dark"/>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen
             name="restaurants/[id]"

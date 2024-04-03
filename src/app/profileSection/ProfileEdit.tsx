@@ -1,21 +1,88 @@
 import { Cake, Camera, Location, Sms, User } from "iconsax-react-native";
 
-import React from "react";
+import React, { useState } from "react";
 import {
+  ActivityIndicator,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   TextInput,
   View,
+  Text
 } from "react-native";
 import Header from "../components/layout/Header";
 import Color from "../constants/Color";
+import { useMutation, useQuery } from "react-query";
+import { getUserById } from "../lib/service/queryHelper";
+import { useAuth } from "../context/AuthContext";
+import { updateUserInfo } from "../lib/service/mutationHelper";
+import Button from "../components/ui/Button";
+
 
 const ProfileEdit = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const { authState } = useAuth()
+  const [nickname, setNickname] = useState('');
+  const [email, setEmail] = useState('');
+  const [location, setLocation] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+
+  const { data: user = [] } = useQuery({
+    queryKey: ["UserInfo"],
+    queryFn: () => {
+      return getUserById(authState.userId)
+    }
+  })
+
+  const {
+    data,
+    error,
+    isLoading,
+    status,
+    mutateAsync: handleUpdateUser,
+  } = useMutation({
+    mutationFn: updateUserInfo,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (data, variables) => {
+      console.log("🚀 ~ QrModal ~ data:", data);
+      try {
+        console.log(" successful:", data);
+        // setEncryptedTap(data.data.data);
+        // togglePopup();
+      } catch (error) {
+        console.error(" mutation failed:", error);
+      }
+    },
+  });
+
+  const triggerUpdateUser = async () => {
+    setLoading(true);
+    const userData = {
+      nickname: nickname, 
+      email: email, 
+      location: location, 
+      dateOfBirth: dateOfBirth, 
+    };
+    try {
+      const data = await handleUpdateUser({
+        userId: authState.userId,
+        data: userData,
+      });
+      if (data.success) {
+        // Handle success, e.g., showing a success message
+        setLoading(false);
+      }
+    } catch (error) {
+      // Handle error, e.g., showing an error message
+      console.log(error);
+      setLoading(false);
+    }
+  };
   return (
     <>
       <Header title="Account" />
-
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1 }}>
           <View style={styles.body}>
@@ -31,34 +98,63 @@ const ProfileEdit = () => {
               <View style={styles.input}>
                 <User color="black" />
                 <TextInput
-                  defaultValue="Satoshi"
+                  placeholder={user.nickname}
+                  placeholderTextColor={Color.Gray.gray200}
+                  value={nickname}
+                  onChangeText={setNickname}
                   style={{ fontSize: 20 }}
                 ></TextInput>
               </View>
               <View style={styles.input}>
                 <Sms color="black" />
                 <TextInput
-                  defaultValue="example@gmail.com"
+                  placeholderTextColor={Color.Gray.gray200}
+                  placeholder={user.email}
+                  value={email}
+                  onChangeText={setEmail}
                   style={{ fontSize: 20 }}
                 ></TextInput>
               </View>
               <View style={styles.input}>
                 <Location color="black" />
                 <TextInput
-                  defaultValue="JLT Cluster A"
+                  placeholderTextColor={Color.Gray.gray200}
+                  placeholder={user.location}
+                  value={location}
+                  onChangeText={setLocation}
                   style={{ fontSize: 20 }}
                 ></TextInput>
               </View>
               <View style={styles.input}>
                 <Cake color="black" />
                 <TextInput
-                  defaultValue="Jan 24, 2000"
+                  placeholder={user.dateOfBirth}
+                  placeholderTextColor={Color.Gray.gray200}
+                  value={dateOfBirth}
+                  onChangeText={setDateOfBirth}
                   style={{ fontSize: 20 }}
                 ></TextInput>
               </View>
             </View>
           </View>
+          
         </ScrollView>
+        <Button
+                variant="primary"
+                textStyle="primary"
+                size="default"
+                onPress={triggerUpdateUser}
+              >
+                {loading ? (
+                  <ActivityIndicator size="small" color="white" />
+                ) : (
+                  <Text
+                    style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                  >
+                    Continue
+                  </Text>
+                )}
+              </Button>
       </SafeAreaView>
     </>
   );
@@ -106,7 +202,7 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray50,
     flexDirection: "row",
     alignItems: "center",
-    padding: 16,
+    paddingHorizontal:16,
     gap: 12,
     marginBottom: 16,
   },
