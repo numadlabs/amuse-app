@@ -34,6 +34,7 @@ const Layout = ({ navigation }) => {
   if (authState.authenticated === false) {
     return <Redirect href={"/Login"} />;
   }
+  
 
   return (
     <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>

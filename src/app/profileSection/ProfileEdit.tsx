@@ -91,12 +91,12 @@ const ProfileEdit = () => {
                 <View style={styles.profilePic}>
                   <User size={48} color={Color.Gray.gray400} />
                   <View style={styles.camera}>
-                    <Camera color="white" size={16}></Camera>
+                    <Camera color={Color.Gray.gray50} size={16}></Camera>
                   </View>
                 </View>
               </View>
               <View style={styles.input}>
-                <User color="black" />
+                <User color={Color.Gray.gray600} />
                 <TextInput
                   placeholder={user.nickname}
                   placeholderTextColor={Color.Gray.gray200}
@@ -106,7 +106,7 @@ const ProfileEdit = () => {
                 ></TextInput>
               </View>
               <View style={styles.input}>
-                <Sms color="black" />
+                <Sms color={Color.Gray.gray600} />
                 <TextInput
                   placeholderTextColor={Color.Gray.gray200}
                   placeholder={user.email}
@@ -116,7 +116,7 @@ const ProfileEdit = () => {
                 ></TextInput>
               </View>
               <View style={styles.input}>
-                <Location color="black" />
+                <Location color={Color.Gray.gray600} />
                 <TextInput
                   placeholderTextColor={Color.Gray.gray200}
                   placeholder={user.location}
@@ -126,7 +126,7 @@ const ProfileEdit = () => {
                 ></TextInput>
               </View>
               <View style={styles.input}>
-                <Cake color="black" />
+                <Cake color={Color.Gray.gray600} />
                 <TextInput
                   placeholder={user.dateOfBirth}
                   placeholderTextColor={Color.Gray.gray200}
