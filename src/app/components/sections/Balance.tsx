@@ -3,7 +3,16 @@ import React from 'react'
 import Color from '../../constants/Color'
 import BalanceStripes from '../icons/BalanceStripes'
 
-const Balance = () => {
+
+
+
+interface BalanceProps{
+  amount?: number
+}
+const Balance: React.FC<BalanceProps> = ({amount}) => {
+
+  const truncatedAmount = amount !== 0 ? amount?.toString().substring(0, 6) : "0.0000";
+
   return (
     <View style={styles.container}>
       <View style={styles.container1}>
@@ -11,9 +20,8 @@ const Balance = () => {
           <Text style={styles.balanceLabel}>Balance</Text>
           <View style={{flexDirection:'row', alignItems:'center', gap:8}}>
             <Image style={{ width: 28, height: 28 }} source={require('@/public/images/Bitcoin.png')} />
-            <Text style={styles.balanceAmount}>0.0000</Text>
+            <Text style={styles.balanceAmount}>{truncatedAmount}</Text>
           </View>
-
         </View>
         <View style={styles.balanceStripesContainer}>
           <BalanceStripes />
@@ -36,7 +44,6 @@ const styles = StyleSheet.create({
     shadowRadius: 1.41,
     elevation: 2,
     borderRadius: 16,
-
     marginTop: 32
   },
   container1: {

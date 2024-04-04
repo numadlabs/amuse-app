@@ -102,6 +102,7 @@ function Login() {
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
+    togglePrefix()
   };
 
   const onFocusPhone = () => {
@@ -147,7 +148,7 @@ function Login() {
             paddingHorizontal: 20,
             paddingVertical: 24,
             backgroundColor: "white",
-            position: "relative", 
+            position: "relative",
           }}
         >
           <View
@@ -213,13 +214,13 @@ function Login() {
                   onPress={togglePrefix}
                 >
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                    <Text>
-                    +{!prefix ? data[0].prefix : prefix}
+                    <Text style={{ fontSize: 16, lineHeight: 20 }}>
+                      +{!prefix ? data[0].prefix : prefix}
                     </Text>
                     <ArrowDown2 color={Color.Gray.gray600} />
                   </View>
                 </AnimatedPressable>
-                
+
 
                 <TextInput
                   inputMode="tel"
@@ -229,7 +230,10 @@ function Login() {
                   onBlur={onBlurPhone}
                   style={{
                     height: 40,
-                    paddingHorizontal: 10,
+                    fontSize: 16,
+                    fontWeight: '400',
+                    lineHeight: 20,
+                    paddingLeft: 10
                   }}
                   value={phoneNumber}
                   onChangeText={setPhoneNumber}
@@ -253,7 +257,12 @@ function Login() {
                   placeholderTextColor={Color.Gray.gray200}
                   onFocus={onFocusPassword}
                   onBlur={onBlurPassword}
-                  style={{ flex: 1 }}
+                  style={{
+                    flex: 1,
+                    fontSize: 16,
+                    fontWeight: '400',
+                    lineHeight: 20
+                  }}
                   value={password}
                   onChangeText={setPassword}
                 />
@@ -309,27 +318,35 @@ function Login() {
               </Button>
             </View>
             {isOpen && (
-                <Animated.View style={[translateY, { position: 'absolute', zIndex: 100, bottom: height /2.5, width: '80%', height: height / 3.5, backgroundColor: Color.base.White, borderRadius:16, overflow:'hidden', left:20 }]}>
-                  <ScrollView style={{}}>
-                    {data.map((prefix, index) => (
+              <Animated.View style={[translateY, { position: 'absolute', zIndex: 100, bottom: height / 2.5, width: '80%', height: height / 3.5, backgroundColor: Color.base.White, borderRadius: 16, overflow: 'hidden', left: 20 }]}>
+                <ScrollView style={{}}>
+                  {data.map((prefix, index) => (
                     <TouchableOpacity key={index} onPress={() => handlePrefixSelection(prefix.prefix)}>
-                        <View  style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal:16,paddingVertical:15, backgroundColor: Color.base.White }}>
-                          <Text>{prefix.name}</Text>
-                          <Text>{prefix.prefix}</Text>
-                        </View>
-                        <View style={{ height: 1, width: '100%', backgroundColor: Color.Gray.gray50 }} />
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
-                </Animated.View>
-              )}
+                      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 15, backgroundColor: Color.base.White, }}>
+                        <Text style={{
+                          fontSize: 16,
+                          fontWeight: '400',
+                          lineHeight: 20
+                        }}>{prefix.name}</Text>
+                        <Text style={{
+                            fontSize:16,
+                            fontWeight:'400',
+                            lineHeight:20
+                        }}>+{prefix.prefix}</Text>
+                      </View>
+                      <View style={{ height: 1, width: '100%', backgroundColor: Color.Gray.gray50 }} />
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </Animated.View>
+            )}
           </View>
         </View>
         <View style={{ alignContent: 'center', alignItems: 'center', justifyContent: 'center', marginBottom: 48, gap: 0, }}>
           <Text style={{ textAlign: 'center', fontSize: 14, color: Color.Gray.gray400, fontWeight: '400' }}>
             By continuing, I agree with Amuse-Bouche's {"\n"}
           </Text>
-          <TouchableOpacity style={{}}>
+          <TouchableOpacity onPress={() => router.navigate('/TermsAndCondo')}>
             <Text style={{ textDecorationLine: 'underline', color: Color.Gray.gray600, fontSize: 14, fontWeight: '500' }}>
               Terms and Conditions.
             </Text>
