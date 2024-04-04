@@ -30,15 +30,27 @@ const overlayAdjusting = 5;
 
 const QrModal = () => {
   const [isPopupVisible, setPopupVisible] = useState(false);
+  const [isBtcPopupVisible, setBtcPopupVisible] = useState(false)
   const [isModalVisible, setModalVisible] = useState(true);
 
   const togglePopup = () => {
     setPopupVisible(!isPopupVisible);
   };
 
+  const toggleBtcPopup = () => {
+    setBtcPopupVisible(!isBtcPopupVisible)
+  }
+
   const closeModal = () => {
-    router.back();
+    toggleBtcPopup()
+    togglePopup()
+
   };
+
+  const queryClient = useQueryClient()
+  const closeBtcModal = () => {
+    router.back();
+  }
   const { currentLocation } = useLocationStore();
 
   const { data: cards = [] } = useQuery({
@@ -55,6 +67,8 @@ const QrModal = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
+  const [powerUp, setPowerUp] = useState("")
+  const [btcAmount, setBTCAmount] = useState("")
   const [encryptedTap, setEncryptedTap] = useState("");
   const router = useRouter();
   useEffect(() => {
@@ -96,6 +110,8 @@ const QrModal = () => {
         console.log("Redeem successful:", resp);
 
         setEncryptedTap(data.data.data);
+        queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+
         togglePopup();
       } catch (error) {
         console.error("Redeem mutation failed:", error);
@@ -108,7 +124,9 @@ const QrModal = () => {
       console.log(error);
     },
     onSuccess: (data, variables) => {
-      console.log("🚀 ~ QrModal ~ data:", data);
+      console.log("🚀 ~ QrModal ~ data:", data.data.data);
+      setPowerUp(data.data.data.bonus.name)
+      setBTCAmount(data.data.data.increment)
     },
   });
 
@@ -299,12 +317,17 @@ const QrModal = () => {
               <Image source={require("@/public/icons/close.png")} />
             </TouchableOpacity>
           </View>
-          {/* Popup component for displaying power-up message */}
           <PowerUp
             title="Congrats!"
+            powerUpTitle={powerUp}
             subText="You received a power-up."
             isVisible={isPopupVisible}
             onClose={closeModal}
+          />
+          <Popup
+            isVisible={isBtcPopupVisible}
+            onClose={closeBtcModal}
+            title={btcAmount}
           />
         </View>
       )}
