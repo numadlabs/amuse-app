@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
-import { ActivityIndicator, Image } from "react-native";
+import { ActivityIndicator, Image, Pressable } from "react-native";
 
 import React, { useState } from "react";
 import {
@@ -18,6 +18,10 @@ import { useAuth } from "./context/AuthContext";
 import { baseUrl } from "./lib/axios";
 import Color from "./constants/Color";
 import PrefixCard from "./components/atom/cards/PrefixCard";
+import Animated, { FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
+import { height } from "./lib/utils";
+import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
+import { ArrowDown2 } from "iconsax-react-native";
 
 function Login() {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -30,15 +34,14 @@ function Login() {
     useState<string>("Password");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const { onLogin } = useAuth();
-
+  const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
   const handleLogin = async () => {
     try {
       setLoading(true);
       const response = await onLogin(prefix, phoneNumber, password);
       if (response.success) {
-        
         router.push("/(tabs)");
       } else {
         console.log("Login failed:", response.data);
@@ -53,6 +56,45 @@ function Login() {
       setLoading(false);
     }
   };
+
+  const data = [
+    {
+      name: "UAE",
+      prefix: "971"
+    },
+    {
+      name: "Mongolia",
+      prefix: "976"
+    },
+    {
+      name: "United States",
+      prefix: "1"
+    },
+    {
+      name: "United Kingdom",
+      prefix: "44"
+    },
+    {
+      name: "Canada",
+      prefix: "1"
+    },
+    {
+      name: "Australia",
+      prefix: "61"
+    },
+    {
+      name: "Germany",
+      prefix: "49"
+    },
+    {
+      name: "France",
+      prefix: "33"
+    },
+    {
+      name: "Japan",
+      prefix: "81"
+    },
+  ];
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -77,10 +119,26 @@ function Login() {
   const onBlurPassword = () => {
     setPasswordPlaceholder("Password");
   };
+  const offset = useSharedValue(300)
+  const togglePrefix = () => {
+    setIsOpen(!isOpen);
+    offset.value = withSpring(isOpen ? height / 3 : height / 3 + 10, {
+      damping: 20,
+      mass: 0.5
+    });
+  };
+  const translateY = useAnimatedStyle(() => ({
+    transform: [{ translateY: offset.value }]
+  }))
+
+  const handlePrefixSelection = (selectedPrefix) => {
+    setPrefix(selectedPrefix)
+    console.log(selectedPrefix)
+  }
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <View style={{ backgroundColor: Color.base.White, flex: 1 }}>
+      <GestureHandlerRootView style={{ backgroundColor: Color.base.White, flex: 1 }}>
         <View
           style={{
             flex: 1,
@@ -89,6 +147,7 @@ function Login() {
             paddingHorizontal: 20,
             paddingVertical: 24,
             backgroundColor: "white",
+            position: "relative", 
           }}
         >
           <View
@@ -133,8 +192,10 @@ function Login() {
                 borderColor: Color.Gray.gray50,
                 borderWidth: 1,
                 borderRadius: 16,
+                alignItems: 'center',
+                paddingHorizontal: 16
               }}>
-                <TextInput
+                {/* <TextInput
                   value={prefix}
                   placeholder='+976'
                   defaultValue='+'
@@ -144,7 +205,22 @@ function Login() {
                   style={{
                     height: 40,
                     paddingHorizontal: 10,
-                  }} />
+                  }} /> */}
+
+                <AnimatedPressable
+                  entering={FadeIn}
+                  exiting={FadeOut}
+                  onPress={togglePrefix}
+                >
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                    <Text>
+                    +{!prefix ? data[0].prefix : prefix}
+                    </Text>
+                    <ArrowDown2 color={Color.Gray.gray600} />
+                  </View>
+                </AnimatedPressable>
+                
+
                 <TextInput
                   inputMode="tel"
                   placeholder={phonePlaceholder}
@@ -210,6 +286,7 @@ function Login() {
                 )}
               </Button>
               <Button
+                style={{ zIndex: 0 }}
                 variant="text"
                 onPress={() => router.push("/forgotpassword/ForgotPassword")}
               >
@@ -231,19 +308,34 @@ function Login() {
                 </Text>
               </Button>
             </View>
+            {isOpen && (
+                <Animated.View style={[translateY, { position: 'absolute', zIndex: 100, bottom: height /2.5, width: '80%', height: height / 3.5, backgroundColor: Color.base.White, borderRadius:16, overflow:'hidden', left:20 }]}>
+                  <ScrollView style={{}}>
+                    {data.map((prefix, index) => (
+                    <TouchableOpacity key={index} onPress={() => handlePrefixSelection(prefix.prefix)}>
+                        <View  style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal:16,paddingVertical:15, backgroundColor: Color.base.White }}>
+                          <Text>{prefix.name}</Text>
+                          <Text>{prefix.prefix}</Text>
+                        </View>
+                        <View style={{ height: 1, width: '100%', backgroundColor: Color.Gray.gray50 }} />
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                </Animated.View>
+              )}
           </View>
         </View>
-        <View style={{ alignContent: 'center', alignItems: 'center', justifyContent: 'center', marginBottom: 48, gap:0, }}>
+        <View style={{ alignContent: 'center', alignItems: 'center', justifyContent: 'center', marginBottom: 48, gap: 0, }}>
           <Text style={{ textAlign: 'center', fontSize: 14, color: Color.Gray.gray400, fontWeight: '400' }}>
             By continuing, I agree with Amuse-Bouche's {"\n"}
           </Text>
-          <TouchableOpacity style={{  }}>
-            <Text style={{ textDecorationLine: 'underline', color: Color.Gray.gray600,  fontSize: 14, fontWeight: '500' }}>
+          <TouchableOpacity style={{}}>
+            <Text style={{ textDecorationLine: 'underline', color: Color.Gray.gray600, fontSize: 14, fontWeight: '500' }}>
               Terms and Conditions.
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </GestureHandlerRootView>
     </TouchableWithoutFeedback>
   );
 }
