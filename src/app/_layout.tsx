@@ -27,8 +27,6 @@ export default function Layout() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <GestureHandlerRootView>
-
-        
         <StatusBar style="dark"/>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen

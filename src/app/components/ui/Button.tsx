@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 const buttonVariants = {
   variant: {
-    primary: { backgroundColor: "black" },
+    primary: { backgroundColor: "black", zindex:0 },
     secondary: { backgroundColor: "white" },
     tertiary: { backgroundColor: "#F3F4F6" },
     text: { backgroundColor: "transparent" },

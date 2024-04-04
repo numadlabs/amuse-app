@@ -31,7 +31,6 @@ const Restaurant = () => {
   const { name, location, category, about, isOwned, benefits, artistInfo, membership, instruction, logo, taps } = useLocalSearchParams();
   console.log(instruction)
   const [loading, setLoading] = useState(false)
-  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const translateY = useAnimatedStyle(() => ({
     transform: [{ translateY: offset.value }]
   }))
@@ -51,7 +50,6 @@ const Restaurant = () => {
         runOnJS(toggleBottomSheet)()
       })
     }
-   
   })
 
   return (
@@ -116,9 +114,7 @@ const Restaurant = () => {
                 entering={SlideInDown.springify().damping(25)}
                 exiting={SlideOutDown}
               >
-
                 <DetailsSheet benefits={benefits} locations={location} memberships={membership} about={about} instruction={instruction} artistInfo={artistInfo} />
-
               </Animated.View>
             </GestureDetector>
           )}
