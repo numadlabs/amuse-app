@@ -22,20 +22,24 @@ const Page = () => {
   const { authState } = useAuth()
   const { currentLocation } = useLocationStore();
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      setRefreshPage(prevState => !prevState);
-    });
-    return unsubscribe;
-  }, [router]);
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener("focus", () => {
+  //     setRefreshPage(prevState => !prevState);
+  //   });
+  //   return unsubscribe;
+  // }, [router]);
 
   const { data: user = [], isSuccess } = useQuery({
     queryKey: ["UserInfo"],
     queryFn: () => {
       return getUserById(authState.userId)
     },
-    enabled : !!authState.userId
+    enabled: !!authState.userId
   })
+
+  console.log(user)
+
+
 
 
   const { data: cards = [], } = useQuery({
@@ -70,7 +74,7 @@ const Page = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Balance amount={user.balance}/>
+      <Balance amount={user.balance} />
       <View style={{ marginTop: 24, gap: 12 }}>
         {user.email && user.dateOfBirth ? (
           <Text style={{ fontSize: 14, fontWeight: '600', color: Color.Gray.gray400 }}>
