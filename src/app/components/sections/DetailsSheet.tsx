@@ -4,12 +4,12 @@ import Animated, { useSharedValue, withSpring, runOnJS, ReduceMotion } from 'rea
 import { TickCircle, Location, TicketExpired, User } from 'iconsax-react-native';
 import Color from '@/app/constants/Color';
 import Tick from '../icons/Tick';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
 
 interface BottomSheetProps {
-  isVisible: boolean;
-  onClose: () => void;
+ 
   benefits: string | string[],
   locations: string | string[],
   memberships: string | string[],
@@ -18,35 +18,38 @@ interface BottomSheetProps {
   artistInfo: string | string[]
 }
 
-const DetailsSheet: React.FC<BottomSheetProps> = ({ isVisible, onClose, benefits, locations, memberships, about, instruction, artistInfo }) => {
-  const translateY = useSharedValue(0);
+const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, memberships, about, instruction, artistInfo }) => {
+  // const translateY = useSharedValue(0);
 
-  useEffect(() => {
-    translateY.value = withSpring(isVisible ? 0 : 300, {
-      mass: 1.5,
-      damping: 40,
-      stiffness: 398,
-      overshootClamping: false,
-      restDisplacementThreshold: 0.01,
-      restSpeedThreshold: 20,
-      reduceMotion: ReduceMotion.System,
-    });
-  }, [translateY, isVisible]);
+  // useEffect(() => {
+  //   translateY.value = withSpring(isVisible ? 0 : 1000, {
+  //     mass: 1.5,
+  //     damping: 40,
+  //     stiffness: 398,
+  //     overshootClamping: false,
+  //     restDisplacementThreshold: 0.01,
+  //     restSpeedThreshold: 20,
+  //     reduceMotion: ReduceMotion.System,
+  //   });
+  // }, [translateY, isVisible]);
 
-  const handleOutsidePress = () => {
-    onClose()
-  }
+  // const handleOutsidePress = () => {
+  //   onClose()
+  // }
 
   return (
-    <Modal
-      animationType="none"
-      transparent={true}
-      visible={isVisible}
-      onRequestClose={onClose}
-    >
-      <TouchableWithoutFeedback onPress={handleOutsidePress}>
-        <View style={styles.container}>
-          <Animated.View style={[styles.bottomSheet, { transform: [{ translateY }] }]}>
+    // <Modal
+    //   animationType="none"
+    //   transparent={true}
+    //   visible={isVisible}
+    //   onRequestClose={onClose}
+    // >
+    //   <TouchableWithoutFeedback onPress={handleOutsidePress}>
+
+
+   
+
+          <View style={[styles.bottomSheet]}>
             <View style={styles.content}>
               <Text style={{ fontWeight: "bold", fontSize: 16 }}>Rewards</Text>
               <View style={{marginVertical:16}}>
@@ -89,10 +92,11 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ isVisible, onClose, benefits
                 </View>
               </View>
             </View>
-          </Animated.View>
-        </View>
-      </TouchableWithoutFeedback>
-    </Modal>
+          </View>
+
+
+    //   </TouchableWithoutFeedback>
+    // </Modal>
   );
 };
 
@@ -109,6 +113,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     width: '100%',
+    zIndex: 999
   },
   content: {
 

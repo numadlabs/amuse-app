@@ -253,7 +253,7 @@ export default function RestaurantMapView() {
     } else if (selectedLocation === "dubai") {
       setInitialRegion({
         latitude: 25.276987,
-        longitude: 55.296249, // Longitude for Dubai
+        longitude: 55.296249,
         latitudeDelta: mapLatitudeDelta,
         longitudeDelta: mapLongitudeDelta,
       });
@@ -476,7 +476,7 @@ export default function RestaurantMapView() {
         customMapStyle={mapStyle}
         onPress={toggleLocation} // Add this onPress handler
       >
-        <View style={styles.locationToggleContainer}>
+        {/* <View style={styles.locationToggleContainer}>
           <TouchableOpacity onPress={toggleLocation} style={styles.locationToggle}>
             <Text style={styles.locationToggleText}>
               {selectedLocation === "current" ? "Dubai" : "Current Location"}
@@ -487,7 +487,7 @@ export default function RestaurantMapView() {
           <TouchableOpacity >
             <Gps size={24} color={Color.Gray.gray600} style={{ zIndex: 10 }} />
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         {currentLocation && (
           <Marker
