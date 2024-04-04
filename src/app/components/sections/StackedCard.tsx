@@ -15,7 +15,7 @@ const StackedCard = () => {
   const { currentLocation } = useLocationStore();
   const router = useRouter();
   const queryClient = useQueryClient()
-  
+
   const [scrollViewHeight, setScrollViewHeight] = useState(0);
 
 
@@ -31,29 +31,26 @@ const StackedCard = () => {
     enabled: !!currentLocation,
   });
 
- useEffect(() => {
-  if (cards && cards.data && cards.data.cards) {
-    const totalCardHeight = cards.data.cards.reduce((totalHeight, card, index) => {
-      const marginBottom = index !== 0 ? -80 : 0; 
-      const cardHeight = 470 + marginBottom; 
-      return totalHeight + cardHeight;
-    }, 0);
-
-  
-    const adjustedTotalHeight = totalCardHeight * (1 - 0.8); 
-
-    setScrollViewHeight(adjustedTotalHeight);
-  }
-}, [cards]);
-
-// Render only the latest four cards
-const latestCards = cards?.data?.cards.slice(0, 4);
+  useEffect(() => {
+    if (cards && cards.data && cards.data.cards) {
+      const totalCardHeight = cards.data.cards.reduce((totalHeight, card, index) => {
+        const marginBottom = index !== 0 ? -80 : 0;
+        const cardHeight = 470 + marginBottom;
+        return totalHeight + cardHeight;
+      }, 0);
 
 
+      const adjustedTotalHeight = totalCardHeight * (1 - 0.8);
 
+      setScrollViewHeight(adjustedTotalHeight);
+    }
+  }, [cards]);
+
+  // Render only the latest four cards
+  const latestCards = cards?.data?.cards.slice(0, 4);
   useEffect(() => {
     queryClient.invalidateQueries("userCards");
-  }, []); 
+  }, []);
 
 
 
@@ -83,7 +80,7 @@ const latestCards = cards?.data?.cards.slice(0, 4);
           <View>
             <EmojiHappy size={48} color={Color.Gray.gray400} />
           </View>
-          <Text style={{textAlign:'center'}}>Discover restaurants, add an A-Pass, and start earning rewards every time you check in at a participating restaurant!</Text>
+          <Text style={{ textAlign: 'center' }}>Discover restaurants, add an A-Pass, and start earning rewards every time you check in at a participating restaurant!</Text>
           <TouchableOpacity>
             <View style={styles.button}>
               <Text style={styles.buttonText}>Add A-Pass</Text>
@@ -92,7 +89,7 @@ const latestCards = cards?.data?.cards.slice(0, 4);
         </View>
       ) : (
         <ScrollView style={{ height: scrollViewHeight }}>
-          {cards &&
+          {cards?.data?.cards &&
             latestCards.map((card, index) => (
               <TouchableOpacity
                 activeOpacity={0.9}
@@ -100,7 +97,7 @@ const latestCards = cards?.data?.cards.slice(0, 4);
                 onPress={() => handleNavigation(card)}
               >
 
-                <ImageBackground resizeMode='cover' source={{ uri:`https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${card.logo}` }}
+                <ImageBackground resizeMode='cover' source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${card.logo}` }}
                   style={[
                     styles.aCardContainer,
                     { marginTop: index !== 0 ? -5 : 0 },
@@ -129,13 +126,13 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray50,
     borderTopRightRadius: 32,
     borderTopLeftRadius: 32,
-    minHeight:380,
-    maxHeight:600,
+    minHeight: 380,
+    maxHeight: 600,
   },
   container1: {
     backgroundColor: Color.Gray.gray50,
-    height:380,
-    paddingHorizontal:16,
+    height: 380,
+    paddingHorizontal: 16,
     borderTopRightRadius: 32,
     borderTopLeftRadius: 32,
     flexDirection: "column",

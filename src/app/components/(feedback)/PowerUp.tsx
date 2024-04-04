@@ -36,6 +36,7 @@ const PowerUp: React.FC<PopupProps> = ({ isVisible, title, subText, onClose }) =
     >
       <View style={styles.container}>
         <Animated.View style={[styles.popup, { transform: [{ translateY }] }]}>
+          
           <View style={styles.content}>
             <PowerUpCard title='Priority seating on Fridays' onPress={() => console.log('pressed')} date='2024/03/10' />
 

@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import "../global.css";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // import useQu
 // import QueryClien
 const queryClient = new QueryClient();
@@ -25,6 +26,9 @@ export default function Layout() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        <GestureHandlerRootView>
+
+        
         <StatusBar style="dark"/>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen
@@ -44,6 +48,7 @@ export default function Layout() {
           <Stack.Screen name="TermsAndCondo" />
           <Stack.Screen name="PowerUp" options={{presentation: 'modal'}}/>
         </Stack>
+        </GestureHandlerRootView>
       </AuthProvider>
     </QueryClientProvider>
   );

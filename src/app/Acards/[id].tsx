@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   Image,
   ImageBackground,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -20,30 +21,41 @@ import Close from "../components/icons/Close";
 import PowerUp from "../components/(feedback)/PowerUp";
 import PowerUpCard from "../components/atom/cards/PowerUpCard";
 import DetailsSheet from "../components/sections/DetailsSheet";
-import BottomSheetDetails from "../components/sections/BottomDetailsSheet";
+import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
+import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown, runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import { height } from "../lib/utils";
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 const Restaurant = () => {
+  const offset = useSharedValue(0)
   const { name, location, category, about, isOwned, benefits, artistInfo, membership, instruction, logo, taps } = useLocalSearchParams();
-  const [isPopupVisible, setPopupVisible] = useState(false);
   console.log(instruction)
   const [loading, setLoading] = useState(false)
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-
+  const translateY = useAnimatedStyle(() => ({
+    transform: [{ translateY: offset.value }]
+  }))
+  const [isOpen, setOpen] = useState(false);
   const toggleBottomSheet = () => {
-    setBottomSheetVisible(!bottomSheetVisible);
-  };
+    setOpen(!isOpen)
+    offset.value = 0
+  }
 
-  const openPopup = () => {
-    setPopupVisible(true);
-  };
-
-  const closePopup = () => {
-    setPopupVisible(false);
-    router.back();
-  };
+  const pan = Gesture.Pan().onChange((event) => {
+    offset.value += event.changeY
+  }).onFinalize(() => {
+    if (offset.value < height/3) {
+      offset.value = withSpring(0)
+    } else {
+      offset.value = withTiming(height/2, {}, () => {
+        runOnJS(toggleBottomSheet)()
+      })
+    }
+   
+  })
 
   return (
-    <View style={{ backgroundColor: Color.base.White, flex: 1 }}>
+    <GestureHandlerRootView style={{ backgroundColor: Color.base.White, flex: 1 }}>
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity
           style={[styles.button, styles.closeButton]}
@@ -86,15 +98,31 @@ const Restaurant = () => {
           </ImageBackground>
         )}
         <View style={styles.attrContainer}>
-          <TouchableOpacity onPress={toggleBottomSheet}>
+          {/* <DetailsSheet isVisible={bottomSheetVisible} onClose={toggleBottomSheet} benefits={benefits} locations={location} memberships={membership} artistInfo={artistInfo} about={about} instruction={instruction}/> */}
+
+          <AnimatedPressable
+            entering={FadeIn}
+            exiting={FadeOut}
+            onPress={toggleBottomSheet}>
             <View style={{ backgroundColor: Color.Gray.gray50, justifyContent: 'center', alignItems: 'center', borderRadius: 48, paddingVertical: 12 }}>
               <Text style={{ fontSize: 15, color: Color.Gray.gray600, fontWeight: 'bold' }}>
                 Details
               </Text>
             </View>
-          </TouchableOpacity>
+          </AnimatedPressable>
+          {isOpen && (
+            <GestureDetector gesture={pan}>
+              <Animated.View style={[translateY,  { zIndex:999, bottom:height/3}]}
+                entering={SlideInDown.springify().damping(25)}
+                exiting={SlideOutDown}
+              >
+
+                <DetailsSheet benefits={benefits} locations={location} memberships={membership} about={about} instruction={instruction} artistInfo={artistInfo} />
+
+              </Animated.View>
+            </GestureDetector>
+          )}
           {/* <BottomSheetDetails visible={bottomSheetVisible} onClose={toggleBottomSheet} benefits={benefits}/> */}
-          <DetailsSheet isVisible={bottomSheetVisible} onClose={toggleBottomSheet} benefits={benefits} locations={location} memberships={membership} artistInfo={artistInfo} about={about} instruction={instruction}/>
           <Text style={{ fontWeight: "bold", fontSize: 16, marginTop: 32 }}>Power ups</Text>
           <View style={styles.powerUpGrid}>
             <PowerUpCard title="Priority seating on Fridays" date="2024/01/03" onPress={() => router.navigate({
@@ -103,13 +131,13 @@ const Restaurant = () => {
                 benefits
               }
             })} />
-             <PowerUpCard title="Priority seating on Fridays" date="2024/01/03" onPress={() => router.navigate({
+            <PowerUpCard title="Priority seating on Fridays" date="2024/01/03" onPress={() => router.navigate({
               pathname: '/PowerUp',
               params: {
                 benefits
               }
             })} />
-             <PowerUpCard title="Priority seating on Fridays" date="2024/01/03" onPress={() => router.navigate({
+            <PowerUpCard title="Priority seating on Fridays" date="2024/01/03" onPress={() => router.navigate({
               pathname: '/PowerUp',
               params: {
                 benefits
@@ -118,7 +146,7 @@ const Restaurant = () => {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </GestureHandlerRootView>
   );
 };
 
