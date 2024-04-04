@@ -1,39 +1,41 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-} from "react-native";
-import React, { useEffect } from "react";
-import Header from "../components/layout/Header";
-import Color from "../constants/Color";
+import { useRouter } from "expo-router";
 import {
   ArrowRight2,
-  Lock1,
   LogoutCurve,
   MessageQuestion,
   NoteText,
   Sms,
   User,
 } from "iconsax-react-native";
-import { router, useRouter } from "expo-router";
-import { useAuth } from "../context/AuthContext";
+import React, { useEffect } from "react";
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useQuery, useQueryClient } from "react-query";
-import { getUserById, getUserCard, getUserTaps } from "../lib/service/queryHelper";
+import Header from "../components/layout/Header";
+import Color from "../constants/Color";
+import { useAuth } from "../context/AuthContext";
+import {
+  getUserById,
+  getUserCard,
+  getUserTaps,
+} from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
 
 const Profile = () => {
-
   const { currentLocation } = useLocationStore();
-  const router = useRouter()
+  const router = useRouter();
   const { data: taps = [] } = useQuery({
     queryKey: ["userTaps"],
     queryFn: () => {
-      return getUserTaps()
+      return getUserTaps();
     },
-  })
+  });
 
   const { data: cards = [], isLoading } = useQuery({
     queryKey: ["userCards"],
@@ -45,7 +47,7 @@ const Profile = () => {
     },
     enabled: !!currentLocation,
   });
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     queryClient.invalidateQueries("userCards");
@@ -55,9 +57,9 @@ const Profile = () => {
   const { data: user = [] } = useQuery({
     queryKey: ["UserInfo"],
     queryFn: () => {
-      return getUserById(authState.userId)
-    }
-  })
+      return getUserById(authState.userId);
+    },
+  });
   return (
     <>
       <Header title="Profile" />
@@ -73,41 +75,61 @@ const Profile = () => {
               </View>
               <View style={styles.profileStatsContainer}>
                 <View style={styles.profileStats}>
-                  <TouchableOpacity onPress={() => router.push('/MyAcards')}>
-                    <View style={{ justifyContent: 'center',gap:8, alignItems: 'center', paddingHorizontal: 10 }}>
+                  <TouchableOpacity onPress={() => router.push("/MyAcards")}>
+                    <View
+                      style={{
+                        justifyContent: "center",
+                        gap: 8,
+                        alignItems: "center",
+                        paddingHorizontal: 10,
+                      }}
+                    >
                       <Text style={{ color: Color.Gray.gray400, fontSize: 16 }}>
-                      Check Ins
+                        Check Ins
                       </Text>
                       <Text
                         style={{
                           color: Color.Gray.gray600,
                           fontSize: 24,
-                          fontWeight: 'bold',
+                          fontWeight: "bold",
                         }}
                       >
-                        {taps?.data?.taps.length === 0 ? '00' : taps?.data?.taps.length}
+                        {taps?.data?.taps.length === 0
+                          ? "00"
+                          : taps?.data?.taps.length}
                       </Text>
                     </View>
                   </TouchableOpacity>
-
                 </View>
                 <View
                   style={{ width: 1, backgroundColor: Color.Gray.gray50 }}
                 />
-                <TouchableOpacity style={styles.profileStats} onPress={() => router.push('/MyAcards')}>
-                <View style={{ justifyContent: 'center',gap:8, alignItems: 'center', paddingHorizontal: 10 }}>
-                  <Text style={{ color: Color.Gray.gray400, fontSize: 16 }}>
-                  A-Passes
-                  </Text>
-                  <Text
+                <TouchableOpacity
+                  style={styles.profileStats}
+                  onPress={() => router.push("/MyAcards")}
+                >
+                  <View
                     style={{
-                      color: Color.Gray.gray600,
-                      fontSize: 24,
-                      fontWeight: "bold",
+                      justifyContent: "center",
+                      gap: 8,
+                      alignItems: "center",
+                      paddingHorizontal: 10,
                     }}
                   >
-                    {cards?.data?.cards.length === 0 ? "00" : cards?.data?.cards.length}
-                  </Text>
+                    <Text style={{ color: Color.Gray.gray400, fontSize: 16 }}>
+                      A-Passes
+                    </Text>
+                    <Text
+                      style={{
+                        color: Color.Gray.gray600,
+                        fontSize: 24,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {cards?.data?.cards.length === 0
+                        ? "00"
+                        : cards?.data?.cards.length}
+                    </Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -129,7 +151,10 @@ const Profile = () => {
                 </View>
                 <ArrowRight2 color={Color.Gray.gray600} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.configContainer}>
+              <TouchableOpacity
+                style={styles.configContainer}
+                onPress={() => router.push("profileSection/ContactEdit")}
+              >
                 <View
                   style={{
                     flexDirection: "row",
@@ -155,7 +180,10 @@ const Profile = () => {
                 </View>
                 <ArrowRight2 color={Color.Gray.gray600} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.configContainer} onPress={() => router.navigate('/TermsAndCondo')}>
+              <TouchableOpacity
+                style={styles.configContainer}
+                onPress={() => router.navigate("/TermsAndCondo")}
+              >
                 <View
                   style={{
                     flexDirection: "row",
@@ -170,14 +198,19 @@ const Profile = () => {
               </TouchableOpacity>
 
               <TouchableOpacity onPress={onLogout}>
-                <View
-                  style={styles.logout}
-                >
-                  <LogoutCurve color={Color.Gray.gray600}/>
-                  <Text style={{ fontSize: 16, color: Color.Gray.gray600, fontWeight: 'bold' }}>Log out</Text>
+                <View style={styles.logout}>
+                  <LogoutCurve color={Color.Gray.gray600} />
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: Color.Gray.gray600,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Log out
+                  </Text>
                 </View>
               </TouchableOpacity>
-
             </View>
           </View>
         </ScrollView>
@@ -211,14 +244,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
   },
-  logout:{
+  logout: {
     borderRadius: 48,
-    justifyContent:'center',
-    flexDirection:'row',
-    alignItems:'center',
-    gap:12,
-    backgroundColor:Color.Gray.gray50,
-    paddingVertical:12
+    justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    backgroundColor: Color.Gray.gray50,
+    paddingVertical: 12,
   },
   profilePic: {
     alignItems: "center",
@@ -244,7 +277,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
-  
   },
   profileConfig: {
     gap: 16,
