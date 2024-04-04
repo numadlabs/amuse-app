@@ -29,12 +29,14 @@ const Page = () => {
     return unsubscribe;
   }, [router]);
 
-  const { data: user = [], isLoading } = useQuery({
+  const { data: user = [], isSuccess } = useQuery({
     queryKey: ["UserInfo"],
     queryFn: () => {
       return getUserById(authState.userId)
-    }
+    },
+    enabled : !!authState.userId
   })
+
 
   const { data: cards = [], } = useQuery({
     queryKey: ["userCards"],
@@ -68,7 +70,7 @@ const Page = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Balance />
+      <Balance amount={user.balance}/>
       <View style={{ marginTop: 24, gap: 12 }}>
         {user.email && user.dateOfBirth ? (
           <Text style={{ fontSize: 14, fontWeight: '600', color: Color.Gray.gray400 }}>
@@ -81,7 +83,6 @@ const Page = () => {
             cards?.data?.cards.slice(0, 2).map((card, index) => (
               <View style={{ marginRight: 8 }}>
                 <OwnedAcards marker={card} key={card.id} onPress={() => handleNavigation(card)} />
-
               </View>
             ))
           ) : (

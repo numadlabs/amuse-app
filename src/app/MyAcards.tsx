@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 100,
     marginTop: 16,
+    height: 'auto'
   },
   searchBarContainer: {
     backgroundColor: Color.base.White,

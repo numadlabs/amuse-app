@@ -105,6 +105,7 @@ const StackedCard = () => {
                   <View style={styles.overlay} />
                   <BlurView intensity={24} style={styles.blurContainer}>
                     <Text style={styles.titleText}>{card.name}</Text>
+                    <Text style={[styles.buttonText, {bottom:5}]}>{"A-Pass"}</Text>
                     <View style={{ alignItems: 'center' }}>
                       <Image style={styles.image} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${card.logo}` }} />
                     </View>
@@ -185,7 +186,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Color.Gray.gray50,
-    fontSize: 13,
+    fontSize: 12,
+    lineHeight:16,
     fontWeight: "bold",
   },
   image: {

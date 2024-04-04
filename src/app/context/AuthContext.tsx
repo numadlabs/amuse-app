@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
+import { QueryCache } from '@tanstack/react-query'
 import { axiosClient } from "../lib/axios";
 import { useRouter } from "expo-router";
 import { SERVER_SETTING } from "../constants/serverSettings";
@@ -31,6 +32,20 @@ interface AuthProps {
 }
 
 const AuthContext = createContext<AuthProps>({});
+
+
+
+const queryCache = new QueryCache({
+  onError: (error) => {
+    console.log(error)
+  },
+  onSuccess: (data) => {
+    console.log(data)
+  },
+  onSettled: (data, error) => {
+    console.log(data, error)
+  },
+})
 
 export const useAuth = () => {
   return useContext(AuthContext);
@@ -233,7 +248,9 @@ export const AuthProvider = ({ children }: any) => {
       loading: false,
       userId: null,
     });
+   
     await deleteUserId();
+    queryCache.clear()
     router.push("/Login");
   };
 
