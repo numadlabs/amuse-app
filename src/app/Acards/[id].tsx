@@ -119,7 +119,7 @@ const Restaurant = () => {
             </GestureDetector>
           )}
           {/* <BottomSheetDetails visible={bottomSheetVisible} onClose={toggleBottomSheet} benefits={benefits}/> */}
-          <Text style={{ fontWeight: "bold", fontSize: 16, marginTop: 32 }}>Power ups</Text>
+          <Text style={{ fontWeight: "bold", fontSize: 16, marginTop: 32 }}>Perks</Text>
           <View style={styles.powerUpGrid}>
             <PowerUpCard title="Priority seating on Fridays" date="2024/01/03" onPress={() => router.navigate({
               pathname: '/PowerUp',

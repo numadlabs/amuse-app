@@ -1,6 +1,6 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+
 import Color from "../constants/Color";
 import Balance from "../components/sections/Balance";
 import QuickInfo from "../components/sections/QuickInfo";
@@ -9,10 +9,12 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigation, useRouter } from "expo-router";
 import { useQuery, useQueryClient } from "react-query";
 import { getUserById, getUserCard } from "../lib/service/queryHelper";
-import { Lamp } from "iconsax-react-native";
+
 import OwnedAcards from "../components/atom/cards/OwnedAcards";
 import useLocationStore from "../lib/store/userLocation";
 import { RestaurantType } from "../lib/types";
+
+
 
 const Page = () => {
   const queryClient = useQueryClient()
@@ -21,14 +23,6 @@ const Page = () => {
   const navigation = useNavigation();
   const { authState } = useAuth()
   const { currentLocation } = useLocationStore();
-
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener("focus", () => {
-  //     setRefreshPage(prevState => !prevState);
-  //   });
-  //   return unsubscribe;
-  // }, [router]);
-
   const { data: user = [], isSuccess } = useQuery({
     queryKey: ["UserInfo"],
     queryFn: () => {
@@ -36,11 +30,6 @@ const Page = () => {
     },
     enabled: !!authState.userId
   })
-
-  console.log(user)
-
-
-
 
   const { data: cards = [], } = useQuery({
     queryKey: ["userCards"],
@@ -70,6 +59,8 @@ const Page = () => {
       },
     });
   };
+
+
 
 
   return (
