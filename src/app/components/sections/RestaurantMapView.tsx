@@ -28,6 +28,7 @@ import FloatingRestaurantCard from "../atom/cards/FloatingRestCard";
 import useLocationStore from "@/app/lib/store/userLocation";
 import SvgMarker from "../atom/svgMarker";
 import Color from "@/app/constants/Color";
+import Toast from 'react-native-toast-message';
 import { Gps } from "iconsax-react-native";
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
@@ -265,6 +266,10 @@ export default function RestaurantMapView() {
       prevLocation === "current" ? "dubai" : "current"
     );
 
+
+
+
+
     const coordinates = getLocationCoordinates();
     setInitialRegion({
       latitude: coordinates.latitude,
@@ -376,6 +381,13 @@ export default function RestaurantMapView() {
   };
 
 
+  const showToast = () => {
+    Toast.show({
+      type: 'perkToast',
+      text1: 'Added A-Pass',
+    });
+  }
+
   const handleGetAcard = async (acardId: string) => {
     console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
     setIsClaimLoading(true);
@@ -395,6 +407,7 @@ export default function RestaurantMapView() {
       if (data.data.success) {
         queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
         setIsClaimLoading(false);
+        showToast()
       }
     }
   };

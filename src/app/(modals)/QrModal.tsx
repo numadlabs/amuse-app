@@ -20,6 +20,7 @@ import { useAuth } from "../context/AuthContext";
 import { getUserCard } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
 import { Flash } from "iconsax-react-native";
+import Toast from 'react-native-toast-message';
 
 const { width, height } = Dimensions.get("window");
 
@@ -37,6 +38,13 @@ const QrModal = () => {
     setPopupVisible(!isPopupVisible);
   };
 
+  const showToast = () => {
+    Toast.show({
+      type: 'perkToast',
+      text1: 'Successfully used perk',
+    });
+  }
+
   const toggleBtcPopup = () => {
     setBtcPopupVisible(!isBtcPopupVisible)
   }
@@ -44,7 +52,7 @@ const QrModal = () => {
   const closeModal = () => {
     toggleBtcPopup()
     togglePopup()
-
+    showToast()
   };
 
   const queryClient = useQueryClient()
