@@ -32,8 +32,11 @@ const MyAcards = () => {
     enabled: !!currentLocation,
   });
 
+  console.log(cards?.data?.cards)
+
   const router = useRouter();
   const handleNavigation = (restaurant: RestaurantType) => {
+    console.log("logo",restaurant.logo)
     router.push({
       pathname: `/Acards/${restaurant.id}`,
       params: {
@@ -52,7 +55,7 @@ const MyAcards = () => {
   };
   return (
     <SafeAreaView style={{ backgroundColor: Color.base.White }}>
-      <Header title="My A-Passes" />
+      <Header title="My memberships" />
       <View style={styles.searchBarContainer}>
         <View style={styles.searchBar}>
           <SearchNormal1 color={Color.Gray.gray600} />

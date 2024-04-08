@@ -20,12 +20,12 @@ const BottomSheet = () => {
               <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Benefits</Text>
               <View>
                 <View style={styles.attribute}>
-                  <Tick />
-                  <Text style={styles.attributeText}>Earn BTC for every visit</Text>
+                  <Tick size={8} color={Color.Gray.gray600}/>
+                  <Text style={styles.attributeText}>Earn BTC for every check-in</Text>
                 </View>
                 <View style={styles.attribute}>
-                  <Tick />
-                  <Text style={styles.attributeText}>Earn BTC for every visit</Text>
+                <Tick size={8} color={Color.Gray.gray600}/>
+                  <Text style={styles.attributeText}>Earn BTC for every check-in</Text>
                 </View>
               </View>
             </View>

@@ -9,7 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
 interface BottomSheetProps {
- 
+
   benefits: string | string[],
   locations: string | string[],
   memberships: string | string[],
@@ -47,52 +47,53 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
     //   <TouchableWithoutFeedback onPress={handleOutsidePress}>
 
 
-   
 
-          <View style={[styles.bottomSheet]}>
-            <View style={styles.content}>
-              <Text style={{ fontWeight: "bold", fontSize: 16 }}>Rewards</Text>
-              <View style={{marginVertical:16}}>
-                <View style={styles.attribute}>
-                  <Tick />
-                  <Text style={styles.attributeText}>
-                    {benefits}
-                  </Text>
-                </View>
-              </View>
-              <View style={{ gap: 16 }}>
-                <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                  Locatons
-                </Text>
-                <View>
-                  <View style={styles.attribute}>
-                    <Location color={Color.Gray.gray600} />
-                    <Text
-                      style={
-                        (styles.attributeText,
-                          { textDecorationLine: "underline" })
-                      }
-                    >
-                      "{locations}"
-                    </Text>
-                  </View>
-                </View>
-               
-                <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                  How it works
-                </Text>
-                <Text>
-                  {instruction}
-                </Text>
-                <View style={styles.imageContainer}>
-                  <Image
-                    source={require("@/public/images/qr.png")}
-                    style={{ width: "100%", height: "100%", borderRadius: 32 }}
-                  ></Image>
-                </View>
-              </View>
+
+    <View style={[styles.bottomSheet]}>
+      <View style={styles.content}>
+        <Text style={{ fontWeight: "bold", fontSize: 16 }}>Rewards</Text>
+        <View style={{ marginVertical: 16 }}>
+          <View style={styles.attribute}>
+            <Tick size={24} color={Color.Gray.gray600} />
+            <Text style={styles.attributeText}>
+              {/* {benefits} */}
+              $1 in Bitcoin for every check in
+            </Text>
+          </View>
+          <View style={styles.attribute}>
+            <Tick size={24} color={Color.Gray.gray600} />
+            <Text style={styles.attributeText}>
+              {/* {benefits} */}
+              1 perk unlock every 10th check in
+            </Text>
+          </View>
+        </View>
+        <View style={{ gap: 16 }}>
+          <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+            Locatons
+          </Text>
+          <View>
+            <View style={styles.attribute}>
+              <Location color={Color.Gray.gray600} />
+              <Text
+                style={
+                  (styles.attributeText)
+                }
+              >
+                "{locations}"
+              </Text>
             </View>
           </View>
+
+          <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+            How it works
+          </Text>
+          <Text>
+            Scan the restaurant’s QR code. Earn some Bitcoin. Activate perks when you get them. Repeat and stack your rewards.
+          </Text>
+        </View>
+      </View>
+    </View>
 
 
     //   </TouchableWithoutFeedback>
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: "100%",
     height: 200,
-   
+
   },
 });
 

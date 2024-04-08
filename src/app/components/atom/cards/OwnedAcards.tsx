@@ -46,7 +46,7 @@ const OwnedAcards: React.FC<OwnedAcardsProp> = ({ marker, onPress }) => {
               <View style={{ width: 1, height: 14, backgroundColor: Color.Gray.gray50 }} />
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                 <Reserve color={Color.Gray.gray600} size={16} />
-                <Text>{marker.visitCount} visits</Text>
+                <Text>{marker.visitCount} Check-ins</Text>
               </View>
             </View>
           </View>

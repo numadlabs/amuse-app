@@ -112,7 +112,7 @@ const Restaurant = () => {
               <View>
 
                 <View style={styles.attribute}>
-                  <Tick />
+                  <Tick size={8} color={Color.Gray.gray600}/>
                   <Text style={styles.attributeText}>
                     {benefits}
                   </Text>
@@ -128,8 +128,7 @@ const Restaurant = () => {
                   <Location color={Color.Gray.gray600} />
                   <Text
                     style={
-                      (styles.attributeText,
-                        { textDecorationLine: "underline" })
+                      (styles.attributeText)
                     }
                   >
                     "{location}"
@@ -164,7 +163,7 @@ const Restaurant = () => {
           <View style={styles.button1}>
           <WalletAdd color={Color.Gray.gray50} />
             <Text style={{color:  Color.Gray.gray50, fontSize: 15, fontWeight:'bold'}}>
-            {isOwned === "false" ? "Add A-card" : "Owned"}
+            {isOwned === "false" ? "Add membership card" : "Owned"}
             </Text>
           </View>
         </TouchableOpacity>

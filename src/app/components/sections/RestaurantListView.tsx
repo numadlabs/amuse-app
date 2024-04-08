@@ -20,6 +20,7 @@ interface RestaurantListViewProps { }
 
 const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
   const [isClaimLoading, setIsClaimLoading] = useState(false);
+  const [showOwned, setShowOwned] = useState(false);
   const { authState } = useAuth();
   const {
     data: restaurantsData,
@@ -34,7 +35,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
         distance: 10000,
         latitude: 0,
         longitude: 0,
-      }), // Update with actual parameters
+      }), 
   });
 
   // if (data.data.success) {
@@ -51,24 +52,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
   }
 
   const router = useRouter();
-  const handleNavigation = (restaurant: RestaurantType) => {
-    router.push({
-      pathname: `/restaurants/${restaurant.id}`,
-      params: {
-        name: restaurant.name,
-        location: restaurant.location,
-        about: restaurant.description,
-        category: restaurant.category,
-        isOwned: restaurant.isOwned,
-        benefits: [restaurant.benefits],
-        locations: restaurant.location,
-        artistInfo: restaurant.artistInfo,
-        expiryInfo: restaurant.expiryInfo,
-        instruction: restaurant.instruction,
-        logo: restaurant.logo,
-      },
-    });
-  };
+  
 
   const queryClient = useQueryClient();
 
@@ -94,6 +78,25 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
         setIsClaimLoading(false);
       }
     }
+  };
+
+  const handleNavigation = (restaurant: RestaurantType) => {
+    router.push({
+      pathname: `/restaurants/${restaurant.id}`,
+      params: {
+        name: restaurant.name,
+        location: restaurant.location,
+        about: restaurant.description,
+        category: restaurant.category,
+        isOwned: restaurant.isOwned,
+        benefits: [restaurant.benefits],
+        locations: restaurant.location,
+        artistInfo: restaurant.artistInfo,
+        expiryInfo: restaurant.expiryInfo,
+        instruction: restaurant.instruction,
+        logo: restaurant.logo,
+      },
+    });
   };
 
   return (

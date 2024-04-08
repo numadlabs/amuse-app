@@ -39,10 +39,12 @@ const QrModal = () => {
   };
 
   const showToast = () => {
-    Toast.show({
-      type: 'perkToast',
-      text1: 'Successfully used perk',
-    });
+    setTimeout(function () {
+      Toast.show({
+        type: 'perkToast',
+        text1: 'Successfully used perk',
+      });
+    }, 1500)
   }
 
   const toggleBtcPopup = () => {
@@ -88,17 +90,6 @@ const QrModal = () => {
     getCameraPermissions();
   }, []);
 
-
-  const { data: userCards = [] } = useQuery({
-    queryKey: ["userCards"],
-    queryFn: () => {
-      return getUserCard({
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
-      });
-    },
-    enabled: !!currentLocation,
-  });
 
   const {
     data,

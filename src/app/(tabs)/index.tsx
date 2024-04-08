@@ -85,10 +85,13 @@ const Page = () => {
           )}
         </ScrollView>
       </View>
+      <Text style={{ fontSize: 14, fontWeight: '600', color: Color.Gray.gray400, marginTop:32, marginBottom:12 }}>
+        Memberships
+      </Text>
 
-      <View style={{ marginTop: 32 }}>
+
         <StackedCard key={refreshPage.toString()} />
-      </View>
+
 
       <View style={{ width: '100%', alignItems: 'center', marginBottom: 50 }}>
         <TouchableOpacity onPress={() => router.push('/MyAcards')}>

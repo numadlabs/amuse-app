@@ -28,8 +28,7 @@ import { height } from "../lib/utils";
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 const Restaurant = () => {
   const offset = useSharedValue(0)
-  const { name, location, category, about, isOwned, benefits, artistInfo, membership, instruction, logo, taps } = useLocalSearchParams();
-  console.log(instruction)
+  const { id, name, location, category, about, benefits, artistInfo, membership, instruction, logo, taps } = useLocalSearchParams();
   const [loading, setLoading] = useState(false)
   const translateY = useAnimatedStyle(() => ({
     transform: [{ translateY: offset.value }]
@@ -89,14 +88,14 @@ const Restaurant = () => {
                 </View>
                 <View style={styles.bottomDetails}>
                   <Text style={{ fontWeight: "bold", fontSize: 20, color: Color.base.White, }}>{taps}</Text>
-                  <Text style={{ fontSize: 12, color: Color.Gray.gray50, fontWeight: 'bold' }}>VISITS</Text>
+                  <Text style={{ fontSize: 12, color: Color.Gray.gray50, fontWeight: 'bold' }}>Check-ins</Text>
                 </View>
               </View>
             </BlurView>
           </ImageBackground>
         )}
         <View style={styles.attrContainer}>
-          {/* <DetailsSheet isVisible={bottomSheetVisible} onClose={toggleBottomSheet} benefits={benefits} locations={location} memberships={membership} artistInfo={artistInfo} about={about} instruction={instruction}/> */}
+  
 
           <AnimatedPressable
             entering={FadeIn}
@@ -108,16 +107,7 @@ const Restaurant = () => {
               </Text>
             </View>
           </AnimatedPressable>
-          {isOpen && (
-            <GestureDetector gesture={pan}>
-              <Animated.View style={[translateY,  { zIndex:999, bottom:height/3}]}
-                entering={SlideInDown.springify().damping(25)}
-                exiting={SlideOutDown}
-              >
-                <DetailsSheet benefits={benefits} locations={location} memberships={membership} about={about} instruction={instruction} artistInfo={artistInfo} />
-              </Animated.View>
-            </GestureDetector>
-          )}
+         
           {/* <BottomSheetDetails visible={bottomSheetVisible} onClose={toggleBottomSheet} benefits={benefits}/> */}
           <Text style={{ fontWeight: "bold", fontSize: 16, marginTop: 32 }}>Perks</Text>
           <View style={styles.powerUpGrid}>
@@ -142,6 +132,16 @@ const Restaurant = () => {
           </View>
         </View>
       </ScrollView>
+      {isOpen && (
+            <GestureDetector gesture={pan}>
+              <Animated.View style={[translateY,  { zIndex:999, bottom:height/3}]}
+                entering={SlideInDown.springify().damping(25)}
+                exiting={SlideOutDown}
+              >
+                <DetailsSheet benefits={benefits} locations={location} memberships={membership} about={about} instruction={instruction} artistInfo={artistInfo} />
+              </Animated.View>
+            </GestureDetector>
+          )}
     </GestureHandlerRootView>
   );
 };

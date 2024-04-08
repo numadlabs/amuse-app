@@ -8,7 +8,7 @@ import Color from "../constants/Color";
 import { useAuth } from "../context/AuthContext";
 import * as SplashScreen from "expo-splash-screen";
 import useLocationStore from "../lib/store/userLocation";
-import { RootSiblingParent } from 'react-native-root-siblings';
+
 const Layout = ({ navigation }) => {
   const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState(false);
