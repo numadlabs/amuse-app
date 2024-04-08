@@ -21,9 +21,9 @@ import Popup from "./components/(feedback)/Popup";
 
 
 const PowerUp = () => {
-  const { benefits } = useLocalSearchParams();
+  const { id, name } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
-
+  console.log(id)
 
   const togglePopup = () => {
     setPopupVisible(!isPopupVisible);
@@ -46,7 +46,7 @@ const PowerUp = () => {
           <Close />
         </TouchableOpacity>
       </View>
-      <View style={styles.container}>
+      <View style={styles.container} key={id as string}>
         <TouchableOpacity onPress={togglePopup}>
           <Image style={{ width: 247, height: 247 }} source={require("@/public/images/pqr.png")} />
         </TouchableOpacity>
@@ -55,7 +55,7 @@ const PowerUp = () => {
           <AmuseBlackLogo />
           <View style={{ gap: 12 }}>
             <Text style={{ fontSize: 24, fontWeight: 'bold', color: Color.Gray.gray600 }}>
-              {benefits}
+              {name}
             </Text>
             <Text style={{ color: Color.Gray.gray400, fontSize: 16, textAlign: 'center', lineHeight: 20 }}>
               Show this to your waiter to redeem.{"\n"} Don't worry, they are pros.
