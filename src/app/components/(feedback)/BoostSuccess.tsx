@@ -76,7 +76,7 @@ const BoostSuccess: React.FC<PopupProps> = ({ isVisible, onClose }) => {
                   fontWeight: "normal",
                 }}
               >
-                Every time you use an A-card, you will receive extra rewards.
+                Every time you use an membership card, you will receive extra rewards.
                 Manage personal info in your settings.
               </Text>
             </View>

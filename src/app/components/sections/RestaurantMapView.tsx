@@ -384,7 +384,7 @@ export default function RestaurantMapView() {
   const showToast = () => {
     Toast.show({
       type: 'perkToast',
-      text1: 'Added A-Pass',
+      text1: 'Added membership card',
     });
   }
 

@@ -85,7 +85,7 @@ const Profile = () => {
                       }}
                     >
                       <Text style={{ color: Color.Gray.gray400, fontSize: 16 }}>
-                        Check Ins
+                        Check-ins
                       </Text>
                       <Text
                         style={{
@@ -117,7 +117,7 @@ const Profile = () => {
                     }}
                   >
                     <Text style={{ color: Color.Gray.gray400, fontSize: 16 }}>
-                      A-Passes
+                      Memberships
                     </Text>
                     <Text
                       style={{

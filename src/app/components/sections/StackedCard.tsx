@@ -15,11 +15,7 @@ const StackedCard = () => {
   const { currentLocation } = useLocationStore();
   const router = useRouter();
   const queryClient = useQueryClient()
-
   const [scrollViewHeight, setScrollViewHeight] = useState(0);
-
-
-
   const { data: cards = [], isLoading } = useQuery({
     queryKey: ["userCards"],
     queryFn: () => {
@@ -35,18 +31,15 @@ const StackedCard = () => {
     if (cards && cards.data && cards.data.cards) {
       const totalCardHeight = cards.data.cards.reduce((totalHeight, card, index) => {
         const marginBottom = index !== 0 ? -80 : 0;
-        const cardHeight = 470 + marginBottom;
+        const cardHeight = 350 + marginBottom;
         return totalHeight + cardHeight;
       }, 0);
 
-
       const adjustedTotalHeight = totalCardHeight * (1 - 0.8);
-
       setScrollViewHeight(adjustedTotalHeight);
     }
   }, [cards]);
 
-  // Render only the latest four cards
   const latestCards = cards?.data?.cards.slice(0, 4);
   useEffect(() => {
     queryClient.invalidateQueries("userCards");
@@ -80,10 +73,10 @@ const StackedCard = () => {
           <View>
             <EmojiHappy size={48} color={Color.Gray.gray400} />
           </View>
-          <Text style={{ textAlign: 'center' }}>Discover restaurants, add an A-Pass, and start earning rewards every time you check in at a participating restaurant!</Text>
+          <Text style={{ textAlign: 'center' }}>Discover restaurants, add an membership card, and start earning rewards every time you check-in at a participating restaurant!</Text>
           <TouchableOpacity>
             <View style={styles.button}>
-              <Text style={styles.buttonText}>Add A-Pass</Text>
+              <Text style={styles.buttonText}>Add membership card</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -105,7 +98,7 @@ const StackedCard = () => {
                   <View style={styles.overlay} />
                   <BlurView intensity={24} style={styles.blurContainer}>
                     <Text style={styles.titleText}>{card.name}</Text>
-                    <Text style={[styles.buttonText, {bottom:5}]}>{"A-Pass"}</Text>
+                    <Text style={[styles.buttonText, {bottom:5}]}>{card.category}</Text>
                     <View style={{ alignItems: 'center' }}>
                       <Image style={styles.image} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${card.logo}` }} />
                     </View>
@@ -115,7 +108,6 @@ const StackedCard = () => {
             ))}
         </ScrollView>
       )}
-
     </>
   );
 };

@@ -48,7 +48,7 @@ const ResListCard: React.FC<ResListCardProp> = ({ marker, onPress, isClaimLoadin
               {marker.isOwned ? (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                   <Reserve color={Color.Gray.gray600} size={16} />
-                  <Text>{marker.visitCount} visits</Text>
+                  <Text>{marker.visitCount} Check-ins</Text>
                 </View>
               ) : (
                 <TouchableOpacity onPress={onPress}>
@@ -58,7 +58,7 @@ const ResListCard: React.FC<ResListCardProp> = ({ marker, onPress, isClaimLoadin
                         ? "Loading"
                         : marker.isOwned
                           ? "Owned"
-                          : " Add a-card"}
+                          : " Add"}
                     </Text>
                   </View>
                 </TouchableOpacity>
