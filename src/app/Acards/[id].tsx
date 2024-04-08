@@ -39,7 +39,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { height } from "../lib/utils";
 import { useQuery } from "react-query";
-import { getUserCard, getRa } from "../lib/service/queryHelper";
+import { getUserCard } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -230,7 +230,7 @@ const Restaurant = () => {
           </Text>
           <View style={styles.powerUpGrid}>
             {cards &&
-              cards?.data?.cards.map((item) => (
+              cards?.data?.cards.filter(item => item.id === id).map((item) => (
                 <PowerUpCard
                   key={item.cardId}
                   title={item.name}

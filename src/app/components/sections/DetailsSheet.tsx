@@ -5,6 +5,7 @@ import { TickCircle, Location, TicketExpired, User } from 'iconsax-react-native'
 import Color from '@/app/constants/Color';
 import Tick from '../icons/Tick';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { height } from '@/app/lib/utils';
 
 
 
@@ -109,15 +110,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   bottomSheet: {
-    backgroundColor: 'white',
+    backgroundColor: Color.base.White,
     padding: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     width: '100%',
-    zIndex: 999
+    zIndex: 999,
+    height:height/5
   },
   content: {
-
+    backgroundColor:Color.base.White
   },
   textContainer: {
     alignItems: 'center',
