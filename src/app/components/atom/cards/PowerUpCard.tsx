@@ -8,10 +8,9 @@ import PowerUpStripes from '../../icons/PowerUpStripes'
 
 interface PowerUpCardProp {
   title: string,
-  date: string,
   onPress: () => void
 }
-const PowerUpCard: React.FC<PowerUpCardProp> = ({ title, date, onPress }) => {
+const PowerUpCard: React.FC<PowerUpCardProp> = ({ title, onPress }) => {
   return (
     <View style={styles.container}>
 
