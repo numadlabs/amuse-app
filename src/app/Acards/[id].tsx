@@ -232,9 +232,15 @@ const Restaurant = () => {
             {cards &&
               cards?.data?.cards.filter(item => item.id === id).map((item) => (
                 <PowerUpCard
-                  key={item.cardId}
+                  key={item.id}
                   title={item.name}
-                  onPress={() => router.navigate(item.id)}
+                  onPress={() => router.push({
+                    pathname: `/PowerUp`,
+                    params: {
+                      name: item.name,
+                      id: item.id
+                    }
+                  })}
                 />
               ))}
           </View>
