@@ -18,9 +18,19 @@ import Color from "./constants/Color";
 import Close from "./components/icons/Close";
 import AmuseBlackLogo from "./components/icons/AmuseBlackLogo";
 import Popup from "./components/(feedback)/Popup";
+import Toast from "react-native-toast-message";
 
 
 const PowerUp = () => {
+
+  const showToast = () => {
+    setTimeout(() => {
+      Toast.show({
+        type: "perkToast",
+        text1: "Perk consumed"
+      })
+    }, 800)
+  }
   const { id, name } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
   console.log(id)
@@ -30,6 +40,7 @@ const PowerUp = () => {
   };
 
   const handleNavigation = () => {
+    showToast()
     router.back()
   }
 

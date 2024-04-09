@@ -37,12 +37,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
         longitude: 0,
       }), 
   });
-
-  // if (data.data.success) {
-  //   queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
-  //   setIsClaimLoading(false);
-  // }
-
+  
   if (isLoading) {
     return <Text>Loading...</Text>;
   }

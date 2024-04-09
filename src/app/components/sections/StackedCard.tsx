@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground, ScrollView } from "react-native";
-import { EmojiHappy } from "iconsax-react-native";
+import { EmojiHappy, Flash } from "iconsax-react-native";
 import Color from "../../constants/Color";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "expo-router";
@@ -71,12 +71,12 @@ const StackedCard = () => {
       {cards?.data?.cards.length === 0 ? (
         <View style={styles.container1}>
           <View>
-            <EmojiHappy size={48} color={Color.Gray.gray400} />
+            <Flash size={48} color={Color.Gray.gray400} />
           </View>
           <Text style={{ textAlign: 'center' }}>Discover restaurants, add an membership card, and start earning rewards every time you check-in at a participating restaurant!</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => router.navigate('/Acards')}>
             <View style={styles.button}>
-              <Text style={styles.buttonText}>Add membership card</Text>
+              <Text style={styles.buttonText}>Explore</Text>
             </View>
           </TouchableOpacity>
         </View>

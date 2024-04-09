@@ -102,7 +102,7 @@ function Login() {
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
-    togglePrefix()
+
   };
 
   const onFocusPhone = () => {
@@ -134,6 +134,7 @@ function Login() {
 
   const handlePrefixSelection = (selectedPrefix) => {
     setPrefix(selectedPrefix)
+    togglePrefix()
     console.log(selectedPrefix)
   }
 

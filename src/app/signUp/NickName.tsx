@@ -117,11 +117,13 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   bottomPosition: {
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    bottom:20
   },
   topPosition: {
     justifyContent: 'flex-start',
     marginTop: 'auto',
+    bottom:100,
   },
   topText: {
     color: Color.Gray.gray500,

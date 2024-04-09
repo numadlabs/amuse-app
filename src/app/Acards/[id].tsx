@@ -39,13 +39,17 @@ import Animated, {
 } from "react-native-reanimated";
 import { height } from "../lib/utils";
 import { useQuery } from "react-query";
-import { getUserCard } from "../lib/service/queryHelper";
+import { getPowerUp, getUserCard } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
+import PerksSection from "../components/sections/PerksSection";
+import PowerUpLogo from "../components/icons/PowerUpLogo";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const Restaurant = () => {
   const offset = useSharedValue(0);
   const { currentLocation } = useLocationStore();
+  const [showPerks, setShowPerks] = useState(true)
+
   const {
     id,
     name,
@@ -83,17 +87,16 @@ const Restaurant = () => {
       }
     });
 
-  const { data: cards = [], isSuccess } = useQuery({
+  const backgroundColor = showPerks ? Color.base.White : Color.Gray.gray50
+  const { data: perks = [], isLoading } = useQuery({
     queryFn: () => {
-      return getUserCard({
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
-      });
+      return getPowerUp(id)
     },
-    enabled: !!currentLocation,
-  });
-
-  console.log(cards?.data?.cards);
+    enabled: !!currentLocation
+  })
+  const toggleView = (view) => {
+    setShowPerks(view)
+  }
 
   return (
     <GestureHandlerRootView
@@ -142,27 +145,9 @@ const Restaurant = () => {
                 source={{
                   uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${logo}` as string,
                 }}
-              /> 
+              />
               <View style={styles.bottomDetailsContainer}>
                 <View style={styles.bottomDetails1}>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 16,
-                      color: Color.base.White,
-                    }}
-                  >
-                    {artistInfo}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      color: Color.Gray.gray50,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    MINT
-                  </Text>
                   <Text
                     style={{
                       fontSize: 12,
@@ -171,6 +156,15 @@ const Restaurant = () => {
                     }}
                   >
                     #267473
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: Color.Gray.gray50,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    MEMBERSHIP
                   </Text>
                 </View>
                 <View style={styles.bottomDetails}>
@@ -198,72 +192,100 @@ const Restaurant = () => {
           </ImageBackground>
         )}
         <View style={styles.attrContainer}>
-          <AnimatedPressable
-            entering={FadeIn}
-            exiting={FadeOut}
-            onPress={toggleBottomSheet}
+
+          <View
+            style={{
+              backgroundColor: Color.Gray.gray50,
+              justifyContent: "center",
+              alignItems: "center",
+              alignContent: 'center',
+              borderRadius: 48,
+              height: 48,
+              width: '100%',
+              flexDirection: 'row',
+              overflow: 'hidden',
+              padding: 4,
+            }}
           >
-            <View
-              style={{
-                backgroundColor: Color.Gray.gray50,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 48,
-                paddingVertical: 12,
-              }}
-            >
-              <Text
-                style={{
+            <TouchableOpacity onPress={() => toggleView(true)}>
+              <View style={{
+                backgroundColor: backgroundColor,
+                flex: 1,
+                flexGrow: 1,
+                paddingHorizontal: 60,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 48
+              }}>
+                <Text style={{
                   fontSize: 15,
                   color: Color.Gray.gray600,
                   fontWeight: "bold",
-                }}
-              >
-                Details
-              </Text>
-            </View>
-          </AnimatedPressable>
+                }}>
+                  Perks
+                </Text>
+              </View>
 
-          {/* <BottomSheetDetails visible={bottomSheetVisible} onClose={toggleBottomSheet} benefits={benefits}/> */}
-          <Text style={{ fontWeight: "bold", fontSize: 16, marginTop: 32 }}>
-            Perks
-          </Text>
-          <View style={styles.powerUpGrid}>
-            {cards &&
-              cards?.data?.cards.filter(item => item.id === id).map((item) => (
-                <PowerUpCard
-                  key={item.id}
-                  title={item.name}
-                  onPress={() => router.push({
-                    pathname: `/PowerUp`,
-                    params: {
-                      name: item.name,
-                      id: item.id
-                    }
-                  })}
-                />
-              ))}
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => toggleView(false)}>
+              <View style={{
+                backgroundColor: showPerks ? Color.Gray.gray50 : Color.base.White,
+                flex: 1,
+                flexGrow: 1,
+                alignItems: 'center',
+                paddingHorizontal: 60,
+                justifyContent: 'center',
+                borderRadius: 48
+              }}>
+                <Text style={{
+                  fontSize: 15,
+                  color: Color.Gray.gray600,
+                  fontWeight: "bold",
+                }}>
+                  Details
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={{ flex: 1, flexGrow: 1, marginTop: 32 }}>
+            {isLoading ? (
+              <ActivityIndicator color={Color.Gray.gray600} />
+            ) : (
+              showPerks ? (
+                <View style={styles.powerUpGrid}>
+                  {perks && perks.length > 0 ? (
+                    perks.map((item, index) => (
+                      <PowerUpCard
+                        key={index}
+                        title={item.name}
+                        onPress={() => router.push({
+                          pathname: `/PowerUp`,
+                          params: {
+                            name: item.name,
+                            id: item.id
+                          }
+                        })}
+                      />
+                    ))
+                  ) : (
+                    <View style={{ backgroundColor: Color.Gray.gray50, flex: 1, justifyContent: 'center', gap: 16, padding: 24, borderRadius: 16 }}>
+                      <View style={{ justifyContent: 'center', alignItems: 'center', }}>
+                        <PowerUpLogo />
+                      </View>
+
+                      <Text style={{ textAlign: 'center', lineHeight: 16, fontSize: 12, fontWeight: '400' }}>You haven’t got any perks yet.{"\n"} Every 10th check-in, you will receive perks.</Text>
+                    </View>
+                  )}
+                </View>
+              ) : (
+                <View style={{ flex: 1, flexGrow: 1, marginBottom: 150, padding:8 }}>
+                  <DetailsSheet benefits={benefits} locations={location} memberships={membership} about={about} instruction={instruction} artistInfo={artistInfo} />
+                </View>
+              )
+            )}
           </View>
         </View>
       </ScrollView>
-      {isOpen && (
-        <GestureDetector gesture={pan}>
-          <Animated.View
-            style={[translateY, { zIndex: 999, bottom: height / 3 }]}
-            entering={SlideInDown.springify().damping(25)}
-            exiting={SlideOutDown}
-          >
-            <DetailsSheet
-              benefits={benefits}
-              locations={location}
-              memberships={membership}
-              about={about}
-              instruction={instruction}
-              artistInfo={artistInfo}
-            />
-          </Animated.View>
-        </GestureDetector>
-      )}
     </GestureHandlerRootView>
   );
 };
