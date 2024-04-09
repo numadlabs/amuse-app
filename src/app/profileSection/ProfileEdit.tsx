@@ -17,6 +17,8 @@ import { useAuth } from "../context/AuthContext";
 import { updateUserInfo } from "../lib/service/mutationHelper";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "../components/ui/Button";
+import Toast from "react-native-toast-message";
+import { router } from "expo-router";
 
 const ProfileEdit = () => {
   const { authState } = useAuth();
@@ -32,6 +34,15 @@ const ProfileEdit = () => {
   const [location, setLocation] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [dataChanged, setDataChanged] = useState(false);
+
+  const showToast = () => {
+    setTimeout(function () {
+      Toast.show({
+        type: 'perkToast',
+        text1: 'Account changes saved.',
+      });
+    }, 300)
+  }
 
   useEffect(() => {
     if (user) {
@@ -74,7 +85,10 @@ const ProfileEdit = () => {
       await updateUserInfo({ userId: authState.userId, data: userData });
       await refetch();
       setLoading(false);
-      setDataChanged(false); // Reset data change flag after saving
+      setDataChanged(false); 
+      showToast()
+      router.back();
+
     } catch (error) {
       console.log(error);
       setLoading(false);

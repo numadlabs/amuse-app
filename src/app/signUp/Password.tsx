@@ -1,4 +1,4 @@
-import { View, Text, TextInput, KeyboardAvoidingView, Keyboard, Platform, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import { View, Text, TextInput, KeyboardAvoidingView, Keyboard, Platform, TouchableWithoutFeedback, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react'
 import FpLayout from './_layout'
 import Color from '../constants/Color';
@@ -7,6 +7,7 @@ import Button from '../components/ui/Button';
 import Steps from '../components/atom/Steps';
 import { EyeSlash } from 'iconsax-react-native';
 import Tick from '../components/icons/Tick'
+import { Ionicons } from "@expo/vector-icons";
 import { useSignUpStore } from '../lib/store/signUpStore';
 
 const validatePassword = (password: string): boolean => {
@@ -32,12 +33,18 @@ const Password = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const { prefix, phoneNumber } = useLocalSearchParams()
   const { password, setPassword } = useSignUpStore()
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [passwordPlaceholder, setPasswordPlaceholder] =
+  useState<string>("Password");
 
   const isPasswordValid = validatePassword(password);
   const doPasswordsMatch = password === confirmPassword;
 
 
 
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
   const isRuleSatisfied = (rule: RegExp): boolean => {
     return rule.test(password);
   };
@@ -59,6 +66,12 @@ const Password = () => {
   }, []);
 
 
+  const onFocusPassword = () => {
+    setPasswordPlaceholder("");
+  };
+  const onBlurPassword = () => {
+    setPasswordPlaceholder("Password");
+  };
   const handleNavigation = () => {
     console.log(phoneNumber, prefix, password)
     router.push({
@@ -84,41 +97,95 @@ const Password = () => {
                 </Text>
               </View>
               <View style={styles.inputContainer}>
-                <TextInput
-                  onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)}
-                  placeholder='Password'
-                  style={isFocused ? styles.inputFocused : styles.input}
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  height: 40,
+                  borderColor: Color.Gray.gray50,
+                  borderWidth: 1,
+                  borderRadius: 16,
+                  paddingHorizontal: 10,
+                  marginTop: 10,
+                }}
+              >
+              <TextInput
+                  secureTextEntry={!showPassword}
+                  placeholder={passwordPlaceholder}
+                  placeholderTextColor={Color.Gray.gray200}
+                  onFocus={onFocusPassword}
+                  onBlur={onBlurPassword}
+                  style={{
+                    flex: 1,
+                    fontSize: 16,
+                    fontWeight: '400',
+                    lineHeight: 20
+                  }}
                   value={password}
                   onChangeText={setPassword}
-                  secureTextEntry
                 />
+                 <TouchableOpacity onPress={toggleShowPassword}>
+                  <Ionicons
+                    name={showPassword ? "eye-outline" : "eye-off-outline"}
+                    size={24}
+                    color="black"
+                  />
+                </TouchableOpacity>
+                </View>
+                <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  height: 40,
+                  borderColor: Color.Gray.gray50,
+                  borderWidth: 1,
+                  borderRadius: 16,
+                  paddingHorizontal: 10,
+                  marginTop: 10,
+                }}
+              >
                 <TextInput
-                  onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)}
-                  placeholder='Confirm password'
-                  style={isFocused ? styles.inputFocused : styles.input}
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  secureTextEntry
+                  secureTextEntry={!showPassword}
+                  placeholder={passwordPlaceholder}
+                  placeholderTextColor={Color.Gray.gray200}
+                  onFocus={onFocusPassword}
+                  onBlur={onBlurPassword}
+                  style={{
+                    flex: 1,
+                    fontSize: 16,
+                    fontWeight: '400',
+                    lineHeight: 20
+                  }}
+                  value={password}
+                  onChangeText={setPassword}
                 />
+                <TouchableOpacity onPress={toggleShowPassword}>
+                  <Ionicons
+                    name={showPassword ? "eye-outline" : "eye-off-outline"}
+                    size={24}
+                    color="black"
+                  />
+                </TouchableOpacity>
+                </View>
               </View>
               {!doPasswordsMatch && (
                 <Text style={styles.errorText}>Password doesn't match</Text>
               )}
               <View style={styles.ruleContainer}>
                 <View style={{ flexDirection: 'row' }}>
-                  <Tick />
+                  <Tick size={18} color={Color.Gray.gray100}/>
                   <Text style={[styles.ruleText, isRuleSatisfied(/.{8,}/) && styles.greenRuleText]}>{'At least 8 characters'}</Text>
                 </View>
                 <View style={{ flexDirection: 'row' }}>
-                  <Tick />
+                <Tick size={18} color={Color.Gray.gray100}/>
                   <Text style={[styles.ruleText, isRuleSatisfied(/[A-Z]/) && styles.greenRuleText]}>{'At least 1 upper case letter (A-Z)'}</Text>
                 </View>
                 <View style={{ flexDirection: 'row' }}>
-                  <Tick />
+                <Tick size={18} color={Color.Gray.gray100}/>
                   <Text style={[styles.ruleText, isRuleSatisfied(/[a-z]/) && styles.greenRuleText]}>{'At least 1 lower case letter (a-z)'}</Text>
                 </View>
                 <View style={{ flexDirection: 'row' }}>
-                  <Tick />
+                <Tick size={18} color={Color.Gray.gray100}/>
                   <Text style={[styles.ruleText, isRuleSatisfied(/\d/) && styles.greenRuleText]}>{'At least 1 number (0-9)'}</Text>
                 </View>
               </View>
@@ -215,11 +282,13 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   bottomPosition: {
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    bottom:20
   },
   topPosition: {
     justifyContent: 'flex-start',
     marginTop: 'auto',
+    bottom:100
   },
 });
 

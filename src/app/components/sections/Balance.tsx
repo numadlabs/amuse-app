@@ -20,7 +20,9 @@ const Balance: React.FC<BalanceProps> = ({amount}) => {
           <Text style={styles.balanceLabel}>Balance</Text>
           <View style={{flexDirection:'row', alignItems:'center', gap:8}}>
             <Image style={{ width: 28, height: 28 }} source={require('@/public/images/Bitcoin.png')} />
-            <Text style={styles.balanceAmount}>{truncatedAmount}</Text>
+            <Text style={styles.balanceAmount}>{truncatedAmount}
+            <Text style={{lineHeight:16,marginLeft:4, fontSize:20, fontWeight:'400', color:Color.Gray.gray400}}>
+            ≈$1.00</Text></Text>
           </View>
         </View>
         <View style={styles.balanceStripesContainer}>
@@ -65,7 +67,8 @@ const styles = StyleSheet.create({
   balanceAmount: {
     fontSize: 28,
     lineHeight: 36,
-    color: Color.Gray.gray600
+    color: Color.Gray.gray600,
+    fontWeight:'300'
   },
   balanceStripesContainer: {
     position: 'absolute',

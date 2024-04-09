@@ -66,6 +66,18 @@ export async function getUserCard({ latitude, longitude }) {
     });
 }
 
+export async function getPowerUp(id){
+  return axiosClient
+  .get(`/userBonus/${id}/userCard`)
+  .then((response) => {
+    if (response.data.success) {
+      return response?.data.data
+    } else {
+      throw new Error(response.data.error)
+    }
+  })
+}
+
 export async function getUserTaps() {
   return axiosClient
     .get(`/users/taps`)

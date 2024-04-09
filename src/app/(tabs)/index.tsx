@@ -17,10 +17,8 @@ import { RestaurantType } from "../lib/types";
 
 
 const Page = () => {
-  const queryClient = useQueryClient()
   const router = useRouter()
   const [refreshPage, setRefreshPage] = useState<boolean>(false);
-  const navigation = useNavigation();
   const { authState } = useAuth()
   const { currentLocation } = useLocationStore();
   const { data: user = [], isSuccess } = useQuery({
@@ -85,23 +83,28 @@ const Page = () => {
           )}
         </ScrollView>
       </View>
-      <Text style={{ fontSize: 14, fontWeight: '600', color: Color.Gray.gray400, marginTop:32, marginBottom:12 }}>
+      <Text style={{ fontSize: 14, fontWeight: '600', color: Color.Gray.gray400, marginTop: 32, marginBottom: 12 }}>
         Memberships
       </Text>
 
 
-        <StackedCard key={refreshPage.toString()} />
+      <StackedCard key={refreshPage.toString()} />
 
-
-      <View style={{ width: '100%', alignItems: 'center', marginBottom: 50 }}>
-        <TouchableOpacity onPress={() => router.push('/MyAcards')}>
-          <View style={{ backgroundColor: Color.Gray.gray50, marginTop: 16, paddingVertical: 12, paddingHorizontal: 16, borderRadius: 32 }}>
-            <Text style={{ fontWeight: 'bold', color: Color.Gray.gray600, fontSize: 16, }}>
-              See all
-            </Text>
+      {cards?.data?.cards.length === 0 ?
+        "" :
+        (
+          <View style={{ width: '100%', alignItems: 'center', marginBottom: 50 }}>
+            <TouchableOpacity onPress={() => router.push('/MyAcards')}>
+              <View style={{ backgroundColor: Color.Gray.gray50, marginTop: 16, paddingVertical: 12, paddingHorizontal: 16, borderRadius: 32 }}>
+                <Text style={{ fontWeight: 'bold', color: Color.Gray.gray600, fontSize: 16, }}>
+                  See all
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
-      </View>
+        )
+      }
+
     </ScrollView>
   );
 };

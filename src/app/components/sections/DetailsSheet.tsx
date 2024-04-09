@@ -78,10 +78,10 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
               <Location color={Color.Gray.gray600} />
               <Text
                 style={
-                  (styles.attributeText)
+                  (styles.attributeLocText)
                 }
               >
-                "{locations}"
+                {locations}
               </Text>
             </View>
           </View>
@@ -111,7 +111,6 @@ const styles = StyleSheet.create({
   },
   bottomSheet: {
     backgroundColor: Color.base.White,
-    padding: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     width: '100%',
@@ -151,6 +150,11 @@ const styles = StyleSheet.create({
   },
   attributeText: {
     color: Color.Gray.gray600,
+    fontSize: 16,
+  },
+
+  attributeLocText: {
+    color: "#007FFF",
     fontSize: 16,
   },
   membershipContainer: {
