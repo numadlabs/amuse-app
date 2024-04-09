@@ -19,16 +19,19 @@ import AmuseBlackLogo from "./components/icons/AmuseBlackLogo";
 import Popup from "./components/(feedback)/Popup";
 
 const PowerUp = () => {
-  const { benefits } = useLocalSearchParams();
+  const { id, name } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
+  console.log(id)
 
   const togglePopup = () => {
     setPopupVisible(!isPopupVisible);
   };
 
   const handleNavigation = () => {
+
     router.back();
   };
+
 
   return (
     <View style={{ backgroundColor: Color.base.White, flex: 1 }}>
@@ -42,13 +45,14 @@ const PowerUp = () => {
           <Close />
         </TouchableOpacity>
       </View>
-      <View style={styles.container}>
+      <View style={styles.container} key={id as string}>
         <TouchableOpacity onPress={togglePopup}>
           <Image
             style={{ width: 247, height: 247 }}
             source={require("@/public/images/pqr.png")}
           />
         </TouchableOpacity>
+
         <Popup
           title="Power-up consumed."
           isVisible={isPopupVisible}
@@ -78,6 +82,7 @@ const PowerUp = () => {
             >
               Show this to your waiter to redeem.{"\n"} Don't worry, they are
               pros.
+
             </Text>
           </View>
         </View>

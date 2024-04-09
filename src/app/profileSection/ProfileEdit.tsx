@@ -1,5 +1,4 @@
 import { Cake, Camera, Location, Sms, User } from "iconsax-react-native";
-
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -8,7 +7,7 @@ import {
   StyleSheet,
   TextInput,
   View,
-  Text
+  Text,
 } from "react-native";
 import Header from "../components/layout/Header";
 import Color from "../constants/Color";
@@ -19,87 +18,69 @@ import { updateUserInfo } from "../lib/service/mutationHelper";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "../components/ui/Button";
 
-
 const ProfileEdit = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const { authState } = useAuth()
-  const [nickname, setNickname] = useState('');
-  const [email, setEmail] = useState('');
+  const { authState } = useAuth();
+  const { data: user = [], refetch } = useQuery({
+    queryKey: ["UserInfo"],
+    queryFn: () => getUserById(authState.userId),
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [location, setLocation] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [location, setLocation] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [dataChanged, setDataChanged] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setNickname(user.nickname || "");
+      setEmail(user.email || "");
+      setLocation(user.location || "");
+      setDateOfBirth(user.dateOfBirth || "");
+    }
+  }, [user]);
+
+  useEffect(() => {
+    // Check if any data has changed
+    if (
+      user.nickname !== nickname ||
+      user.email !== email ||
+      user.location !== location ||
+      user.dateOfBirth !== dateOfBirth
+    ) {
+      setDataChanged(true);
+    } else {
+      setDataChanged(false);
+    }
+  }, [user, nickname, email, location, dateOfBirth]);
 
   const openDatePicker = () => {
     setShowDatePicker(true);
   };
+
   const onDateChange = (event, selectedDate) => {
+    setShowDatePicker(false);
     if (selectedDate) {
-      const currentDate = selectedDate;
-      // setDate(currentDate.toISOString().split("T")[0]);
       setDateOfBirth(selectedDate.toISOString());
     }
-    // setShowDatePicker(false);
   };
-  useEffect(() => {
-    if (dateOfBirth) {
-      setShowDatePicker(true);
-    }
-  }, [dateOfBirth]);
-
-
-  const { data: user = [] } = useQuery({
-    queryKey: ["UserInfo"],
-    queryFn: () => {
-      return getUserById(authState.userId)
-    }
-  })
-
-  const {
-    data,
-    error,
-    isLoading,
-    status,
-    mutateAsync: handleUpdateUser,
-  } = useMutation({
-    mutationFn: updateUserInfo,
-    onError: (error) => {
-      console.log(error);
-    },
-    onSuccess: (data, variables) => {
-      console.log("🚀 ~ QrModal ~ data:", data);
-      try {
-        console.log(" successful:", data);
-        // setEncryptedTap(data.data.data);
-        // togglePopup();
-      } catch (error) {
-        console.error(" mutation failed:", error);
-      }
-    },
-  });
 
   const triggerUpdateUser = async () => {
     setLoading(true);
-    const userData = {
-      nickname: nickname, 
-      email: email, 
-      location: location, 
-      dateOfBirth: dateOfBirth, 
-    };
+    const userData = { nickname, email, location, dateOfBirth };
     try {
-      const data = await handleUpdateUser({
-        userId: authState.userId,
-        data: userData,
-      });
-      if (data.success) {
-        // Handle success, e.g., showing a success message
-        setLoading(false);
-      }
+      await updateUserInfo({ userId: authState.userId, data: userData });
+      await refetch();
+      setLoading(false);
+      setDataChanged(false); // Reset data change flag after saving
     } catch (error) {
-      // Handle error, e.g., showing an error message
       console.log(error);
       setLoading(false);
     }
   };
+
   return (
     <>
       <Header title="Account" />
@@ -107,85 +88,67 @@ const ProfileEdit = () => {
         <ScrollView style={{ flex: 1 }}>
           <View style={styles.body}>
             <View style={styles.container}>
-              <View style={styles.profileContainer}>
-                <View style={styles.profilePic}>
-                  <User size={48} color={Color.Gray.gray400} />
-                  <View style={styles.camera}>
-                    <Camera color={Color.Gray.gray50} size={16}></Camera>
-                  </View>
-                </View>
-              </View>
               <View style={styles.input}>
                 <User color={Color.Gray.gray600} />
                 <TextInput
-                  placeholder={user.nickname}
+                  placeholder="Nickname"
                   placeholderTextColor={Color.Gray.gray200}
                   value={nickname}
                   onChangeText={setNickname}
                   style={{ fontSize: 20 }}
-                ></TextInput>
+                />
               </View>
               <View style={styles.input}>
                 <Sms color={Color.Gray.gray600} />
                 <TextInput
                   placeholderTextColor={Color.Gray.gray200}
-                  placeholder={user.email}
+                  placeholder="Email"
                   value={email}
                   onChangeText={setEmail}
                   style={{ fontSize: 20 }}
-                ></TextInput>
+                />
               </View>
               <View style={styles.input}>
                 <Location color={Color.Gray.gray600} />
                 <TextInput
                   placeholderTextColor={Color.Gray.gray200}
-                  placeholder={user.location}
+                  placeholder="Location"
                   value={location}
                   onChangeText={setLocation}
                   style={{ fontSize: 20 }}
-                ></TextInput>
+                />
               </View>
               <View style={styles.input}>
                 <Cake color={Color.Gray.gray600} />
-                 {showDatePicker ? (
-                  <DateTimePicker
-                    value={dateOfBirth ? new Date(dateOfBirth) : new Date()}
-                    mode="date"
-                    display="default"
-                    onChange={onDateChange}
-                    maximumDate={new Date(Date.now())}
-                  />
-                ) : (
-                  <Button
-                    onPress={openDatePicker}
-                    variant="secondary"
-                    textStyle="secondary"
-                    size="default"
-                  >
-                    {user.dateOfBirth ? new Date(user.dateOfBirth).toISOString().split('T')[0] : ''}
-                  </Button>
-                )}
+                <DateTimePicker
+                  value={dateOfBirth ? new Date(dateOfBirth) : new Date()}
+                  mode="date"
+                  display="default"
+                  onChange={onDateChange}
+                  maximumDate={new Date(Date.now())}
+                />
               </View>
             </View>
           </View>
-          
         </ScrollView>
-        <Button
-                variant="primary"
-                textStyle="primary"
-                size="default"
-                onPress={triggerUpdateUser}
+        {dataChanged && (
+          <Button
+            variant="primary"
+            textStyle="primary"
+            size="default"
+            onPress={triggerUpdateUser}
+          >
+            {loading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text
+                style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
               >
-                {loading ? (
-                  <ActivityIndicator size="small" color="white" />
-                ) : (
-                  <Text
-                    style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
-                  >
-                    Continue
-                  </Text>
-                )}
-              </Button>
+                Save
+              </Text>
+            )}
+          </Button>
+        )}
       </SafeAreaView>
     </>
   );
@@ -233,7 +196,7 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray50,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal:16,
+    paddingHorizontal: 16,
     gap: 12,
     marginBottom: 16,
   },

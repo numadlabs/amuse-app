@@ -23,6 +23,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
   const queryClient = useQueryClient();
 
   const [isClaimLoading, setIsClaimLoading] = useState(false);
+  const [showOwned, setShowOwned] = useState(false);
   const { authState } = useAuth();
   const {
     data: restaurantsData,
@@ -87,6 +88,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
     });
   };
 
+
   if (isLoading) {
     return <Text>Loading...</Text>;
   }
@@ -94,6 +96,25 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
   if (isError) {
     return <Text>Error fetching data</Text>;
   }
+
+  const handleNavigation = (restaurant: RestaurantType) => {
+    router.push({
+      pathname: `/restaurants/${restaurant.id}`,
+      params: {
+        name: restaurant.name,
+        location: restaurant.location,
+        about: restaurant.description,
+        category: restaurant.category,
+        isOwned: restaurant.isOwned,
+        benefits: [restaurant.benefits],
+        locations: restaurant.location,
+        artistInfo: restaurant.artistInfo,
+        expiryInfo: restaurant.expiryInfo,
+        instruction: restaurant.instruction,
+        logo: restaurant.logo,
+      },
+    });
+  };
 
   return (
     <ScrollView style={{ flex: 1, height: "100%" }}>

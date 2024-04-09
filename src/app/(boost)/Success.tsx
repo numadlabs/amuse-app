@@ -14,7 +14,7 @@ const Success = () => {
           <TickCircle color={Color.System.systemSuccess} size={64} />
           <Text style={styles.topText}>Success</Text>
           <Text style={styles.bottomText}>
-          You will earn extra rewards every time you use an A-Pass.
+          You will earn extra rewards every time you use an membership card.
           </Text>
         </View>
       </View>

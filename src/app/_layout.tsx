@@ -2,16 +2,17 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "../global.css";
-import { AuthProvider, useAuth } from "./context/AuthContext";
+import { AuthProvider } from "./context/AuthContext";
 import { StatusBar } from "expo-status-bar";
-// import useQu
-// import QueryClien
+import Toast from 'react-native-toast-message';
+import { toastConfig } from "./components/(feedback)/ToasterConfig";
+
 const queryClient = new QueryClient();
 
 export const unstable_settings = {
-  // Ensure any route can link back to `/`
   initialRouteName: "Index",
 };
+
 export default function Layout() {
   const [fontsLoaded] = useFonts({
     "Sora-Regular": require("../public/fonts/Sora-Regular.ttf"),
@@ -21,6 +22,7 @@ export default function Layout() {
   if (!fontsLoaded) {
     return null; // or a loading indicator
   }
+
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -44,6 +46,7 @@ export default function Layout() {
           <Stack.Screen name="TermsAndCondo" />
           <Stack.Screen name="PowerUp" options={{presentation: 'modal'}}/>
         </Stack>
+        <Toast config={toastConfig} /> 
       </AuthProvider>
     </QueryClientProvider>
   );

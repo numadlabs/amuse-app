@@ -106,7 +106,7 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                 ? "Loading"
                 : marker.isOwned
                 ? "Owned"
-                : " Add a-card"}
+                : "Add"}
             </Text>
           </TouchableOpacity>
         </View>

@@ -91,6 +91,18 @@ export async function getUserById(userID: string){
   })
 }
 
+export async function getRestaurantId(id: string){
+  return axiosClient
+  .get(`/restaurants/${id}`)
+  .then((response) => {
+    if (response.data.success) {
+      return response?.data.data.restaurant
+    } else {
+      throw new Error(response.data.error)
+    }
+  })
+}
+
 
 export async function getPrefixAndCountry(){
   return axiosClient

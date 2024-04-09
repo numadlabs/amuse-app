@@ -8,12 +8,13 @@ import PowerUpCard from '../atom/cards/PowerUpCard';
 
 interface PopupProps {
   isVisible: boolean;
+  powerUpTitle: string;
   onClose: () => void;
   title: string,
   subText: string,
 }
 
-const PowerUp: React.FC<PopupProps> = ({ isVisible, title, subText, onClose }) => {
+const PowerUp: React.FC<PopupProps> = ({ isVisible, title, subText, onClose, powerUpTitle }) => {
   const translateY = useSharedValue(0);
 
   useEffect(() => {
@@ -36,8 +37,9 @@ const PowerUp: React.FC<PopupProps> = ({ isVisible, title, subText, onClose }) =
     >
       <View style={styles.container}>
         <Animated.View style={[styles.popup, { transform: [{ translateY }] }]}>
+          
           <View style={styles.content}>
-            <PowerUpCard title='Priority seating on Fridays' onPress={() => console.log('pressed')} date='2024/03/10' />
+            <PowerUpCard title={powerUpTitle} onPress={() => console.log('pressed')} date='2024/03/10' />
 
             <View style={styles.textContainer}>
               <Text style={styles.title}>{title}</Text>

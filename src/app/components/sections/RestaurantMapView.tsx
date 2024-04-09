@@ -28,6 +28,7 @@ import FloatingRestaurantCard from "../atom/cards/FloatingRestCard";
 import useLocationStore from "@/app/lib/store/userLocation";
 import SvgMarker from "../atom/svgMarker";
 import Color from "@/app/constants/Color";
+import Toast from 'react-native-toast-message';
 import { Gps } from "iconsax-react-native";
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
@@ -253,7 +254,7 @@ export default function RestaurantMapView() {
     } else if (selectedLocation === "dubai") {
       setInitialRegion({
         latitude: 25.276987,
-        longitude: 55.296249, // Longitude for Dubai
+        longitude: 55.296249,
         latitudeDelta: mapLatitudeDelta,
         longitudeDelta: mapLongitudeDelta,
       });
@@ -264,6 +265,10 @@ export default function RestaurantMapView() {
     setSelectedLocation(prevLocation =>
       prevLocation === "current" ? "dubai" : "current"
     );
+
+
+
+
 
     const coordinates = getLocationCoordinates();
     setInitialRegion({
@@ -376,6 +381,13 @@ export default function RestaurantMapView() {
   };
 
 
+  const showToast = () => {
+    Toast.show({
+      type: 'perkToast',
+      text1: 'Added membership card',
+    });
+  }
+
   const handleGetAcard = async (acardId: string) => {
     console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
     setIsClaimLoading(true);
@@ -395,6 +407,7 @@ export default function RestaurantMapView() {
       if (data.data.success) {
         queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
         setIsClaimLoading(false);
+        showToast()
       }
     }
   };
@@ -476,7 +489,7 @@ export default function RestaurantMapView() {
         customMapStyle={mapStyle}
         onPress={toggleLocation} // Add this onPress handler
       >
-        <View style={styles.locationToggleContainer}>
+        {/* <View style={styles.locationToggleContainer}>
           <TouchableOpacity onPress={toggleLocation} style={styles.locationToggle}>
             <Text style={styles.locationToggleText}>
               {selectedLocation === "current" ? "Dubai" : "Current Location"}
@@ -487,7 +500,7 @@ export default function RestaurantMapView() {
           <TouchableOpacity >
             <Gps size={24} color={Color.Gray.gray600} style={{ zIndex: 10 }} />
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         {currentLocation && (
           <Marker

@@ -1,6 +1,6 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+
 import Color from "../constants/Color";
 import Balance from "../components/sections/Balance";
 import QuickInfo from "../components/sections/QuickInfo";
@@ -9,10 +9,12 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigation, useRouter } from "expo-router";
 import { useQuery, useQueryClient } from "react-query";
 import { getUserById, getUserCard } from "../lib/service/queryHelper";
-import { Lamp } from "iconsax-react-native";
+
 import OwnedAcards from "../components/atom/cards/OwnedAcards";
 import useLocationStore from "../lib/store/userLocation";
 import { RestaurantType } from "../lib/types";
+
+
 
 const Page = () => {
   const queryClient = useQueryClient()
@@ -21,19 +23,12 @@ const Page = () => {
   const navigation = useNavigation();
   const { authState } = useAuth()
   const { currentLocation } = useLocationStore();
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      setRefreshPage(prevState => !prevState);
-    });
-    return unsubscribe;
-  }, [router]);
-
-  const { data: user = [], isLoading } = useQuery({
+  const { data: user = [], isSuccess } = useQuery({
     queryKey: ["UserInfo"],
     queryFn: () => {
       return getUserById(authState.userId)
-    }
+    },
+    enabled: !!authState.userId
   })
 
   const { data: cards = [], } = useQuery({
@@ -66,9 +61,11 @@ const Page = () => {
   };
 
 
+
+
   return (
     <ScrollView style={styles.container}>
-      <Balance />
+      <Balance amount={user.balance} />
       <View style={{ marginTop: 24, gap: 12 }}>
         {user.email && user.dateOfBirth ? (
           <Text style={{ fontSize: 14, fontWeight: '600', color: Color.Gray.gray400 }}>
@@ -81,7 +78,6 @@ const Page = () => {
             cards?.data?.cards.slice(0, 2).map((card, index) => (
               <View style={{ marginRight: 8 }}>
                 <OwnedAcards marker={card} key={card.id} onPress={() => handleNavigation(card)} />
-
               </View>
             ))
           ) : (
@@ -89,10 +85,13 @@ const Page = () => {
           )}
         </ScrollView>
       </View>
+      <Text style={{ fontSize: 14, fontWeight: '600', color: Color.Gray.gray400, marginTop:32, marginBottom:12 }}>
+        Memberships
+      </Text>
 
-      <View style={{ marginTop: 32 }}>
+
         <StackedCard key={refreshPage.toString()} />
-      </View>
+
 
       <View style={{ width: '100%', alignItems: 'center', marginBottom: 50 }}>
         <TouchableOpacity onPress={() => router.push('/MyAcards')}>

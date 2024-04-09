@@ -46,7 +46,7 @@ const QrPopup: React.FC<PopupProps> = ({ isVisible, onClose }) => {
             <TickCircle size={72} color={Color.System.systemSuccess} />
             <View style={{ alignItems: 'center', gap: 8, marginBottom: 32 }}>
               <Text style={{ fontSize: 24, color: Color.Gray.gray600, fontWeight: 'bold' }}>Success</Text>
-              <Text style={{ fontSize: 16, color: Color.Gray.gray400, fontWeight: 'normal' }}>Successfully added A-card.</Text>
+              <Text style={{ fontSize: 16, color: Color.Gray.gray400, fontWeight: 'normal' }}>Successfully added membership card.</Text>
             </View>
             <Button
               variant='primary'

@@ -20,6 +20,7 @@ import { useAuth } from "../context/AuthContext";
 import { getUserCard } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
 import { Flash } from "iconsax-react-native";
+import Toast from 'react-native-toast-message';
 
 const { width, height } = Dimensions.get("window");
 
@@ -30,15 +31,36 @@ const overlayAdjusting = 5;
 
 const QrModal = () => {
   const [isPopupVisible, setPopupVisible] = useState(false);
+  const [isBtcPopupVisible, setBtcPopupVisible] = useState(false)
   const [isModalVisible, setModalVisible] = useState(true);
 
   const togglePopup = () => {
     setPopupVisible(!isPopupVisible);
   };
 
+  const showToast = () => {
+    setTimeout(function () {
+      Toast.show({
+        type: 'perkToast',
+        text1: 'Successfully used perk',
+      });
+    }, 1500)
+  }
+
+  const toggleBtcPopup = () => {
+    setBtcPopupVisible(!isBtcPopupVisible)
+  }
+
   const closeModal = () => {
-    router.back();
+    toggleBtcPopup()
+    togglePopup()
+    showToast()
   };
+
+  const queryClient = useQueryClient()
+  const closeBtcModal = () => {
+    router.back();
+  }
   const { currentLocation } = useLocationStore();
 
   const { data: cards = [] } = useQuery({
@@ -55,6 +77,8 @@ const QrModal = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
+  const [powerUp, setPowerUp] = useState("")
+  const [btcAmount, setBTCAmount] = useState("")
   const [encryptedTap, setEncryptedTap] = useState("");
   const router = useRouter();
   useEffect(() => {
@@ -65,6 +89,7 @@ const QrModal = () => {
 
     getCameraPermissions();
   }, []);
+
 
   const {
     data,
@@ -84,6 +109,8 @@ const QrModal = () => {
         console.log("Redeem successful:", resp);
 
         setEncryptedTap(data.data.data);
+        queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+
         togglePopup();
       } catch (error) {
         console.error("Redeem mutation failed:", error);
@@ -96,7 +123,9 @@ const QrModal = () => {
       console.log(error);
     },
     onSuccess: (data, variables) => {
-      console.log("🚀 ~ QrModal ~ data:", data);
+      console.log("🚀 ~ QrModal ~ data:", data.data.data);
+      setPowerUp(data.data.data.bonus.name)
+      setBTCAmount(data.data.data.increment)
     },
   });
 
@@ -115,6 +144,8 @@ const QrModal = () => {
       console.log("Map mutation failed:", error);
     }
   };
+
+
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
@@ -209,7 +240,7 @@ const QrModal = () => {
   return (
     <>
       {isModalVisible && (
-        <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
           <View style={{ flex: 1 }}>
             <CameraView
               onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
@@ -218,8 +249,9 @@ const QrModal = () => {
               }}
               style={StyleSheet.absoluteFillObject}
               flash={flashMode == true ? "on" : "off"}
-              // flash="on"
+            // flash="on"
             />
+            {/* Overlay for guiding user to place QR code within scan area */}
             <View
               style={[
                 styles.overlay,
@@ -261,37 +293,20 @@ const QrModal = () => {
                 },
               ]}
             />
+            {/* Marker for indicating QR code scanning area */}
             <View style={styles.markerContainer}>
               {marker("white", markerSize, 40, 4, 12)}
-
-              {/* <TouchableOpacity
-            style={[styles.button, styles.flashButton]}
-            onPress={() => {
-              createMapMutation("0ce6d927-8e17-4c0b-902b-f2c5b882e922");
-            }}
-          >
-            <Text>Test tap</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, styles.flashButton]}
-            onPress={() => {
-              createRedeemMutation(encryptedTap);
-            }}
-          >
-            <Text>Test redeem</Text>
-          </TouchableOpacity> */}
             </View>
 
+            {/* Button for toggling flashlight */}
             <TouchableOpacity
               style={[styles.button, styles.flashButton]}
-              // onPress={() => {
-              //   setFlashMode(!flashMode);
-              // }}
               onPress={handleScanButtonPress}
             >
-              <Flash color={Color.Gray.gray600}/>
-              {/* <Image source={require("@/public/icons/flash.png")} /> */}
+              <Flash color={Color.Gray.gray600} />
             </TouchableOpacity>
+
+            {/* Button for closing the modal */}
             <TouchableOpacity
               style={[styles.button, styles.closeButton]}
               onPress={() => {
@@ -303,11 +318,17 @@ const QrModal = () => {
           </View>
           <PowerUp
             title="Congrats!"
-            subText="You recieved power-up."
+            powerUpTitle={powerUp}
+            subText="You received a power-up."
             isVisible={isPopupVisible}
             onClose={closeModal}
           />
-        </SafeAreaView>
+          <Popup
+            isVisible={isBtcPopupVisible}
+            onClose={closeBtcModal}
+            title={btcAmount}
+          />
+        </View>
       )}
     </>
   );
@@ -321,13 +342,14 @@ const styles = StyleSheet.create({
   },
   overlay: {
     position: "absolute",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    // borderRadius: 20,
+    backgroundColor: "rgba(0, 0, 0, 0)",
+
   },
   markerContainer: {
     position: "absolute",
     left: "50%",
     top: "50%",
+
     marginLeft: -halfMarkerSize,
     marginTop: -halfMarkerSize,
     height: markerSize,
@@ -347,8 +369,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: "0%",
     top: "0%",
-    marginTop: 4,
-    marginRight: 16,
+    margin: 16,
   },
   flashButton: {
     position: "absolute",
