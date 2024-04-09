@@ -16,9 +16,12 @@ import { useRouter } from "expo-router";
 import { useAuth } from "@/app/context/AuthContext";
 import { getAcard } from "@/app/lib/service/mutationHelper";
 
-interface RestaurantListViewProps { }
+interface RestaurantListViewProps {}
 
 const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const { authState } = useAuth();
   const {
@@ -34,23 +37,37 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
         distance: 10000,
         latitude: 0,
         longitude: 0,
-      }), // Update with actual parameters
+      }),
   });
 
+  const { mutateAsync: createGetAcardMutation } = useMutation({
+    mutationFn: getAcard,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (data, variables) => {},
+  });
   // if (data.data.success) {
   //   queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
   //   setIsClaimLoading(false);
   // }
 
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
+  const handleGetAcard = async (acardId: string) => {
+    console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
+    setIsClaimLoading(true);
+    if (authState.userId) {
+      const data = await createGetAcardMutation({
+        userId: authState.userId,
+        cardId: acardId,
+      });
+      console.log("🚀 ~ handleGetAcard ~ data:", data);
+      if (data.data.success) {
+        queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
+        setIsClaimLoading(false);
+      }
+    }
+  };
 
-  if (isError) {
-    return <Text>Error fetching data</Text>;
-  }
-
-  const router = useRouter();
   const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
       pathname: `/restaurants/${restaurant.id}`,
@@ -70,31 +87,13 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
     });
   };
 
-  const queryClient = useQueryClient();
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
 
-  const { mutateAsync: createGetAcardMutation } = useMutation({
-    mutationFn: getAcard,
-    onError: (error) => {
-      console.log(error);
-    },
-    onSuccess: (data, variables) => { },
-  });
-
-  const handleGetAcard = async (acardId: string) => {
-    console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
-    setIsClaimLoading(true);
-    if (authState.userId) {
-      const data = await createGetAcardMutation({
-        userId: authState.userId,
-        cardId: acardId,
-      });
-      console.log("🚀 ~ handleGetAcard ~ data:", data);
-      if (data.data.success) {
-        queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
-        setIsClaimLoading(false);
-      }
-    }
-  };
+  if (isError) {
+    return <Text>Error fetching data</Text>;
+  }
 
   return (
     <ScrollView style={{ flex: 1, height: "100%" }}>
