@@ -11,15 +11,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { BlurView } from 'expo-blur';
-
+import { BlurView } from "expo-blur";
 
 import Color from "./constants/Color";
 import Close from "./components/icons/Close";
 import AmuseBlackLogo from "./components/icons/AmuseBlackLogo";
 import Popup from "./components/(feedback)/Popup";
 import Toast from "react-native-toast-message";
-
 
 const PowerUp = () => {
 
@@ -40,9 +38,11 @@ const PowerUp = () => {
   };
 
   const handleNavigation = () => {
+
     showToast()
     router.back()
   }
+
 
 
   return (
@@ -59,17 +59,42 @@ const PowerUp = () => {
       </View>
       <View style={styles.container} key={id as string}>
         <TouchableOpacity onPress={togglePopup}>
-          <Image style={{ width: 247, height: 247 }} source={require("@/public/images/pqr.png")} />
+          <Image
+            style={{ width: 247, height: 247 }}
+            source={require("@/public/images/pqr.png")}
+          />
         </TouchableOpacity>
-        <Popup title="Power-up consumed." isVisible={isPopupVisible} onClose={handleNavigation} />
-        <View style={{ justifyContent: 'center', alignItems: 'center', gap: 32 }}>
+
+        <Popup
+          title="Power-up consumed."
+          isVisible={isPopupVisible}
+          onClose={handleNavigation}
+        />
+        <View
+          style={{ justifyContent: "center", alignItems: "center", gap: 32 }}
+        >
           <AmuseBlackLogo />
           <View style={{ gap: 12 }}>
-            <Text style={{ fontSize: 24, fontWeight: 'bold', color: Color.Gray.gray600 }}>
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: "bold",
+                color: Color.Gray.gray600,
+              }}
+            >
               {name}
             </Text>
-            <Text style={{ color: Color.Gray.gray400, fontSize: 16, textAlign: 'center', lineHeight: 20 }}>
-              Show this to your waiter to redeem.{"\n"} Don't worry, they are pros.
+            <Text
+              style={{
+                color: Color.Gray.gray400,
+                fontSize: 16,
+                textAlign: "center",
+                lineHeight: 20,
+              }}
+            >
+              Show this to your waiter to redeem.{"\n"} Don't worry, they are
+              pros.
+
             </Text>
           </View>
         </View>
@@ -94,33 +119,32 @@ const styles = StyleSheet.create({
     height: 200,
   },
   closeButton: {
-    marginTop: 12
+    marginTop: 12,
   },
   closeButtonContainer: {
     width: "100%",
     justifyContent: "flex-end",
     flexDirection: "row",
     paddingHorizontal: 16,
-
   },
   container: {
     gap: 80,
     marginTop: 16,
     paddingHorizontal: 16,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   powerUpGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
     marginTop: 16,
-    gap: 15
+    gap: 15,
   },
   textImageContainer: {
     borderRadius: 32,
-    overflow: 'hidden',
+    overflow: "hidden",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -128,22 +152,21 @@ const styles = StyleSheet.create({
     padding: 20,
     gap: 20,
     borderRadius: 32,
-    width: '100%',
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    flex: 1
+    flex: 1,
   },
   textContainer: {
     justifyContent: "flex-start",
     flexDirection: "column",
     width: "100%",
     gap: 4,
-
   },
   bottomDetails: {
     flexDirection: "column",
     gap: 4,
-    alignItems: 'center'
+    alignItems: "center",
   },
   bottomDetails1: {
     flexDirection: "column",
@@ -151,10 +174,10 @@ const styles = StyleSheet.create({
   },
   bottomDetailsContainer: {
     justifyContent: "space-between",
-    flexDirection: 'row',
-    width: '100%',
+    flexDirection: "row",
+    width: "100%",
     paddingHorizontal: 16,
-    alignContent: 'center'
+    alignContent: "center",
   },
   image: {
     width: 300,
@@ -163,7 +186,7 @@ const styles = StyleSheet.create({
   },
   attrContainer: {
     marginTop: 32,
-    marginBottom: 40
+    marginBottom: 40,
   },
   attribute: {
     flexDirection: "row",
