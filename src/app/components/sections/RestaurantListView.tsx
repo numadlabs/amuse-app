@@ -16,9 +16,12 @@ import { useRouter } from "expo-router";
 import { useAuth } from "@/app/context/AuthContext";
 import { getAcard } from "@/app/lib/service/mutationHelper";
 
-interface RestaurantListViewProps { }
+interface RestaurantListViewProps {}
 
 const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const [showOwned, setShowOwned] = useState(false);
   const { authState } = useAuth();
@@ -35,34 +38,20 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
         distance: 10000,
         latitude: 0,
         longitude: 0,
-      }), 
+      }),
   });
-
-  // if (data.data.success) {
-  //   queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
-  //   setIsClaimLoading(false);
-  // }
-
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
-
-  if (isError) {
-    return <Text>Error fetching data</Text>;
-  }
-
-  const router = useRouter();
-  
-
-  const queryClient = useQueryClient();
 
   const { mutateAsync: createGetAcardMutation } = useMutation({
     mutationFn: getAcard,
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => { },
+    onSuccess: (data, variables) => {},
   });
+  // if (data.data.success) {
+  //   queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
+  //   setIsClaimLoading(false);
+  // }
 
   const handleGetAcard = async (acardId: string) => {
     console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
@@ -79,6 +68,34 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
       }
     }
   };
+
+  const handleNavigation = (restaurant: RestaurantType) => {
+    router.push({
+      pathname: `/restaurants/${restaurant.id}`,
+      params: {
+        name: restaurant.name,
+        location: restaurant.location,
+        about: restaurant.description,
+        category: restaurant.category,
+        isOwned: restaurant.isOwned,
+        benefits: [restaurant.benefits],
+        locations: restaurant.location,
+        artistInfo: restaurant.artistInfo,
+        expiryInfo: restaurant.expiryInfo,
+        instruction: restaurant.instruction,
+        logo: restaurant.logo,
+      },
+    });
+  };
+
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (isError) {
+    return <Text>Error fetching data</Text>;
+  }
 
   const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
