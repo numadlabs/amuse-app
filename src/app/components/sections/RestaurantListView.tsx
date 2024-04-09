@@ -69,26 +69,6 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
     }
   };
 
-  const handleNavigation = (restaurant: RestaurantType) => {
-    router.push({
-      pathname: `/restaurants/${restaurant.id}`,
-      params: {
-        name: restaurant.name,
-        location: restaurant.location,
-        about: restaurant.description,
-        category: restaurant.category,
-        isOwned: restaurant.isOwned,
-        benefits: [restaurant.benefits],
-        locations: restaurant.location,
-        artistInfo: restaurant.artistInfo,
-        expiryInfo: restaurant.expiryInfo,
-        instruction: restaurant.instruction,
-        logo: restaurant.logo,
-      },
-    });
-  };
-
-
   if (isLoading) {
     return <Text>Loading...</Text>;
   }
