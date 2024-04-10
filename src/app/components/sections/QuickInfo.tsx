@@ -9,7 +9,7 @@ const QuickInfo = () => {
     <View style={styles.container}>
       <View style={styles.container1}>
         <View style={styles.textContainer}>
-          <Text style={styles.topTitle}>Boost your rewards.</Text>
+          <Text style={styles.topTitle}>Boost your rewards</Text>
           <Text style={styles.bottomTitle}>More data, more Bitcoin.</Text>
         </View>
         <TouchableOpacity onPress={() => router.push("(boost)/Email")}>
@@ -84,6 +84,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: Color.Gray.gray600,
     fontWeight: "bold",
-    marginLeft: 8, 
+    marginLeft: 8,
   },
 });
