@@ -88,7 +88,9 @@ const Page = () => {
       </Text>
 
 
-      <StackedCard key={refreshPage.toString()} />
+        <StackedCard key={refreshPage.toString()} />
+
+
 
       {cards?.data?.cards.length === 0 ?
         "" :

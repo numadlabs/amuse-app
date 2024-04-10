@@ -1,6 +1,7 @@
 // Import React and other necessary libraries
 import Color from "@/app/constants/Color";
 import { RestaurantType } from "@/app/lib/types";
+import { Reserve, Wallet } from "iconsax-react-native";
 import moment from "moment";
 import React from "react";
 import {
@@ -79,39 +80,30 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
               {isOpen ? "Open" : "Closed"}
             </Text>
           </View>
-          <TouchableOpacity
-            onPress={onPress}
-            style={[
-              styles.signIn,
-              {
-                borderColor: "#000",
-                borderWidth: 1,
-                backgroundColor: "#000",
-                width: 96,
-                height: 32,
-                borderRadius: 48,
-              },
-            ]}
-            disabled={isClaimLoading}
-          >
-            <Text
-              style={[
-                styles.textSign,
-                {
-                  color: "#FFF",
-                },
-              ]}
-            >
-              {isClaimLoading
-                ? "Loading"
-                : marker.isOwned
-                ? "Owned"
-                : "Add"}
-            </Text>
-          </TouchableOpacity>
+          <View style={{ width: 1, height: 14, backgroundColor: Color.Gray.gray50 }} />
+            {marker.isOwned ? (
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <Reserve color={Color.Gray.gray600} size={16} />
+                <Text>{marker.visitCount} Check-ins</Text>
+              </View>
+            ) : (
+              <TouchableOpacity onPress={onPress}>
+                <View style={{ flexDirection: 'row', position: 'relative', backgroundColor: Color.Gray.gray600, paddingVertical: 8, paddingHorizontal: 16, borderRadius: 48, marginLeft: 49, alignContent: 'center', alignItems: 'center' }}>
+                  <Wallet size={16} color={Color.Gray.gray50} />
+                  <Text style={{ color: Color.Gray.gray50, fontWeight: 'bold', fontSize: 11, lineHeight: 16 }}>
+                    {isClaimLoading
+                      ? "Loading"
+                      : marker.isOwned
+                        ? "Owned"
+                        : " Add"}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
       </View>
-    </View>
+
   );
 };
 
