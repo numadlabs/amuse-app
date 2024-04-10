@@ -9,6 +9,7 @@ import { getUserCard } from "@/app/lib/service/queryHelper";
 import useLocationStore from "@/app/lib/store/userLocation";
 import { BlurView } from "expo-blur";
 import { RestaurantType } from "@/app/lib/types";
+import APassCard from "../atom/cards/APassCard";
 
 
 const StackedCard = () => {
@@ -30,7 +31,7 @@ const StackedCard = () => {
   useEffect(() => {
     if (cards && cards.data && cards.data.cards) {
       const totalCardHeight = cards.data.cards.reduce((totalHeight, card, index) => {
-        const marginBottom = index !== 0 ? -80 : 0;
+        const marginBottom = index !== 0 ? -90 : 0;
         const cardHeight = 350 + marginBottom;
         return totalHeight + cardHeight;
       }, 0);
@@ -81,32 +82,12 @@ const StackedCard = () => {
           </TouchableOpacity>
         </View>
       ) : (
-        <ScrollView style={{ height: scrollViewHeight }}>
+        <View style={{ flex: 1, flexGrow: 1,}}>
           {cards?.data?.cards &&
             latestCards.map((card, index) => (
-              <TouchableOpacity
-                activeOpacity={0.9}
-                key={card.id}
-                onPress={() => handleNavigation(card)}
-              >
-
-                <ImageBackground resizeMode='cover' source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${card.logo}` }}
-                  style={[
-                    styles.aCardContainer,
-                    { marginTop: index !== 0 ? -5 : 0 },
-                  ]}>
-                  <View style={styles.overlay} />
-                  <BlurView intensity={24} style={styles.blurContainer}>
-                    <Text style={styles.titleText}>{card.name}</Text>
-                    <Text style={[styles.buttonText, {bottom:5}]}>{card.category}</Text>
-                    <View style={{ alignItems: 'center' }}>
-                      <Image style={styles.image} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${card.logo}` }} />
-                    </View>
-                  </BlurView>
-                </ImageBackground>
-              </TouchableOpacity>
+              <APassCard name={card.name} image={card.logo} onPress={() => handleNavigation(card)} category={card.category} />
             ))}
-        </ScrollView>
+        </View>
       )}
     </>
   );
@@ -179,7 +160,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Color.Gray.gray50,
     fontSize: 12,
-    lineHeight:16,
+    lineHeight: 16,
     fontWeight: "bold",
   },
   image: {

@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { RestaurantType } from '@/app/lib/types'
 import { useLocalSearchParams } from 'expo-router'
 import Color from '@/app/constants/Color'
-import { Reserve } from 'iconsax-react-native'
+import { Reserve, Wallet } from 'iconsax-react-native'
 
 
 interface ResListCardProp {
@@ -20,52 +20,52 @@ const ResListCard: React.FC<ResListCardProp> = ({ marker, onPress, isClaimLoadin
     currentTime.getTime() >= opensAt.getTime() &&
     currentTime.getTime() <= closesAt.getTime();
   return (
-    <View>
-   
-        <View style={styles.container}>
-          <Image source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker.logo}` as string }} style={styles.image} />
-          <View style={{ gap: 28 }}>
-            <View style={{ gap: 4 }}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.title}>{marker.name}</Text>
-              </View>
-              <Text style={styles.category}>{marker.category}</Text>
+    <View style={{ paddingHorizontal: 16 }}>
+      <View style={styles.container}>
+        <Image source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker.logo}` as string }} style={styles.image} />
+        <View style={{ gap: 28 }}>
+          <View style={{ gap: 4 }}>
+            <View style={{ width: '80%' }}>
+              <Text numberOfLines={1} ellipsizeMode="tail" style={styles.title}>{marker.name}</Text>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <View
-                  style={[
-                    styles.dot,
-                    { backgroundColor: isOpen ? `${Color.System.systemError}` : `${Color.System.systemSuccess}` },
-                  ]}
-                />
-                <Text style={{ color: isOpen ? `${Color.System.systemError}` : `${Color.System.systemSuccess}` }}>
-                  {isOpen ? "Closed" : "Open"}
-                </Text>
-              </View>
+            <Text style={styles.category}>{marker.category}</Text>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 25, }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View
+                style={[
+                  styles.dot,
+                  { backgroundColor: isOpen ? `${Color.System.systemError}` : `${Color.System.systemSuccess}` },
+                ]}
+              />
+              <Text style={{ color: isOpen ? `${Color.System.systemError}` : `${Color.System.systemSuccess}` }}>
+                {isOpen ? "Closed" : "Open"}
+              </Text>
+            </View>
 
-              <View style={{ width: 1, height: 14, backgroundColor: Color.Gray.gray50 }} />
-              {marker.isOwned ? (
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                  <Reserve color={Color.Gray.gray600} size={16} />
-                  <Text>{marker.visitCount} Check-ins</Text>
+            <View style={{ width: 1, height: 14, backgroundColor: Color.Gray.gray50 }} />
+            {marker.isOwned ? (
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <Reserve color={Color.Gray.gray600} size={16} />
+                <Text>{marker.visitCount} Check-ins</Text>
+              </View>
+            ) : (
+              <TouchableOpacity onPress={onPress}>
+                <View style={{ flexDirection: 'row', position: 'relative', backgroundColor: Color.Gray.gray600, paddingVertical: 8, paddingHorizontal: 16, borderRadius: 48, marginLeft: 49, alignContent: 'center', alignItems: 'center' }}>
+                  <Wallet size={16} color={Color.Gray.gray50} />
+                  <Text style={{ color: Color.Gray.gray50, fontWeight: 'bold', fontSize: 11, lineHeight: 16 }}>
+                    {isClaimLoading
+                      ? "Loading"
+                      : marker.isOwned
+                        ? "Owned"
+                        : " Add"}
+                  </Text>
                 </View>
-              ) : (
-                <TouchableOpacity onPress={onPress}>
-                  <View style={{ position: 'relative', backgroundColor: Color.Gray.gray600, paddingVertical: 8, paddingHorizontal: 16, borderRadius: 48, marginLeft: 49 }}>
-                    <Text style={{ color: Color.Gray.gray50, fontWeight: 'bold', fontSize: 11 }}>
-                      {isClaimLoading
-                        ? "Loading"
-                        : marker.isOwned
-                          ? "Owned"
-                          : " Add"}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              )}
-            </View>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
+      </View>
 
     </View>
   )
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   dot: {
     width: 10,
     height: 10,
-    borderRadius: 5, // To make it a circle
-    marginRight: 5, // Adjust the margin as needed
+    borderRadius: 5,
+    marginRight: 5,
   },
 })
