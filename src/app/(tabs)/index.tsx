@@ -65,11 +65,11 @@ const Page = () => {
   };
 
   const flingUp = Gesture.Fling().direction(Directions.UP).onStart(() => {
-    console.log("fling up")
+    console.log("fling up");
   });
 
   const flingDown = Gesture.Fling().direction(Directions.DOWN).onStart(() => {
-    console.log("fling down")
+    console.log("fling down");
   });
 
   const modalTranslateY = useSharedValue(height);

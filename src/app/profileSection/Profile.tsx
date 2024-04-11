@@ -9,6 +9,7 @@ import {
 } from "iconsax-react-native";
 import React, { useEffect } from "react";
 import {
+  Linking,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -153,7 +154,7 @@ const Profile = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.configContainer}
-                onPress={() => router.push("profileSection/ContactEdit")}
+                onPress={() => Linking.openURL('mailto:itnumadlabs@gmail.com')}
               >
                 <View
                   style={{
@@ -252,6 +253,7 @@ const styles = StyleSheet.create({
     gap: 12,
     backgroundColor: Color.Gray.gray50,
     paddingVertical: 12,
+    marginBottom:24
   },
   profilePic: {
     alignItems: "center",
