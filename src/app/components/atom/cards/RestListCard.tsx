@@ -66,7 +66,6 @@ const ResListCard: React.FC<ResListCardProp> = ({ marker, onPress, isClaimLoadin
           </View>
         </View>
       </View>
-
     </View>
   )
 }

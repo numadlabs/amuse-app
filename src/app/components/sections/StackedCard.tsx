@@ -95,9 +95,6 @@ const StackedCard = () => {
           </TouchableOpacity>
         </View>
       ) : (
-    
-
-     
         <View style={{ }}>
           {cards?.data?.cards &&
             latestCards.map((card, index) => (

@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
         elevation: 12,
       },
     }),
+    zIndex: 999
   },
   toastText: {
     fontSize: 16,

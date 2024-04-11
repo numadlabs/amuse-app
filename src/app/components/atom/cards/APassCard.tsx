@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     marginBottom: "-80%",
     borderColor: Color.Gray.gray400,
     overflow: 'hidden',
-    height: scaleHeight(height/1.55)
+    height: scaleHeight(540)
   },
   aCardContainer1: {
     backgroundColor: Color.Gray.gray50,

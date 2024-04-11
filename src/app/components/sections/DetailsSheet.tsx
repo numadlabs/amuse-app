@@ -71,7 +71,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
         </View>
         <View style={{ gap: 16 }}>
           <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-            Locatons
+            Locations
           </Text>
           <View>
             <View style={styles.attribute}>
