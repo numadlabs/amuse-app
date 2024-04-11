@@ -5,14 +5,17 @@ import Color from "../../constants/Color";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "expo-router";
 import { useQuery, useQueryClient } from "react-query";
-import { getUserCard } from "@/app/lib/service/queryHelper";
+import { getPowerUp, getUserCard } from "@/app/lib/service/queryHelper";
 import useLocationStore from "@/app/lib/store/userLocation";
 import { BlurView } from "expo-blur";
 import { RestaurantType } from "@/app/lib/types";
 import APassCard from "../atom/cards/APassCard";
+import { Directions, Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
+import { height } from "@/app/lib/utils";
 
 
 const StackedCard = () => {
+  
   const { currentLocation } = useLocationStore();
   const router = useRouter();
   const queryClient = useQueryClient()
@@ -28,10 +31,20 @@ const StackedCard = () => {
     enabled: !!currentLocation,
   });
 
+  const { data: perks = [] } = useQuery({
+    queryFn: () => {
+      return getPowerUp(cards.id)
+    },
+    enabled: !!currentLocation
+  })
+
+  console.log(perks)
+
+
   useEffect(() => {
     if (cards && cards.data && cards.data.cards) {
       const totalCardHeight = cards.data.cards.reduce((totalHeight, card, index) => {
-        const marginBottom = index !== 0 ? -90 : 0;
+        const marginBottom = index !== 0 ? -80 : 0;
         const cardHeight = 350 + marginBottom;
         return totalHeight + cardHeight;
       }, 0);
@@ -82,12 +95,16 @@ const StackedCard = () => {
           </TouchableOpacity>
         </View>
       ) : (
-        <View style={{ flex: 1, flexGrow: 1,}}>
+    
+
+     
+        <View style={{ }}>
           {cards?.data?.cards &&
             latestCards.map((card, index) => (
               <APassCard name={card.name} image={card.logo} onPress={() => handleNavigation(card)} category={card.category} />
             ))}
         </View>
+
       )}
     </>
   );
@@ -130,7 +147,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     elevation: 3,
     width: "100%",
-    marginBottom: "-80%",
+    marginBottom: "-90%",
     borderWidth: 1,
     borderColor: Color.Gray.gray400,
   },
