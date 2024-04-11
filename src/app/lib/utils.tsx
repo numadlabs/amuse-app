@@ -6,8 +6,10 @@ import { CommonActions } from "@react-navigation/native";
 const { width, height } = Dimensions.get("screen");
 
 const guidlineBaseWith = 375;
+const guidlineBaseHeight = 812
 
 const scaleSize = (size: number): number => (width / guidlineBaseWith) * size;
+const scaleHeight = (height: number): number => (height/ guidlineBaseHeight) * height;
 const styledScaleSize = (size: number): string => `${scaleSize(size)}px`;
 
 type DimensionProperty = "margin" | "padding";
@@ -211,6 +213,7 @@ export {
   height,
   // deviceHasNotch,
   scaleSize,
+  scaleHeight,
   styledScaleSize,
   resize,
   margin,

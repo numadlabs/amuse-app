@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, Image, ViewS
 import React from 'react'
 import { BlurView } from 'expo-blur'
 import Color from '@/app/constants/Color'
+import { height, scaleHeight } from '@/app/lib/utils';
 
 
 // In the APassCard component
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     marginBottom: "-80%",
     borderColor: Color.Gray.gray400,
     overflow: 'hidden',
-    height:360
+    height: scaleHeight(height/1.55)
   },
   aCardContainer1: {
     backgroundColor: Color.Gray.gray50,
