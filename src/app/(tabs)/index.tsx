@@ -1,4 +1,4 @@
-import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 
 import Color from "../constants/Color";
@@ -14,13 +14,18 @@ import OwnedAcards from "../components/atom/cards/OwnedAcards";
 import useLocationStore from "../lib/store/userLocation";
 import { RestaurantType } from "../lib/types";
 import { Directions, Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
+import StackedCardModal from "../components/modals/StackedCardModal";
+import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import { height } from "../lib/utils";
 
 
 
 const Page = () => {
   const router = useRouter()
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [refreshPage, setRefreshPage] = useState<boolean>(false);
   const { authState } = useAuth()
+
   const { currentLocation } = useLocationStore();
   const { data: user = [], isSuccess } = useQuery({
     queryKey: ["UserInfo"],
@@ -61,11 +66,13 @@ const Page = () => {
 
   const flingUp = Gesture.Fling().direction(Directions.UP).onStart(() => {
     console.log("fling up")
-  })
+  });
 
   const flingDown = Gesture.Fling().direction(Directions.DOWN).onStart(() => {
-    console.log("fling Down")
-  })
+    console.log("fling down")
+  });
+
+  const modalTranslateY = useSharedValue(height);
 
 
 
@@ -96,16 +103,13 @@ const Page = () => {
       <Text style={{ fontSize: 14, fontWeight: '600', color: Color.Gray.gray400, marginTop: 32, marginBottom: 12 }}>
         Memberships
       </Text>
-
       <GestureHandlerRootView>
         <GestureDetector gesture={Gesture.Exclusive(flingUp, flingDown)}>
-
+          <View>
             <StackedCard key={refreshPage.toString()} />
-
-
+          </View>
         </GestureDetector>
       </GestureHandlerRootView>
-
 
 
       {cards?.data?.cards.length === 0 ?
@@ -122,8 +126,9 @@ const Page = () => {
           </View>
         )
       }
+    
 
-    </View>
+    </View> 
 
 
   );
@@ -136,5 +141,32 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Color.base.White,
     paddingHorizontal: 16
+  },
+  modal: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: Color.base.White,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    padding: 16,
+  },
+  closeButton: {
+    marginTop: 16,
+    backgroundColor: Color.Gray.gray50,
+    borderRadius: 32,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+  },
+  closeButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    fontWeight: 'bold',
+    color: Color.Gray.gray600,
+    fontSize: 16,
   },
 });
