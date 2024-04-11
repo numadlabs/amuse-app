@@ -1,14 +1,15 @@
-import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, Image } from 'react-native'
+import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, Image, ViewStyle, StyleProp } from 'react-native'
 import React from 'react'
 import { BlurView } from 'expo-blur'
 import Color from '@/app/constants/Color'
 
 
+// In the APassCard component
 interface ApassProp {
-  name: string,
-  category: string,
-  image: string,
-  onPress: () => void
+  name: string;
+  image: string;
+  onPress: () => void;
+  category: string;
 }
 const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress }) => {
   return (
@@ -64,7 +65,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: "-80%",
     borderColor: Color.Gray.gray400,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    height:360
   },
   aCardContainer1: {
     backgroundColor: Color.Gray.gray50,

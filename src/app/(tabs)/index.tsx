@@ -13,6 +13,7 @@ import { getUserById, getUserCard } from "../lib/service/queryHelper";
 import OwnedAcards from "../components/atom/cards/OwnedAcards";
 import useLocationStore from "../lib/store/userLocation";
 import { RestaurantType } from "../lib/types";
+import { Directions, Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 
 
 
@@ -58,11 +59,20 @@ const Page = () => {
     });
   };
 
+  const flingUp = Gesture.Fling().direction(Directions.UP).onStart(() => {
+    console.log("fling up")
+  })
+
+  const flingDown = Gesture.Fling().direction(Directions.DOWN).onStart(() => {
+    console.log("fling Down")
+  })
+
 
 
 
   return (
-    <ScrollView style={styles.container}>
+
+    <View style={styles.container}>
       <Balance amount={user.balance} />
       <View style={{ marginTop: 24, gap: 12 }}>
         {user.email && user.dateOfBirth ? (
@@ -87,8 +97,14 @@ const Page = () => {
         Memberships
       </Text>
 
+      <GestureHandlerRootView>
+        <GestureDetector gesture={Gesture.Exclusive(flingUp, flingDown)}>
 
-        <StackedCard key={refreshPage.toString()} />
+            <StackedCard key={refreshPage.toString()} />
+
+
+        </GestureDetector>
+      </GestureHandlerRootView>
 
 
 
@@ -107,7 +123,9 @@ const Page = () => {
         )
       }
 
-    </ScrollView>
+    </View>
+
+
   );
 };
 
