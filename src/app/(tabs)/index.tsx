@@ -17,6 +17,9 @@ import { Directions, Gesture, GestureDetector, GestureHandlerRootView } from "re
 import StackedCardModal from "../components/modals/StackedCardModal";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { height } from "../lib/utils";
+import { GetRestaurantsResponseType } from "../lib/types/apiResponseType";
+import { restaurantKeys } from "../lib/service/keysHelper";
+import { getRestaurants } from "../lib/service/queryHelper";
 
 
 
@@ -43,6 +46,24 @@ const Page = () => {
         longitude: currentLocation.longitude,
       });
     },
+    enabled: !!currentLocation,
+  });
+
+  const { data: restaurantsData } = useQuery<GetRestaurantsResponseType>({
+    queryKey: restaurantKeys.all,
+    queryFn: () => {
+      return getRestaurants({
+        page: 1,
+        limit: 10,
+        distance: 10000,
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
+      });
+    },
+    // onError(error):{
+    //   console.log(error)
+    // }
+
     enabled: !!currentLocation,
   });
 
@@ -88,11 +109,11 @@ const Page = () => {
           </Text>
         ) : ("")}
 
-        <ScrollView horizontal={true} >
-          {user.email && user.dateOfBirth ? (
-            cards?.data?.cards.slice(0, 2).map((card, index) => (
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          {restaurantsData?.data?.restaurants && restaurantsData.data.restaurants ? (
+            restaurantsData?.data?.restaurants.slice(0, 3).map((card, index) => (
               <View style={{ marginRight: 8 }}>
-                <OwnedAcards marker={card} key={card.id} onPress={() => handleNavigation(card)} />
+                <OwnedAcards marker={card} key={card.id as string} onPress={() => handleNavigation(card)} />
               </View>
             ))
           ) : (

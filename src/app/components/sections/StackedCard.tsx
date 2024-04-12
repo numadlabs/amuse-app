@@ -38,9 +38,6 @@ const StackedCard = () => {
     enabled: !!currentLocation
   })
 
-  console.log(perks)
-
-
   useEffect(() => {
     if (cards && cards.data && cards.data.cards) {
       const totalCardHeight = cards.data.cards.reduce((totalHeight, card, index) => {
@@ -98,7 +95,7 @@ const StackedCard = () => {
         <View style={{ }}>
           {cards?.data?.cards &&
             latestCards.map((card, index) => (
-              <APassCard name={card.name} image={card.logo} onPress={() => handleNavigation(card)} category={card.category} />
+              <APassCard name={card.name} image={card.logo} onPress={() => handleNavigation(card)} category={card.category} bonus={perks}/>
             ))}
         </View>
 

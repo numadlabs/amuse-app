@@ -64,8 +64,6 @@ const Restaurant = () => {
     }
   };
 
-
-
   const openPopup = () => {
     setPopupVisible(true);
   };
@@ -213,7 +211,6 @@ const styles = StyleSheet.create({
   },
   container: {
     marginTop: 16,
-
     paddingHorizontal: 16,
     flex: 1,
   },
@@ -259,6 +256,7 @@ const styles = StyleSheet.create({
   attributeText: {
     color: Color.Gray.gray600,
     fontSize: 16,
+    width: '90%'
   },
   membershipContainer: {
     flexDirection: "row",

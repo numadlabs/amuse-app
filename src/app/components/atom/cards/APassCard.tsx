@@ -1,9 +1,18 @@
-import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, Image, ViewStyle, StyleProp } from 'react-native'
-import React from 'react'
-import { BlurView } from 'expo-blur'
-import Color from '@/app/constants/Color'
-import { height, scaleHeight } from '@/app/lib/utils';
-
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+  StyleSheet,
+  Image,
+  ViewStyle,
+  StyleProp,
+} from "react-native";
+import React from "react";
+import { BlurView } from "expo-blur";
+import Color from "@/app/constants/Color";
+import { height, scaleHeight } from "@/app/lib/utils";
+import { Flash } from "iconsax-react-native";
 
 // In the APassCard component
 interface ApassProp {
@@ -11,34 +20,51 @@ interface ApassProp {
   image: string;
   onPress: () => void;
   category: string;
+  bonus: string;
 }
-const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress }) => {
+const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, bonus }) => {
   return (
     <>
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={onPress}
-      >
-
-        <ImageBackground resizeMode='cover' source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${image}` }}
-          style={[
-            styles.aCardContainer
-          ]}>
+      <TouchableOpacity activeOpacity={0.9} onPress={onPress}>
+        <ImageBackground
+          resizeMode="cover"
+          source={{
+            uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${image}`,
+          }}
+          style={[styles.aCardContainer]}
+        >
           <View style={styles.overlay} />
           <BlurView intensity={20} style={styles.blurContainer}>
             <Text style={styles.titleText}>{name}</Text>
             <Text style={[styles.buttonText, { bottom: 5 }]}>{category}</Text>
-            <View style={{ alignItems: 'center' }}>
-              <Image style={styles.image} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${image}` }} />
+            <View style={{ alignItems: "center" }}>
+              <Image
+                style={styles.image}
+                source={{
+                  uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${image}`,
+                }}
+              />
             </View>
           </BlurView>
+          {bonus ? <View
+            style={{
+              position: "absolute",
+              top: 20,
+              right: 20,
+              backgroundColor: "#21212152",
+              padding: 8,
+              borderRadius: 100,
+            }}
+          >
+            <Flash size={16} color={Color.base.White} />
+          </View> : null}
         </ImageBackground>
       </TouchableOpacity>
     </>
-  )
-}
+  );
+};
 
-export default APassCard
+export default APassCard;
 
 const styles = StyleSheet.create({
   container: {
@@ -66,8 +92,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: "-80%",
     borderColor: Color.Gray.gray400,
-    overflow: 'hidden',
-    height: scaleHeight(540)
+    overflow: "hidden",
+    height: scaleHeight(540),
   },
   aCardContainer1: {
     backgroundColor: Color.Gray.gray50,
@@ -81,9 +107,9 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray400,
   },
   blurContainer: {
-    width: '100%',
+    width: "100%",
     flex: 1,
-    padding: 20
+    padding: 20,
   },
   titleText: {
     color: Color.base.White,
@@ -91,10 +117,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     alignSelf: "flex-start",
     fontWeight: "bold",
+    width: '85%'
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(33, 33, 33, 0.32)',
+    backgroundColor: "rgba(33, 33, 33, 0.32)",
   },
   button: {
     paddingHorizontal: 20,
@@ -114,4 +141,4 @@ const styles = StyleSheet.create({
     height: 300,
     borderRadius: 32,
   },
-})
+});

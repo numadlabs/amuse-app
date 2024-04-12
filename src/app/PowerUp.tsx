@@ -74,7 +74,7 @@ const PowerUp = () => {
           style={{ justifyContent: "center", alignItems: "center", gap: 32 }}
         >
           <AmuseBlackLogo />
-          <View style={{ gap: 12 }}>
+          <View style={{ gap: 12, alignItems: 'center' }}>
             <Text
               style={{
                 fontSize: 24,

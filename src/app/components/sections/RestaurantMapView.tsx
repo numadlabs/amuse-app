@@ -428,23 +428,43 @@ export default function RestaurantMapView() {
   const router = useRouter();
 
   const handleNavigation = (restaurant: RestaurantType) => {
-    router.push({
-      pathname: `/restaurants/${restaurant.id}`,
-      params: {
-        cardId: restaurant.cardId,
-        name: restaurant.name,
-        location: restaurant.location,
-        about: restaurant.description,
-        category: restaurant.category,
-        isOwned: restaurant.isOwned,
-        benefits: [restaurant.benefits],
-        locations: restaurant.location,
-        artistInfo: restaurant.artistInfo,
-        expiryInfo: restaurant.expiryInfo,
-        instruction: restaurant.instruction,
-        logo: restaurant.logo,
-      },
-    });
+    if(restaurant.isOwned){
+      router.push({
+        pathname: `/Acards/${restaurant.id}`,
+        params: {
+          cardId: restaurant.cardId,
+          name: restaurant.name,
+          location: restaurant.location,
+          about: restaurant.description,
+          category: restaurant.category,
+          isOwned: restaurant.isOwned,
+          benefits: [restaurant.benefits],
+          locations: restaurant.location,
+          artistInfo: restaurant.artistInfo,
+          expiryInfo: restaurant.expiryInfo,
+          instruction: restaurant.instruction,
+          logo: restaurant.logo,
+        },
+      });
+    } else {
+      router.push({
+        pathname: `/restaurants/${restaurant.id}`,
+        params: {
+          cardId: restaurant.cardId,
+          name: restaurant.name,
+          location: restaurant.location,
+          about: restaurant.description,
+          category: restaurant.category,
+          isOwned: restaurant.isOwned,
+          benefits: [restaurant.benefits],
+          locations: restaurant.location,
+          artistInfo: restaurant.artistInfo,
+          expiryInfo: restaurant.expiryInfo,
+          instruction: restaurant.instruction,
+          logo: restaurant.logo,
+        },
+      });
+    }
   };
 
   return (
