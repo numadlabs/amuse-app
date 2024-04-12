@@ -124,8 +124,8 @@ const QrModal = () => {
     },
     onSuccess: (data, variables) => {
       console.log("🚀 ~ QrModal ~ data:", data.data.data);
-      setPowerUp(data.data.data.bonus.name)
-      setBTCAmount(data.data.data.increment)
+      setPowerUp(data.data.data.bonus?.name)
+      setBTCAmount(data.data?.data?.increment)
     },
   });
 
@@ -137,10 +137,8 @@ const QrModal = () => {
         return console.log("no card id");
       }
       const data = await createMapMutation(firstCardId);
-      // Handle the successful response from createMapMutation
       console.log("Map mutation successful:", data);
     } catch (error) {
-      // Handle the error from createMapMutation
       console.log("Map mutation failed:", error);
     }
   };
