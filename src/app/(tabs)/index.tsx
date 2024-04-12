@@ -69,6 +69,7 @@ const Page = () => {
   });
 
   const handleNavigation = (restaurant: RestaurantType) => {
+    if(restaurant.isOwned){
     router.push({
       pathname: `/Acards/${restaurant.id}`,
       params: {
@@ -84,6 +85,23 @@ const Page = () => {
         membership: restaurant.expiryInfo,
       },
     });
+    } else {
+      router.push({
+        pathname: `/restaurants/${restaurant.id}`,
+        params: {
+          name: restaurant.name,
+          location: restaurant.location,
+          about: restaurant.description,
+          category: restaurant.category,
+          isOwned: restaurant.isOwned,
+          logo: restaurant.logo,
+          taps: restaurant.visitCount,
+          artistInfo: restaurant.artistInfo,
+          benefits: restaurant.benefits,
+          membership: restaurant.expiryInfo,
+        },
+      });
+    }
   };
 
   const flingUp = Gesture.Fling().direction(Directions.UP).onStart(() => {
@@ -112,10 +130,13 @@ const Page = () => {
 
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           {restaurantsData?.data?.restaurants && restaurantsData.data.restaurants ? (
-            restaurantsData?.data?.restaurants.slice(0, 3).map((card, index) => (
-              <View style={{ marginRight: 8 }}>
-                <ResListCard isClaimLoading={false} marker={card} key={card.id as string} onPress={() => handleNavigation(card)} />
-              </View>
+            restaurantsData?.data?.restaurants.slice(0, 310).map((card, index) => (
+              <TouchableOpacity 
+              key={`card-${card.id}`}
+              onPress={() => handleNavigation(card)}
+              >
+                <ResListCard isClaimLoading={true} marker={card} key={card.id as string} onPress={() => handleNavigation(card)} />
+                </TouchableOpacity>
             ))
           ) : (
             <QuickInfo />
