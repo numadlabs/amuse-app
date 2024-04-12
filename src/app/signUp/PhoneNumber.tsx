@@ -90,7 +90,7 @@ const PhoneNumber = () => {
 
   const handlePrefixSelection = (selectedPrefix) => {
     setPrefix(selectedPrefix);
-    togglePrefix()
+    togglePrefix();
   };
 
   useEffect(() => {
@@ -203,38 +203,76 @@ const PhoneNumber = () => {
             </KeyboardAvoidingView>
 
             {isOpen && (
-              <Animated.View style={[translateY, { position: 'absolute', zIndex: 100, bottom: height / 1.45, width: '80%', height: height / 3.5, backgroundColor: Color.base.White, borderRadius: 16, overflow: 'hidden', left: 20
-              ,...Platform.select({
-                ios: {
-                  shadowColor: Color.Gray.gray500,
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.1,
-                  shadowRadius: 4,
-                  elevation: 12
-                },
-                android: {
-                  elevation: 12,
-                },
-              }),
-               }]}>
+              <Animated.View
+                style={[
+                  translateY,
+                  {
+                    position: "absolute",
+                    zIndex: 100,
+                    bottom: height / 1.45,
+                    width: "80%",
+                    height: height / 3.5,
+                    backgroundColor: Color.base.White,
+                    borderRadius: 16,
+                    overflow: "hidden",
+                    left: 20,
+                    ...Platform.select({
+                      ios: {
+                        shadowColor: Color.Gray.gray500,
+                        shadowOffset: { width: 0, height: 4 },
+                        shadowOpacity: 0.1,
+                        shadowRadius: 4,
+                        elevation: 12,
+                      },
+                      android: {
+                        elevation: 12,
+                      },
+                    }),
+                  },
+                ]}
+              >
                 <ScrollView style={{}}>
                   {data.map((prefix, index) => (
-                    <TouchableOpacity key={index} onPress={() => handlePrefixSelection(prefix.prefix)}>
-                      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 15, backgroundColor: Color.base.White,
-                        
-                       }}>
-                        <Text style={{
-                          fontSize: 16,
-                          fontWeight: '400',
-                          lineHeight: 20
-                        }}>{prefix.name}</Text>
-                        <Text style={{
-                            fontSize:16,
-                            fontWeight:'400',
-                            lineHeight:20
-                        }}>+{prefix.prefix}</Text>
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => handlePrefixSelection(prefix.prefix)}
+                    >
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          paddingHorizontal: 16,
+                          paddingVertical: 15,
+                          backgroundColor: Color.base.White,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            fontWeight: "400",
+                            lineHeight: 20,
+                          }}
+                        >
+                          {prefix.name}
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            fontWeight: "400",
+                            lineHeight: 20,
+                          }}
+                        >
+                          +{prefix.prefix}
+                        </Text>
                       </View>
-                      <View style={{ height: 1, width: '100%', backgroundColor: Color.Gray.gray50 }} />
+                      <View
+                        style={{
+                          height: 1,
+                          width: "100%",
+                          backgroundColor: Color.Gray.gray50,
+                        }}
+                      />
                     </TouchableOpacity>
                   ))}
                 </ScrollView>

@@ -1,14 +1,22 @@
-import { View, Text, TextInput, KeyboardAvoidingView, Keyboard, Platform, TouchableWithoutFeedback, StyleSheet, TouchableOpacity } from 'react-native';
-import React, { useEffect, useState } from 'react'
-import FpLayout from './_layout'
-import Color from '../constants/Color';
-import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import Button from '../components/ui/Button';
-import Steps from '../components/atom/Steps';
-import { EyeSlash } from 'iconsax-react-native';
-import Tick from '../components/icons/Tick'
 import { Ionicons } from "@expo/vector-icons";
-import { useSignUpStore } from '../lib/store/signUpStore';
+import { router, useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import Steps from "../components/atom/Steps";
+import Tick from "../components/icons/Tick";
+import Button from "../components/ui/Button";
+import Color from "../constants/Color";
+import { useSignUpStore } from "../lib/store/signUpStore";
 
 const validatePassword = (password: string): boolean => {
   if (password.length < 8) {
@@ -28,19 +36,17 @@ const validatePassword = (password: string): boolean => {
 };
 
 const Password = () => {
-  const [buttonPosition, setButtonPosition] = useState('bottom');
-  const [isFocused, setIsFocused] = useState(false)
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const { prefix, phoneNumber } = useLocalSearchParams()
-  const { password, setPassword } = useSignUpStore()
+  const [buttonPosition, setButtonPosition] = useState("bottom");
+  const [isFocused, setIsFocused] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const { prefix, phoneNumber } = useLocalSearchParams();
+  const { password, setPassword } = useSignUpStore();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [passwordPlaceholder, setPasswordPlaceholder] =
-  useState<string>("Password");
+    useState<string>("Password");
 
   const isPasswordValid = validatePassword(password);
   const doPasswordsMatch = password === confirmPassword;
-
-
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -51,20 +57,19 @@ const Password = () => {
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => setButtonPosition('top')
+      "keyboardDidShow",
+      () => setButtonPosition("top")
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => setButtonPosition('bottom')
+      "keyboardDidHide",
+      () => setButtonPosition("bottom")
     );
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
   }, []);
-
 
   const onFocusPassword = () => {
     setPasswordPlaceholder("");
@@ -73,126 +78,176 @@ const Password = () => {
     setPasswordPlaceholder("Password");
   };
   const handleNavigation = () => {
-    console.log(phoneNumber, prefix, password)
+    console.log(phoneNumber, prefix, password);
     router.push({
-      pathname: '/signUp/NickName',
+      pathname: "/signUp/NickName",
       params: {
         phoneNumber: phoneNumber,
         prefix: prefix,
-        password: password
-      }
-    })
-  }
+        password: password,
+      },
+    });
+  };
 
   return (
     <>
       <Steps activeStep={2} />
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.body}>
             <View style={styles.container}>
               <View style={styles.textContainer}>
-                <Text style={styles.topText}>
-                  New password
-                </Text>
+                <Text style={styles.topText}>New password</Text>
               </View>
               <View style={styles.inputContainer}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  height: 40,
-                  borderColor: Color.Gray.gray50,
-                  borderWidth: 1,
-                  borderRadius: 16,
-                  paddingHorizontal: 10,
-                  marginTop: 10,
-                }}
-              >
-              <TextInput
-                  secureTextEntry={!showPassword}
-                  placeholder={passwordPlaceholder}
-                  placeholderTextColor={Color.Gray.gray200}
-                  onFocus={onFocusPassword}
-                  onBlur={onBlurPassword}
+                <View
                   style={{
-                    flex: 1,
-                    fontSize: 16,
-                    fontWeight: '400',
-                    lineHeight: 20
+                    flexDirection: "row",
+                    alignItems: "center",
+                    height: 40,
+                    borderColor: Color.Gray.gray50,
+                    borderWidth: 1,
+                    borderRadius: 16,
+                    paddingHorizontal: 10,
+                    marginTop: 10,
                   }}
-                  value={password}
-                  onChangeText={setPassword}
-                />
-                 <TouchableOpacity onPress={toggleShowPassword}>
-                  <Ionicons
-                    name={showPassword ? "eye-outline" : "eye-off-outline"}
-                    size={24}
-                    color="black"
+                >
+                  <TextInput
+                    secureTextEntry={!showPassword}
+                    placeholder={passwordPlaceholder}
+                    placeholderTextColor={Color.Gray.gray200}
+                    onFocus={onFocusPassword}
+                    onBlur={onBlurPassword}
+                    style={{
+                      flex: 1,
+                      fontSize: 16,
+                      fontWeight: "400",
+                      lineHeight: 20,
+                    }}
+                    value={password}
+                    onChangeText={setPassword}
                   />
-                </TouchableOpacity>
+                  <TouchableOpacity onPress={toggleShowPassword}>
+                    <Ionicons
+                      name={showPassword ? "eye-outline" : "eye-off-outline"}
+                      size={24}
+                      color="black"
+                    />
+                  </TouchableOpacity>
                 </View>
                 <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  height: 40,
-                  borderColor: Color.Gray.gray50,
-                  borderWidth: 1,
-                  borderRadius: 16,
-                  paddingHorizontal: 10,
-                  marginTop: 10,
-                }}
-              >
-                <TextInput
-                  secureTextEntry={!showPassword}
-                  placeholder={passwordPlaceholder}
-                  placeholderTextColor={Color.Gray.gray200}
-                  onFocus={onFocusPassword}
-                  onBlur={onBlurPassword}
                   style={{
-                    flex: 1,
-                    fontSize: 16,
-                    fontWeight: '400',
-                    lineHeight: 20
+                    flexDirection: "row",
+                    alignItems: "center",
+                    height: 40,
+                    borderColor: Color.Gray.gray50,
+                    borderWidth: 1,
+                    borderRadius: 16,
+                    paddingHorizontal: 10,
+                    marginTop: 10,
                   }}
-                  value={password}
-                  onChangeText={setPassword}
-                />
-                <TouchableOpacity onPress={toggleShowPassword}>
-                  <Ionicons
-                    name={showPassword ? "eye-outline" : "eye-off-outline"}
-                    size={24}
-                    color="black"
+                >
+                  <TextInput
+                    secureTextEntry={!showPassword}
+                    placeholder={passwordPlaceholder}
+                    placeholderTextColor={Color.Gray.gray200}
+                    onFocus={onFocusPassword}
+                    onBlur={onBlurPassword}
+                    style={{
+                      flex: 1,
+                      fontSize: 16,
+                      fontWeight: "400",
+                      lineHeight: 20,
+                    }}
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
                   />
-                </TouchableOpacity>
+                  <TouchableOpacity onPress={toggleShowPassword}>
+                    <Ionicons
+                      name={showPassword ? "eye-outline" : "eye-off-outline"}
+                      size={24}
+                      color="black"
+                    />
+                  </TouchableOpacity>
                 </View>
               </View>
               {!doPasswordsMatch && (
                 <Text style={styles.errorText}>Password doesn't match</Text>
               )}
               <View style={styles.ruleContainer}>
-                <View style={{ flexDirection: 'row' }}>
-                  <Tick size={18} color={Color.Gray.gray100}/>
-                  <Text style={[styles.ruleText, isRuleSatisfied(/.{8,}/) && styles.greenRuleText]}>{'At least 8 characters'}</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Tick size={18} color={Color.Gray.gray100} />
+                  <Text
+                    style={[
+                      styles.ruleText,
+                      isRuleSatisfied(/.{8,}/) && styles.greenRuleText,
+                    ]}
+                  >
+                    {"At least 8 characters"}
+                  </Text>
                 </View>
-                <View style={{ flexDirection: 'row' }}>
-                <Tick size={18} color={Color.Gray.gray100}/>
-                  <Text style={[styles.ruleText, isRuleSatisfied(/[A-Z]/) && styles.greenRuleText]}>{'At least 1 upper case letter (A-Z)'}</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Tick size={18} color={Color.Gray.gray100} />
+                  <Text
+                    style={[
+                      styles.ruleText,
+                      isRuleSatisfied(/[A-Z]/) && styles.greenRuleText,
+                    ]}
+                  >
+                    {"At least 1 upper case letter (A-Z)"}
+                  </Text>
                 </View>
-                <View style={{ flexDirection: 'row' }}>
-                <Tick size={18} color={Color.Gray.gray100}/>
-                  <Text style={[styles.ruleText, isRuleSatisfied(/[a-z]/) && styles.greenRuleText]}>{'At least 1 lower case letter (a-z)'}</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Tick size={18} color={Color.Gray.gray100} />
+                  <Text
+                    style={[
+                      styles.ruleText,
+                      isRuleSatisfied(/[a-z]/) && styles.greenRuleText,
+                    ]}
+                  >
+                    {"At least 1 lower case letter (a-z)"}
+                  </Text>
                 </View>
-                <View style={{ flexDirection: 'row' }}>
-                <Tick size={18} color={Color.Gray.gray100}/>
-                  <Text style={[styles.ruleText, isRuleSatisfied(/\d/) && styles.greenRuleText]}>{'At least 1 number (0-9)'}</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Tick size={18} color={Color.Gray.gray100} />
+                  <Text
+                    style={[
+                      styles.ruleText,
+                      isRuleSatisfied(/\d/) && styles.greenRuleText,
+                    ]}
+                  >
+                    {"At least 1 number (0-9)"}
+                  </Text>
                 </View>
               </View>
             </View>
-            <View style={[styles.buttonContainer, buttonPosition === 'bottom' ? styles.bottomPosition : styles.topPosition]}>
-              <Button variant='primary' textStyle='primary' size='default' onPress={handleNavigation}>Continue</Button>
-            </View>
+
+            <KeyboardAvoidingView
+              style={{ flex: 1 }}
+              keyboardVerticalOffset={110}
+              behavior={Platform.OS === "ios" ? "height" : "padding"}
+            >
+              <View
+                style={[
+                  styles.buttonContainer,
+                  buttonPosition === "bottom"
+                    ? styles.bottomPosition
+                    : styles.topPosition,
+                ]}
+              >
+                <Button
+                  variant="primary"
+                  textStyle="primary"
+                  size="default"
+                  onPress={handleNavigation}
+                >
+                  Continue
+                </Button>
+              </View>
+            </KeyboardAvoidingView>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
@@ -203,8 +258,8 @@ const Password = () => {
 const styles = StyleSheet.create({
   body: {
     backgroundColor: Color.base.White,
-    height: '100%',
-    paddingHorizontal: 16
+    height: "100%",
+    paddingHorizontal: 16,
   },
   container: {
     paddingHorizontal: 16,
@@ -223,21 +278,21 @@ const styles = StyleSheet.create({
     borderRadius: 32,
   },
   textContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 24
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 24,
   },
   topText: {
     color: Color.Gray.gray500,
-    fontWeight: 'bold',
-    fontSize: 24
+    fontWeight: "bold",
+    fontSize: 24,
   },
   bottomText: {
     color: Color.Gray.gray400,
-    fontSize: 12
+    fontSize: 12,
   },
   inputContainer: {
-    gap: 12
+    gap: 12,
   },
   input: {
     height: 48,
@@ -246,7 +301,7 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray100,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    fontSize: 16
+    fontSize: 16,
   },
   inputFocused: {
     height: 48,
@@ -255,11 +310,11 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray600,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    fontSize: 16
+    fontSize: 16,
   },
   ruleContainer: {
     marginTop: 16,
-    gap: 6
+    gap: 6,
   },
   ruleText: {
     fontSize: 14,
@@ -271,24 +326,22 @@ const styles = StyleSheet.create({
   errorText: {
     color: Color.System.systemError,
     marginTop: 8,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
   },
   buttonContainer: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     bottom: 10,
     paddingHorizontal: 20,
-    marginBottom: 10
+    marginBottom: 20,
   },
   bottomPosition: {
-    justifyContent: 'flex-end',
-    bottom:20
+    justifyContent: "flex-end",
   },
   topPosition: {
-    justifyContent: 'flex-start',
-    marginTop: 'auto',
-    bottom:100
+    justifyContent: "flex-start",
+    marginTop: "auto",
   },
 });
 

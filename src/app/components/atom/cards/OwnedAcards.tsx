@@ -1,9 +1,8 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-import React from "react";
-import { RestaurantType } from "@/app/lib/types";
-import { useLocalSearchParams } from "expo-router";
 import Color from "@/app/constants/Color";
+import { RestaurantType } from "@/app/lib/types";
 import { Reserve } from "iconsax-react-native";
+import React from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 // Restaurant desc endpoint deeree nemeh
 
 interface OwnedAcardsProp {
@@ -30,7 +29,7 @@ const OwnedAcards: React.FC<OwnedAcardsProp> = ({ marker, onPress }) => {
           />
           <View style={{ gap: 28 }}>
             <View style={{ gap: 4 }}>
-              <View style={{ width: '80%' }}>
+              <View style={{ width: "80%" }}>
                 <Text style={styles.title}>{marker.name}</Text>
               </View>
               <Text style={styles.category}>{marker.category}</Text>
@@ -99,6 +98,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: "center",
     gap: 16,
+    marginBottom: 12,
   },
   image: {
     borderRadius: 8,

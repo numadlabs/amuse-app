@@ -1,22 +1,14 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-} from "react-native";
+import { useRouter } from "expo-router";
 import React from "react";
-import { useAuth } from "./context/AuthContext";
+import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import { useQuery } from "react-query";
-import { getUserCard } from "./lib/service/queryHelper";
-import useLocationStore from "./lib/store/userLocation";
+import OwnedAcards from "./components/atom/cards/OwnedAcards";
 import Header from "./components/layout/Header";
 import Color from "./constants/Color";
-import OwnedAcards from "./components/atom/cards/OwnedAcards";
-import { useRouter } from "expo-router";
+import { useAuth } from "./context/AuthContext";
+import { getUserCard } from "./lib/service/queryHelper";
+import useLocationStore from "./lib/store/userLocation";
 import { RestaurantType } from "./lib/types";
-import { SearchNormal1 } from "iconsax-react-native";
 
 const MyAcards = () => {
   const { authState } = useAuth();
@@ -32,11 +24,11 @@ const MyAcards = () => {
     enabled: !!currentLocation,
   });
 
-  console.log(cards?.data?.cards)
+  console.log(cards?.data?.cards);
 
   const router = useRouter();
   const handleNavigation = (restaurant: RestaurantType) => {
-    console.log("logo",restaurant.logo)
+    console.log("logo", restaurant.logo);
     router.push({
       pathname: `/Acards/${restaurant.id}`,
       params: {
@@ -56,12 +48,12 @@ const MyAcards = () => {
   return (
     <SafeAreaView style={{ backgroundColor: Color.base.White }}>
       <Header title="My memberships" />
-      <View style={styles.searchBarContainer}>
+      {/* <View style={styles.searchBarContainer}>
         <View style={styles.searchBar}>
           <SearchNormal1 color={Color.Gray.gray600} />
           <TextInput placeholder="Search Acards" style={styles.searchInput} />
         </View>
-      </View>
+      </View> */}
       <ScrollView style={styles.container}>
         {cards &&
           cards?.data?.cards.map((card, index) => (
@@ -83,8 +75,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 100,
     marginTop: 16,
-    height: 'auto'
-
+    height: "90%",
   },
   searchBarContainer: {
     backgroundColor: Color.base.White,
