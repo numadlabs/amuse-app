@@ -4,25 +4,25 @@ import Header from "./components/layout/Header";
 import Color from "./constants/Color";
 import Accordion from "./components/ui/Accordion";
 
-const TermsAndCondo = () => {
+const Faq = () => {
   const data = [
     {
-      title: "Section-1",
+      title: "FAQ-1",
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tincidunt rutrum tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec eget accumsan dolor, id consequat diam.",
     },
     {
-      title: "Section-2",
+      title: "FAQ-2",
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tincidunt rutrum tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec eget accumsan dolor, id consequat diam.",
     },
     {
-      title: "Section-3",
+      title: "FAQ-3",
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tincidunt rutrum tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec eget accumsan dolor, id consequat diam.",
     },
   ];
 
   return (
     <>
-      <Header title="Terms and Conditions" />
+      <Header title="FAQ" />
       <View style={styles.container}>
         {data.map((item, index) => (
           <Accordion key={index} title={item.title} text={item.text} />
@@ -32,7 +32,7 @@ const TermsAndCondo = () => {
   );
 };
 
-export default TermsAndCondo;
+export default Faq;
 
 const styles = StyleSheet.create({
   container: {

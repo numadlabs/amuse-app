@@ -44,6 +44,7 @@ export default function Layout() {
           <Stack.Screen name="SuccessScreen" />
           <Stack.Screen name="MyAcards" />
           <Stack.Screen name="TermsAndCondo" />
+          <Stack.Screen name="Faq" />
           <Stack.Screen name="PowerUp" options={{presentation: 'modal'}}/>
           <Stack.Screen name="(modals)/StackedCardModal" options={{presentation: 'modal'}}/>
         </Stack>

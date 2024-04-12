@@ -196,27 +196,18 @@ const Restaurant = () => {
           <View
             style={{
               backgroundColor: Color.Gray.gray50,
-              justifyContent: "center",
-              alignItems: "center",
-              alignContent: 'center',
+              justifyContent: "space-between",
               borderRadius: 48,
               height: 48,
               width: '100%',
               flexDirection: 'row',
-              overflow: 'hidden',
               padding: 4,
-            }}
-          >
-            <TouchableOpacity onPress={() => toggleView(true)}>
-              <View style={{
-                backgroundColor: backgroundColor,
-                flex: 1,
-                flexGrow: 1,
-                paddingHorizontal: 60,
-                alignItems: 'center',
+            }}>
+            <TouchableOpacity onPress={() => toggleView(true)} style={{ backgroundColor: backgroundColor,
+                alignItems: "center",
+                borderRadius: 48,
                 justifyContent: 'center',
-                borderRadius: 48
-              }}>
+                width: '48%' }}>
                 <Text style={{
                   fontSize: 15,
                   color: Color.Gray.gray600,
@@ -224,7 +215,6 @@ const Restaurant = () => {
                 }}>
                   Perks
                 </Text>
-              </View>
 
             </TouchableOpacity>
             <TouchableOpacity onPress={() => toggleView(false)}>

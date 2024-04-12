@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
   attributeLocText: {
     color: "#007FFF",
     fontSize: 16,
+    width: '90%'
   },
   membershipContainer: {
     flexDirection: "row",
