@@ -74,6 +74,8 @@ const QrModal = () => {
     enabled: !!currentLocation,
   });
 
+  console.log(cards)
+
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
@@ -110,13 +112,18 @@ const QrModal = () => {
 
         setEncryptedTap(data.data.data);
         queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
+        if (visitCount % 10 === 0) {
+          togglePopup();
+        } else {
+          toggleBtcPopup()
+        }
 
-        togglePopup();
       } catch (error) {
         console.error("Redeem mutation failed:", error);
       }
     },
   });
+  const visitCount = cards?.data?.cards[0].visitCount;
   const { mutateAsync: createRedeemMutation } = useMutation({
     mutationFn: redeemTap,
     onError: (error) => {
@@ -124,10 +131,15 @@ const QrModal = () => {
     },
     onSuccess: (data, variables) => {
       console.log("🚀 ~ QrModal ~ data:", data.data.data);
-      setPowerUp(data.data.data.bonus?.name)
+      if (visitCount >= 10) {
+        setPowerUp(data.data.data.bonus?.name)
+      }
+
       setBTCAmount(data.data?.data?.increment)
     },
   });
+
+
 
   const handleScanButtonPress = async () => {
     try {
@@ -314,13 +326,15 @@ const QrModal = () => {
               <Image source={require("@/public/icons/close.png")} />
             </TouchableOpacity>
           </View>
-          <PowerUp
-            title="Congrats!"
-            powerUpTitle={powerUp}
-            subText="You received a power-up."
-            isVisible={isPopupVisible}
-            onClose={closeModal}
-          />
+          {visitCount >= 10 ? (
+            <PowerUp
+              title="Congrats!"
+              powerUpTitle={powerUp}
+              subText="You received a power-up."
+              isVisible={isPopupVisible}
+              onClose={closeModal}
+            />
+          ) : null}
           <Popup
             isVisible={isBtcPopupVisible}
             onClose={closeBtcModal}

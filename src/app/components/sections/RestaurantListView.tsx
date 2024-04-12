@@ -16,12 +16,14 @@ import { useRouter } from "expo-router";
 import { useAuth } from "@/app/context/AuthContext";
 import { getAcard } from "@/app/lib/service/mutationHelper";
 
-interface RestaurantListViewProps {}
+interface RestaurantListViewProps { }
 
 const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
+
+  const [restaurants, setRestaurants] = useState<RestaurantType[]>([]);
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const [showOwned, setShowOwned] = useState(false);
   const { authState } = useAuth();
@@ -29,6 +31,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
     data: restaurantsData,
     isLoading,
     isError,
+    isSuccess
   } = useQuery<GetRestaurantsResponseType>({
     queryKey: restaurantKeys.all,
     queryFn: () =>
@@ -39,6 +42,9 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
         latitude: 0,
         longitude: 0,
       }),
+    onSuccess: () => {
+      setRestaurants(restaurantsData?.data?.restaurants)
+    }
   });
 
   const { mutateAsync: createGetAcardMutation } = useMutation({
@@ -46,7 +52,9 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => {},
+    onSuccess: (data, variables) => {
+
+    },
   });
   // if (data.data.success) {
   //   queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
@@ -81,24 +89,15 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
     router.push({
       pathname: `/restaurants/${restaurant.id}`,
       params: {
-        name: restaurant.name,
-        location: restaurant.location,
-        about: restaurant.description,
-        category: restaurant.category,
-        isOwned: restaurant.isOwned,
-        benefits: [restaurant.benefits],
-        locations: restaurant.location,
-        artistInfo: restaurant.artistInfo,
-        expiryInfo: restaurant.expiryInfo,
-        instruction: restaurant.instruction,
-        logo: restaurant.logo,
+        id: restaurant.id,
+        cardId: restaurant.cardId
       },
     });
   };
 
   return (
     <ScrollView style={{ flex: 1, height: "100%" }}>
-      {restaurantsData?.data?.restaurants &&
+      {/* {restaurantsData?.data?.restaurants &&
         restaurantsData.data.restaurants.map((item, index) => (
           <>
             <TouchableOpacity
@@ -116,7 +115,18 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
               />
             </TouchableOpacity>
           </>
-        ))}
+        ))} */}
+      {restaurants && restaurants.length > 0 ? (
+      restaurants.map((item, index) => (
+        <>
+          <TouchableOpacity key={`card-${item.id}`} onPress={() => handleNavigation(item)}>
+            <ResListCard key={index} marker={item} onPress={() => handleGetAcard(item.cardId)} isClaimLoading={isClaimLoading} />
+          </TouchableOpacity>
+        </>
+      ))
+    ) : (
+      <Text>Loading...</Text>
+    )}
     </ScrollView>
   );
 };
