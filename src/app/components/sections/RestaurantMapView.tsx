@@ -432,18 +432,8 @@ export default function RestaurantMapView() {
       router.push({
         pathname: `/Acards/${restaurant.id}`,
         params: {
-          cardId: restaurant.cardId,
-          name: restaurant.name,
-          location: restaurant.location,
-          about: restaurant.description,
-          category: restaurant.category,
-          isOwned: restaurant.isOwned,
-          benefits: [restaurant.benefits],
-          locations: restaurant.location,
-          artistInfo: restaurant.artistInfo,
-          expiryInfo: restaurant.expiryInfo,
-          instruction: restaurant.instruction,
-          logo: restaurant.logo,
+          id: restaurant.id,
+          cardId: restaurant.cardId
         },
       });
     } else {
@@ -451,17 +441,7 @@ export default function RestaurantMapView() {
         pathname: `/restaurants/${restaurant.id}`,
         params: {
           cardId: restaurant.cardId,
-          name: restaurant.name,
-          location: restaurant.location,
-          about: restaurant.description,
-          category: restaurant.category,
-          isOwned: restaurant.isOwned,
-          benefits: [restaurant.benefits],
-          locations: restaurant.location,
-          artistInfo: restaurant.artistInfo,
-          expiryInfo: restaurant.expiryInfo,
-          instruction: restaurant.instruction,
-          logo: restaurant.logo,
+          id: restaurant.id
         },
       });
     }

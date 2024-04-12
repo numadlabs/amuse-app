@@ -20,6 +20,7 @@ import { height } from "../lib/utils";
 import { GetRestaurantsResponseType } from "../lib/types/apiResponseType";
 import { restaurantKeys } from "../lib/service/keysHelper";
 import { getRestaurants } from "../lib/service/queryHelper";
+import ResListCard from "../components/atom/cards/RestListCard";
 
 
 
@@ -100,7 +101,7 @@ const Page = () => {
 
   return (
 
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Balance amount={user.balance} />
       <View style={{ marginTop: 24, gap: 12 }}>
         {user.email && user.dateOfBirth ? (
@@ -113,7 +114,7 @@ const Page = () => {
           {restaurantsData?.data?.restaurants && restaurantsData.data.restaurants ? (
             restaurantsData?.data?.restaurants.slice(0, 3).map((card, index) => (
               <View style={{ marginRight: 8 }}>
-                <OwnedAcards marker={card} key={card.id as string} onPress={() => handleNavigation(card)} />
+                <ResListCard isClaimLoading={false} marker={card} key={card.id as string} onPress={() => handleNavigation(card)} />
               </View>
             ))
           ) : (
@@ -126,7 +127,7 @@ const Page = () => {
       </Text>
       <GestureHandlerRootView>
         <GestureDetector gesture={Gesture.Exclusive(flingUp, flingDown)}>
-          <View>
+          <View style={{}}>
             <StackedCard key={refreshPage.toString()} />
           </View>
         </GestureDetector>
@@ -149,7 +150,7 @@ const Page = () => {
       }
     
 
-    </View> 
+    </ScrollView> 
 
 
   );

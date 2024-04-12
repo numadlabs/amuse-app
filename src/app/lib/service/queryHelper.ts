@@ -103,12 +103,12 @@ export async function getUserById(userID: string){
   })
 }
 
-export async function getRestaurantId(id: string){
+export async function getRestaurantId(id){
   return axiosClient
   .get(`/restaurants/${id}`)
   .then((response) => {
     if (response.data.success) {
-      return response?.data.data.restaurant
+      return response?.data.restaurant
     } else {
       throw new Error(response.data.error)
     }

@@ -92,7 +92,7 @@ const StackedCard = () => {
           </TouchableOpacity>
         </View>
       ) : (
-        <View style={{ }}>
+        <View style={{height:400, overflow:'hidden' }}>
           {cards?.data?.cards &&
             latestCards.map((card, index) => (
               <APassCard name={card.name} image={card.logo} onPress={() => handleNavigation(card)} category={card.category} hasBonus={card.hasBonus}/>

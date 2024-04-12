@@ -56,7 +56,7 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
               borderRadius: 100,
             }}
           >
-            <Flash size={16} color={Color.base.White} />
+            <Flash size={16} color={Color.base.White} variant="Bold"/>
           </View> : null}
         </ImageBackground>
       </TouchableOpacity>
