@@ -95,7 +95,7 @@ const StackedCard = () => {
         <View style={{ }}>
           {cards?.data?.cards &&
             latestCards.map((card, index) => (
-              <APassCard name={card.name} image={card.logo} onPress={() => handleNavigation(card)} category={card.category} bonus={perks}/>
+              <APassCard name={card.name} image={card.logo} onPress={() => handleNavigation(card)} category={card.category} hasBonus={card.hasBonus}/>
             ))}
         </View>
 

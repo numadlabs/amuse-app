@@ -20,9 +20,9 @@ interface ApassProp {
   image: string;
   onPress: () => void;
   category: string;
-  bonus: string;
+  hasBonus: boolean;
 }
-const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, bonus }) => {
+const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBonus }) => {
   return (
     <>
       <TouchableOpacity activeOpacity={0.9} onPress={onPress}>
@@ -46,7 +46,7 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, bonus 
               />
             </View>
           </BlurView>
-          {bonus ? <View
+          {hasBonus ? <View
             style={{
               position: "absolute",
               top: 20,
