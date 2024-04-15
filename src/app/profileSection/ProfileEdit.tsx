@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import Header from "../components/layout/Header";
 import Color from "../constants/Color";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getUserById } from "../lib/service/queryHelper";
 import { useAuth } from "../context/AuthContext";
 import { updateUserInfo } from "../lib/service/mutationHelper";
@@ -19,11 +19,12 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "../components/ui/Button";
 import Toast from "react-native-toast-message";
 import { router } from "expo-router";
+import { userKeys } from "../lib/service/keysHelper";
 
 const ProfileEdit = () => {
   const { authState } = useAuth();
   const { data: user = [], refetch } = useQuery({
-    queryKey: ["UserInfo"],
+    queryKey: userKeys.info,
     queryFn: () => getUserById(authState.userId),
   });
 
@@ -38,11 +39,11 @@ const ProfileEdit = () => {
   const showToast = () => {
     setTimeout(function () {
       Toast.show({
-        type: 'perkToast',
-        text1: 'Account changes saved.',
+        type: "perkToast",
+        text1: "Account changes saved.",
       });
-    }, 300)
-  }
+    }, 300);
+  };
 
   useEffect(() => {
     if (user) {
@@ -85,10 +86,9 @@ const ProfileEdit = () => {
       await updateUserInfo({ userId: authState.userId, data: userData });
       await refetch();
       setLoading(false);
-      setDataChanged(false); 
-      showToast()
+      setDataChanged(false);
+      showToast();
       router.back();
-
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -146,24 +146,24 @@ const ProfileEdit = () => {
           </View>
         </ScrollView>
         <View style={{ paddingHorizontal: 16, marginBottom: 30 }}>
-        {dataChanged && (
-          <Button
-            variant="primary"
-            textStyle="primary"
-            size="default"
-            onPress={triggerUpdateUser}
-          >
-            {loading ? (
-              <ActivityIndicator size="small" color="white" />
-            ) : (
-              <Text
-                style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
-              >
-                Save
-              </Text>
-            )}
-          </Button>
-        )}
+          {dataChanged && (
+            <Button
+              variant="primary"
+              textStyle="primary"
+              size="default"
+              onPress={triggerUpdateUser}
+            >
+              {loading ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Text
+                  style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                >
+                  Save
+                </Text>
+              )}
+            </Button>
+          )}
         </View>
       </SafeAreaView>
     </>

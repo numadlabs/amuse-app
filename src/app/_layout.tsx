@@ -1,10 +1,10 @@
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "../global.css";
 import { AuthProvider } from "./context/AuthContext";
 import { StatusBar } from "expo-status-bar";
-import Toast from 'react-native-toast-message';
+import Toast from "react-native-toast-message";
 import { toastConfig } from "./components/(feedback)/ToasterConfig";
 
 const queryClient = new QueryClient();
@@ -23,17 +23,16 @@ export default function Layout() {
     return null; // or a loading indicator
   }
 
-
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <StatusBar style="dark"/>
+        <StatusBar style="dark" />
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen
             name="restaurants/[id]"
             options={{ presentation: "modal" }}
           />
-            <Stack.Screen
+          <Stack.Screen
             name="Acards/[id]"
             options={{ presentation: "modal" }}
           />
@@ -45,10 +44,13 @@ export default function Layout() {
           <Stack.Screen name="MyAcards" />
           <Stack.Screen name="TermsAndCondo" />
           <Stack.Screen name="Faq" />
-          <Stack.Screen name="PowerUp" options={{presentation: 'modal'}}/>
-          <Stack.Screen name="(modals)/StackedCardModal" options={{presentation: 'modal'}}/>
+          <Stack.Screen name="PowerUp" options={{ presentation: "modal" }} />
+          <Stack.Screen
+            name="(modals)/StackedCardModal"
+            options={{ presentation: "modal" }}
+          />
         </Stack>
-        <Toast config={toastConfig} /> 
+        <Toast config={toastConfig} />
       </AuthProvider>
     </QueryClientProvider>
   );

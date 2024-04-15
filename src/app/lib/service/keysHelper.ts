@@ -7,3 +7,10 @@ export const restaurantKeys = {
   details: () => [...restaurantKeys.all, "detail"] as const,
   detail: (id: string) => [...restaurantKeys.details(), id] as const,
 };
+
+export const userKeys = {
+  info: ["userInfo"] as const,
+  perks: ["userPerks"] as const,
+  cards: ["userCards"] as const,
+  taps: ["userTaps"] as const,
+};

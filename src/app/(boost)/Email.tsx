@@ -11,17 +11,14 @@ import {
 import React, { useEffect, useState } from "react";
 import Steps from "../components/atom/Steps";
 import Color from "../constants/Color";
-import PrimaryButton from "../components/atom/button/PrimaryButton";
 import Button from "../components/ui/Button";
 import { router, useRouter } from "expo-router";
-import { useAuth } from "../context/AuthContext";
 import useBoostInfoStore from "../lib/store/boostInfoStore";
 
 const Email = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const [isFocused, setIsFocused] = useState(false);
   const router = useRouter();
-  const { onRegister } = useAuth();
   const { email, setEmail } = useBoostInfoStore();
 
   useEffect(() => {
@@ -58,7 +55,8 @@ const Email = () => {
                 <View style={{ gap: 8 }}>
                   <Text style={styles.topText}>Email</Text>
                   <Text style={styles.bottomText}>
-                  Restaurants will use this to get in touch for things like priority reservations. Spam is so 20th century.
+                    Restaurants will use this to get in touch for things like
+                    priority reservations. Spam is so 20th century.
                   </Text>
                 </View>
                 <TextInput

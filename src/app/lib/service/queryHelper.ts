@@ -66,64 +66,54 @@ export async function getUserCard({ latitude, longitude }) {
     });
 }
 
-export async function getPowerUp(id){
-  return axiosClient
-  .get(`/userBonus/${id}/userCard`)
-  .then((response) => {
+export async function getUserPowerUps(id) {
+  return axiosClient.get(`/userBonus/${id}/userCard`).then((response) => {
     if (response.data.success) {
-      return response?.data.data
+      return response?.data.data;
     } else {
-      throw new Error(response.data.error)
+      throw new Error(response.data.error);
     }
-  })
+  });
 }
 
 export async function getUserTaps() {
+  return axiosClient.get(`/users/taps`).then((response) => {
+    if (response.data.success) {
+      return response?.data;
+    } else {
+      throw new Error(response.data.error);
+    }
+  });
+}
+
+export async function getUserById(userID: string) {
+  return axiosClient.get(`/users/${userID}`).then((response) => {
+    if (response.data.success) {
+      return response?.data.data.user;
+    } else {
+      throw new Error(response.data.error);
+    }
+  });
+}
+
+export async function getRestaurantId(id) {
+  return axiosClient.get(`/restaurants/${id}`).then((response) => {
+    if (response.data.success) {
+      return response?.data.restaurant;
+    } else {
+      throw new Error(response.data.error);
+    }
+  });
+}
+
+export async function getPrefixAndCountry() {
   return axiosClient
-    .get(`/users/taps`)
+    .get("https://restcountries.com/v2/all?fields=name,callingCodes")
     .then((response) => {
-      if (response.data.success) {
-        return response?.data;
+      if (response.status === 200) {
+        return response.data;
       } else {
         throw new Error(response.data.error);
       }
     });
-}
-
-
-export async function getUserById(userID: string){
-  return axiosClient
-  .get(`/users/${userID}`)
-  .then((response) => {
-    if (response.data.success) {
-      return response?.data.data.user
-    } else {
-      throw new Error(response.data.error)
-    }
-  })
-}
-
-export async function getRestaurantId(id){
-  return axiosClient
-  .get(`/restaurants/${id}`)
-  .then((response) => {
-    if (response.data.success) {
-      return response?.data.restaurant
-    } else {
-      throw new Error(response.data.error)
-    }
-  })
-}
-
-
-export async function getPrefixAndCountry(){
-  return axiosClient
-  .get('https://restcountries.com/v2/all?fields=name,callingCodes')
-  .then((response) => {
-    if (response.status === 200) {
-      return response.data
-    }else{
-      throw new Error(response.data.error)
-    }
-  })
 }

@@ -1,12 +1,20 @@
 import React, { useState } from "react";
-import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import RestaurantListView from "../components/sections/RestaurantListView";
 import RestaurantMapView from "../components/sections/RestaurantMapView";
 import Color from "../constants/Color";
-import { SearchNormal1, Setting4 } from "iconsax-react-native";
-import Animated, { withSpring, useSharedValue, ReduceMotion } from 'react-native-reanimated';
-import { StatusBar } from "expo-status-bar";
+import Animated, {
+  withSpring,
+  useSharedValue,
+  ReduceMotion,
+} from "react-native-reanimated";
 
 const Acards = () => {
   const [showMapView, setShowMapView] = useState(true);
@@ -23,9 +31,7 @@ const Acards = () => {
       reduceMotion: ReduceMotion.System,
     });
     setShowMapView(view);
-
   };
-
 
   return (
     <>
@@ -43,22 +49,35 @@ const Acards = () => {
           <View style={{ padding: 16 }}>
             <Animated.View style={styles.buttonContainer}>
               <TouchableOpacity
-                style={[styles.toggleButton, !showMapView && styles.activeButton]}
+                style={[
+                  styles.toggleButton,
+                  !showMapView && styles.activeButton,
+                ]}
                 onPress={() => toggleView(false)}
               >
-                <Text style={[styles.buttonText, !showMapView && styles.activeText]}>List</Text>
+                <Text
+                  style={[styles.buttonText, !showMapView && styles.activeText]}
+                >
+                  List
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.toggleButton, showMapView && styles.activeButton]}
+                style={[
+                  styles.toggleButton,
+                  showMapView && styles.activeButton,
+                ]}
                 onPress={() => toggleView(true)}
               >
-                <Text style={[styles.buttonText, showMapView && styles.activeText]}>Map</Text>
+                <Text
+                  style={[styles.buttonText, showMapView && styles.activeText]}
+                >
+                  Map
+                </Text>
               </TouchableOpacity>
             </Animated.View>
           </View>
 
           {showMapView ? <RestaurantMapView /> : <RestaurantListView />}
-
         </View>
       </View>
     </>
@@ -75,7 +94,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Color.base.White,
     borderBottomLeftRadius: 48,
-
   },
   header: {
     flexDirection: "row",
@@ -110,12 +128,12 @@ const styles = StyleSheet.create({
   toggleButton: {
     paddingVertical: 12,
     alignItems: "center",
-    width: '48%'
+    width: "48%",
   },
   buttonText: {
     fontSize: 13,
     lineHeight: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: Color.Gray.gray600,
   },
   activeButton: {

@@ -1,20 +1,19 @@
 import { useRouter } from "expo-router";
 import React from "react";
 import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import OwnedAcards from "./components/atom/cards/OwnedAcards";
 import Header from "./components/layout/Header";
 import Color from "./constants/Color";
-import { useAuth } from "./context/AuthContext";
 import { getUserCard } from "./lib/service/queryHelper";
 import useLocationStore from "./lib/store/userLocation";
 import { RestaurantType } from "./lib/types";
+import { userKeys } from "./lib/service/keysHelper";
 
 const MyAcards = () => {
-  const { authState } = useAuth();
   const { currentLocation } = useLocationStore();
   const { data: cards = [], isLoading } = useQuery({
-    queryKey: ["userCards"],
+    queryKey: userKeys.cards,
     queryFn: () => {
       return getUserCard({
         latitude: currentLocation.latitude,
@@ -28,7 +27,6 @@ const MyAcards = () => {
 
   const router = useRouter();
   const handleNavigation = (restaurant: RestaurantType) => {
-    console.log("logo", restaurant.logo);
     router.push({
       pathname: `/Acards/${restaurant.id}`,
       params: {
