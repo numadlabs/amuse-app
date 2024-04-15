@@ -1,4 +1,12 @@
-import { Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Modal,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 
 import Color from "../constants/Color";
@@ -13,33 +21,39 @@ import { getUserById, getUserCard } from "../lib/service/queryHelper";
 import OwnedAcards from "../components/atom/cards/OwnedAcards";
 import useLocationStore from "../lib/store/userLocation";
 import { RestaurantType } from "../lib/types";
-import { Directions, Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  Directions,
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
 import StackedCardModal from "../components/modals/StackedCardModal";
-import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 import { height } from "../lib/utils";
 import { GetRestaurantsResponseType } from "../lib/types/apiResponseType";
 import { restaurantKeys } from "../lib/service/keysHelper";
 import { getRestaurants } from "../lib/service/queryHelper";
 import ResListCard from "../components/atom/cards/RestListCard";
 
-
-
 const Page = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [refreshPage, setRefreshPage] = useState<boolean>(false);
-  const { authState } = useAuth()
+  const { authState } = useAuth();
 
   const { currentLocation } = useLocationStore();
   const { data: user = [], isSuccess } = useQuery({
     queryKey: ["UserInfo"],
     queryFn: () => {
-      return getUserById(authState.userId)
+      return getUserById(authState.userId);
     },
-    enabled: !!authState.userId
-  })
+    enabled: !!authState.userId,
+  });
 
-  const { data: cards = [], } = useQuery({
+  const { data: cards = [] } = useQuery({
     queryKey: ["userCards"],
     queryFn: () => {
       return getUserCard({
@@ -69,22 +83,22 @@ const Page = () => {
   });
 
   const handleNavigation = (restaurant: RestaurantType) => {
-    if(restaurant.isOwned){
-    router.push({
-      pathname: `/Acards/${restaurant.id}`,
-      params: {
-        name: restaurant.name,
-        location: restaurant.location,
-        about: restaurant.description,
-        category: restaurant.category,
-        isOwned: restaurant.isOwned,
-        logo: restaurant.logo,
-        taps: restaurant.visitCount,
-        artistInfo: restaurant.artistInfo,
-        benefits: restaurant.benefits,
-        membership: restaurant.expiryInfo,
-      },
-    });
+    if (restaurant.isOwned) {
+      router.push({
+        pathname: `/Acards/${restaurant.id}`,
+        params: {
+          name: restaurant.name,
+          location: restaurant.location,
+          about: restaurant.description,
+          category: restaurant.category,
+          isOwned: restaurant.isOwned,
+          logo: restaurant.logo,
+          taps: restaurant.visitCount,
+          artistInfo: restaurant.artistInfo,
+          benefits: restaurant.benefits,
+          membership: restaurant.expiryInfo,
+        },
+      });
     } else {
       router.push({
         pathname: `/restaurants/${restaurant.id}`,
@@ -104,46 +118,79 @@ const Page = () => {
     }
   };
 
-  const flingUp = Gesture.Fling().direction(Directions.UP).onStart(() => {
-    console.log("fling up");
-  });
+  const flingUp = Gesture.Fling()
+    .direction(Directions.UP)
+    .onStart(() => {
+      console.log("fling up");
+    });
 
-  const flingDown = Gesture.Fling().direction(Directions.DOWN).onStart(() => {
-    console.log("fling down");
-  });
+  const flingDown = Gesture.Fling()
+    .direction(Directions.DOWN)
+    .onStart(() => {
+      console.log("fling down");
+    });
 
   const modalTranslateY = useSharedValue(height);
 
-
-
+  const restaurantsArray = restaurantsData?.data?.restaurants || [];
 
   return (
-
     <ScrollView style={styles.container}>
       <Balance amount={user.balance} />
       <View style={{ marginTop: 24, gap: 12 }}>
         {user.email && user.dateOfBirth ? (
-          <Text style={{ fontSize: 14, fontWeight: '600', color: Color.Gray.gray400 }}>
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: "600",
+              color: Color.Gray.gray400,
+            }}
+          >
             Featured restaurants
           </Text>
-        ) : ("")}
-
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {restaurantsData?.data?.restaurants && restaurantsData.data.restaurants ? (
-            restaurantsData?.data?.restaurants.slice(0, 3).map((card, index) => (
-              <TouchableOpacity 
-              key={`card-${card.id}`}
-              onPress={() => handleNavigation(card)}
-              >
-                <ResListCard isClaimLoading={true} marker={card} key={card.id as string} onPress={() => handleNavigation(card)} />
-                </TouchableOpacity>
-            ))
-          ) : (
-            <QuickInfo />
-          )}
-        </ScrollView>
+        ) : (
+          ""
+        )}
+        {restaurantsArray?.length > 0 && (
+          <View style={{ alignItems: "center" }}>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            >
+              <ResListCard
+                isClaimLoading={true}
+                marker={restaurantsArray[0]}
+                key={restaurantsArray[0].id as string}
+                onPress={() => handleNavigation(restaurantsArray[0])}
+              />
+              {user.email && user.dateOfBirth && user.nickname && user.location ? (
+                null
+              ) : <QuickInfo />}  
+              <ResListCard
+                isClaimLoading={true}
+                marker={restaurantsArray[1]}
+                key={restaurantsArray[1].id as string}
+                onPress={() => handleNavigation(restaurantsArray[1])}
+              />
+              <ResListCard
+                isClaimLoading={true}
+                marker={restaurantsArray[2]}
+                key={restaurantsArray[2].id as string}
+                onPress={() => handleNavigation(restaurantsArray[2])}
+              />
+            </ScrollView>
+          </View>
+        )}
       </View>
-      <Text style={{ fontSize: 14, fontWeight: '600', color: Color.Gray.gray400, marginTop: 32, marginBottom: 12 }}>
+      <Text
+        style={{
+          fontSize: 14,
+          fontWeight: "600",
+          color: Color.Gray.gray400,
+          marginTop: 32,
+          marginBottom: 12,
+        }}
+      >
         Memberships
       </Text>
       <GestureHandlerRootView>
@@ -154,26 +201,34 @@ const Page = () => {
         </GestureDetector>
       </GestureHandlerRootView>
 
-
-      {cards?.data?.cards.length === 0 ?
-        "" :
-        (
-          <View style={{ width: '100%', alignItems: 'center', marginBottom: 50 }}>
-            <TouchableOpacity onPress={() => router.push('/MyAcards')}>
-              <View style={{ backgroundColor: Color.Gray.gray50, marginTop: 16, paddingVertical: 12, paddingHorizontal: 16, borderRadius: 32 }}>
-                <Text style={{ fontWeight: 'bold', color: Color.Gray.gray600, fontSize: 16, }}>
-                  See all
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        )
-      }
-    
-
-    </ScrollView> 
-
-
+      {cards?.data?.cards.length === 0 ? (
+        ""
+      ) : (
+        <View style={{ width: "100%", alignItems: "center", marginBottom: 50 }}>
+          <TouchableOpacity onPress={() => router.push("/MyAcards")}>
+            <View
+              style={{
+                backgroundColor: Color.Gray.gray50,
+                marginTop: 16,
+                paddingVertical: 12,
+                paddingHorizontal: 16,
+                borderRadius: 32,
+              }}
+            >
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  color: Color.Gray.gray600,
+                  fontSize: 16,
+                }}
+              >
+                See all
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      )}
+    </ScrollView>
   );
 };
 
@@ -183,10 +238,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.base.White,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
   },
   modal: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
@@ -201,14 +256,14 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   closeButtonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   closeButtonText: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: Color.Gray.gray600,
     fontSize: 16,
   },
