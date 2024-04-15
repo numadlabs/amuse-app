@@ -1,5 +1,4 @@
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import { Location, TicketExpired, User, WalletAdd } from "iconsax-react-native";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
@@ -13,19 +12,11 @@ import {
   View,
 } from "react-native";
 import { BlurView } from "expo-blur";
-import Popup from "../components/(feedback)/Popup";
-import Tick from "../components/icons/Tick";
-import Button from "../components/ui/Button";
 import Color from "../constants/Color";
 import Close from "../components/icons/Close";
-import PowerUp from "../components/(feedback)/PowerUp";
 import PowerUpCard from "../components/atom/cards/PowerUpCard";
 import DetailsSheet from "../components/sections/DetailsSheet";
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from "react-native-gesture-handler";
+import { Gesture, GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, {
   FadeIn,
   FadeOut,
@@ -38,17 +29,17 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { height } from "../lib/utils";
-import { useQuery } from "react-query";
-import { getPowerUp, getUserCard } from "../lib/service/queryHelper";
+import { useQuery } from "@tanstack/react-query";
+import { getUserPowerUps, getUserCard } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
-import PerksSection from "../components/sections/PerksSection";
 import PowerUpLogo from "../components/icons/PowerUpLogo";
+import { userKeys } from "../lib/service/keysHelper";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const Restaurant = () => {
   const offset = useSharedValue(0);
   const { currentLocation } = useLocationStore();
-  const [showPerks, setShowPerks] = useState(true)
+  const [showPerks, setShowPerks] = useState(true);
 
   const {
     id,
@@ -87,16 +78,17 @@ const Restaurant = () => {
       }
     });
 
-  const backgroundColor = showPerks ? Color.base.White : Color.Gray.gray50
+  const backgroundColor = showPerks ? Color.base.White : Color.Gray.gray50;
   const { data: perks = [], isLoading } = useQuery({
+    queryKey: userKeys.perks,
     queryFn: () => {
-      return getPowerUp(id)
+      return getUserPowerUps(id);
     },
-    enabled: !!currentLocation
-  })
+    enabled: !!currentLocation,
+  });
   const toggleView = (view) => {
-    setShowPerks(view)
-  }
+    setShowPerks(view);
+  };
 
   return (
     <GestureHandlerRootView
@@ -192,46 +184,58 @@ const Restaurant = () => {
           </ImageBackground>
         )}
         <View style={styles.attrContainer}>
-
           <View
             style={{
               backgroundColor: Color.Gray.gray50,
               justifyContent: "space-between",
               borderRadius: 48,
               height: 48,
-              width: '100%',
-              flexDirection: 'row',
+              width: "100%",
+              flexDirection: "row",
               padding: 4,
-            }}>
-            <TouchableOpacity onPress={() => toggleView(true)} style={{ backgroundColor: backgroundColor,
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => toggleView(true)}
+              style={{
+                backgroundColor: backgroundColor,
                 alignItems: "center",
                 borderRadius: 48,
-                justifyContent: 'center',
-                width: '48%' }}>
-                <Text style={{
+                justifyContent: "center",
+                width: "48%",
+              }}
+            >
+              <Text
+                style={{
                   fontSize: 15,
                   color: Color.Gray.gray600,
                   fontWeight: "bold",
-                }}>
-                  Perks
-                </Text>
-
+                }}
+              >
+                Perks
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => toggleView(false)}>
-              <View style={{
-                backgroundColor: showPerks ? Color.Gray.gray50 : Color.base.White,
-                flex: 1,
-                flexGrow: 1,
-                alignItems: 'center',
-                paddingHorizontal: 60,
-                justifyContent: 'center',
-                borderRadius: 48
-              }}>
-                <Text style={{
-                  fontSize: 15,
-                  color: Color.Gray.gray600,
-                  fontWeight: "bold",
-                }}>
+              <View
+                style={{
+                  backgroundColor: showPerks
+                    ? Color.Gray.gray50
+                    : Color.base.White,
+                  flex: 1,
+                  flexGrow: 1,
+                  alignItems: "center",
+                  paddingHorizontal: 60,
+                  justifyContent: "center",
+                  borderRadius: 48,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: Color.Gray.gray600,
+                    fontWeight: "bold",
+                  }}
+                >
                   Details
                 </Text>
               </View>
@@ -240,38 +244,68 @@ const Restaurant = () => {
           <View style={{ flex: 1, flexGrow: 1, marginTop: 32 }}>
             {isLoading ? (
               <ActivityIndicator color={Color.Gray.gray600} />
-            ) : (
-              showPerks ? (
-                <View style={styles.powerUpGrid}>
-                  {perks && perks.length > 0 ? (
-                    perks.map((item, index) => (
-                      <PowerUpCard
-                        key={index}
-                        title={item.name}
-                        onPress={() => router.push({
+            ) : showPerks ? (
+              <View style={styles.powerUpGrid}>
+                {perks && perks.length > 0 ? (
+                  perks.map((item, index) => (
+                    <PowerUpCard
+                      key={index}
+                      title={item.name}
+                      onPress={() =>
+                        router.push({
                           pathname: `/PowerUp`,
                           params: {
                             name: item.name,
-                            id: item.id
-                          }
-                        })}
-                      />
-                    ))
-                  ) : (
-                    <View style={{ backgroundColor: Color.Gray.gray50, flex: 1, justifyContent: 'center', gap: 16, padding: 24, borderRadius: 16 }}>
-                      <View style={{ justifyContent: 'center', alignItems: 'center', }}>
-                        <PowerUpLogo />
-                      </View>
-
-                      <Text style={{ textAlign: 'center', lineHeight: 16, fontSize: 12, fontWeight: '400' }}>You haven’t got any perks yet.{"\n"} Every 10th check-in, you will receive perks.</Text>
+                            id: item.id,
+                          },
+                        })
+                      }
+                    />
+                  ))
+                ) : (
+                  <View
+                    style={{
+                      backgroundColor: Color.Gray.gray50,
+                      flex: 1,
+                      justifyContent: "center",
+                      gap: 16,
+                      padding: 24,
+                      borderRadius: 16,
+                    }}
+                  >
+                    <View
+                      style={{ justifyContent: "center", alignItems: "center" }}
+                    >
+                      <PowerUpLogo />
                     </View>
-                  )}
-                </View>
-              ) : (
-                <View style={{ flex: 1, flexGrow: 1, marginBottom: 150, padding:8 }}>
-                  <DetailsSheet benefits={benefits} locations={location} memberships={membership} about={about} instruction={instruction} artistInfo={artistInfo} />
-                </View>
-              )
+
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        lineHeight: 16,
+                        fontSize: 12,
+                        fontWeight: "400",
+                      }}
+                    >
+                      You haven’t got any perks yet.{"\n"} Every 10th check-in,
+                      you will receive perks.
+                    </Text>
+                  </View>
+                )}
+              </View>
+            ) : (
+              <View
+                style={{ flex: 1, flexGrow: 1, marginBottom: 150, padding: 8 }}
+              >
+                <DetailsSheet
+                  benefits={benefits}
+                  locations={location}
+                  memberships={membership}
+                  about={about}
+                  instruction={instruction}
+                  artistInfo={artistInfo}
+                />
+              </View>
             )}
           </View>
         </View>

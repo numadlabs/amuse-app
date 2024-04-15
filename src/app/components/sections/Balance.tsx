@@ -8,9 +8,9 @@ interface BalanceProps {
 }
 const Balance: React.FC<BalanceProps> = ({ amount }) => {
   const truncatedAmount =
-    amount !== 0 ? amount?.toString().substring(0, 6) : "0.0000";
+    amount !== 0 ? amount?.toString().substring(0, 8) : "0.0000";
   let coinAmout = parseFloat(truncatedAmount) * 70193;
-  let formattedCoin = coinAmout.toFixed(2)
+  let formattedCoin = coinAmout.toFixed(2);
 
   return (
     <View style={styles.container}>

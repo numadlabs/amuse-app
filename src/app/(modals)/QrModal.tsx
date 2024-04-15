@@ -5,22 +5,21 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { CameraView, Camera } from "expo-camera/next";
 import Color from "../constants/Color";
 import { useRouter } from "expo-router";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { generateTap, redeemTap } from "../lib/service/mutationHelper";
 import Popup from "../components/(feedback)/Popup";
-import QrPopup from "../components/(feedback)/QrPopup";
 import PowerUp from "../components/(feedback)/PowerUp";
-import { useAuth } from "../context/AuthContext";
 import { getUserCard } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
 import { Flash } from "iconsax-react-native";
-import Toast from 'react-native-toast-message';
+import Toast from "react-native-toast-message";
+import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
+import { SERVER_SETTING } from "../constants/serverSettings";
 
 const { width, height } = Dimensions.get("window");
 
@@ -31,8 +30,14 @@ const overlayAdjusting = 5;
 
 const QrModal = () => {
   const [isPopupVisible, setPopupVisible] = useState(false);
-  const [isBtcPopupVisible, setBtcPopupVisible] = useState(false)
+  const [isBtcPopupVisible, setBtcPopupVisible] = useState(false);
   const [isModalVisible, setModalVisible] = useState(true);
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
+  const [flashMode, setFlashMode] = useState(false);
+  const [powerUp, setPowerUp] = useState("");
+  const [btcAmount, setBTCAmount] = useState("");
+  const [encryptedTap, setEncryptedTap] = useState("");
 
   const togglePopup = () => {
     setPopupVisible(!isPopupVisible);
@@ -41,30 +46,30 @@ const QrModal = () => {
   const showToast = () => {
     setTimeout(function () {
       Toast.show({
-        type: 'perkToast',
-        text1: 'Successfully used perk',
+        type: "perkToast",
+        text1: "Successfully used perk",
       });
-    }, 1500)
-  }
-
-  const toggleBtcPopup = () => {
-    setBtcPopupVisible(!isBtcPopupVisible)
-  }
-
-  const closeModal = () => {
-    toggleBtcPopup()
-    togglePopup()
-    showToast()
+    }, 1500);
   };
 
-  const queryClient = useQueryClient()
+  const toggleBtcPopup = () => {
+    setBtcPopupVisible(!isBtcPopupVisible);
+  };
+
+  const closeModal = () => {
+    toggleBtcPopup();
+    togglePopup();
+    showToast();
+  };
+
+  const queryClient = useQueryClient();
   const closeBtcModal = () => {
     router.back();
-  }
+  };
   const { currentLocation } = useLocationStore();
 
   const { data: cards = [] } = useQuery({
-    queryKey: ["userCards"],
+    queryKey: userKeys.cards,
     queryFn: () => {
       return getUserCard({
         latitude: currentLocation.latitude,
@@ -74,14 +79,6 @@ const QrModal = () => {
     enabled: !!currentLocation,
   });
 
-  console.log(cards)
-
-  const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
-  const [flashMode, setFlashMode] = useState(false);
-  const [powerUp, setPowerUp] = useState("")
-  const [btcAmount, setBTCAmount] = useState("")
-  const [encryptedTap, setEncryptedTap] = useState("");
   const router = useRouter();
   useEffect(() => {
     const getCameraPermissions = async () => {
@@ -92,13 +89,11 @@ const QrModal = () => {
     getCameraPermissions();
   }, []);
 
-
   const {
     data,
     error,
-    isLoading,
     status,
-    mutateAsync: createMapMutation,
+    mutateAsync: createTapMutation,
   } = useMutation({
     mutationFn: generateTap,
     onError: (error) => {
@@ -111,12 +106,6 @@ const QrModal = () => {
         console.log("Redeem successful:", resp);
 
         setEncryptedTap(data.data.data);
-        queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
-        if ( visitCount % 10 === 0) {
-          togglePopup();
-        } else {
-          toggleBtcPopup()
-        }
       } catch (error) {
         console.error("Redeem mutation failed:", error);
       }
@@ -130,11 +119,21 @@ const QrModal = () => {
     },
     onSuccess: (data, variables) => {
       console.log("🚀 ~ QrModal ~ data:", data.data.data);
-      if (visitCount >= 10) {
-        setPowerUp(data.data.data.bonus?.name)
+      if (visitCount >= SERVER_SETTING.PERK_FREQUENCY) {
+        setPowerUp(data.data.data.bonus?.name);
+        queryClient.invalidateQueries({ queryKey: userKeys.perks });
       }
 
-      setBTCAmount(data.data?.data?.increment)
+      setBTCAmount(data.data?.data?.increment);
+      queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
+
+      queryClient.invalidateQueries({ queryKey: userKeys.info });
+
+      if (visitCount % SERVER_SETTING.PERK_FREQUENCY === 0) {
+        togglePopup();
+      } else {
+        toggleBtcPopup();
+      }
     },
   });
   const handleScanButtonPress = async () => {
@@ -144,14 +143,12 @@ const QrModal = () => {
       if (!firstCardId) {
         return console.log("no card id");
       }
-      const data = await createMapMutation(firstCardId);
+      const data = await createTapMutation(firstCardId);
       console.log("Map mutation successful:", data);
     } catch (error) {
       console.log("Map mutation failed:", error);
     }
   };
-
-
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
@@ -230,19 +227,6 @@ const QrModal = () => {
     );
   }
 
-  const overlayStyles = (
-    overlayWidth,
-    overlayHeight,
-    marginTop = 0,
-    marginLeft = 0
-  ) => ({
-    ...styles.overlay,
-    width: overlayWidth,
-    height: overlayHeight,
-    marginTop,
-    marginLeft,
-  });
-
   return (
     <>
       {isModalVisible && (
@@ -255,7 +239,7 @@ const QrModal = () => {
               }}
               style={StyleSheet.absoluteFillObject}
               flash={flashMode == true ? "on" : "off"}
-            // flash="on"
+              // flash="on"
             />
             {/* Overlay for guiding user to place QR code within scan area */}
             <View
@@ -322,7 +306,7 @@ const QrModal = () => {
               <Image source={require("@/public/icons/close.png")} />
             </TouchableOpacity>
           </View>
-          {visitCount >= 10 ? (
+          {visitCount >= SERVER_SETTING.PERK_FREQUENCY ? (
             <PowerUp
               title="Congrats!"
               powerUpTitle={powerUp}
@@ -351,7 +335,6 @@ const styles = StyleSheet.create({
   overlay: {
     position: "absolute",
     backgroundColor: "rgba(0, 0, 0, 0)",
-
   },
   markerContainer: {
     position: "absolute",

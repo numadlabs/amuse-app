@@ -11,28 +11,32 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { BlurView } from 'expo-blur';
+import { BlurView } from "expo-blur";
 import Popup from "../components/(feedback)/Popup";
 import Tick from "../components/icons/Tick";
 import Button from "../components/ui/Button";
 import Color from "../constants/Color";
 import Close from "../components/icons/Close";
 import { useAuth } from "../context/AuthContext";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAcard } from "../lib/service/mutationHelper";
 import { restaurantKeys } from "../lib/service/keysHelper";
 import Toast from "react-native-toast-message";
 import { GetRestaurantsResponseType } from "../lib/types/apiResponseType";
-import { getRestaurantById, getRestaurantId, getRestaurants } from "../lib/service/queryHelper";
+import {
+  getRestaurantById,
+  getRestaurantId,
+  getRestaurants,
+} from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
 
 const Restaurant = () => {
-  const { cardId, id, } = useLocalSearchParams();
+  const { cardId, id } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
 
   const [visitCount, setVisitCount] = useState(0);
-  const [isClaimLoading, setIsClaimLoading] = useState(false)
-  const { authState } = useAuth()
+  const [isClaimLoading, setIsClaimLoading] = useState(false);
+  const { authState } = useAuth();
   const { currentLocation } = useLocationStore();
   const queryClient = useQueryClient();
 
@@ -43,7 +47,6 @@ const Restaurant = () => {
     },
     enabled: !!currentLocation,
   });
-
 
   const showToast = () => {
     Toast.show({
@@ -57,13 +60,12 @@ const Restaurant = () => {
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => { },
+    onSuccess: (data, variables) => {},
   });
   const handleGetAcard = async (acardId: string) => {
     console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
     setIsClaimLoading(true);
     if (authState.userId) {
-
       const data = await createGetAcardMutation({
         userId: authState.userId,
         cardId: acardId,
@@ -71,8 +73,8 @@ const Restaurant = () => {
       if (data.data.success) {
         queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
         setIsClaimLoading(false);
-        const owned = data.data.userCard
-        console.log(owned)
+        const owned = data.data.userCard;
+        console.log(owned);
         showToast();
       }
     }
@@ -87,7 +89,6 @@ const Restaurant = () => {
     router.back();
   };
 
-
   return (
     <View style={{ backgroundColor: Color.base.White, flex: 1 }}>
       <View style={styles.closeButtonContainer}>
@@ -101,17 +102,33 @@ const Restaurant = () => {
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.container}>
-
-        <ImageBackground source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${restaurantsData.logo}` as string }} style={styles.textImageContainer}>
+        <ImageBackground
+          source={{
+            uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${restaurantsData.logo}` as string,
+          }}
+          style={styles.textImageContainer}
+        >
           <View style={styles.overlay} />
           <BlurView intensity={24} style={styles.textImageContainer1}>
             <View style={styles.textContainer}>
-              <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White, }}>{restaurantsData.name}</Text>
-              <Text style={{ fontSize: 12, color: Color.Gray.gray50 }}>{restaurantsData.category}</Text>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                  color: Color.base.White,
+                }}
+              >
+                {restaurantsData.name}
+              </Text>
+              <Text style={{ fontSize: 12, color: Color.Gray.gray50 }}>
+                {restaurantsData.category}
+              </Text>
             </View>
             <Image
               style={styles.image}
-              source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${restaurantsData.logo}` as string }}
+              source={{
+                uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${restaurantsData.logo}` as string,
+              }}
             />
           </BlurView>
         </ImageBackground>
@@ -121,7 +138,6 @@ const Restaurant = () => {
             <View style={{ gap: 16 }}>
               <Text style={{ fontWeight: "bold", fontSize: 16 }}>Rewards</Text>
               <View>
-
                 <View style={styles.attribute}>
                   <Tick size={8} color={Color.Gray.gray600} />
                   <Text style={styles.attributeText}>
@@ -137,36 +153,44 @@ const Restaurant = () => {
               <View>
                 <View style={styles.attribute}>
                   <Location color={Color.Gray.gray600} />
-                  <Text
-                    style={
-                      (styles.attributeLocText)
-                    }
-                  >
+                  <Text style={styles.attributeLocText}>
                     {restaurantsData.location}
                   </Text>
                 </View>
               </View>
             </View>
 
-
-            <Text style={{ fontWeight: "bold", fontSize: 16, }}>
+            <Text style={{ fontWeight: "bold", fontSize: 16 }}>
               How it works
             </Text>
-            <Text style={{marginBottom:100}}>
-              Open your app to the homepage, scan the QR code from your waiter or hostess, and earn rewards for checking in. Activate power-ups for extra rewards.
+            <Text style={{ marginBottom: 100 }}>
+              Open your app to the homepage, scan the QR code from your waiter
+              or hostess, and earn rewards for checking in. Activate power-ups
+              for extra rewards.
             </Text>
-
           </View>
         </View>
       </ScrollView>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => {
-          handleGetAcard(cardId as string)
-        }}>
+        <TouchableOpacity
+          onPress={() => {
+            handleGetAcard(cardId as string);
+          }}
+        >
           <View style={styles.button1}>
             <WalletAdd color={Color.Gray.gray50} />
-            <Text style={{ color: Color.Gray.gray50, fontSize: 15, fontWeight: 'bold' }}>
-            {isClaimLoading ? "Loading" : restaurantsData.visitCount === null ? "Add a membership card" : "Owned"}
+            <Text
+              style={{
+                color: Color.Gray.gray50,
+                fontSize: 15,
+                fontWeight: "bold",
+              }}
+            >
+              {isClaimLoading
+                ? "Loading"
+                : restaurantsData.visitCount === null
+                ? "Add a membership card"
+                : "Owned"}
             </Text>
           </View>
         </TouchableOpacity>
@@ -181,25 +205,25 @@ export default Restaurant;
 const styles = StyleSheet.create({
   button: {
     alignItems: "center",
-    alignContent: 'center',
+    alignContent: "center",
     justifyContent: "center",
     width: 48,
     padding: 12,
     gap: 12,
     borderRadius: 100,
     backgroundColor: Color.Gray.gray50,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   button1: {
     alignItems: "center",
-    alignContent: 'center',
+    alignContent: "center",
     justifyContent: "center",
-    width: '100%',
+    width: "100%",
     padding: 12,
     gap: 12,
     borderRadius: 100,
     backgroundColor: Color.Gray.gray600,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   imageContainer: {
     width: "100%",
@@ -207,7 +231,7 @@ const styles = StyleSheet.create({
     marginBottom: 80,
   },
   closeButton: {
-    marginTop: 12
+    marginTop: 12,
   },
   closeButtonContainer: {
     width: "100%",
@@ -222,7 +246,7 @@ const styles = StyleSheet.create({
   },
   textImageContainer: {
     borderRadius: 32,
-    overflow: 'hidden',
+    overflow: "hidden",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -230,21 +254,20 @@ const styles = StyleSheet.create({
     padding: 20,
     gap: 20,
     borderRadius: 32,
-    width: '100%',
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    flex: 1
+    flex: 1,
   },
   textContainer: {
     justifyContent: "flex-start",
     flexDirection: "column",
     width: "100%",
     gap: 4,
-
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(33, 33, 33, 0.32)',
+    backgroundColor: "rgba(33, 33, 33, 0.32)",
   },
   image: {
     width: 300,
@@ -262,12 +285,12 @@ const styles = StyleSheet.create({
   attributeText: {
     color: Color.Gray.gray600,
     fontSize: 16,
-    width: '90%'
+    width: "90%",
   },
   attributeLocText: {
     color: "#007FFF",
     fontSize: 16,
-    width: '90%'
+    width: "90%",
   },
   membershipContainer: {
     flexDirection: "row",
@@ -282,5 +305,4 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 16,
   },
-
 });

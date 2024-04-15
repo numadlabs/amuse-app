@@ -17,7 +17,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Header from "../components/layout/Header";
 import Color from "../constants/Color";
 import { useAuth } from "../context/AuthContext";
@@ -27,19 +27,20 @@ import {
   getUserTaps,
 } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
+import { userKeys } from "../lib/service/keysHelper";
 
 const Profile = () => {
   const { currentLocation } = useLocationStore();
   const router = useRouter();
   const { data: taps = [] } = useQuery({
-    queryKey: ["userTaps"],
+    queryKey: userKeys.taps,
     queryFn: () => {
       return getUserTaps();
     },
   });
 
   const { data: cards = [], isLoading } = useQuery({
-    queryKey: ["userCards"],
+    queryKey: userKeys.cards,
     queryFn: () => {
       return getUserCard({
         latitude: currentLocation.latitude,
@@ -48,15 +49,10 @@ const Profile = () => {
     },
     enabled: !!currentLocation,
   });
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    queryClient.invalidateQueries("userCards");
-  }, []);
 
   const { authState, onLogout } = useAuth();
   const { data: user = [] } = useQuery({
-    queryKey: ["UserInfo"],
+    queryKey: userKeys.info,
     queryFn: () => {
       return getUserById(authState.userId);
     },
@@ -154,7 +150,7 @@ const Profile = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.configContainer}
-                onPress={() => Linking.openURL('mailto:itnumadlabs@gmail.com')}
+                onPress={() => Linking.openURL("mailto:itnumadlabs@gmail.com")}
               >
                 <View
                   style={{
@@ -168,7 +164,10 @@ const Profile = () => {
                 </View>
                 <ArrowRight2 color={Color.Gray.gray600} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.configContainer} onPress={() => router.navigate("/Faq")}>
+              <TouchableOpacity
+                style={styles.configContainer}
+                onPress={() => router.navigate("/Faq")}
+              >
                 <View
                   style={{
                     flexDirection: "row",
@@ -253,7 +252,7 @@ const styles = StyleSheet.create({
     gap: 12,
     backgroundColor: Color.Gray.gray50,
     paddingVertical: 12,
-    marginBottom:24
+    marginBottom: 24,
   },
   profilePic: {
     alignItems: "center",

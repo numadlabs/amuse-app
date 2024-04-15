@@ -18,10 +18,9 @@ import { router, useRouter } from "expo-router";
 import { useAuth } from "../context/AuthContext";
 import useBoostInfoStore from "../lib/store/boostInfoStore";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import BoostSuccess from "../components/(feedback)/BoostSuccess";
 import { updateUserInfo } from "../lib/service/mutationHelper";
-import { UserBoostData } from "../lib/types";
 
 const Email = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
@@ -72,7 +71,6 @@ const Email = () => {
   const {
     data,
     error,
-    isLoading,
     status,
     mutateAsync: handleUpdateUser,
   } = useMutation({
@@ -129,7 +127,7 @@ const Email = () => {
                 <View style={{ gap: 8 }}>
                   <Text style={styles.topText}>Birthday</Text>
                   <Text style={styles.bottomText}>
-                  Rewarding the wise, the reckless, and everyone in between.
+                    Rewarding the wise, the reckless, and everyone in between.
                   </Text>
                 </View>
                 {/* <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} placeholder='Birthday' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, }} /> */}

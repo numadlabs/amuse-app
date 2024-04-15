@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, Tabs, router } from "expo-router";
 import { View, Text, TouchableOpacity } from "react-native";
 import Footer from "../components/layout/Footer";
@@ -14,14 +14,13 @@ const Layout = ({ navigation }) => {
   const [appIsReady, setAppIsReady] = useState(false);
   const { getLocation, currentLocation } = useLocationStore();
 
-
   useEffect(() => {
     async function prepareApp() {
       SplashScreen.preventAutoHideAsync();
       if (currentLocation == null) {
         getLocation();
       } else if (!authState.loading) {
-        await SplashScreen.hideAsync()
+        await SplashScreen.hideAsync();
         setAppIsReady(true);
       }
     }
@@ -35,36 +34,33 @@ const Layout = ({ navigation }) => {
     return <Redirect href={"/Login"} />;
   }
 
-
   return (
-      <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
-        <Tabs.Screen
-          name="index"
-          options={{
-            headerStyle: { shadowOpacity: 0 },
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() =>
-                  router.push("/profileSection/Profile")
-                }
-              >
-                <View style={{ paddingHorizontal: 20 }}>
-                  <User color={Color.Gray.gray600} />
-                </View>
-              </TouchableOpacity>
-            ),
-            headerRight: () => (
-              <TouchableOpacity onPress={() => router.push("/Notification")}>
-                <View style={{ paddingHorizontal: 20 }}>
-                  <Notification color={Color.Gray.gray600} />
-                </View>
-              </TouchableOpacity>
-            ),
-            headerTitle: () => <Logo />,
-          }}
-        />
-        <Tabs.Screen name="Acards" options={{ headerShown: false }} />
-      </Tabs>
+    <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
+      <Tabs.Screen
+        name="index"
+        options={{
+          headerStyle: { shadowOpacity: 0 },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.push("/profileSection/Profile")}
+            >
+              <View style={{ paddingHorizontal: 20 }}>
+                <User color={Color.Gray.gray600} />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/Notification")}>
+              <View style={{ paddingHorizontal: 20 }}>
+                <Notification color={Color.Gray.gray600} />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerTitle: () => <Logo />,
+        }}
+      />
+      <Tabs.Screen name="Acards" options={{ headerShown: false }} />
+    </Tabs>
   );
 };
 

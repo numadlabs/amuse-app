@@ -4,9 +4,7 @@ import { getAcard } from "@/app/lib/service/mutationHelper";
 import { getRestaurants } from "@/app/lib/service/queryHelper";
 import { RestaurantType } from "@/app/lib/types";
 import { GetRestaurantsResponseType } from "@/app/lib/types/apiResponseType";
-import { Ionicons } from "@expo/vector-icons";
-import * as Location from "expo-location";
-import { useNavigation, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -16,20 +14,18 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Text,
 } from "react-native";
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
   PROVIDER_DEFAULT,
 } from "react-native-maps";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import FloatingRestaurantCard from "../atom/cards/FloatingRestCard";
 import useLocationStore from "@/app/lib/store/userLocation";
 import SvgMarker from "../atom/svgMarker";
 import Color from "@/app/constants/Color";
 import Toast from "react-native-toast-message";
-import { Gps } from "iconsax-react-native";
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
@@ -428,7 +424,7 @@ export default function RestaurantMapView() {
   const router = useRouter();
 
   const handleNavigation = (restaurant: RestaurantType) => {
-    if(restaurant.isOwned){
+    if (restaurant.isOwned) {
       router.push({
         pathname: `/Acards/${restaurant.id}`,
         params: {
@@ -452,13 +448,11 @@ export default function RestaurantMapView() {
         pathname: `/restaurants/${restaurant.id}`,
         params: {
           cardId: restaurant.cardId,
-          id: restaurant.id
+          id: restaurant.id,
         },
       });
     }
   };
-
-  
 
   return (
     <View style={styles.container}>

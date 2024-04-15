@@ -3,10 +3,9 @@ import React from "react";
 import Color from "../constants/Color";
 import { TickCircle } from "iconsax-react-native";
 import Button from "../components/ui/Button";
-import { router, useNavigation } from "expo-router";
+import { router } from "expo-router";
 
 const Success = () => {
-  const navigation = useNavigation();
   return (
     <View style={styles.body}>
       <View style={styles.container}>
@@ -14,7 +13,7 @@ const Success = () => {
           <TickCircle color={Color.System.systemSuccess} size={64} />
           <Text style={styles.topText}>Success</Text>
           <Text style={styles.bottomText}>
-          You will earn extra rewards every time you use an membership card.
+            You will earn extra rewards every time you use an membership card.
           </Text>
         </View>
       </View>
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: 212,
-    paddingHorizontal:16,
+    paddingHorizontal: 16,
 
     paddingTop: 24,
     paddingBottom: 32,

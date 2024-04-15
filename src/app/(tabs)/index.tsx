@@ -15,7 +15,7 @@ import QuickInfo from "../components/sections/QuickInfo";
 import StackedCard from "../components/sections/StackedCard";
 import { useAuth } from "../context/AuthContext";
 import { useNavigation, useRouter } from "expo-router";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getUserById, getUserCard } from "../lib/service/queryHelper";
 
 import OwnedAcards from "../components/atom/cards/OwnedAcards";
@@ -34,7 +34,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { height } from "../lib/utils";
 import { GetRestaurantsResponseType } from "../lib/types/apiResponseType";
-import { restaurantKeys } from "../lib/service/keysHelper";
+import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
 import { getRestaurants } from "../lib/service/queryHelper";
 import ResListCard from "../components/atom/cards/RestListCard";
 
@@ -45,16 +45,17 @@ const Page = () => {
   const { authState } = useAuth();
 
   const { currentLocation } = useLocationStore();
-  const { data: user = [], isSuccess } = useQuery({
-    queryKey: ["UserInfo"],
+  const { data: user, isSuccess } = useQuery({
+    queryKey: userKeys.info,
     queryFn: () => {
       return getUserById(authState.userId);
     },
     enabled: !!authState.userId,
   });
+  console.log("🚀 ~ Page ~ user:", user);
 
   const { data: cards = [] } = useQuery({
-    queryKey: ["userCards"],
+    queryKey: userKeys.cards,
     queryFn: () => {
       return getUserCard({
         latitude: currentLocation.latitude,
@@ -136,9 +137,9 @@ const Page = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Balance amount={user.balance} />
+      {user && <Balance amount={user.balance} />}
       <View style={{ marginTop: 24, gap: 12 }}>
-        {user.email && user.dateOfBirth ? (
+        {user?.email && user?.dateOfBirth ? (
           <Text
             style={{
               fontSize: 14,
@@ -163,9 +164,12 @@ const Page = () => {
                 key={restaurantsArray[0].id as string}
                 onPress={() => handleNavigation(restaurantsArray[0])}
               />
-              {user.email && user.dateOfBirth && user.nickname && user.location ? (
-                null
-              ) : <QuickInfo />}  
+              {user.email &&
+              user.dateOfBirth &&
+              user.nickname &&
+              user.location ? null : (
+                <QuickInfo />
+              )}
               <ResListCard
                 isClaimLoading={true}
                 marker={restaurantsArray[1]}

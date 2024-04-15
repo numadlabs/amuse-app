@@ -2,37 +2,29 @@ import { restaurantKeys } from "@/app/lib/service/keysHelper";
 import { getRestaurants } from "@/app/lib/service/queryHelper";
 import { GetRestaurantsResponseType } from "@/app/lib/types/apiResponseType";
 import React, { useState } from "react";
-import {
-  FlatList,
-  Text,
-  TouchableOpacity,
-  View,
-  ScrollView,
-} from "react-native";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { Text, TouchableOpacity, View, ScrollView } from "react-native";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import ResListCard from "../atom/cards/RestListCard";
 import { RestaurantType } from "@/app/lib/types";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/app/context/AuthContext";
 import { getAcard } from "@/app/lib/service/mutationHelper";
 
-interface RestaurantListViewProps { }
+interface RestaurantListViewProps {}
 
-const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
+const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-
-  const [restaurants, setRestaurants] = useState<RestaurantType[]>([]);
+  // const [restaurants, setRestaurants] = useState<RestaurantType[]>([]);
   const [isClaimLoading, setIsClaimLoading] = useState(false);
-  const [showOwned, setShowOwned] = useState(false);
   const [cardLoadingStates, setCardLoadingStates] = useState<boolean[]>([]);
   const { authState } = useAuth();
   const {
     data: restaurantsData,
     isLoading,
     isError,
-    isSuccess
+    isSuccess,
   } = useQuery<GetRestaurantsResponseType>({
     queryKey: restaurantKeys.all,
     queryFn: () =>
@@ -43,9 +35,6 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
         latitude: 0,
         longitude: 0,
       }),
-    onSuccess: () => {
-      setRestaurants(restaurantsData?.data?.restaurants)
-    }
   });
 
   const { mutateAsync: createGetAcardMutation } = useMutation({
@@ -53,9 +42,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => {
-
-    },
+    onSuccess: (data, variables) => {},
   });
   // if (data.data.success) {
   //   queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
@@ -79,7 +66,6 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
         setCardLoadingStates(newCardLoadingStates);
         queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
       }
-    
     }
   };
   if (isLoading) {
@@ -95,14 +81,14 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
       pathname: `/restaurants/${restaurant.id}`,
       params: {
         id: restaurant.id,
-        cardId: restaurant.cardId
+        cardId: restaurant.cardId,
       },
     });
   };
 
   return (
     <ScrollView style={{ flex: 1, height: "100%" }}>
-      {/* {restaurantsData?.data?.restaurants &&
+      {restaurantsData?.data?.restaurants &&
         restaurantsData.data.restaurants.map((item, index) => (
           <>
             <TouchableOpacity
@@ -114,14 +100,14 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
                 marker={item}
                 onPress={() => {
                   const aCardId = item.cardId;
-                  handleGetAcard(aCardId);
+                  handleGetAcard(index, item.cardId);
                 }}
                 isClaimLoading={isClaimLoading}
               />
             </TouchableOpacity>
           </>
-        ))} */}
-      {restaurants && restaurants.length > 0 ? (
+        ))}
+      {/* {restaurants && restaurants.length > 0 ? (
         restaurants.map((item, index) => (
           <>
             <TouchableOpacity key={`card-${item.id}`} onPress={() => handleNavigation(item)}>
@@ -136,7 +122,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
         ))
       ) : (
         <Text>Loading...</Text>
-      )}
+      )} */}
     </ScrollView>
   );
 };
