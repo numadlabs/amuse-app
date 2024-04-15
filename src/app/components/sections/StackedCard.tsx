@@ -28,6 +28,9 @@ const StackedCard = () => {
         longitude: currentLocation.longitude,
       });
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries('userCards')
+    },
     enabled: !!currentLocation,
   });
 

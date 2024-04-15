@@ -112,12 +112,11 @@ const QrModal = () => {
 
         setEncryptedTap(data.data.data);
         queryClient.invalidateQueries({ queryKey: ['UserInfo'] })
-        if (visitCount % 10 === 0) {
+        if ( visitCount % 10 === 0) {
           togglePopup();
         } else {
           toggleBtcPopup()
         }
-
       } catch (error) {
         console.error("Redeem mutation failed:", error);
       }
@@ -138,9 +137,6 @@ const QrModal = () => {
       setBTCAmount(data.data?.data?.increment)
     },
   });
-
-
-
   const handleScanButtonPress = async () => {
     try {
       const firstCardId = cards?.data?.cards[0].restaurantId;
