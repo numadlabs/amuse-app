@@ -26,6 +26,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
   const [restaurants, setRestaurants] = useState<RestaurantType[]>([]);
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const [showOwned, setShowOwned] = useState(false);
+  const [cardLoadingStates, setCardLoadingStates] = useState<boolean[]>([]);
   const { authState } = useAuth();
   const {
     data: restaurantsData,
@@ -61,22 +62,26 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
   //   setIsClaimLoading(false);
   // }
 
-  const handleGetAcard = async (acardId: string) => {
+  const handleGetAcard = async (index: number, acardId: string) => {
     console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
-    setIsClaimLoading(true);
+    const newCardLoadingStates = [...cardLoadingStates];
+    newCardLoadingStates[index] = true;
+    setCardLoadingStates(newCardLoadingStates);
+
     if (authState.userId) {
       const data = await createGetAcardMutation({
         userId: authState.userId,
         cardId: acardId,
       });
-      console.log("🚀 ~ handleGetAcard ~ data:", data);
+
       if (data.data.success) {
+        newCardLoadingStates[index] = false;
+        setCardLoadingStates(newCardLoadingStates);
         queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
-        setIsClaimLoading(false);
       }
+    
     }
   };
-
   if (isLoading) {
     return <Text>Loading...</Text>;
   }
@@ -117,16 +122,21 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = (props) => {
           </>
         ))} */}
       {restaurants && restaurants.length > 0 ? (
-      restaurants.map((item, index) => (
-        <>
-          <TouchableOpacity key={`card-${item.id}`} onPress={() => handleNavigation(item)}>
-            <ResListCard key={index} marker={item} onPress={() => handleGetAcard(item.cardId)} isClaimLoading={isClaimLoading} />
-          </TouchableOpacity>
-        </>
-      ))
-    ) : (
-      <Text>Loading...</Text>
-    )}
+        restaurants.map((item, index) => (
+          <>
+            <TouchableOpacity key={`card-${item.id}`} onPress={() => handleNavigation(item)}>
+              <ResListCard
+                key={index}
+                marker={item}
+                onPress={() => handleGetAcard(index, item.cardId)}
+                isClaimLoading={cardLoadingStates[index] || false}
+              />
+            </TouchableOpacity>
+          </>
+        ))
+      ) : (
+        <Text>Loading...</Text>
+      )}
     </ScrollView>
   );
 };

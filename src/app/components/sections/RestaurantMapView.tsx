@@ -433,7 +433,18 @@ export default function RestaurantMapView() {
         pathname: `/Acards/${restaurant.id}`,
         params: {
           id: restaurant.id,
-          cardId: restaurant.cardId
+          cardId: restaurant.cardId,
+          name: restaurant.name,
+          location: restaurant.location,
+          about: restaurant.description,
+          category: restaurant.category,
+          isOwned: restaurant.isOwned,
+          benefits: [restaurant.benefits],
+          locations: restaurant.location,
+          artistInfo: restaurant.artistInfo,
+          expiryInfo: restaurant.expiryInfo,
+          instruction: restaurant.instruction,
+          logo: restaurant.logo,
         },
       });
     } else {
@@ -446,6 +457,8 @@ export default function RestaurantMapView() {
       });
     }
   };
+
+  
 
   return (
     <View style={styles.container}>

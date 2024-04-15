@@ -130,7 +130,7 @@ const Page = () => {
 
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           {restaurantsData?.data?.restaurants && restaurantsData.data.restaurants ? (
-            restaurantsData?.data?.restaurants.slice(0, 310).map((card, index) => (
+            restaurantsData?.data?.restaurants.slice(0, 3).map((card, index) => (
               <TouchableOpacity 
               key={`card-${card.id}`}
               onPress={() => handleNavigation(card)}
