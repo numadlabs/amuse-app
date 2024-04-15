@@ -145,6 +145,7 @@ const ProfileEdit = () => {
             </View>
           </View>
         </ScrollView>
+        <View style={{ paddingHorizontal: 16, marginBottom: 30 }}>
         {dataChanged && (
           <Button
             variant="primary"
@@ -163,6 +164,7 @@ const ProfileEdit = () => {
             )}
           </Button>
         )}
+        </View>
       </SafeAreaView>
     </>
   );
