@@ -39,7 +39,6 @@ export default QuickInfo;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 24,
     paddingHorizontal: 16,
     paddingBottom: 16,
     paddingTop: 24,
