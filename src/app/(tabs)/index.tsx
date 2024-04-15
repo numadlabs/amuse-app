@@ -158,30 +158,36 @@ const Page = () => {
               horizontal={true}
               showsHorizontalScrollIndicator={false}
             >
-              <ResListCard
-                isClaimLoading={true}
-                marker={restaurantsArray[0]}
-                key={restaurantsArray[0].id as string}
-                onPress={() => handleNavigation(restaurantsArray[0])}
-              />
+              <TouchableOpacity onPress={() => handleNavigation(restaurantsArray[0])}>
+                <ResListCard
+                  isClaimLoading={true}
+                  marker={restaurantsArray[0]}
+                  key={restaurantsArray[0].id as string}
+                  onPress={() => handleNavigation(restaurantsArray[0])}
+                />
+              </TouchableOpacity >
               {user.email &&
               user.dateOfBirth &&
               user.nickname &&
               user.location ? null : (
                 <QuickInfo />
               )}
-              <ResListCard
-                isClaimLoading={true}
-                marker={restaurantsArray[1]}
-                key={restaurantsArray[1].id as string}
-                onPress={() => handleNavigation(restaurantsArray[1])}
-              />
-              <ResListCard
-                isClaimLoading={true}
-                marker={restaurantsArray[2]}
-                key={restaurantsArray[2].id as string}
-                onPress={() => handleNavigation(restaurantsArray[2])}
-              />
+              <TouchableOpacity onPress={() => handleNavigation(restaurantsArray[1])}>
+                <ResListCard
+                  isClaimLoading={true}
+                  marker={restaurantsArray[1]}
+                  key={restaurantsArray[1].id as string}
+                  onPress={() => handleNavigation(restaurantsArray[1])}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleNavigation(restaurantsArray[2])}>
+                <ResListCard
+                  isClaimLoading={true}
+                  marker={restaurantsArray[2]}
+                  key={restaurantsArray[2].id as string}
+                  onPress={() => handleNavigation(restaurantsArray[2])}
+                />
+              </TouchableOpacity>
             </ScrollView>
           </View>
         )}
