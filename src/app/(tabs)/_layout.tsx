@@ -39,20 +39,20 @@ const Layout = ({ navigation }) => {
       <Tabs.Screen
         name="index"
         options={{
-          headerStyle: { shadowOpacity: 0 },
+          headerStyle: { shadowOpacity: 0, backgroundColor:Color.Gray.gray600 },
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => router.push("/profileSection/Profile")}
             >
               <View style={{ paddingHorizontal: 20 }}>
-                <User color={Color.Gray.gray600} />
+                <User color={Color.base.White} />
               </View>
             </TouchableOpacity>
           ),
           headerRight: () => (
             <TouchableOpacity onPress={() => router.push("/Notification")}>
               <View style={{ paddingHorizontal: 20 }}>
-                <Notification color={Color.Gray.gray600} />
+                <Notification color={Color.base.White} />
               </View>
             </TouchableOpacity>
           ),
