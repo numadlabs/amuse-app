@@ -3,6 +3,7 @@ import { Home2, Map, ScanBarcode } from "iconsax-react-native";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Color from "../../constants/Color";
+import { BlurView } from "expo-blur";
 
 const Footer = ({ navigation }) => {
   const [isActive, setIsActive] = useState("/");
@@ -15,17 +16,17 @@ const Footer = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <BlurView style={styles.container}>
       <TouchableOpacity
         style={styles.button}
         onPress={() => handleTabPress({ name: "/" })}
       >
         <Home2
           size={24}
-          color={isTabActive("/") ? Color.Gray.gray600 : Color.Gray.gray400}
+          color={isTabActive("/") ? Color.base.White : Color.Gray.gray100}
           variant={isTabActive("/") ? "Bold" : "Linear"}
         />
-        <Text style={{ fontSize: 13, fontWeight: "bold" }}>Home</Text>
+        <Text style={{ fontSize: 13, fontWeight: "bold",  color:Color.Gray.gray50  }}>Home</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
@@ -34,7 +35,7 @@ const Footer = ({ navigation }) => {
         <View style={styles.qr}>
           <ScanBarcode size={32} color={Color.base.White} />
         </View>
-        <Text style={{ fontSize: 13, bottom: 20, fontWeight: "bold" }}>
+        <Text style={{ fontSize: 13, bottom: 20, fontWeight: "bold", color:Color.Gray.gray50 }}>
           Check-in
         </Text>
       </TouchableOpacity>
@@ -46,12 +47,12 @@ const Footer = ({ navigation }) => {
           variant={isTabActive("Acards") ? "Bold" : "Linear"}
           size={24}
           color={
-            isTabActive("Acards") ? Color.Gray.gray600 : Color.Gray.gray400
+            isTabActive("Acards") ?  Color.base.White : Color.Gray.gray100
           }
         />
-        <Text style={{ fontSize: 13, fontWeight: "bold" }}>Discover</Text>
+        <Text style={{ fontSize: 13, fontWeight: "bold",  color:Color.Gray.gray50  }}>Discover</Text>
       </TouchableOpacity>
-    </View>
+    </BlurView>
   );
 };
 
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     height: 80,
     flexDirection: "row",
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray600,
     paddingHorizontal: 44,
   },
   button: {
