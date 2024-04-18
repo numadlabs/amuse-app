@@ -73,8 +73,8 @@ const ResListCard: React.FC<ResListCardProp> = ({
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
               >
-                <Reserve color={Color.Gray.gray600} size={16} />
-                <Text>{marker.visitCount} Check-ins</Text>
+                <Reserve color={Color.Gray.gray50} size={16} />
+                <Text style={{ color: Color.Gray.gray50 }}>{marker.visitCount} Check-ins</Text>
               </View>
             ) : (
               <TouchableOpacity onPress={onPress}>
@@ -130,7 +130,9 @@ const styles = StyleSheet.create({
     elevation: 2,
     flexDirection: "row",
     padding: 12,
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray500,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
     borderRadius: 16,
     gap: 16,
     marginBottom: 12,
@@ -143,12 +145,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "bold",
-    color: Color.Gray.gray600,
+    color: Color.base.White,
     width: "100%",
   },
   category: {
     fontSize: 12,
-    color: Color.Gray.gray400,
+    color: Color.Gray.gray100,
   },
   dot: {
     width: 10,

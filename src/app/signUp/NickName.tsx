@@ -72,7 +72,7 @@ const NickName = () => {
         style={{ flex: 1 }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={{ flex: 1, backgroundColor: Color.base.White }}>
+          <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
               <View style={styles.textContainer}>
                 <View style={{ gap: 8 }}>
@@ -87,26 +87,29 @@ const NickName = () => {
                   onChangeText={setNickname}
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
+                  placeholderTextColor={Color.Gray.gray100}
                   placeholder="Nickname"
                   style={
                     isFocused
                       ? {
-                          borderColor: Color.Gray.gray600,
+                          borderColor: Color.Gray.gray100,
                           height: 48,
                           borderWidth: 1,
                           borderRadius: 16,
                           paddingHorizontal: 16,
                           marginTop: 10,
                           fontSize: 16,
+                          color: Color.base.White
                         }
                       : {
                           height: 48,
                           borderWidth: 1,
-                          borderColor: Color.Gray.gray100,
+                          borderColor: Color.Gray.gray300,
                           borderRadius: 16,
                           paddingHorizontal: 16,
                           marginTop: 10,
                           fontSize: 16,
+                          color: Color.base.White
                         }
                   }
                 />
@@ -126,7 +129,7 @@ const NickName = () => {
                 ]}
               >
                 <Button
-                  variant="primary"
+                  variant="tertiary"
                   onPress={handleRegister}
                   disabled={loading}
                 >
@@ -140,7 +143,7 @@ const NickName = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      Continue
+                      Finish
                     </Text>
                   )}
                 </Button>
@@ -166,7 +169,9 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     gap: 24,
     borderRadius: 32,
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray500,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -191,13 +196,13 @@ const styles = StyleSheet.create({
     marginTop: "auto",
   },
   topText: {
-    color: Color.Gray.gray500,
+    color: Color.base.White,
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
   },
   bottomText: {
-    color: Color.Gray.gray400,
+    color: Color.Gray.gray100,
     fontSize: 12,
     lineHeight: 16,
     textAlign: "center",

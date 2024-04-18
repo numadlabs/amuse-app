@@ -60,8 +60,8 @@ const Profile = () => {
   return (
     <>
       <Header title="Profile" />
-      <SafeAreaView style={{ flex: 1, backgroundColor: Color.base.White }}>
-        <ScrollView style={{ flex: 1, backgroundColor: Color.base.White }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+        <ScrollView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
           <View style={styles.body}>
             <View style={styles.container}>
               <View style={styles.profileContainer}>
@@ -81,12 +81,12 @@ const Profile = () => {
                         paddingHorizontal: 10,
                       }}
                     >
-                      <Text style={{ color: Color.Gray.gray400, fontSize: 16 }}>
+                      <Text style={{ color: Color.Gray.gray100, fontSize: 16 }}>
                         Check-ins
                       </Text>
                       <Text
                         style={{
-                          color: Color.Gray.gray600,
+                          color: Color.Gray.gray50,
                           fontSize: 24,
                           fontWeight: "bold",
                         }}
@@ -99,7 +99,7 @@ const Profile = () => {
                   </TouchableOpacity>
                 </View>
                 <View
-                  style={{ width: 1, backgroundColor: Color.Gray.gray50 }}
+                  style={{ width: 1, backgroundColor: Color.Gray.gray300 }}
                 />
                 <TouchableOpacity
                   style={styles.profileStats}
@@ -113,12 +113,12 @@ const Profile = () => {
                       paddingHorizontal: 10,
                     }}
                   >
-                    <Text style={{ color: Color.Gray.gray400, fontSize: 16 }}>
+                    <Text style={{ color: Color.Gray.gray100, fontSize: 16 }}>
                       Memberships
                     </Text>
                     <Text
                       style={{
-                        color: Color.Gray.gray600,
+                        color: Color.Gray.gray50,
                         fontSize: 24,
                         fontWeight: "bold",
                       }}
@@ -143,10 +143,10 @@ const Profile = () => {
                     alignItems: "center",
                   }}
                 >
-                  <User size={24} color={Color.Gray.gray600} />
-                  <Text style={{ fontSize: 16 }}>Account</Text>
+                  <User size={24} color={Color.Gray.gray100} />
+                  <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>Account</Text>
                 </View>
-                <ArrowRight2 color={Color.Gray.gray600} />
+                <ArrowRight2 color={Color.Gray.gray100} />
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.configContainer}
@@ -159,10 +159,10 @@ const Profile = () => {
                     alignItems: "center",
                   }}
                 >
-                  <Sms size={24} color={Color.Gray.gray600} />
-                  <Text style={{ fontSize: 16 }}>Contact</Text>
+                  <Sms size={24} color={Color.Gray.gray100} />
+                  <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>Contact</Text>
                 </View>
-                <ArrowRight2 color={Color.Gray.gray600} />
+                <ArrowRight2 color={Color.Gray.gray100} />
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.configContainer}
@@ -175,10 +175,10 @@ const Profile = () => {
                     alignItems: "center",
                   }}
                 >
-                  <MessageQuestion size={24} color={Color.Gray.gray600} />
-                  <Text style={{ fontSize: 16 }}>FAQ</Text>
+                  <MessageQuestion size={24} color={Color.Gray.gray100} />
+                  <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>FAQ</Text>
                 </View>
-                <ArrowRight2 color={Color.Gray.gray600} />
+                <ArrowRight2 color={Color.Gray.gray100} />
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.configContainer}
@@ -191,19 +191,19 @@ const Profile = () => {
                     alignItems: "center",
                   }}
                 >
-                  <NoteText size={24} color={Color.Gray.gray600} />
-                  <Text style={{ fontSize: 16 }}>Terms and Conditions</Text>
+                  <NoteText size={24} color={Color.Gray.gray100} />
+                  <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>Terms and Conditions</Text>
                 </View>
-                <ArrowRight2 color={Color.Gray.gray600} />
+                <ArrowRight2 color={Color.Gray.gray100} />
               </TouchableOpacity>
 
               <TouchableOpacity onPress={onLogout}>
                 <View style={styles.logout}>
-                  <LogoutCurve color={Color.Gray.gray600} />
+                  <LogoutCurve color={Color.Gray.gray100} />
                   <Text
                     style={{
                       fontSize: 16,
-                      color: Color.Gray.gray600,
+                      color: Color.Gray.gray50,
                       fontWeight: "bold",
                     }}
                   >
@@ -224,7 +224,7 @@ export default Profile;
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray600,
     paddingHorizontal: 16,
   },
   container: {
@@ -235,7 +235,9 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     gap: 24,
     borderRadius: 32,
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray500,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -250,7 +252,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: Color.Gray.gray50,
+    backgroundColor: Color.Gray.gray400,
     paddingVertical: 12,
     marginBottom: 24,
   },
@@ -266,6 +268,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginTop: 16,
+    color: Color.base.White
   },
   profileContainer: {
     alignItems: "center",
@@ -284,14 +287,16 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   configContainer: {
-    backgroundColor: Color.base.White,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
+    backgroundColor: Color.Gray.gray500,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray300,
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.23,
+    // shadowRadius: 2.62,
     justifyContent: "space-between",
     flexDirection: "row",
     padding: 16,

@@ -1,11 +1,12 @@
 import * as React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import Color from "@/app/constants/Color";
 
 const buttonVariants = {
   variant: {
     primary: { backgroundColor: "black", zindex:0 },
     secondary: { backgroundColor: "white" },
-    tertiary: { backgroundColor: "#F3F4F6" },
+    tertiary: { backgroundColor: "#2D3A42" },
     text: { backgroundColor: "transparent" },
   },
   size: {
@@ -18,9 +19,9 @@ const buttonVariants = {
 
 const textStyles = {
   primary: { fontSize: 16, fontWeight: "bold", color: "white" },
-  secondary: { fontSize: 16, fontWeight: "bold", color: "#333" },
-  tertiary: { fontSize: 18 },
-  text: { fontSize: 16, fontWeight: "bold", color: "#333" },
+  secondary: { fontSize: 16, fontWeight: "bold", color: "white" },
+  tertiary: { fontSize: 18, color: "white" },
+  text: { fontSize: 16, fontWeight: "bold", color: "white" },
 };
 
 export interface ButtonProps

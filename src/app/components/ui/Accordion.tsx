@@ -19,9 +19,11 @@ const Accordion = ({ text, title }) => {
   return (
     <View
       style={{
-        backgroundColor: Color.base.White,
+        backgroundColor: Color.Gray.gray500,
         padding: 16,
         borderRadius: 16,
+        borderWidth: 1,
+        borderColor: Color.Gray.gray300,
         justifyContent: 'center',
         ...Platform.select({
           ios: {
@@ -46,15 +48,15 @@ const Accordion = ({ text, title }) => {
         }}
       >
         <Text
-          style={{ fontSize: 16, fontWeight: "600", color: Color.Gray.gray600 }}
+          style={{ fontSize: 16, fontWeight: "600", color: Color.Gray.gray50 }}
         >
           {title}
         </Text>
-        {open ? <ArrowUp2 size={20} color={Color.Gray.gray600}/> : <ArrowDown2 size={20} color={Color.Gray.gray600} />}
+        {open ? <ArrowUp2 size={20} color={Color.Gray.gray100}/> : <ArrowDown2 size={20} color={Color.Gray.gray100} />}
       </TouchableOpacity>
       <Animated.View style={{ paddingTop: 8 }}>
         {open && (
-          <Text style={{ color: Color.Gray.gray400, fontSize: 14 }}>
+          <Text style={{ color: Color.Gray.gray100, fontSize: 14 }}>
             {text}
           </Text>
         )}

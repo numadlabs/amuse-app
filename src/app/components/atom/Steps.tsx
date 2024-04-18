@@ -21,16 +21,16 @@ const styles = StyleSheet.create({
     gap: 8,
     height: 24,
     alignItems: 'center',
-    backgroundColor: Color.base.White
+    backgroundColor: Color.Gray.gray600
   },
   step: {
     borderRadius: 10,
-    backgroundColor: Color.Gray.gray100,
+    backgroundColor: Color.Gray.gray400,
     width: 64,
     height: 8
   },
   stepActive: {
-    backgroundColor: Color.Gray.gray600,
+    backgroundColor: Color.Gray.gray50,
   }
 })
 

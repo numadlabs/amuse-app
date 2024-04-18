@@ -1,5 +1,6 @@
 import React from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
+import Color from "@/app/constants/Color";
 
 function Divider() {
   return (
@@ -26,11 +27,11 @@ const styles = StyleSheet.create({
   border: {
     flex: 1,
     height: 1,
-    backgroundColor: "#F0F0F0",
+    backgroundColor: Color.Gray.gray400,
   },
   text: {
     marginHorizontal: 10,
-    color: "gray", // You can adjust the color as needed
+    color: Color.Gray.gray50, // You can adjust the color as needed
   },
   androidText: {
     alignItems: "center", // Align the text vertically in the center on Android
