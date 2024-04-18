@@ -27,6 +27,7 @@ import Color from "../constants/Color";
 import { useAuth } from "../context/AuthContext";
 import { useSignUpStore } from "../lib/store/signUpStore";
 import { height } from "../lib/utils";
+import { LinearGradient } from "expo-linear-gradient";
 
 const PhoneNumber = () => {
   const { prefix, setPrefix, phoneNumber, setPhoneNumber } = useSignUpStore();
@@ -192,14 +193,24 @@ const PhoneNumber = () => {
                     : styles.topPosition,
                 ]}
               >
-                <Button
+                {/* <Button
                   variant="tertiary"
                   textStyle="primary"
                   size="default"
                   onPress={handleNavigation}
                 >
                   Send code
-                </Button>
+                </Button> */}
+                <TouchableOpacity onPress={handleNavigation}>
+                  <LinearGradient
+                    colors={[Color.Brand.main.start, Color.Brand.main.end]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }} >
+                      <Text>
+                        Hello
+                      </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
               </View>
             </KeyboardAvoidingView>
 
