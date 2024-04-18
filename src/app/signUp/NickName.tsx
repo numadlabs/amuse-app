@@ -129,7 +129,7 @@ const NickName = () => {
                 ]}
               >
                 <Button
-                  variant="tertiary"
+                  variant="primary"
                   onPress={handleRegister}
                   disabled={loading}
                 >

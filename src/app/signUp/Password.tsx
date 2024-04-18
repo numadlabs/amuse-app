@@ -241,7 +241,7 @@ const Password = () => {
                 ]}
               >
                 <Button
-                  variant="tertiary"
+                  variant="primary"
                   textStyle="primary"
                   size="default"
                   onPress={handleNavigation}

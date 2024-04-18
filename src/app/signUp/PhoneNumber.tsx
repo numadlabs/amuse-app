@@ -193,24 +193,15 @@ const PhoneNumber = () => {
                     : styles.topPosition,
                 ]}
               >
-                {/* <Button
-                  variant="tertiary"
+                <Button
+                  variant="primary"
                   textStyle="primary"
                   size="default"
                   onPress={handleNavigation}
                 >
                   Send code
-                </Button> */}
-                <TouchableOpacity onPress={handleNavigation}>
-                  <LinearGradient
-                    colors={[Color.Brand.main.start, Color.Brand.main.end]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }} >
-                      <Text>
-                        Hello
-                      </Text>
-                  </LinearGradient>
-                </TouchableOpacity>
+                </Button>
+
               </View>
             </KeyboardAvoidingView>
 
