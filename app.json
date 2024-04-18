@@ -6,7 +6,7 @@
     "owner": "numad-labs",
     "splash": {
       "image": "./src/public/images/Image.png",
-      "backgroundColor": "#FFFFFF"
+      "backgroundColor": "#1B2328"
     },
     "userInterfaceStyle": "dark",
     "orientation": "portrait",
@@ -43,6 +43,7 @@
         }
       }
     },
+    "backgroundColor": "#1B2328",
     "assetBundlePatterns": [
       "**/*"
     ],

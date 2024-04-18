@@ -92,6 +92,7 @@ const StackedCard = () => {
                 onPress={() => handleNavigation(card)}
                 category={card.category}
                 hasBonus={card.hasBonus}
+                visitCount={card.visitCount}
               />
             ))}
         </View>

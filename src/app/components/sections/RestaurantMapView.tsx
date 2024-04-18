@@ -590,10 +590,7 @@ export default function RestaurantMapView() {
                   }
                 />
               ) : (
-                <Image
-                  source={require("@/public/images/map_marker.png")}
-                  style={{ width: 32, height: 32 }}
-                />
+               <View style={{width:8, height:8, backgroundColor:Color.base.White, borderRadius:48}}/>
               )}
             </Marker>
           );
@@ -612,7 +609,7 @@ export default function RestaurantMapView() {
           contentInset={{
             top: 0,
             left: SPACING_FOR_CARD_INSET,
-            bottom: 0,
+            bottom: 10,
             right: SPACING_FOR_CARD_INSET,
           }}
           contentContainerStyle={{
@@ -696,7 +693,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     position: "absolute",
-    bottom: 0,
+    bottom: 70,
     left: 0,
     right: 0,
     paddingVertical: 10,

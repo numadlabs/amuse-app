@@ -6,6 +6,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { StatusBar } from "expo-status-bar";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "./components/(feedback)/ToasterConfig";
+import Color from "./constants/Color";
 
 const queryClient = new QueryClient();
 
@@ -26,8 +27,14 @@ export default function Layout() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <StatusBar style="dark" />
-        <Stack screenOptions={{ headerShown: false }}>
+        <StatusBar style="light" />
+        <Stack screenOptions={{
+          headerShown: false,
+          contentStyle: {
+            backgroundColor: 'transparent',
+          }
+
+        }}>
           <Stack.Screen
             name="restaurants/[id]"
             options={{ presentation: "modal" }}
