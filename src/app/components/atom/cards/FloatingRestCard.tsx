@@ -83,8 +83,8 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
           <View style={{ width: 1, height: 14, backgroundColor: Color.Gray.gray50 }} />
             {marker.isOwned ? (
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                <Reserve color={Color.Gray.gray600} size={16} />
-                <Text>{marker.visitCount} Check-ins</Text>
+                <Reserve color={Color.Gray.gray100} size={16} />
+                <Text style={{ color: Color.Gray.gray50 }}>{marker.visitCount} Check-ins</Text>
               </View>
             ) : (
               <TouchableOpacity onPress={onPress}>
@@ -109,7 +109,7 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray500,
     justifyContent: "space-between",
     marginHorizontal: 10,
     width: CARD_WIDTH,
@@ -153,12 +153,12 @@ const styles = StyleSheet.create({
 
   cardtitle: {
     fontSize: 18,
-
+    color: Color.base.White,
     fontWeight: "bold",
   },
   cardDescription: {
     fontSize: 14,
-    color: "#656565",
+    color: Color.Gray.gray100,
   },
   signIn: {
     padding: 5,

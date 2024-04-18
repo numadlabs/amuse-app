@@ -78,7 +78,7 @@ const Restaurant = () => {
       }
     });
 
-  const backgroundColor = showPerks ? Color.base.White : Color.Gray.gray50;
+  const backgroundColor = showPerks ? Color.Gray.gray300 : Color.Gray.gray400;
   const { data: perks = [], isLoading } = useQuery({
     queryKey: userKeys.perks,
     queryFn: () => {
@@ -92,7 +92,7 @@ const Restaurant = () => {
 
   return (
     <GestureHandlerRootView
-      style={{ backgroundColor: Color.base.White, flex: 1 }}
+      style={{ backgroundColor: Color.Gray.gray500, flex: 1 }}
     >
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity
@@ -186,7 +186,7 @@ const Restaurant = () => {
         <View style={styles.attrContainer}>
           <View
             style={{
-              backgroundColor: Color.Gray.gray50,
+              backgroundColor: Color.Gray.gray400,
               justifyContent: "space-between",
               borderRadius: 48,
               height: 48,
@@ -202,13 +202,13 @@ const Restaurant = () => {
                 alignItems: "center",
                 borderRadius: 48,
                 justifyContent: "center",
-                width: "48%",
+                width: "50%",
               }}
             >
               <Text
                 style={{
                   fontSize: 15,
-                  color: Color.Gray.gray600,
+                  color: Color.base.White,
                   fontWeight: "bold",
                 }}
               >
@@ -219,8 +219,8 @@ const Restaurant = () => {
               <View
                 style={{
                   backgroundColor: showPerks
-                    ? Color.Gray.gray50
-                    : Color.base.White,
+                    ? Color.Gray.gray400
+                    : Color.Gray.gray300,
                   flex: 1,
                   flexGrow: 1,
                   alignItems: "center",
@@ -232,7 +232,7 @@ const Restaurant = () => {
                 <Text
                   style={{
                     fontSize: 15,
-                    color: Color.Gray.gray600,
+                    color: Color.base.White,
                     fontWeight: "bold",
                   }}
                 >
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
     width: 48,
     padding: 12,
     borderRadius: 100,
-    backgroundColor: Color.Gray.gray50,
+    backgroundColor: Color.Gray.gray200,
   },
   imageContainer: {
     width: "100%",

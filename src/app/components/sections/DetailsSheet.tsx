@@ -52,17 +52,17 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
 
     <View style={[styles.bottomSheet]}>
       <View style={styles.content}>
-        <Text style={{ fontWeight: "bold", fontSize: 16 }}>Rewards</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>Rewards</Text>
         <View style={{ marginVertical: 16 }}>
           <View style={styles.attribute}>
-            <Tick size={24} color={Color.Gray.gray600} />
+            <Tick size={24} color={Color.Gray.gray100} />
             <Text style={styles.attributeText}>
               {/* {benefits} */}
               $1 in Bitcoin for every check in
             </Text>
           </View>
           <View style={styles.attribute}>
-            <Tick size={24} color={Color.Gray.gray600} />
+            <Tick size={24} color={Color.Gray.gray100} />
             <Text style={styles.attributeText}>
               {/* {benefits} */}
               1 perk unlock every 10th check in
@@ -70,12 +70,12 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
           </View>
         </View>
         <View style={{ gap: 16 }}>
-          <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+          <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>
             Locations
           </Text>
           <View>
             <View style={styles.attribute}>
-              <Location color={Color.Gray.gray600} />
+              <Location color={Color.Gray.gray100} />
               <Text
                 style={
                   (styles.attributeLocText)
@@ -86,10 +86,10 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
             </View>
           </View>
 
-          <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+          <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>
             How it works
           </Text>
-          <Text>
+          <Text style={(styles.attributeLocText)}>
             Scan the restaurant’s QR code. Earn some Bitcoin. Activate perks when you get them. Repeat and stack your rewards.
           </Text>
         </View>
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     height:height/5
   },
   content: {
-    backgroundColor:Color.base.White
+    backgroundColor:Color.Gray.gray500
   },
   textContainer: {
     alignItems: 'center',
@@ -149,12 +149,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   attributeText: {
-    color: Color.Gray.gray600,
+    color: Color.Gray.gray50,
     fontSize: 16,
   },
 
   attributeLocText: {
-    color: "#007FFF",
+    color: Color.Gray.gray50,
     fontSize: 16,
     width: '90%'
   },

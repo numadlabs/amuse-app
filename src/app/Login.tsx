@@ -159,6 +159,7 @@ function Login() {
               width: "100%",
               backgroundColor: Color.Gray.gray500,
               borderColor: Color.Gray.gray400,
+              marginTop: 96,
               borderWidth: 1,
               ...Platform.select({
                 ios: {
@@ -323,7 +324,7 @@ function Login() {
               </Button>
             </View>
             {isOpen && (
-              <Animated.View style={[translateY, { position: 'absolute', zIndex: 100, bottom: height / 2.5, width: '80%', height: height / 3.5, backgroundColor: Color.base.White, borderRadius: 16, overflow: 'hidden', left: 20 }]}>
+              <Animated.View style={[translateY, { position: 'absolute', zIndex: 100, top: -196, width: '80%', backgroundColor: Color.Gray.gray400, borderRadius: 16, overflow: 'hidden', left: 0 }]}>
                 <ScrollView style={{}}>
                   {data.map((prefix, index) => (
                     <TouchableOpacity key={index} onPress={() => handlePrefixSelection(prefix.prefix)}>
@@ -341,7 +342,7 @@ function Login() {
                             color: Color.Gray.gray50
                         }}>+{prefix.prefix}</Text>
                       </View>
-                      <View style={{ height: 1, width: '100%', backgroundColor: Color.Gray.gray50 }} />
+                      <View style={{ height: 1, width: '100%', backgroundColor: Color.Gray.gray300 }} />
                     </TouchableOpacity>
                   ))}
                 </ScrollView>
@@ -350,7 +351,7 @@ function Login() {
           </View>
         </View>
         <View style={{ alignContent: 'center', alignItems: 'center', justifyContent: 'center', marginBottom: 48, gap: 0, flexDirection: 'column' }}>
-          <Text style={{ textAlign: 'center', fontSize: 14, color: Color.Gray.gray100, fontWeight: '400' }}>
+          <Text style={{ textAlign: 'center', fontSize: 14, color: Color.Gray.gray100, fontWeight: '400', marginBottom: 0 }}>
             By continuing, I agree with Amuse-Bouche's {"\n"}
           </Text>
           <TouchableOpacity onPress={() => router.navigate('/TermsAndCondo')}>
