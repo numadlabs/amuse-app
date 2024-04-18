@@ -21,7 +21,7 @@ const PowerUpCard: React.FC<PowerUpCardProp> = ({ title, onPress }) => {
         <View style={{padding:12}}>
         <PowerUpLogo />
         <View style={{ gap: 8, marginTop: 20 }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 14, color: Color.Gray.gray600, }}>{title}</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 14, color: Color.Gray.gray50, }}>{title}</Text>
         </View>
 
         </View>
@@ -50,10 +50,10 @@ const styles = StyleSheet.create({
       },
     }),
     width: 164,
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray300,
     borderRadius: 16,
     overflow: 'hidden',
-    borderColor: Color.Gray.gray50,
+    borderColor: Color.Gray.gray300,
     borderWidth:1
   },
   stripesContainer: {

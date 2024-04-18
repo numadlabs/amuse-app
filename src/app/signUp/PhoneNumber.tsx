@@ -210,13 +210,12 @@ const PhoneNumber = () => {
                   {
                     position: "absolute",
                     zIndex: 100,
-                    bottom: height / 1.45,
+                    top: -196,
                     width: "80%",
-                    height: height / 3.5,
-                    backgroundColor: Color.base.White,
+                    backgroundColor: Color.Gray.gray400,
                     borderRadius: 16,
                     overflow: "hidden",
-                    left: 20,
+                    left: 16,
                     ...Platform.select({
                       ios: {
                         shadowColor: Color.Gray.gray500,
@@ -273,7 +272,7 @@ const PhoneNumber = () => {
                         style={{
                           height: 1,
                           width: "100%",
-                          backgroundColor: Color.Gray.gray50,
+                          backgroundColor: Color.Gray.gray300,
                         }}
                       />
                     </TouchableOpacity>
