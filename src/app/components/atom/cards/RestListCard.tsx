@@ -22,6 +22,7 @@ const ResListCard: React.FC<ResListCardProp> = ({
     currentTime.getTime() >= opensAt.getTime() &&
     currentTime.getTime() <= closesAt.getTime();
   return (
+    
     <View style={{ paddingHorizontal: 16 }}>
       <View style={styles.container}>
         <Image
