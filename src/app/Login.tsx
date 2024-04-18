@@ -140,7 +140,7 @@ function Login() {
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <GestureHandlerRootView style={{ backgroundColor: Color.base.White, flex: 1 }}>
+      <GestureHandlerRootView style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
         <View
           style={{
             flex: 1,
@@ -148,16 +148,18 @@ function Login() {
             alignItems: "center",
             paddingHorizontal: 20,
             paddingVertical: 24,
-            backgroundColor: "white",
+            backgroundColor: Color.Gray.gray600,
             position: "relative",
           }}
         >
           <View
             style={{
               padding: 20,
-              borderRadius: 20,
+              borderRadius: 32,
               width: "100%",
-              backgroundColor: "white",
+              backgroundColor: Color.Gray.gray500,
+              borderColor: Color.Gray.gray400,
+              borderWidth: 1,
               ...Platform.select({
                 ios: {
                   shadowColor: Color.Gray.gray500,
@@ -179,7 +181,7 @@ function Login() {
             <Text
               style={{
                 fontSize: 24,
-                color: Color.Gray.gray500,
+                color: Color.base.White,
                 fontWeight: "bold",
                 textAlign: "center",
                 marginBottom: 24
@@ -191,7 +193,7 @@ function Login() {
             <View style={{ gap: 12 }}>
               <View style={{
                 flexDirection: 'row',
-                borderColor: Color.Gray.gray50,
+                borderColor: Color.Gray.gray300,
                 borderWidth: 1,
                 borderRadius: 16,
                 alignItems: 'center',
@@ -215,10 +217,10 @@ function Login() {
                   onPress={togglePrefix}
                 >
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                    <Text style={{ fontSize: 16, lineHeight: 20 }}>
+                    <Text style={{ fontSize: 16, lineHeight: 20, color: Color.Gray.gray50 }}>
                       +{!prefix ? data[0].prefix : prefix}
                     </Text>
-                    <ArrowDown2 color={Color.Gray.gray600} />
+                    <ArrowDown2 color={Color.Gray.gray50} />
                   </View>
                 </AnimatedPressable>
 
@@ -226,7 +228,7 @@ function Login() {
                 <TextInput
                   inputMode="tel"
                   placeholder={phonePlaceholder}
-                  placeholderTextColor={Color.Gray.gray200}
+                  placeholderTextColor={Color.Gray.gray100}
                   onFocus={onFocusPhone}
                   onBlur={onBlurPhone}
                   style={{
@@ -234,7 +236,8 @@ function Login() {
                     fontSize: 16,
                     fontWeight: '400',
                     lineHeight: 20,
-                    paddingLeft: 10
+                    paddingLeft: 10,
+                    color: Color.base.White
                   }}
                   value={phoneNumber}
                   onChangeText={setPhoneNumber}
@@ -245,7 +248,7 @@ function Login() {
                   flexDirection: "row",
                   alignItems: "center",
                   height: 40,
-                  borderColor: Color.Gray.gray50,
+                  borderColor: Color.Gray.gray300,
                   borderWidth: 1,
                   borderRadius: 16,
                   paddingHorizontal: 10,
@@ -255,14 +258,15 @@ function Login() {
                 <TextInput
                   secureTextEntry={!showPassword}
                   placeholder={passwordPlaceholder}
-                  placeholderTextColor={Color.Gray.gray200}
+                  placeholderTextColor={Color.Gray.gray100}
                   onFocus={onFocusPassword}
                   onBlur={onBlurPassword}
                   style={{
                     flex: 1,
                     fontSize: 16,
                     fontWeight: '400',
-                    lineHeight: 20
+                    lineHeight: 20,
+                    color: Color.base.White
                   }}
                   value={password}
                   onChangeText={setPassword}
@@ -271,7 +275,7 @@ function Login() {
                   <Ionicons
                     name={showPassword ? "eye-outline" : "eye-off-outline"}
                     size={24}
-                    color="black"
+                    color={Color.Gray.gray50}
                   />
                 </TouchableOpacity>
               </View>
@@ -301,7 +305,7 @@ function Login() {
                 onPress={() => router.push("/forgotpassword/ForgotPassword")}
               >
                 <Text
-                  style={{ color: "black", fontSize: 14, fontWeight: "bold", marginTop: 12 }}
+                  style={{ color: Color.base.White, fontSize: 14, fontWeight: "bold", marginTop: 12 }}
                 >
                   Forgot password?
                 </Text>
@@ -312,7 +316,7 @@ function Login() {
                 onPress={() => router.push("/signUp/PhoneNumber")}
               >
                 <Text
-                  style={{ color: "black", fontSize: 16, fontWeight: "bold" }}
+                  style={{ color: Color.base.White, fontSize: 16, fontWeight: "bold" }}
                 >
                   Sign up
                 </Text>
@@ -323,16 +327,18 @@ function Login() {
                 <ScrollView style={{}}>
                   {data.map((prefix, index) => (
                     <TouchableOpacity key={index} onPress={() => handlePrefixSelection(prefix.prefix)}>
-                      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 15, backgroundColor: Color.base.White, }}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 15, backgroundColor: Color.Gray.gray400, }}>
                         <Text style={{
                           fontSize: 16,
                           fontWeight: '400',
-                          lineHeight: 20
+                          lineHeight: 20,
+                          color: Color.base.White
                         }}>{prefix.name}</Text>
                         <Text style={{
                             fontSize:16,
                             fontWeight:'400',
-                            lineHeight:20
+                            lineHeight:20,
+                            color: Color.Gray.gray50
                         }}>+{prefix.prefix}</Text>
                       </View>
                       <View style={{ height: 1, width: '100%', backgroundColor: Color.Gray.gray50 }} />
@@ -343,12 +349,12 @@ function Login() {
             )}
           </View>
         </View>
-        <View style={{ alignContent: 'center', alignItems: 'center', justifyContent: 'center', marginBottom: 48, gap: 0, }}>
-          <Text style={{ textAlign: 'center', fontSize: 14, color: Color.Gray.gray400, fontWeight: '400' }}>
+        <View style={{ alignContent: 'center', alignItems: 'center', justifyContent: 'center', marginBottom: 48, gap: 0, flexDirection: 'column' }}>
+          <Text style={{ textAlign: 'center', fontSize: 14, color: Color.Gray.gray100, fontWeight: '400' }}>
             By continuing, I agree with Amuse-Bouche's {"\n"}
           </Text>
           <TouchableOpacity onPress={() => router.navigate('/TermsAndCondo')}>
-            <Text style={{ textDecorationLine: 'underline', color: Color.Gray.gray600, fontSize: 14, fontWeight: '500' }}>
+            <Text style={{ color: Color.base.White, fontSize: 14, fontWeight: '500' }}>
               Terms and Conditions.
             </Text>
           </TouchableOpacity>

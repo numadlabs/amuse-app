@@ -98,42 +98,42 @@ const ProfileEdit = () => {
   return (
     <>
       <Header title="Account" />
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
         <ScrollView style={{ flex: 1 }}>
           <View style={styles.body}>
             <View style={styles.container}>
               <View style={styles.input}>
-                <User color={Color.Gray.gray600} />
+                <User color={Color.Gray.gray50} />
                 <TextInput
                   placeholder="Nickname"
                   placeholderTextColor={Color.Gray.gray200}
                   value={nickname}
                   onChangeText={setNickname}
-                  style={{ fontSize: 20 }}
+                  style={{ fontSize: 20, color: Color.base.White }}
                 />
               </View>
               <View style={styles.input}>
-                <Sms color={Color.Gray.gray600} />
+                <Sms color={Color.Gray.gray50} />
                 <TextInput
-                  placeholderTextColor={Color.Gray.gray200}
+                  placeholderTextColor={Color.Gray.gray100}
                   placeholder="Email"
                   value={email}
                   onChangeText={setEmail}
-                  style={{ fontSize: 20 }}
+                  style={{ fontSize: 20, color: Color.base.White }}
                 />
               </View>
               <View style={styles.input}>
-                <Location color={Color.Gray.gray600} />
+                <Location color={Color.Gray.gray50} />
                 <TextInput
                   placeholderTextColor={Color.Gray.gray200}
                   placeholder="Location"
                   value={location}
                   onChangeText={setLocation}
-                  style={{ fontSize: 20 }}
+                  style={{ fontSize: 20, color: Color.base.White }}
                 />
               </View>
               <View style={styles.input}>
-                <Cake color={Color.Gray.gray600} />
+                <Cake color={Color.Gray.gray50} />
                 <DateTimePicker
                   value={dateOfBirth ? new Date(dateOfBirth) : new Date()}
                   mode="date"
@@ -148,7 +148,7 @@ const ProfileEdit = () => {
         <View style={{ paddingHorizontal: 16, marginBottom: 30 }}>
           {dataChanged && (
             <Button
-              variant="primary"
+              variant="tertiary"
               textStyle="primary"
               size="default"
               onPress={triggerUpdateUser}
@@ -175,7 +175,7 @@ export default ProfileEdit;
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray600,
     paddingHorizontal: 16,
   },
   container: {
@@ -206,10 +206,10 @@ const styles = StyleSheet.create({
   input: {
     height: 48,
     width: "100%",
-    backgroundColor: "#FFF",
+    backgroundColor: Color.Gray.gray600,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: Color.Gray.gray50,
+    borderColor: Color.Gray.gray300,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,

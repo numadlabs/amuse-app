@@ -36,7 +36,7 @@ export default Faq;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray600,
     flex: 1,
     paddingHorizontal: 16,
     flexDirection: 'column',

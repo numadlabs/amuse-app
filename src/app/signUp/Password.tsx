@@ -100,7 +100,7 @@ const Password = () => {
           <View style={styles.body}>
             <View style={styles.container}>
               <View style={styles.textContainer}>
-                <Text style={styles.topText}>New password</Text>
+                <Text style={styles.topText}>Create password</Text>
               </View>
               <View style={styles.inputContainer}>
                 <View
@@ -108,7 +108,7 @@ const Password = () => {
                     flexDirection: "row",
                     alignItems: "center",
                     height: 40,
-                    borderColor: Color.Gray.gray50,
+                    borderColor: Color.Gray.gray300,
                     borderWidth: 1,
                     borderRadius: 16,
                     paddingHorizontal: 10,
@@ -118,7 +118,7 @@ const Password = () => {
                   <TextInput
                     secureTextEntry={!showPassword}
                     placeholder={passwordPlaceholder}
-                    placeholderTextColor={Color.Gray.gray200}
+                    placeholderTextColor={Color.Gray.gray100}
                     onFocus={onFocusPassword}
                     onBlur={onBlurPassword}
                     style={{
@@ -126,6 +126,7 @@ const Password = () => {
                       fontSize: 16,
                       fontWeight: "400",
                       lineHeight: 20,
+                      color: Color.base.White
                     }}
                     value={password}
                     onChangeText={setPassword}
@@ -134,7 +135,7 @@ const Password = () => {
                     <Ionicons
                       name={showPassword ? "eye-outline" : "eye-off-outline"}
                       size={24}
-                      color="black"
+                      color={Color.Gray.gray50}
                     />
                   </TouchableOpacity>
                 </View>
@@ -143,7 +144,7 @@ const Password = () => {
                     flexDirection: "row",
                     alignItems: "center",
                     height: 40,
-                    borderColor: Color.Gray.gray50,
+                    borderColor: Color.Gray.gray300,
                     borderWidth: 1,
                     borderRadius: 16,
                     paddingHorizontal: 10,
@@ -153,7 +154,7 @@ const Password = () => {
                   <TextInput
                     secureTextEntry={!showPassword}
                     placeholder={passwordPlaceholder}
-                    placeholderTextColor={Color.Gray.gray200}
+                    placeholderTextColor={Color.Gray.gray100}
                     onFocus={onFocusPassword}
                     onBlur={onBlurPassword}
                     style={{
@@ -161,6 +162,7 @@ const Password = () => {
                       fontSize: 16,
                       fontWeight: "400",
                       lineHeight: 20,
+                      color: Color.base.White
                     }}
                     value={confirmPassword}
                     onChangeText={setConfirmPassword}
@@ -169,7 +171,7 @@ const Password = () => {
                     <Ionicons
                       name={showPassword ? "eye-outline" : "eye-off-outline"}
                       size={24}
-                      color="black"
+                      color={Color.Gray.gray50}
                     />
                   </TouchableOpacity>
                 </View>
@@ -239,12 +241,12 @@ const Password = () => {
                 ]}
               >
                 <Button
-                  variant="primary"
+                  variant="tertiary"
                   textStyle="primary"
                   size="default"
                   onPress={handleNavigation}
                 >
-                  Continue
+                  Confirm
                 </Button>
               </View>
             </KeyboardAvoidingView>
@@ -257,7 +259,7 @@ const Password = () => {
 
 const styles = StyleSheet.create({
   body: {
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray600,
     height: "100%",
     paddingHorizontal: 16,
   },
@@ -265,8 +267,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 24,
     paddingBottom: 16,
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray500,
     shadowColor: "#000",
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -283,7 +287,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   topText: {
-    color: Color.Gray.gray500,
+    color: Color.base.White,
     fontWeight: "bold",
     fontSize: 24,
   },
@@ -318,7 +322,7 @@ const styles = StyleSheet.create({
   },
   ruleText: {
     fontSize: 14,
-    color: Color.Gray.gray400,
+    color: Color.Gray.gray100,
   },
   greenRuleText: {
     color: Color.System.systemSuccess,

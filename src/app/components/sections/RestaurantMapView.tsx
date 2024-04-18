@@ -666,7 +666,7 @@ export default function RestaurantMapView() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   map: {
     flex: 1,

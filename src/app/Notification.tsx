@@ -16,12 +16,12 @@ const Notification = () => {
       <View style={styles.body}>
       <View style={styles.container}>
             <View style={{marginHorizontal: 12, marginVertical: 16, flexDirection: 'row', gap: 12}}>
-                <View style={{backgroundColor: Color.Gray.gray600, width: 36, height: 36, justifyContent: 'center', alignItems: 'center', borderRadius: 100}}>
+                <View style={{backgroundColor: Color.Gray.gray300, width: 36, height: 36, justifyContent: 'center', alignItems: 'center', borderRadius: 100}}>
                     <Notification1 size={20} color="#fff"/>
                 </View>
                 <View style={{flexDirection: 'column', gap: 4, flex: 1}}>
-                    <Text style={{color: Color.Gray.gray600, fontSize: 14, fontFamily: 'Rubik-Medium'}}>{"Help"}</Text>
-                    <Text style={{color: Color.Gray.gray400, fontSize: 12, fontFamily: 'Rubik-Regular'}}>{"description"}</Text>
+                    <Text style={{color: Color.Gray.gray50, fontSize: 14, fontFamily: 'Rubik-Medium'}}>{"Help"}</Text>
+                    <Text style={{color: Color.Gray.gray100, fontSize: 12, fontFamily: 'Rubik-Regular'}}>{"description"}</Text>
                 </View>
             </View>
         </View>
@@ -35,11 +35,13 @@ export default Notification
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray600,
     paddingHorizontal:16
   },
     container: { 
-        backgroundColor: '#fff',
+        backgroundColor: Color.Gray.gray500,
+        borderWidth: 1,
+        borderColor: Color.Gray.gray300,
         borderRadius: 16,
         shadowColor: '#000',
         elevation: 3,

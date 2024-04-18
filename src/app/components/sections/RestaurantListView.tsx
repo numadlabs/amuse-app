@@ -16,7 +16,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  // const [restaurants, setRestaurants] = useState<RestaurantType[]>([]);
+// const [restaurants, setRestaurants] = useState<RestaurantType[]>([]);
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const [cardLoadingStates, setCardLoadingStates] = useState<boolean[]>([]);
   const { authState } = useAuth();

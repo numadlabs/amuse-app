@@ -87,13 +87,12 @@ const Acards = () => {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray600,
     paddingTop: 50,
   },
   container: {
     flex: 1,
-    backgroundColor: Color.base.White,
-    borderBottomLeftRadius: 48,
+    backgroundColor: Color.Gray.gray600,
   },
   header: {
     flexDirection: "row",
@@ -121,7 +120,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    backgroundColor: Color.Gray.gray50,
+    backgroundColor: Color.Gray.gray500,
     paddingVertical: 4,
     borderRadius: 48,
   },
@@ -134,14 +133,14 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 16,
     fontWeight: "bold",
-    color: Color.Gray.gray600,
+    color: Color.base.White,
   },
   activeButton: {
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray400,
     borderRadius: 48,
   },
   activeText: {
-    color: Color.base.Black,
+    color: Color.base.White,
   },
 });
 
