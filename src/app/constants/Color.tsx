@@ -20,6 +20,14 @@ export default {
     secondary: {
       start: '#FDAD32',
       end: 'rgba(241,135,251,0.6)' 
+    },
+    navbar:{
+      start: '#242E35',
+      end: 'rgba(36, 46, 53, 0)' 
+    },
+    card:{
+      start: 'rgba(36, 46, 53, 1)',
+      end: 'rgba(36, 46, 53, 0)'
     }
   },
   System: {

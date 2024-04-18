@@ -104,7 +104,7 @@ const Restaurant = () => {
       <ScrollView style={styles.container}>
         <ImageBackground
           source={{
-            uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${restaurantsData.logo}` as string,
+            uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${restaurantsData?.logo}` as string,
           }}
           style={styles.textImageContainer}
         >
@@ -118,16 +118,16 @@ const Restaurant = () => {
                   color: Color.base.White,
                 }}
               >
-                {restaurantsData.name}
+                {restaurantsData?.name}
               </Text>
               <Text style={{ fontSize: 12, color: Color.Gray.gray50 }}>
-                {restaurantsData.category}
+                {restaurantsData?.category}
               </Text>
             </View>
             <Image
               style={styles.image}
               source={{
-                uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${restaurantsData.logo}` as string,
+                uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${restaurantsData?.logo}` as string,
               }}
             />
           </BlurView>
@@ -141,7 +141,7 @@ const Restaurant = () => {
                 <View style={styles.attribute}>
                   <Tick size={8} color={Color.Gray.gray600} />
                   <Text style={styles.attributeText}>
-                    {restaurantsData.benefits}
+                    {restaurantsData?.benefits}
                   </Text>
                 </View>
               </View>
@@ -154,7 +154,7 @@ const Restaurant = () => {
                 <View style={styles.attribute}>
                   <Location color={Color.Gray.gray600} />
                   <Text style={styles.attributeLocText}>
-                    {restaurantsData.location}
+                    {restaurantsData?.location}
                   </Text>
                 </View>
               </View>
@@ -188,7 +188,7 @@ const Restaurant = () => {
             >
               {isClaimLoading
                 ? "Loading"
-                : restaurantsData.visitCount === null
+                : restaurantsData?.visitCount === null
                 ? "Add a membership card"
                 : "Owned"}
             </Text>

@@ -136,7 +136,7 @@ const Page = () => {
   const restaurantsArray = restaurantsData?.data?.restaurants || [];
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {user && <Balance amount={user.balance} />}
       <View style={{ marginTop: 24, gap: 12 }}>
         {user?.email && user?.dateOfBirth ? (
@@ -166,10 +166,10 @@ const Page = () => {
                   onPress={() => handleNavigation(restaurantsArray[0])}
                 />
               </TouchableOpacity >
-              {user.email &&
-              user.dateOfBirth &&
-              user.nickname &&
-              user.location ? null : (
+              {user?.email &&
+              user?.dateOfBirth &&
+              user?.nickname &&
+              user?.location ? null : (
                 <QuickInfo />
               )}
               <TouchableOpacity onPress={() => handleNavigation(restaurantsArray[1])}>
@@ -214,7 +214,7 @@ const Page = () => {
       {cards?.data?.cards.length === 0 ? (
         ""
       ) : (
-        <View style={{ width: "100%", alignItems: "center", marginBottom: 50 }}>
+        <View style={{ width: "100%", alignItems: "center", marginBottom: 120 }}>
           <TouchableOpacity onPress={() => router.push("/MyAcards")}>
             <View
               style={{
