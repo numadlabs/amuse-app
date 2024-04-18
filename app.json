@@ -8,7 +8,7 @@
       "image": "./src/public/images/Image.png",
       "backgroundColor": "#FFFFFF"
     },
-    "userInterfaceStyle": "dark",
+    "userInterfaceStyle": "automatic",
     "orientation": "portrait",
     "web": {
       "output": "static",

@@ -144,10 +144,10 @@ const Page = () => {
             style={{
               fontSize: 14,
               fontWeight: "600",
-              color: Color.Gray.gray100,
+              color: Color.Gray.gray400,
             }}
           >
-            Featured
+            Featured restaurants
           </Text>
         ) : (
           ""
@@ -190,7 +190,7 @@ const Page = () => {
         style={{
           fontSize: 14,
           fontWeight: "600",
-          color: Color.Gray.gray100,
+          color: Color.Gray.gray400,
           marginTop: 32,
           marginBottom: 12,
         }}
@@ -241,7 +241,7 @@ export default Page;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Color.Gray.gray600,
+    backgroundColor: Color.base.White,
     paddingHorizontal: 16,
   },
   modal: {

@@ -133,7 +133,6 @@ const QrModal = () => {
         togglePopup();
       } else {
         toggleBtcPopup();
-        showToast()
       }
     },
   });
