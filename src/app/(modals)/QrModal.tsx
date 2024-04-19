@@ -47,7 +47,7 @@ const QrModal = () => {
     setTimeout(function () {
       Toast.show({
         type: "perkToast",
-        text1: "Successfully used perk",
+        text1: "1$ of bitcoin added to your wallet",
       });
     }, 1500);
   };

@@ -2,11 +2,8 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ImageBackground,
   StyleSheet,
   Image,
-  ViewStyle,
-  StyleProp,
 } from "react-native";
 import React from "react";
 import { BlurView } from "expo-blur";
