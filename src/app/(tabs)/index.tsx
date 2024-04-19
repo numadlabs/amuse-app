@@ -169,7 +169,7 @@ const Page = () => {
               {user?.email &&
               user?.dateOfBirth &&
               user?.nickname &&
-              user?.location ? null : (
+              user?.location ? <QuickInfo /> : (
                 <QuickInfo />
               )}
               <TouchableOpacity onPress={() => handleNavigation(restaurantsArray[1])}>

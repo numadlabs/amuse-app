@@ -20,6 +20,8 @@ import { Flash } from "iconsax-react-native";
 import Toast from "react-native-toast-message";
 import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
 import { SERVER_SETTING } from "../constants/serverSettings";
+import { LinearGradient } from "expo-linear-gradient";
+import Close from "../components/icons/Close";
 
 const { width, height } = Dimensions.get("window");
 
@@ -133,7 +135,7 @@ const QrModal = () => {
         togglePopup();
       } else {
         toggleBtcPopup();
-        showToast()
+        showToast();
       }
     },
   });
@@ -291,10 +293,15 @@ const QrModal = () => {
 
             {/* Button for toggling flashlight */}
             <TouchableOpacity
-              style={[styles.button, styles.flashButton]}
               onPress={handleScanButtonPress}
+              style={styles.flashButton}
             >
-              <Flash color={Color.Gray.gray600} />
+              <LinearGradient
+                colors={[Color.Brand.main.start, Color.Brand.main.end]}
+                style={[styles.button]}
+              >
+                <Flash color={Color.base.White} />
+              </LinearGradient>
             </TouchableOpacity>
 
             {/* Button for closing the modal */}
@@ -304,7 +311,7 @@ const QrModal = () => {
                 router.back();
               }}
             >
-              <Image source={require("@/public/icons/close.png")} />
+              <Close/>
             </TouchableOpacity>
           </View>
           {visitCount >= SERVER_SETTING.PERK_FREQUENCY ? (
@@ -355,7 +362,7 @@ const styles = StyleSheet.create({
     width: 48,
     padding: 12,
     borderRadius: 100,
-    backgroundColor: Color.Gray.gray50,
+    backgroundColor: Color.Gray.gray400,
   },
   closeButton: {
     position: "absolute",
