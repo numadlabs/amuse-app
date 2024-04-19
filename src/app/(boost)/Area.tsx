@@ -16,6 +16,7 @@ import Button from "../components/ui/Button";
 import { router, useRouter } from "expo-router";
 import { useAuth } from "../context/AuthContext";
 import useBoostInfoStore from "../lib/store/boostInfoStore";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Area = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
@@ -51,8 +52,17 @@ const Area = () => {
         style={{ flex: 1 }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={{ flex: 1, backgroundColor: Color.base.White }}>
+          <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
+            <LinearGradient
+                colors={[Color.Brand.card.start, Color.Brand.card.end]}
+                style={{
+                  marginTop: 20,
+                  borderWidth: 1,
+                  borderColor: Color.Gray.gray400,
+                  borderRadius: 32,
+                }}
+              >
               <View style={styles.textContainer}>
                 <View style={{ gap: 8 }}>
                   <Text style={styles.topText}>Area</Text>
@@ -69,24 +79,27 @@ const Area = () => {
                   style={
                     isFocused
                       ? {
-                          borderColor: Color.Gray.gray600,
+                          borderColor: Color.Gray.gray300,
                           height: 48,
                           borderWidth: 1,
                           borderRadius: 16,
                           paddingHorizontal: 16,
                           marginTop: 10,
+                          color: Color.base.White
                         }
                       : {
                           height: 48,
                           borderWidth: 1,
-                          borderColor: Color.Gray.gray100,
+                          borderColor: Color.Gray.gray300,
                           borderRadius: 16,
                           paddingHorizontal: 16,
                           marginTop: 10,
+                          color: Color.base.White
                         }
                   }
                 />
               </View>
+              </LinearGradient>
             </View>
             <View
               style={[
@@ -119,20 +132,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   textContainer: {
-    marginTop: 20,
     paddingHorizontal: 16,
     paddingBottom: 16,
     paddingTop: 24,
     gap: 24,
     borderRadius: 32,
-    backgroundColor: Color.base.White,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
   },
   buttonContainer: {
     position: "absolute",
@@ -150,13 +154,13 @@ const styles = StyleSheet.create({
     marginTop: "auto",
   },
   topText: {
-    color: Color.Gray.gray500,
+    color: Color.base.White,
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
   },
   bottomText: {
-    color: Color.Gray.gray400,
+    color: Color.Gray.gray100,
     fontSize: 12,
     textAlign: "center",
   },
