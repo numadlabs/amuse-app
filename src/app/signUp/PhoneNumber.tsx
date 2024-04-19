@@ -366,5 +366,6 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 16,
     fontWeight: "normal",
-  },
+    color: Color.base.White
+  }
 });
