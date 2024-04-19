@@ -2,6 +2,7 @@ import * as React from "react";
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import Color from "@/app/constants/Color";
+import { BlurView } from "expo-blur";
 
 const buttonVariants = {
   variant: {
@@ -48,11 +49,15 @@ const Button = React.forwardRef<TouchableOpacity, ButtonProps>(
     // Render linear gradient for primary variant
     const renderGradient = variant === "primary" && (
       <LinearGradient
-        colors={[Color.Brand.main.start, Color.Brand.main.end]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        style={styles.gradient}
-      />
+    colors={[Color.Brand.main.start, Color.Brand.main.end]}
+    start={{ x: 0, y: 0 }}
+    end={{ x: 1, y: 0 }}
+    style={styles.gradient}
+  >
+    <View style={[styles.blurContainer, { borderRadius: 48 }]}>
+      <BlurView style={styles.blurView} />
+    </View>
+  </LinearGradient>
     );
 
     return (
@@ -89,6 +94,17 @@ const styles = StyleSheet.create({
   gradient: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: 48,
+    padding:1
+  },
+  blurView: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 48,
+  },
+  blurContainer: {
+    flex: 1,
+    borderRadius: 48,
+    overflow: 'hidden', // Ensure children don't overflow the borderRadius
   },
 });
 
