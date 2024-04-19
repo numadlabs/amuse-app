@@ -3,6 +3,7 @@ import { RestaurantType } from "@/app/lib/types";
 import { Reserve } from "iconsax-react-native";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 // Restaurant desc endpoint deeree nemeh
 
 interface OwnedAcardsProp {
@@ -21,59 +22,74 @@ const OwnedAcards: React.FC<OwnedAcardsProp> = ({ marker, onPress }) => {
     <View>
       <TouchableOpacity onPress={onPress}>
         <View style={styles.container}>
-          <Image
-            source={{
-              uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker.logo}` as string,
+          <LinearGradient
+            colors={[Color.Brand.card.start, Color.Brand.card.end]}
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              padding: 12,
+              alignItems: "center",
+              gap: 16,
+              marginBottom: 12,
+              borderRadius: 16,
             }}
-            style={styles.image}
-          />
-          <View style={{ gap: 28 }}>
-            <View style={{ gap: 4 }}>
-              <View style={{ width: "80%" }}>
-                <Text style={styles.title}>{marker.name}</Text>
+          >
+            <Image
+              source={{
+                uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker.logo}` as string,
+              }}
+              style={styles.image}
+            />
+            <View style={{ gap: 28 }}>
+              <View style={{ gap: 4 }}>
+                <View style={{ width: "80%" }}>
+                  <Text style={styles.title}>{marker.name}</Text>
+                </View>
+                <Text style={styles.category}>{marker.category}</Text>
               </View>
-              <Text style={styles.category}>{marker.category}</Text>
-            </View>
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
-            >
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <View
-                  style={[
-                    styles.dot,
-                    {
-                      backgroundColor: isOpen
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
+              >
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View
+                    style={[
+                      styles.dot,
+                      {
+                        backgroundColor: isOpen
+                          ? `${Color.System.systemError}`
+                          : `${Color.System.systemSuccess}`,
+                      },
+                    ]}
+                  />
+                  <Text
+                    style={{
+                      color: isOpen
                         ? `${Color.System.systemError}`
                         : `${Color.System.systemSuccess}`,
-                    },
-                  ]}
-                />
-                <Text
-                  style={{
-                    color: isOpen
-                      ? `${Color.System.systemError}`
-                      : `${Color.System.systemSuccess}`,
-                  }}
-                >
-                  {isOpen ? "Closed" : "Open"}
-                </Text>
-              </View>
+                    }}
+                  >
+                    {isOpen ? "Closed" : "Open"}
+                  </Text>
+                </View>
 
-              <View
-                style={{
-                  width: 1,
-                  height: 14,
-                  backgroundColor: Color.Gray.gray50,
-                }}
-              />
-              <View
-                style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-              >
-                <Reserve color={Color.Gray.gray100} size={16} />
-                <Text style={{ color: Color.Gray.gray50 }}>{marker.visitCount} Check-ins</Text>
+                <View
+                  style={{
+                    width: 1,
+                    height: 14,
+                    backgroundColor: Color.Gray.gray50,
+                  }}
+                />
+                <View
+                  style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+                >
+                  <Reserve color={Color.Gray.gray100} size={16} />
+                  <Text style={{ color: Color.Gray.gray50 }}>
+                    {marker.visitCount} Check-ins
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
+          </LinearGradient>
         </View>
       </TouchableOpacity>
     </View>
@@ -84,21 +100,10 @@ export default OwnedAcards;
 
 const styles = StyleSheet.create({
   container: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-    flexDirection: "row",
-    padding: 12,
-    backgroundColor: Color.Gray.gray500,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
     borderRadius: 16,
-    alignItems: "center",
-    gap: 16,
-    marginBottom: 12,
+    marginBottom: 16,
   },
   image: {
     borderRadius: 8,

@@ -17,6 +17,7 @@ import Tick from "../components/icons/Tick";
 import Button from "../components/ui/Button";
 import Color from "../constants/Color";
 import { useSignUpStore } from "../lib/store/signUpStore";
+import { LinearGradient } from "expo-linear-gradient";
 
 const validatePassword = (password: string): boolean => {
   if (password.length < 8) {
@@ -98,135 +99,144 @@ const Password = () => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.body}>
-            <View style={styles.container}>
-              <View style={styles.textContainer}>
-                <Text style={styles.topText}>Create password</Text>
-              </View>
-              <View style={styles.inputContainer}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    height: 40,
-                    borderColor: Color.Gray.gray300,
-                    borderWidth: 1,
-                    borderRadius: 16,
-                    paddingHorizontal: 10,
-                    marginTop: 10,
-                  }}
-                >
-                  <TextInput
-                    secureTextEntry={!showPassword}
-                    placeholder={passwordPlaceholder}
-                    placeholderTextColor={Color.Gray.gray100}
-                    onFocus={onFocusPassword}
-                    onBlur={onBlurPassword}
+            <LinearGradient
+              colors={[Color.Brand.card.start, Color.Brand.card.end]}
+              style={{
+                borderWidth: 1,
+                borderColor: Color.Gray.gray400,
+                marginTop: 16,
+                borderRadius: 32,
+              }}
+            >
+              <View style={styles.container}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.topText}>Create password</Text>
+                </View>
+                <View style={styles.inputContainer}>
+                  <View
                     style={{
-                      flex: 1,
-                      fontSize: 16,
-                      fontWeight: "400",
-                      lineHeight: 20,
-                      color: Color.base.White
+                      flexDirection: "row",
+                      alignItems: "center",
+                      height: 40,
+                      borderColor: Color.Gray.gray300,
+                      borderWidth: 1,
+                      borderRadius: 16,
+                      paddingHorizontal: 10,
+                      marginTop: 10,
                     }}
-                    value={password}
-                    onChangeText={setPassword}
-                  />
-                  <TouchableOpacity onPress={toggleShowPassword}>
-                    <Ionicons
-                      name={showPassword ? "eye-outline" : "eye-off-outline"}
-                      size={24}
-                      color={Color.Gray.gray50}
+                  >
+                    <TextInput
+                      secureTextEntry={!showPassword}
+                      placeholder={passwordPlaceholder}
+                      placeholderTextColor={Color.Gray.gray100}
+                      onFocus={onFocusPassword}
+                      onBlur={onBlurPassword}
+                      style={{
+                        flex: 1,
+                        fontSize: 16,
+                        fontWeight: "400",
+                        lineHeight: 20,
+                        color: Color.base.White,
+                      }}
+                      value={password}
+                      onChangeText={setPassword}
                     />
-                  </TouchableOpacity>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    height: 40,
-                    borderColor: Color.Gray.gray300,
-                    borderWidth: 1,
-                    borderRadius: 16,
-                    paddingHorizontal: 10,
-                    marginTop: 10,
-                  }}
-                >
-                  <TextInput
-                    secureTextEntry={!showPassword}
-                    placeholder={passwordPlaceholder}
-                    placeholderTextColor={Color.Gray.gray100}
-                    onFocus={onFocusPassword}
-                    onBlur={onBlurPassword}
+                    <TouchableOpacity onPress={toggleShowPassword}>
+                      <Ionicons
+                        name={showPassword ? "eye-outline" : "eye-off-outline"}
+                        size={24}
+                        color={Color.Gray.gray50}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View
                     style={{
-                      flex: 1,
-                      fontSize: 16,
-                      fontWeight: "400",
-                      lineHeight: 20,
-                      color: Color.base.White
+                      flexDirection: "row",
+                      alignItems: "center",
+                      height: 40,
+                      borderColor: Color.Gray.gray300,
+                      borderWidth: 1,
+                      borderRadius: 16,
+                      paddingHorizontal: 10,
+                      marginTop: 10,
                     }}
-                    value={confirmPassword}
-                    onChangeText={setConfirmPassword}
-                  />
-                  <TouchableOpacity onPress={toggleShowPassword}>
-                    <Ionicons
-                      name={showPassword ? "eye-outline" : "eye-off-outline"}
-                      size={24}
-                      color={Color.Gray.gray50}
+                  >
+                    <TextInput
+                      secureTextEntry={!showPassword}
+                      placeholder={passwordPlaceholder}
+                      placeholderTextColor={Color.Gray.gray100}
+                      onFocus={onFocusPassword}
+                      onBlur={onBlurPassword}
+                      style={{
+                        flex: 1,
+                        fontSize: 16,
+                        fontWeight: "400",
+                        lineHeight: 20,
+                        color: Color.base.White,
+                      }}
+                      value={confirmPassword}
+                      onChangeText={setConfirmPassword}
                     />
-                  </TouchableOpacity>
+                    <TouchableOpacity onPress={toggleShowPassword}>
+                      <Ionicons
+                        name={showPassword ? "eye-outline" : "eye-off-outline"}
+                        size={24}
+                        color={Color.Gray.gray50}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                {!doPasswordsMatch && (
+                  <Text style={styles.errorText}>Password doesn't match</Text>
+                )}
+                <View style={styles.ruleContainer}>
+                  <View style={{ flexDirection: "row" }}>
+                    <Tick size={18} color={Color.Gray.gray100} />
+                    <Text
+                      style={[
+                        styles.ruleText,
+                        isRuleSatisfied(/.{8,}/) && styles.greenRuleText,
+                      ]}
+                    >
+                      {"At least 8 characters"}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Tick size={18} color={Color.Gray.gray100} />
+                    <Text
+                      style={[
+                        styles.ruleText,
+                        isRuleSatisfied(/[A-Z]/) && styles.greenRuleText,
+                      ]}
+                    >
+                      {"At least 1 upper case letter (A-Z)"}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Tick size={18} color={Color.Gray.gray100} />
+                    <Text
+                      style={[
+                        styles.ruleText,
+                        isRuleSatisfied(/[a-z]/) && styles.greenRuleText,
+                      ]}
+                    >
+                      {"At least 1 lower case letter (a-z)"}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Tick size={18} color={Color.Gray.gray100} />
+                    <Text
+                      style={[
+                        styles.ruleText,
+                        isRuleSatisfied(/\d/) && styles.greenRuleText,
+                      ]}
+                    >
+                      {"At least 1 number (0-9)"}
+                    </Text>
+                  </View>
                 </View>
               </View>
-              {!doPasswordsMatch && (
-                <Text style={styles.errorText}>Password doesn't match</Text>
-              )}
-              <View style={styles.ruleContainer}>
-                <View style={{ flexDirection: "row" }}>
-                  <Tick size={18} color={Color.Gray.gray100} />
-                  <Text
-                    style={[
-                      styles.ruleText,
-                      isRuleSatisfied(/.{8,}/) && styles.greenRuleText,
-                    ]}
-                  >
-                    {"At least 8 characters"}
-                  </Text>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                  <Tick size={18} color={Color.Gray.gray100} />
-                  <Text
-                    style={[
-                      styles.ruleText,
-                      isRuleSatisfied(/[A-Z]/) && styles.greenRuleText,
-                    ]}
-                  >
-                    {"At least 1 upper case letter (A-Z)"}
-                  </Text>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                  <Tick size={18} color={Color.Gray.gray100} />
-                  <Text
-                    style={[
-                      styles.ruleText,
-                      isRuleSatisfied(/[a-z]/) && styles.greenRuleText,
-                    ]}
-                  >
-                    {"At least 1 lower case letter (a-z)"}
-                  </Text>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                  <Tick size={18} color={Color.Gray.gray100} />
-                  <Text
-                    style={[
-                      styles.ruleText,
-                      isRuleSatisfied(/\d/) && styles.greenRuleText,
-                    ]}
-                  >
-                    {"At least 1 number (0-9)"}
-                  </Text>
-                </View>
-              </View>
-            </View>
-
+            </LinearGradient>
             <KeyboardAvoidingView
               style={{ flex: 1 }}
               keyboardVerticalOffset={110}
@@ -267,19 +277,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 24,
     paddingBottom: 16,
-    backgroundColor: Color.Gray.gray500,
-    shadowColor: "#000",
-    borderWidth: 1,
-    borderColor: Color.Gray.gray400,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    marginTop: 16,
-    elevation: 4,
-    borderRadius: 32,
   },
   textContainer: {
     justifyContent: "center",
