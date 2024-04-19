@@ -1,9 +1,10 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
 import { RestaurantType } from "@/app/lib/types";
 import Color from "@/app/constants/Color";
 import { Reserve, Wallet } from "iconsax-react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import Button from "../../ui/Button";
 
 interface ResListCardProp {
   marker: RestaurantType;
@@ -15,6 +16,7 @@ const ResListCard: React.FC<ResListCardProp> = ({
   onPress,
   isClaimLoading,
 }) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const opensAt = new Date(marker.opensAt);
   const closesAt = new Date(marker.closesAt);
   const currentTime = new Date();
@@ -83,37 +85,64 @@ const ResListCard: React.FC<ResListCardProp> = ({
                 <Text style={{ color: Color.Gray.gray50 }}>{marker.visitCount} Check-ins</Text>
               </View>
             ) : (
-              <TouchableOpacity onPress={onPress}>
-                <View
+
+              <Button
+              variant="primary"
+              onPress={onPress}
+              disabled={loading}
+              style={{width:90, height:35,justifyContent:'center', alignContent:'center', alignItems:'center',}}
+            >
+              {loading ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <>
+              
+
+                <Text
                   style={{
-                    flexDirection: "row",
-                    position: "relative",
-                    backgroundColor: Color.Gray.gray600,
-                    paddingVertical: 8,
-                    paddingHorizontal: 16,
-                    borderRadius: 48,
-                    marginLeft: 49,
-                    alignContent: "center",
-                    alignItems: "center",
+                    color: Color.base.White,
+                    fontSize: 11,
+                    lineHeight:16,
+                    fontWeight: "bold",
+              
                   }}
                 >
-                  <Wallet size={16} color={Color.Gray.gray50} />
-                  <Text
-                    style={{
-                      color: Color.Gray.gray50,
-                      fontWeight: "bold",
-                      fontSize: 11,
-                      lineHeight: 16,
-                    }}
-                  >
-                    {isClaimLoading
-                      ? "Loading"
-                      : marker.isOwned
-                      ? "Owned"
-                      : " Add"}
-                  </Text>
-                </View>
-              </TouchableOpacity>
+                  Add
+                </Text>
+                </>
+              )}
+            </Button>
+              // <TouchableOpacity onPress={onPress}>
+              //   <View
+              //     style={{
+              //       flexDirection: "row",
+              //       position: "relative",
+              //       backgroundColor: Color.Gray.gray600,
+              //       paddingVertical: 8,
+              //       paddingHorizontal: 16,
+              //       borderRadius: 48,
+              //       marginLeft: 49,
+              //       alignContent: "center",
+              //       alignItems: "center",
+              //     }}
+              //   >
+              //     <Wallet size={16} color={Color.Gray.gray50} />
+              //     <Text
+              //       style={{
+              //         color: Color.Gray.gray50,
+              //         fontWeight: "bold",
+              //         fontSize: 11,
+              //         lineHeight: 16,
+              //       }}
+              //     >
+              //       {isClaimLoading
+              //         ? "Loading"
+              //         : marker.isOwned
+              //         ? "Owned"
+              //         : " Add"}
+              //     </Text>
+              //   </View>
+              // </TouchableOpacity>
             )}
           </View>
         </View>
