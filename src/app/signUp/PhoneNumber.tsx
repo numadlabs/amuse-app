@@ -129,6 +129,18 @@ const PhoneNumber = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
+            <LinearGradient
+            colors={[Color.Brand.card.start, Color.Brand.card.end]}
+            style={{
+              width: "100%",
+              borderRadius: 32,
+               marginTop: 16,
+               borderWidth: 1,
+               borderColor: Color.Gray.gray400,
+               paddingBottom: 16,
+               paddingTop: 24,
+               paddingHorizontal: 16
+            }}>
               <View style={styles.textContainer}>
                 <View style={{ gap: 8 }}>
                   <Text style={styles.topText}>Phone Number</Text>
@@ -179,6 +191,7 @@ const PhoneNumber = () => {
                   />
                 </View>
               </View>
+              </LinearGradient>
             </View>
             <KeyboardAvoidingView
               style={{ flex: 1 }}
@@ -296,22 +309,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   textContainer: {
-    marginTop: 20,
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    paddingTop: 24,
-    borderWidth: 1,
-    borderColor: Color.Gray.gray400,
     gap: 24,
-    borderRadius: 32,
-    backgroundColor: Color.Gray.gray500,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
+    flexDirection: 'column'
   },
   prefixContainer: {
     position: "absolute",

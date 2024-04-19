@@ -16,6 +16,7 @@ import Button from "../components/ui/Button";
 import Color from "../constants/Color";
 import { useAuth } from "../context/AuthContext";
 import { useSignUpStore } from "../lib/store/signUpStore";
+import { LinearGradient } from "expo-linear-gradient";
 const NickName = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const { password, phoneNumber, prefix } = useLocalSearchParams();
@@ -74,6 +75,9 @@ const NickName = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
+            <LinearGradient
+            colors={[Color.Brand.card.start, Color.Brand.card.end]}
+            style={{ borderWidth: 1, borderColor: Color.Gray.gray400, borderRadius: 32, marginTop: 16 }}>
               <View style={styles.textContainer}>
                 <View style={{ gap: 8 }}>
                   <Text style={styles.topText}>Nickname</Text>
@@ -114,6 +118,7 @@ const NickName = () => {
                   }
                 />
               </View>
+              </LinearGradient>
             </View>
             <KeyboardAvoidingView
               style={{ flex: 1 }}
@@ -163,22 +168,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   textContainer: {
-    marginTop: 20,
     paddingHorizontal: 16,
     paddingBottom: 16,
     paddingTop: 24,
     gap: 24,
-    borderRadius: 32,
-    backgroundColor: Color.Gray.gray500,
-    borderWidth: 1,
-    borderColor: Color.Gray.gray400,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
   },
   buttonContainer: {
     position: "absolute",

@@ -2,6 +2,7 @@ import Color from "@/app/constants/Color";
 import React, { useRef, useState } from "react";
 import { View, Text, Animated, TouchableOpacity, Platform } from "react-native";
 import { ArrowUp2, ArrowDown2 } from "iconsax-react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Accordion = ({ text, title }) => {
   const [open, setOpen] = useState(false);
@@ -17,26 +18,14 @@ const Accordion = ({ text, title }) => {
   };
 
   return (
-    <View
+    <LinearGradient
+      colors={[Color.Brand.card.start, Color.Brand.card.end]}
       style={{
-        backgroundColor: Color.Gray.gray500,
         padding: 16,
         borderRadius: 16,
         borderWidth: 1,
         borderColor: Color.Gray.gray300,
-        justifyContent: 'center',
-        ...Platform.select({
-          ios: {
-            shadowColor: Color.Gray.gray500,
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.1,
-            shadowRadius: 4,
-            elevation: 12,
-          },
-          android: {
-            elevation: 12,
-          },
-        }),
+        justifyContent: "center",
       }}
     >
       <TouchableOpacity
@@ -52,7 +41,11 @@ const Accordion = ({ text, title }) => {
         >
           {title}
         </Text>
-        {open ? <ArrowUp2 size={20} color={Color.Gray.gray100}/> : <ArrowDown2 size={20} color={Color.Gray.gray100} />}
+        {open ? (
+          <ArrowUp2 size={20} color={Color.Gray.gray100} />
+        ) : (
+          <ArrowDown2 size={20} color={Color.Gray.gray100} />
+        )}
       </TouchableOpacity>
       <Animated.View style={{ paddingTop: 8 }}>
         {open && (
@@ -61,7 +54,7 @@ const Accordion = ({ text, title }) => {
           </Text>
         )}
       </Animated.View>
-    </View>
+    </LinearGradient>
   );
 };
 

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { RestaurantType } from "@/app/lib/types";
 import Color from "@/app/constants/Color";
 import { Reserve, Wallet } from "iconsax-react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 interface ResListCardProp {
   marker: RestaurantType;
@@ -24,6 +25,10 @@ const ResListCard: React.FC<ResListCardProp> = ({
   return (
     
     <View style={{ paddingHorizontal: 16 }}>
+      <LinearGradient
+      colors={[Color.Brand.card.start, Color.Brand.card.end]}
+      style={{ backgroundColor: 'transparent', borderRadius: 16 }}
+      >
       <View style={styles.container}>
         <Image
           source={{
@@ -113,6 +118,7 @@ const ResListCard: React.FC<ResListCardProp> = ({
           </View>
         </View>
       </View>
+      </LinearGradient>
     </View>
   );
 };
@@ -121,17 +127,8 @@ export default ResListCard;
 
 const styles = StyleSheet.create({
   container: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
     flexDirection: "row",
     padding: 12,
-    backgroundColor: Color.Gray.gray500,
     borderWidth: 1,
     borderColor: Color.Gray.gray400,
     borderRadius: 16,
