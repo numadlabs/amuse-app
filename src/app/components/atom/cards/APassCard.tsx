@@ -33,9 +33,6 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
           colors={[Color.Brand.card.start, Color.Brand.card.end]}
           style={[styles.aCardContainer]}
         >
-         
-
-
           <BlurView intensity={24} style={styles.blurContainer}>
           <View style={{ position: 'absolute',  top: 0, right: -20, width: '50%' }}>
             <APassStripes />

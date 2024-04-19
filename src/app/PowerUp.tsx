@@ -46,7 +46,7 @@ const PowerUp = () => {
 
 
   return (
-    <View style={{ backgroundColor: Color.base.White, flex: 1 }}>
+    <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity
           style={[styles.button, styles.closeButton]}
@@ -79,14 +79,14 @@ const PowerUp = () => {
               style={{
                 fontSize: 24,
                 fontWeight: "bold",
-                color: Color.Gray.gray600,
+                color: Color.base.White,
               }}
             >
               {name}
             </Text>
             <Text
               style={{
-                color: Color.Gray.gray400,
+                color: Color.Gray.gray50,
                 fontSize: 16,
                 textAlign: "center",
                 lineHeight: 20,
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     width: 48,
     padding: 12,
     borderRadius: 100,
-    backgroundColor: Color.Gray.gray50,
+    backgroundColor: Color.Gray.gray300,
   },
   imageContainer: {
     width: "100%",

@@ -140,6 +140,7 @@ const ProfileEdit = () => {
                   display="default"
                   onChange={onDateChange}
                   maximumDate={new Date(Date.now())}
+                  style={{ backgroundColor: Color.Gray.gray600 }}
                 />
               </View>
             </View>

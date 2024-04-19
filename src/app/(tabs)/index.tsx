@@ -218,7 +218,7 @@ const Page = () => {
           <TouchableOpacity onPress={() => router.push("/MyAcards")}>
             <View
               style={{
-                backgroundColor: Color.Gray.gray50,
+                backgroundColor: Color.Gray.gray300,
                 marginTop: 16,
                 paddingVertical: 12,
                 paddingHorizontal: 16,
@@ -228,7 +228,7 @@ const Page = () => {
               <Text
                 style={{
                   fontWeight: "bold",
-                  color: Color.Gray.gray600,
+                  color: Color.base.White,
                   fontSize: 16,
                 }}
               >

@@ -265,7 +265,7 @@ const Restaurant = () => {
                 ) : (
                   <View
                     style={{
-                      backgroundColor: Color.Gray.gray50,
+                      backgroundColor: Color.Gray.gray400,
                       flex: 1,
                       justifyContent: "center",
                       gap: 16,
@@ -285,6 +285,7 @@ const Restaurant = () => {
                         lineHeight: 16,
                         fontSize: 12,
                         fontWeight: "400",
+                        color: Color.Gray.gray50
                       }}
                     >
                       You haven’t got any perks yet.{"\n"} Every 10th check-in,

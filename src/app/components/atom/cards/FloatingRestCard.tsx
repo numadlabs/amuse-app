@@ -12,11 +12,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { BlurView } from "expo-blur";
+import { LinearGradient } from "expo-linear-gradient";
 
 const { width } = Dimensions.get("window");
 
 const CARD_HEIGHT = 150;
-const CARD_WIDTH = width * 0.80;
+const CARD_WIDTH = width * 0.8;
 
 // Define the props for the FloatingRestaurantCard component
 interface FloatingRestaurantCardProps {
@@ -52,64 +54,108 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
 
   // console.log(isOpen, opensAt, closesAt);
   return (
-    <View style={styles.card}>
-      <Image
-        source={{uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker.logo}` as string}}
-        style={styles.cardImage}
-        // resizeMode="cover"
-      />
-      <View style={styles.textContent}>
-        <View>
-          <Text numberOfLines={1} style={styles.cardtitle}>
-            {marker.name}
-          </Text>
-          <Text numberOfLines={1} style={styles.cardDescription}>
-            {marker.category}
-          </Text>
-        </View>
+    <>
+      <LinearGradient
+        colors={[Color.Brand.card.start, Color.Brand.card.end]}
+        style={styles.card}
+      >
+        <BlurView
+          intensity={24}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            padding: 12,
+            gap: 16,
+          }}
+        >
+          <Image
+            source={{
+              uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker.logo}` as string,
+            }}
+            style={styles.cardImage}
+            // resizeMode="cover"
+          />
+          <View style={styles.textContent}>
+            <View>
+              <Text numberOfLines={1} style={styles.cardtitle}>
+                {marker.name}
+              </Text>
+              <Text numberOfLines={1} style={styles.cardDescription}>
+                {marker.category}
+              </Text>
+            </View>
 
-        <View style={styles.button}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View
-              style={[
-                styles.dot,
-                { backgroundColor: isOpen ? "green" : "red" },
-              ]}
-            />
-            <Text style={{ color: isOpen ? "green" : "red" }}>
-              {isOpen ? "Open" : "Closed"}
-            </Text>
-          </View>
-          <View style={{ width: 1, height: 14, backgroundColor: Color.Gray.gray50 }} />
-            {marker.isOwned ? (
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                <Reserve color={Color.Gray.gray100} size={16} />
-                <Text style={{ color: Color.Gray.gray50 }}>{marker.visitCount} Check-ins</Text>
+            <View style={styles.button}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View
+                  style={[
+                    styles.dot,
+                    { backgroundColor: isOpen ? "green" : "red" },
+                  ]}
+                />
+                <Text style={{ color: isOpen ? "green" : "red" }}>
+                  {isOpen ? "Open" : "Closed"}
+                </Text>
               </View>
-            ) : (
-              <TouchableOpacity onPress={onPress}>
-                <View style={{ flexDirection: 'row', position: 'relative', backgroundColor: Color.Gray.gray600, paddingVertical: 8, paddingHorizontal: 16, borderRadius: 48, marginLeft: 49, alignContent: 'center', alignItems: 'center' }}>
-                  <Wallet size={16} color={Color.Gray.gray50} />
-                  <Text style={{ color: Color.Gray.gray50, fontWeight: 'bold', fontSize: 11, lineHeight: 16 }}>
-                    {isClaimLoading
-                      ? "Loading"
-                      : marker.isOwned
-                        ? "Owned"
-                        : " Add"}
+              <View
+                style={{
+                  width: 1,
+                  height: 14,
+                  backgroundColor: Color.Gray.gray50,
+                }}
+              />
+              {marker.isOwned ? (
+                <View
+                  style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+                >
+                  <Reserve color={Color.Gray.gray100} size={16} />
+                  <Text style={{ color: Color.Gray.gray50 }}>
+                    {marker.visitCount} Check-ins
                   </Text>
                 </View>
-              </TouchableOpacity>
-            )}
+              ) : (
+                <TouchableOpacity onPress={onPress}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      position: "relative",
+                      backgroundColor: Color.Gray.gray600,
+                      paddingVertical: 8,
+                      paddingHorizontal: 16,
+                      borderRadius: 48,
+                      marginLeft: 49,
+                      alignContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Wallet size={16} color={Color.Gray.gray50} />
+                    <Text
+                      style={{
+                        color: Color.Gray.gray50,
+                        fontWeight: "bold",
+                        fontSize: 11,
+                        lineHeight: 16,
+                      }}
+                    >
+                      {isClaimLoading
+                        ? "Loading"
+                        : marker.isOwned
+                        ? "Owned"
+                        : " Add"}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
-        </View>
-      </View>
-
+        </BlurView>
+      </LinearGradient>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Color.Gray.gray500,
     justifyContent: "space-between",
     marginHorizontal: 10,
     width: CARD_WIDTH,
@@ -118,18 +164,16 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 16,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 12,
-    gap: 16,
+    borderWidth: 1,
+    backgroundColor: "transparent",
+    borderColor: Color.Gray.gray400,
   },
-
   cardImage: {
     width: 92,
     height: 92,
     alignSelf: "center",
     resizeMode: "cover",
-    borderRadius: 8
+    borderRadius: 8,
   },
 
   textContent: {

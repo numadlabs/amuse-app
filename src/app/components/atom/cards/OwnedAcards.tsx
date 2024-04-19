@@ -69,8 +69,8 @@ const OwnedAcards: React.FC<OwnedAcardsProp> = ({ marker, onPress }) => {
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
               >
-                <Reserve color={Color.Gray.gray600} size={16} />
-                <Text>{marker.visitCount} Check-ins</Text>
+                <Reserve color={Color.Gray.gray100} size={16} />
+                <Text style={{ color: Color.Gray.gray50 }}>{marker.visitCount} Check-ins</Text>
               </View>
             </View>
           </View>
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     flexDirection: "row",
     padding: 12,
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray500,
     borderRadius: 16,
     alignItems: "center",
     gap: 16,
@@ -108,11 +108,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "bold",
-    color: Color.Gray.gray600,
+    color: Color.base.White,
   },
   category: {
     fontSize: 12,
-    color: Color.Gray.gray400,
+    color: Color.Gray.gray100,
   },
   dot: {
     width: 10,

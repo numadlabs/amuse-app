@@ -44,7 +44,7 @@ const MyAcards = () => {
     });
   };
   return (
-    <SafeAreaView style={{ backgroundColor: Color.base.White }}>
+    <SafeAreaView style={{ backgroundColor: Color.Gray.gray600 }}>
       <Header title="My memberships" />
       {/* <View style={styles.searchBarContainer}>
         <View style={styles.searchBar}>

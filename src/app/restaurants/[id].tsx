@@ -90,7 +90,7 @@ const Restaurant = () => {
   };
 
   return (
-    <View style={{ backgroundColor: Color.base.White, flex: 1 }}>
+    <View style={{ backgroundColor: Color.Gray.gray500, flex: 1 }}>
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity
           style={[styles.button, styles.closeButton]}
@@ -136,10 +136,10 @@ const Restaurant = () => {
         <View style={styles.attrContainer}>
           <View style={{ gap: 32 }}>
             <View style={{ gap: 16 }}>
-              <Text style={{ fontWeight: "bold", fontSize: 16 }}>Rewards</Text>
+              <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>Rewards</Text>
               <View>
                 <View style={styles.attribute}>
-                  <Tick size={8} color={Color.Gray.gray600} />
+                  <Tick size={8} color={Color.Gray.gray100} />
                   <Text style={styles.attributeText}>
                     {restaurantsData?.benefits}
                   </Text>
@@ -147,12 +147,12 @@ const Restaurant = () => {
               </View>
             </View>
             <View style={{ gap: 16 }}>
-              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+              <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>
                 Locations
               </Text>
               <View>
                 <View style={styles.attribute}>
-                  <Location color={Color.Gray.gray600} />
+                  <Location color={Color.Gray.gray100} />
                   <Text style={styles.attributeLocText}>
                     {restaurantsData?.location}
                   </Text>
@@ -160,10 +160,10 @@ const Restaurant = () => {
               </View>
             </View>
 
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+            <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>
               How it works
             </Text>
-            <Text style={{ marginBottom: 100 }}>
+            <Text style={{ marginBottom: 100, color: Color.Gray.gray50 }}>
               Open your app to the homepage, scan the QR code from your waiter
               or hostess, and earn rewards for checking in. Activate power-ups
               for extra rewards.
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     padding: 12,
     gap: 12,
     borderRadius: 100,
-    backgroundColor: Color.Gray.gray50,
+    backgroundColor: Color.Gray.gray200,
     flexDirection: "row",
   },
   button1: {
@@ -283,12 +283,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   attributeText: {
-    color: Color.Gray.gray600,
+    color: Color.Gray.gray50,
     fontSize: 16,
     width: "90%",
   },
   attributeLocText: {
-    color: "#007FFF",
+    color: Color.Gray.gray50,
     fontSize: 16,
     width: "90%",
   },
