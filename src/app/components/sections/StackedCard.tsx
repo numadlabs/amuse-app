@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Flash } from "iconsax-react-native";
+import { Flash, SearchNormal } from "iconsax-react-native";
 import Color from "../../constants/Color";
 import { useRouter } from "expo-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -10,6 +10,9 @@ import { RestaurantType } from "@/app/lib/types";
 import APassCard from "../atom/cards/APassCard";
 
 import { userKeys } from "@/app/lib/service/keysHelper";
+import { LinearGradient } from "expo-linear-gradient";
+
+import SearchGradient from "../icons/SearchGradient";
 
 const StackedCard = () => {
   const { currentLocation } = useLocationStore();
@@ -68,20 +71,28 @@ const StackedCard = () => {
   return (
     <>
       {cards?.data?.cards.length === 0 ? (
-        <View style={styles.container1}>
-          <View>
-            <Flash size={48} color={Color.Gray.gray400} />
+        <LinearGradient
+          colors={[Color.Brand.card.start, Color.Brand.card.end]}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 2, y: 1 }}
+          style={{
+           borderRadius:32,
+           marginBottom:120
+          }}
+        >
+          <View style={styles.container1}>
+            <SearchGradient/>
+            <Text style={{ textAlign: "center", color: Color.Gray.gray50 }}>
+              Discover restaurants, add an membership card, and start earning
+              rewards every time you check-in at a participating restaurant!
+            </Text>
+            <TouchableOpacity onPress={() => router.navigate("/SplashScreen")}>
+              <View style={styles.button}>
+                <Text style={styles.buttonText}>Explore</Text>
+              </View>
+            </TouchableOpacity>
           </View>
-          <Text style={{ textAlign: "center" }}>
-            Discover restaurants, add an membership card, and start earning
-            rewards every time you check-in at a participating restaurant!
-          </Text>
-          <TouchableOpacity onPress={() => router.navigate("/Acards")}>
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>Explore</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+        </LinearGradient>
       ) : (
         <View style={{ height: 400, overflow: "hidden" }}>
           {cards?.data?.cards &&
@@ -112,11 +123,9 @@ const styles = StyleSheet.create({
     maxHeight: 600,
   },
   container1: {
-    backgroundColor: Color.Gray.gray50,
-    height: 380,
+    height: 232,
     paddingHorizontal: 16,
-    borderTopRightRadius: 32,
-    borderTopLeftRadius: 32,
+    borderRadius: 32,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",

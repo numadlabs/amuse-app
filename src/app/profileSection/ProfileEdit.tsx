@@ -1,4 +1,4 @@
-import { Cake, Camera, Location, Sms, User } from "iconsax-react-native";
+import { Cake, Camera, Location, Sms, User, UserEdit } from "iconsax-react-native";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import Header from "../components/layout/Header";
 import Color from "../constants/Color";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserById } from "../lib/service/queryHelper";
 import { useAuth } from "../context/AuthContext";
 import { updateUserInfo } from "../lib/service/mutationHelper";
@@ -20,6 +20,9 @@ import Button from "../components/ui/Button";
 import Toast from "react-native-toast-message";
 import { router } from "expo-router";
 import { userKeys } from "../lib/service/keysHelper";
+import ProgressBar from "../components/sections/ProgressBar";
+import { width } from "../lib/utils";
+import { LinearGradient } from "expo-linear-gradient";
 
 const ProfileEdit = () => {
   const { authState } = useAuth();
@@ -35,7 +38,7 @@ const ProfileEdit = () => {
   const [location, setLocation] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [dataChanged, setDataChanged] = useState(false);
-
+  const [progress, setProgress] = useState(0);
   const showToast = () => {
     setTimeout(function () {
       Toast.show({
@@ -78,7 +81,7 @@ const ProfileEdit = () => {
       setDateOfBirth(selectedDate.toISOString());
     }
   };
-
+  const queryClient = useQueryClient()
   const triggerUpdateUser = async () => {
     setLoading(true);
     const userData = { nickname, email, location, dateOfBirth };
@@ -88,68 +91,134 @@ const ProfileEdit = () => {
       setLoading(false);
       setDataChanged(false);
       showToast();
-      router.back();
+      queryClient.invalidateQueries({queryKey: userKeys.info})
+      router.navigate('/Success')
+
     } catch (error) {
       console.log(error);
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+
+    const totalFields = 4;
+    const filledFields = [nickname, email, location, dateOfBirth].filter(
+      field => field !== ""
+    ).length;
+    const newProgress = filledFields / totalFields;
+    setProgress(newProgress);
+  }, [nickname, email, location, dateOfBirth]);
+
+
   return (
     <>
       <Header title="Account" />
       <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1, paddingHorizontal: 16 }}>
           <View style={styles.body}>
-            <View style={styles.container}>
-              <View style={styles.input}>
-                <User color={Color.Gray.gray50} />
-                <TextInput
-                  placeholder="Nickname"
-                  placeholderTextColor={Color.Gray.gray200}
-                  value={nickname}
-                  onChangeText={setNickname}
-                  style={{ fontSize: 20, color: Color.base.White }}
-                />
+            <LinearGradient
+              style={{
+                paddingBottom: 16,
+                paddingTop: 24,
+                paddingHorizontal: 16,
+                borderRadius: 24
+              }}
+              colors={[Color.Brand.card.start, Color.Brand.card.end]}
+              start={{ x: 1, y: 0 }}
+              end={{ x: 1, y: 1 }}>
+              <View style={styles.container}>
+                <View style={styles.profileContainer}>
+                  <View style={styles.profilePic}>
+                    <User size={48} color={Color.Gray.gray50} />
+                  </View>
+                  <View style={{ position: 'absolute', bottom: 20, right:width/3.5, backgroundColor: Color.Gray.gray400, padding: 8, borderRadius: 48 }}>
+                    <Camera size={16} color={Color.Gray.gray50} />
+                  </View>
+
+                </View>
+                <View style={{ gap: 8 }}>
+                  <Text style={{ color: Color.base.White, fontSize: 14, lineHeight: 18, fontWeight: '600' }}>
+                    Nickname
+                  </Text>
+                  <View style={styles.input}>
+                    <User color={Color.Gray.gray50} />
+                    <TextInput
+                      placeholder="Nickname"
+                      placeholderTextColor={Color.Gray.gray200}
+                      value={nickname}
+                      onChangeText={setNickname}
+                      style={{ fontSize: 20, color: Color.base.White }}
+                    />
+                  </View>
+                </View>
+                <View style={{ gap: 8 }}>
+                  <Text style={{ color: Color.base.White, fontSize: 14, lineHeight: 18, fontWeight: '600' }}>
+                    Email
+                  </Text>
+                  <View style={styles.input}>
+                    <Sms color={Color.Gray.gray50} />
+                    <TextInput
+                      placeholderTextColor={Color.Gray.gray100}
+                      placeholder="Email"
+                      value={email}
+                      onChangeText={setEmail}
+                      style={{ fontSize: 20, color: Color.base.White }}
+                    />
+                  </View>
+                </View>
+                <View style={{ gap: 8 }}>
+                  <Text style={{ color: Color.base.White, fontSize: 14, lineHeight: 18, fontWeight: '600' }}>
+                    Area
+                  </Text>
+                  <View style={styles.input}>
+                    <Location color={Color.Gray.gray50} />
+                    <TextInput
+                      placeholderTextColor={Color.Gray.gray200}
+                      placeholder="Location"
+                      value={location}
+                      onChangeText={setLocation}
+                      style={{ fontSize: 20, color: Color.base.White }}
+                    />
+                  </View>
+                </View>
+                <View style={{ gap: 8 }}>
+                  <Text style={{ color: Color.base.White, fontSize: 14, lineHeight: 18, fontWeight: '600' }}>
+                    Birthday
+                  </Text>
+                  <View style={styles.input}>
+                    <Cake color={Color.Gray.gray50} />
+                    <DateTimePicker
+                      value={dateOfBirth ? new Date(dateOfBirth) : new Date()}
+                      mode="date"
+                      display="default"
+                      onChange={onDateChange}
+                      maximumDate={new Date(Date.now())}
+                      style={{ backgroundColor: Color.Gray.gray600 }}
+                    />
+                  </View>
+                </View>
               </View>
-              <View style={styles.input}>
-                <Sms color={Color.Gray.gray50} />
-                <TextInput
-                  placeholderTextColor={Color.Gray.gray100}
-                  placeholder="Email"
-                  value={email}
-                  onChangeText={setEmail}
-                  style={{ fontSize: 20, color: Color.base.White }}
-                />
+              <View style={{ gap: 8 }}>
+                <Text style={{ fontSize: 14, lineHeight: 18, fontWeight: '600', color: Color.base.White }}>
+                  For more rewards
+                </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                  <ProgressBar progress={progress} width={'85%'} height={8} />
+                  <Text style={{ color: Color.base.White, fontSize: 12, lineHeight: 16, fontWeight: '700' }}>{`${progress * 100}%`}</Text>
+                </View>
+
               </View>
-              <View style={styles.input}>
-                <Location color={Color.Gray.gray50} />
-                <TextInput
-                  placeholderTextColor={Color.Gray.gray200}
-                  placeholder="Location"
-                  value={location}
-                  onChangeText={setLocation}
-                  style={{ fontSize: 20, color: Color.base.White }}
-                />
-              </View>
-              <View style={styles.input}>
-                <Cake color={Color.Gray.gray50} />
-                <DateTimePicker
-                  value={dateOfBirth ? new Date(dateOfBirth) : new Date()}
-                  mode="date"
-                  display="default"
-                  onChange={onDateChange}
-                  maximumDate={new Date(Date.now())}
-                  style={{ backgroundColor: Color.Gray.gray600 }}
-                />
-              </View>
-            </View>
+            </LinearGradient>
           </View>
+
+
+
         </ScrollView>
         <View style={{ paddingHorizontal: 16, marginBottom: 30 }}>
-          {dataChanged && (
+          {dataChanged ? (
             <Button
-              variant="tertiary"
+              variant="primary"
               textStyle="primary"
               size="default"
               onPress={triggerUpdateUser}
@@ -160,7 +229,23 @@ const ProfileEdit = () => {
                 <Text
                   style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
                 >
-                  Save
+                  Save changes
+                </Text>
+              )}
+            </Button>
+          ) : (
+            <Button
+              variant="disabled"
+              textStyle="disabled"
+              size="default"
+            >
+              {loading ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Text
+                  style={{ fontSize: 16, fontWeight: "bold" }}
+                >
+                  Save changes
                 </Text>
               )}
             </Button>
@@ -177,7 +262,11 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
-    paddingHorizontal: 16,
+    overflow: 'hidden',
+    borderColor: Color.Gray.gray300,
+    borderWidth: 1,
+
+    borderRadius: 24
   },
   container: {
     width: "100%",
@@ -189,9 +278,9 @@ const styles = StyleSheet.create({
     height: 96,
     padding: 10,
     borderRadius: 200,
-    backgroundColor: Color.Gray.gray50,
+    backgroundColor: Color.Gray.gray300,
     position: "relative",
-    marginBottom: 32,
+    marginBottom: 24,
   },
   camera: {
     position: "absolute",

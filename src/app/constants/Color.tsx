@@ -12,6 +12,9 @@ export default {
     gray500: '#242E35',
     gray600: '#1B2328',
   },
+  Splash:{
+    gray: 'rgba(36, 46, 53, 0.6)'
+  },
   Brand:{
     main: {
       start: '#FDAD32',

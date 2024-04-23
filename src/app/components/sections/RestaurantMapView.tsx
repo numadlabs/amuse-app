@@ -1,5 +1,5 @@
 import { useAuth } from "@/app/context/AuthContext";
-import { restaurantKeys } from "@/app/lib/service/keysHelper";
+import { restaurantKeys, userKeys } from "@/app/lib/service/keysHelper";
 import { getAcard } from "@/app/lib/service/mutationHelper";
 import { getRestaurants } from "@/app/lib/service/queryHelper";
 import { RestaurantType } from "@/app/lib/types";
@@ -452,6 +452,7 @@ export default function RestaurantMapView() {
       if (data.data.success) {
         queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
         setIsClaimLoading(false);
+        queryClient.invalidateQueries({queryKey: userKeys.cards})
         showToast();
       }
     }

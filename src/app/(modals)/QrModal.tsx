@@ -128,7 +128,7 @@ const QrModal = () => {
 
       setBTCAmount(data.data?.data?.increment);
       queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
-
+      queryClient.invalidateQueries({ queryKey: userKeys.cards });
       queryClient.invalidateQueries({ queryKey: userKeys.info });
 
       if (visitCount % SERVER_SETTING.PERK_FREQUENCY === 0) {

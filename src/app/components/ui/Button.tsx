@@ -6,12 +6,13 @@ import { BlurView } from "expo-blur";
 
 const buttonVariants = {
   variant: {
-    primary: { 
-      zIndex: 0 
+    primary: {
+      zIndex: 0
     },
     secondary: { backgroundColor: "white" },
     tertiary: { backgroundColor: "#2D3A42" },
     text: { backgroundColor: "transparent" },
+    disabled: { backgroundColor: Color.Gray.gray400 }
   },
   size: {
     default: { paddingVertical: 12, paddingHorizontal: 24, width: "100%" },
@@ -24,6 +25,7 @@ const buttonVariants = {
 const textStyles = {
   primary: { fontSize: 16, fontWeight: "bold", color: "white" },
   secondary: { fontSize: 16, fontWeight: "bold", color: "black" },
+  disabled: { fontSize: 16, fontWeight: "bold", color: Color.Gray.gray200 },
   tertiary: { fontSize: 18, color: "white" },
   text: { fontSize: 16, fontWeight: "bold", color: "black" },
 };
@@ -49,15 +51,15 @@ const Button = React.forwardRef<TouchableOpacity, ButtonProps>(
     // Render linear gradient for primary variant
     const renderGradient = variant === "primary" && (
       <LinearGradient
-    colors={[Color.Brand.main.start, Color.Brand.main.end]}
-    start={{ x: 0, y: 0 }}
-    end={{ x: 1, y: 0 }}
-    style={styles.gradient}
-  >
-    <View style={[styles.blurContainer, { borderRadius: 48 }]}>
-      <BlurView style={styles.blurView} />
-    </View>
-  </LinearGradient>
+        colors={[Color.Brand.secondary.start, Color.Brand.secondary.end]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={styles.gradient}
+      >
+        <View style={[styles.blurContainer, { borderRadius: 48 }]}>
+          <BlurView style={styles.blurView} />
+        </View>
+      </LinearGradient>
     );
 
     return (
@@ -94,7 +96,7 @@ const styles = StyleSheet.create({
   gradient: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: 48,
-    padding:1
+    padding: 1
   },
   blurView: {
     width: "100%",
@@ -104,7 +106,7 @@ const styles = StyleSheet.create({
   blurContainer: {
     flex: 1,
     borderRadius: 48,
-    overflow: 'hidden', // Ensure children don't overflow the borderRadius
+    overflow: 'hidden', 
   },
 });
 

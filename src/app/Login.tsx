@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import { ActivityIndicator, Image, Pressable } from "react-native";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Keyboard,
   Platform,
@@ -15,9 +15,7 @@ import {
 import Divider from "./components/atom/Divider";
 import Button from "./components/ui/Button";
 import { useAuth } from "./context/AuthContext";
-import { baseUrl } from "./lib/axios";
 import Color from "./constants/Color";
-import PrefixCard from "./components/atom/cards/PrefixCard";
 import Animated, {
   FadeIn,
   FadeOut,
@@ -34,38 +32,7 @@ import { ArrowDown2 } from "iconsax-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 function Login() {
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [prefix, setPrefix] = useState<string>("");
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [phonePlaceholder, setPhonePlaceholder] =
-    useState<string>("Phone number");
-  const [passwordPlaceholder, setPasswordPlaceholder] =
-    useState<string>("Password");
-  const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { onLogin } = useAuth();
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-  const handleLogin = async () => {
-    try {
-      setLoading(true);
-      const response = await onLogin(prefix, phoneNumber, password);
-      if (response.success) {
-        router.push("/(tabs)");
-      } else {
-        console.log("Login failed:", response.data);
-        setError(
-          "Invalid credentials. Please check your phone number and password and try again."
-        );
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
-      setError("Login Error. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  };
+
 
   const data = [
     {
@@ -105,6 +72,42 @@ function Login() {
       prefix: "81",
     },
   ];
+
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [prefix, setPrefix] = useState<string>(data[0].prefix);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [phonePlaceholder, setPhonePlaceholder] =
+    useState<string>("Phone number");
+  const [passwordPlaceholder, setPasswordPlaceholder] =
+    useState<string>("Password");
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { onLogin } = useAuth();
+  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
+      const response = await onLogin(prefix, phoneNumber, password);
+      if (response.success) {
+        router.push("/(tabs)");
+      
+      } else {
+        console.log("Login failed:", response.data);
+        setError(
+          "Phone number and/or password do not match our records"
+        );
+        console.log(prefix, phoneNumber, password);
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      setError("Login Error. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -147,6 +150,8 @@ function Login() {
     console.log(selectedPrefix);
   };
 
+
+  
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <GestureHandlerRootView
@@ -198,7 +203,7 @@ function Login() {
                 }}
               >
                 <Image
-                  source={require("@/public/images/LogoWhite.png")}
+                  source={require("@/public/images/LogoDark.png")}
                   style={{ width: 96, height: 96 }}
                 />
               </View>
@@ -219,25 +224,13 @@ function Login() {
                 <View
                   style={{
                     flexDirection: "row",
-                    borderColor: Color.Gray.gray300,
+                    borderColor: error ? Color.System.systemError : Color.Gray.gray300,
                     borderWidth: 1,
                     borderRadius: 16,
                     alignItems: "center",
                     paddingHorizontal: 16,
                   }}
                 >
-                  {/* <TextInput
-                  value={prefix}
-                  placeholder='+976'
-                  defaultValue='+'
-                  placeholderTextColor={Color.Gray.gray200}
-                  keyboardType='phone-pad'
-                  onChangeText={setPrefix}
-                  style={{
-                    height: 40,
-                    paddingHorizontal: 10,
-                  }} /> */}
-
                   <AnimatedPressable
                     entering={FadeIn}
                     exiting={FadeOut}
@@ -257,7 +250,7 @@ function Login() {
                           color: Color.Gray.gray50,
                         }}
                       >
-                        +{!prefix ? data[0].prefix : prefix}
+                        +{prefix}
                       </Text>
                       <ArrowDown2 color={Color.Gray.gray50} />
                     </View>
@@ -281,12 +274,18 @@ function Login() {
                     onChangeText={setPhoneNumber}
                   />
                 </View>
+                {error && phoneNumber.length < 7 && 
+                <Text
+                  style={{ color: Color.System.systemError, paddingHorizontal: 16 }}
+                >
+                  {"Please enter valid phone number"}
+                </Text>}
                 <View
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
                     height: 40,
-                    borderColor: Color.Gray.gray300,
+                    borderColor: error ? Color.System.systemError : Color.Gray.gray300,
                     borderWidth: 1,
                     borderRadius: 16,
                     paddingHorizontal: 10,
@@ -317,9 +316,17 @@ function Login() {
                     />
                   </TouchableOpacity>
                 </View>
+                {password.length < 8 && null && 
+                  <Text
+                  style={{ color: Color.System.systemError, paddingHorizontal: 16 }}
+                >
+                  {"Please enter valid password"}
+                </Text>
+                }
+                
                 {error && (
                   <Text
-                    style={{ color: "red", marginTop: 10, textAlign: "center" }}
+                    style={{ color: Color.System.systemError, paddingHorizontal: 16 }}
                   >
                     {error}
                   </Text>
@@ -450,7 +457,8 @@ function Login() {
             alignContent: "center",
             alignItems: "center",
             justifyContent: "center",
-            marginBottom: 48,
+            marginBottom: 24,
+            marginTop:24,
             gap: 0,
             flexDirection: "column",
           }}

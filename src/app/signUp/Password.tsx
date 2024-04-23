@@ -79,15 +79,21 @@ const Password = () => {
     setPasswordPlaceholder("Password");
   };
   const handleNavigation = () => {
-    console.log(phoneNumber, prefix, password);
-    router.push({
-      pathname: "/signUp/NickName",
-      params: {
-        phoneNumber: phoneNumber,
-        prefix: prefix,
-        password: password,
-      },
-    });
+    if (isPasswordValid && doPasswordsMatch) {
+      console.log(phoneNumber, prefix, password);
+      router.push({
+        pathname: "/signUp/NickName",
+        params: {
+          phoneNumber: phoneNumber,
+          prefix: prefix,
+          password: password,
+        },
+      });
+    } else {
+      // Optionally, you can provide feedback to the user that the password is invalid.
+      // For example, display an error message.
+      console.log("Password does not meet the validation rules or passwords do not match.");
+    }
   };
 
   return (

@@ -31,9 +31,9 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
           style={[styles.aCardContainer]}
         >
           <BlurView intensity={24} style={styles.blurContainer}>
-          <View style={{ position: 'absolute',  top: 0, right: -20, width: '50%' }}>
-            <APassStripes />
-          </View>
+            <View style={{ position: 'absolute', top: 0, right: -20, width: '50%' }}>
+              <APassStripes />
+            </View>
             <View style={{ flexDirection: 'row', width: '100%', gap: 12, justifyContent: 'space-between', alignItems: 'center' }}>
               <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center', justifyContent: 'center', alignContent: 'center' }}>
                 <Image
@@ -62,20 +62,20 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
 
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20, rowGap: 12 }}>
-              <Image style={{ width: 164, height: 164, borderRadius: 12 }} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${image}` }} />
-              <View style={{ borderWidth: 1, borderColor: Color.Gray.gray400, borderRadius: 12, overflow: 'hidden' }}>
+              <Image style={{ minWidth: 164, minHeight: 164, borderRadius: 12 }} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${image}` }} />
+              <View style={{ borderWidth: 1, backgroundColor: Color.Gray.gray600, borderColor: Color.Gray.gray400, borderRadius: 12, overflow: 'hidden' }}>
                 <LinearGradient
                   colors={[Color.Brand.main.start, Color.Brand.main.end]}
-                  style={{ borderRadius: 12, padding: 1 }}>
+                  style={{ borderRadius: 0, padding: 1 }}>
                   <BlurView>
                     <LinearGradient
                       colors={[Color.Brand.card.start, Color.Brand.card.end]}
                       start={{ x: 1, y: 0 }}
                       end={{ x: 2, y: 1 }}
-                      style={{ borderRadius: 12,zIndex:2 }}>
+                      style={{ borderTopStartRadius: 12, borderTopEndRadius: 12, zIndex: 2 }}>
                       <View style={{ padding: 33, justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontSize: 32, lineHeight: 40, fontWeight: '700', color: Color.base.White }}>
-                          0{visitCount}
+                          {visitCount < 10 ? `0${visitCount}` : visitCount}
                         </Text>
                         <Text style={{ fontSize: 12, lineHeight: 16, fontWeight: '600', color: Color.base.White }}>
                           Check-ins
@@ -83,7 +83,6 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
                       </View>
                     </LinearGradient>
                   </BlurView>
-
                 </LinearGradient>
                 <View style={{ justifyContent: 'center', flexDirection: 'row', gap: 6, alignContent: 'center', alignItems: 'center', marginTop: 8, marginBottom: 12 }}>
                   <Text style={{ fontWeight: '700', fontSize: 14, lineHeight: 18, color: Color.base.White }}>{10 - visitCount}</Text>
@@ -91,9 +90,7 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
                     Until next perk
                   </Text>
                 </View>
-
               </View>
-
             </View>
           </BlurView>
         </LinearGradient>
@@ -126,7 +123,7 @@ const styles = StyleSheet.create({
     marginBottom: "-80%",
     borderColor: Color.Gray.gray400,
     overflow: "hidden",
-    height: scaleHeight(540),
+    height: 264,
   },
   aCardContainer1: {
     backgroundColor: Color.Gray.gray50,
