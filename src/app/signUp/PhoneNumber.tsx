@@ -38,45 +38,46 @@ const PhoneNumber = () => {
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
   const { onRegister } = useAuth();
 
-  const data = [
-    {
-      name: "UAE",
-      prefix: "971",
-    },
-    {
-      name: "Mongolia",
-      prefix: "976",
-    },
-    {
-      name: "United States",
-      prefix: "1",
-    },
-    {
-      name: "United Kingdom",
-      prefix: "44",
-    },
-    {
-      name: "Canada",
-      prefix: "1",
-    },
-    {
-      name: "Australia",
-      prefix: "61",
-    },
-    {
-      name: "Germany",
-      prefix: "49",
-    },
-    {
-      name: "France",
-      prefix: "33",
-    },
-    {
-      name: "Japan",
-      prefix: "81",
-    },
-  ];
 
+const data = [
+  {
+    name: "UAE",
+    prefix: "971",
+  },
+  {
+    name: "Mongolia",
+    prefix: "976",
+  },
+  {
+    name: "United States",
+    prefix: "1",
+  },
+  {
+    name: "United Kingdom",
+    prefix: "44",
+  },
+  {
+    name: "Canada",
+    prefix: "1",
+  },
+  {
+    name: "Australia",
+    prefix: "61",
+  },
+  {
+    name: "Germany",
+    prefix: "49",
+  },
+  {
+    name: "France",
+    prefix: "33",
+  },
+  {
+    name: "Japan",
+    prefix: "81",
+  },
+];
+  
   const offset = useSharedValue(300);
   const togglePrefix = () => {
     setIsOpen(!isOpen);
@@ -118,6 +119,8 @@ const PhoneNumber = () => {
         phoneNumber: phoneNumber,
       },
     });
+
+    console.log(prefix, phoneNumber)
   };
   return (
     <>
@@ -175,7 +178,7 @@ const PhoneNumber = () => {
                         gap: 8,
                       }}
                     >
-                      <Text style={{ color: Color.Gray.gray50 }}>+{!prefix ? data[0].prefix : prefix}</Text>
+                      <Text style={{ color: Color.Gray.gray50 }}>+{prefix}</Text>
                       <ArrowDown2 color={Color.Gray.gray50} />
                     </View>
                   </AnimatedPressable>

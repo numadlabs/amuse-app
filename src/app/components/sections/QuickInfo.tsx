@@ -1,50 +1,60 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Color from "../../constants/Color";
-import * as Progress from "react-native-progress";
 import { router } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
 import Button from "../ui/Button";
+import ProgressBar from "./ProgressBar";
+import { width } from "@/app/lib/utils";
+import { LinearGradient } from "expo-linear-gradient";
+const QuickInfo = ({ user }) => {
 
-const QuickInfo = () => {
-  return (
+  const [progress, setProgress] = useState(0);
+
+  console.log(user)
+
+  useEffect(() => {
+
+    const totalFields = 4;
+    const filledFields = [user?.nickname, user?.email, user?.location, user?.dateOfBirth].filter(
+      field => field !== null
+    ).length;
+    const newProgress = filledFields / totalFields;
+    setProgress(newProgress);
+  }, [user.nickname, user.email, user.location, user.dateOfBirth]);
+
+
+return (
     <View style={styles.container}>
       <LinearGradient
-          colors={[Color.Brand.card.start, Color.Brand.card.end]}
-          style={{ 
-            paddingHorizontal: 16,
-            paddingBottom: 16,
-            paddingTop: 24, 
-            borderRadius: 16 }}
-        >
-      <View style={styles.container1}>
-        <View style={styles.textContainer}>
-          <Text style={styles.topTitle}>Boost your rewards</Text>
-          <Text style={styles.bottomTitle}>More data, more Bitcoin.</Text>
+        colors={[Color.Brand.card.start, Color.Brand.card.end]}
+        style={{
+          paddingHorizontal: 16,
+          paddingBottom: 16,
+          paddingTop: 24,
+          borderRadius: 16
+        }}
+      >
+        <View style={styles.container1}>
+          <View style={styles.textContainer}>
+            <Text style={styles.topTitle}>Boost your rewards</Text>
+            <Text style={styles.bottomTitle}>More data, more Bitcoin.</Text>
+          </View>
+          <View>
+            <Button
+              variant="primary"
+              onPress={() => router.push("(boost)/Email")}>
+              <Text style={{ color: Color.base.White }}>
+                Start
+              </Text>
+            </Button>
+          </View>
         </View>
-        <View>
-          <Button
-          variant="primary"
-          onPress={() => router.push("(boost)/Email")}>
-            <Text style={{ color: Color.base.White }}>
-            Start
-            </Text>
-          </Button>
+        <View style={styles.container2}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+            <ProgressBar progress={progress} width={'85%'} height={8} />
+            <Text style={{ color: Color.base.White, fontSize: 12, lineHeight: 16, fontWeight: '700' }}>{`${progress * 100}%`}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.container2}> 
-        <Progress.Bar
-          color={Color.Gray.gray50}
-          progress={0.25}
-          height={8}
-          borderRadius={32}
-          width={281}
-          useNativeDriver
-          unfilledColor={Color.Gray.gray400}
-          borderColor={Color.Gray.gray400}
-        />
-        <Text style={styles.progressPerc}>25%</Text>
-      </View>
       </LinearGradient>
     </View>
   );
@@ -66,6 +76,7 @@ const styles = StyleSheet.create({
   container2: {
     flexDirection: "row",
     justifyContent: "space-between",
+    width:300,
     marginTop: 20,
     alignItems: "center",
   },

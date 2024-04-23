@@ -30,13 +30,16 @@ const Footer = ({ navigation }) => {
           Check-in
         </Text>
       </TouchableOpacity>
-      <LinearGradient
+      <View     style={[styles.container]}>
+
+     
+      {/* <LinearGradient
         colors={[Color.Brand.navbar.start, Color.Brand.navbar.end]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={[styles.container]}
-      >
-        <BlurView intensity={24} style={{ width: '100%', justifyContent: 'space-between', flexDirection: 'row', height: '100%', paddingHorizontal: 44, }}>
+      > */}
+        <BlurView intensity={0} style={{ width: '100%', justifyContent: 'space-between', flexDirection: 'row', height: '100%', paddingHorizontal: 44, }}>
           <TouchableOpacity
             style={styles.button}
             onPress={() => handleTabPress({ name: "/" })}
@@ -63,7 +66,8 @@ const Footer = ({ navigation }) => {
             <Text style={{ fontSize: 13, fontWeight: "bold", color: Color.Gray.gray50 }}>Discover</Text>
           </TouchableOpacity>
         </BlurView>
-      </LinearGradient>
+        </View>
+      {/* </LinearGradient> */}
     </>
   );
 };
@@ -78,6 +82,7 @@ const styles = StyleSheet.create({
     zIndex: 10
   },
   container: {
+    backgroundColor: Color.Gray.gray600,
     borderWidth: 1,
     borderColor: Color.Gray.gray400,
     width: "100%",

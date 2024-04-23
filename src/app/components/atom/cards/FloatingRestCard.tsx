@@ -5,6 +5,7 @@ import { Reserve, Wallet } from "iconsax-react-native";
 import moment from "moment";
 import React from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
   StyleSheet,
@@ -128,7 +129,7 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                       alignItems: "center",
                     }}
                   >
-                    <Wallet size={16} color={Color.Gray.gray50} />
+                   
                     <Text
                       style={{
                         color: Color.Gray.gray50,
@@ -138,10 +139,10 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                       }}
                     >
                       {isClaimLoading
-                        ? "Loading"
+                        ? (<ActivityIndicator/>)
                         : marker.isOwned
                         ? "Owned"
-                        : " Add"}
+                        : "Add"}
                     </Text>
                   </View>
                 </TouchableOpacity>

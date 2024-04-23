@@ -1,5 +1,46 @@
 import { create } from "zustand";
 
+
+const data = [
+  {
+    name: "UAE",
+    prefix: "971",
+  },
+  {
+    name: "Mongolia",
+    prefix: "976",
+  },
+  {
+    name: "United States",
+    prefix: "1",
+  },
+  {
+    name: "United Kingdom",
+    prefix: "44",
+  },
+  {
+    name: "Canada",
+    prefix: "1",
+  },
+  {
+    name: "Australia",
+    prefix: "61",
+  },
+  {
+    name: "Germany",
+    prefix: "49",
+  },
+  {
+    name: "France",
+    prefix: "33",
+  },
+  {
+    name: "Japan",
+    prefix: "81",
+  },
+];
+
+
 export interface SignUpStore {
   prefix: string;
   phoneNumber: string;
@@ -12,7 +53,7 @@ export interface SignUpStore {
 }
 
 export const useSignUpStore = create<SignUpStore>((set) => ({
-  prefix: "",
+  prefix: data[0].prefix,
   phoneNumber: "",
   password: "",
   nickname: "",

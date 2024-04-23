@@ -1,6 +1,4 @@
 import {
-  Modal,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -8,31 +6,16 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-
 import Color from "../constants/Color";
 import Balance from "../components/sections/Balance";
 import QuickInfo from "../components/sections/QuickInfo";
 import StackedCard from "../components/sections/StackedCard";
 import { useAuth } from "../context/AuthContext";
-import { useNavigation, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { getUserById, getUserCard } from "../lib/service/queryHelper";
-
-import OwnedAcards from "../components/atom/cards/OwnedAcards";
 import useLocationStore from "../lib/store/userLocation";
 import { RestaurantType } from "../lib/types";
-import {
-  Directions,
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from "react-native-gesture-handler";
-import StackedCardModal from "../components/modals/StackedCardModal";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-} from "react-native-reanimated";
-import { height } from "../lib/utils";
 import { GetRestaurantsResponseType } from "../lib/types/apiResponseType";
 import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
 import { getRestaurants } from "../lib/service/queryHelper";
@@ -40,7 +23,6 @@ import ResListCard from "../components/atom/cards/RestListCard";
 
 const Page = () => {
   const router = useRouter();
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [refreshPage, setRefreshPage] = useState<boolean>(false);
   const { authState } = useAuth();
 
@@ -52,7 +34,6 @@ const Page = () => {
     },
     enabled: !!authState.userId,
   });
-  console.log("🚀 ~ Page ~ user:", user);
 
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
@@ -76,10 +57,6 @@ const Page = () => {
         longitude: currentLocation.longitude,
       });
     },
-    // onError(error):{
-    //   console.log(error)
-    // }
-
     enabled: !!currentLocation,
   });
 
@@ -119,19 +96,6 @@ const Page = () => {
     }
   };
 
-  const flingUp = Gesture.Fling()
-    .direction(Directions.UP)
-    .onStart(() => {
-      console.log("fling up");
-    });
-
-  const flingDown = Gesture.Fling()
-    .direction(Directions.DOWN)
-    .onStart(() => {
-      console.log("fling down");
-    });
-
-  const modalTranslateY = useSharedValue(height);
 
   const restaurantsArray = restaurantsData?.data?.restaurants || [];
 
@@ -139,19 +103,16 @@ const Page = () => {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {user && <Balance amount={user.balance} />}
       <View style={{ marginTop: 24, gap: 12 }}>
-        {user?.email && user?.dateOfBirth ? (
-          <Text
-            style={{
-              fontSize: 14,
-              fontWeight: "600",
-              color: Color.Gray.gray100,
-            }}
-          >
-            Featured
-          </Text>
-        ) : (
-          ""
-        )}
+        <Text
+          style={{
+            fontSize: 14,
+            fontWeight: "600",
+            color: Color.Gray.gray100,
+          }}
+        >
+          Featured
+        </Text>
+
         {restaurantsArray?.length > 0 && (
           <View style={{ alignItems: "center" }}>
             <ScrollView
@@ -167,10 +128,10 @@ const Page = () => {
                 />
               </TouchableOpacity >
               {user?.email &&
-              user?.dateOfBirth &&
-              user?.nickname &&
-              user?.location ? <QuickInfo /> : (
-                <QuickInfo />
+                user?.dateOfBirth &&
+                user?.nickname &&
+                user?.location ? "" : (
+                <QuickInfo user={user} />
               )}
               <TouchableOpacity onPress={() => handleNavigation(restaurantsArray[1])}>
                 <ResListCard
@@ -203,14 +164,9 @@ const Page = () => {
       >
         Memberships
       </Text>
-      <GestureHandlerRootView>
-        <GestureDetector gesture={Gesture.Exclusive(flingUp, flingDown)}>
-          <View style={{}}>
-            <StackedCard key={refreshPage.toString()} />
-          </View>
-        </GestureDetector>
-      </GestureHandlerRootView>
-
+      <View style={{}}>
+        <StackedCard key={refreshPage.toString()} />
+      </View>
       {cards?.data?.cards.length === 0 ? (
         ""
       ) : (
