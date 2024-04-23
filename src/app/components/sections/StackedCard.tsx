@@ -8,13 +8,14 @@ import { getUserCard } from "@/app/lib/service/queryHelper";
 import useLocationStore from "@/app/lib/store/userLocation";
 import { RestaurantType } from "@/app/lib/types";
 import APassCard from "../atom/cards/APassCard";
-
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { userKeys } from "@/app/lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
 
 import SearchGradient from "../icons/SearchGradient";
 
 const StackedCard = () => {
+  const cardPositions = useSharedValue(-400);
   const { currentLocation } = useLocationStore();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -31,23 +32,28 @@ const StackedCard = () => {
     enabled: !!currentLocation,
   });
 
+  console.log(cards)
+
   useEffect(() => {
     if (cards && cards.data && cards.data.cards) {
-      const totalCardHeight = cards.data.cards.reduce(
-        (totalHeight, card, index) => {
-          const marginBottom = index !== 0 ? -80 : 0;
-          const cardHeight = 350 + marginBottom;
-          return totalHeight + cardHeight;
-        },
-        0
-      );
-
-      const adjustedTotalHeight = totalCardHeight * (1 - 0.8);
-      setScrollViewHeight(adjustedTotalHeight);
+      cardPositions.value = cards.data.cards.length * 1;
     }
-  }, [cards]);
+  }, [cards, cardPositions]);
 
-  const latestCards = cards?.data?.cards.slice(0, 4);
+  const animatedCardStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: withTiming(cardPositions.value, {
+          duration: 600,
+        }),
+      },
+    ],
+    zIndex: 999,
+    top: cardPositions.value,
+    marginBottom: -190
+  }));
+
+  const latestCards = cards?.data?.cards.slice(0, 5);
 
   const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
@@ -76,12 +82,12 @@ const StackedCard = () => {
           start={{ x: 1, y: 0 }}
           end={{ x: 2, y: 1 }}
           style={{
-           borderRadius:32,
-           marginBottom:120
+            borderRadius: 32,
+            marginBottom: 120
           }}
         >
           <View style={styles.container1}>
-            <SearchGradient/>
+            <SearchGradient />
             <Text style={{ textAlign: "center", color: Color.Gray.gray50 }}>
               Discover restaurants, add an membership card, and start earning
               rewards every time you check-in at a participating restaurant!
@@ -94,9 +100,31 @@ const StackedCard = () => {
           </View>
         </LinearGradient>
       ) : (
-        <View style={{ height: 400, overflow: "hidden" }}>
-          {cards?.data?.cards &&
-            latestCards.map((card, index) => (
+        // <View style={{ flex:1, overflow: "hidden" }}>
+        //   {cards?.data?.cards &&
+        //     latestCards.map((card, index) => (
+        //       <APassCard
+        //         key={index}
+        //         name={card.name}
+        //         image={card.logo}
+        //         onPress={() => handleNavigation(card)}
+        //         category={card.category}
+        //         hasBonus={card.hasBonus}
+        //         visitCount={card.visitCount}
+        //       />
+        //     ))}
+        // </View>
+        <Animated.View style={{ flex: 1, overflow: 'hidden', paddingBottom: 230 }}>
+          {latestCards?.map((card, index) => (
+            <Animated.View
+              key={index}
+              style={[
+                animatedCardStyle,
+                {
+                  zIndex: latestCards.length - index,
+                },
+              ]}
+            >
               <APassCard
                 name={card.name}
                 image={card.logo}
@@ -105,8 +133,9 @@ const StackedCard = () => {
                 hasBonus={card.hasBonus}
                 visitCount={card.visitCount}
               />
-            ))}
-        </View>
+            </Animated.View>
+          ))}
+        </Animated.View>
       )}
     </>
   );

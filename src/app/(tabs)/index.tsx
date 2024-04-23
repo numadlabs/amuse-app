@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
-    paddingHorizontal: 16,
+    paddingHorizontal:16
   },
   modal: {
     position: "absolute",
