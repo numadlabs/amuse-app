@@ -39,7 +39,6 @@ const QrModal = () => {
   const [flashMode, setFlashMode] = useState(false);
   const [powerUp, setPowerUp] = useState("");
   const [btcAmount, setBTCAmount] = useState("");
-  const [encryptedTap, setEncryptedTap] = useState("");
 
   const togglePopup = () => {
     setPopupVisible(!isPopupVisible);
@@ -102,12 +101,8 @@ const QrModal = () => {
       console.log(error);
     },
     onSuccess: (data, variables) => {
-      console.log("🚀 ~ QrModal ~ data:", data);
       try {
         const resp = createRedeemMutation(data.data.data);
-        console.log("Redeem successful:", resp);
-
-        setEncryptedTap(data.data.data);
       } catch (error) {
         console.error("Redeem mutation failed:", error);
       }
@@ -127,7 +122,9 @@ const QrModal = () => {
       }
 
       setBTCAmount(data.data?.data?.increment);
-      queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
+      queryClient.invalidateQueries({
+        queryKey: restaurantKeys.all,
+      });
       queryClient.invalidateQueries({ queryKey: userKeys.cards });
       queryClient.invalidateQueries({ queryKey: userKeys.info });
 
@@ -147,7 +144,6 @@ const QrModal = () => {
         return console.log("no card id");
       }
       const data = await createTapMutation(firstCardId);
-      console.log("Map mutation successful:", data);
     } catch (error) {
       console.log("Map mutation failed:", error);
     }
@@ -311,7 +307,7 @@ const QrModal = () => {
                 router.back();
               }}
             >
-              <Close/>
+              <Close />
             </TouchableOpacity>
           </View>
           {visitCount >= SERVER_SETTING.PERK_FREQUENCY ? (

@@ -20,7 +20,7 @@ import Close from "../components/icons/Close";
 import { useAuth } from "../context/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAcard } from "../lib/service/mutationHelper";
-import { restaurantKeys } from "../lib/service/keysHelper";
+import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
 import Toast from "react-native-toast-message";
 import { GetRestaurantsResponseType } from "../lib/types/apiResponseType";
 import {
@@ -41,11 +41,11 @@ const Restaurant = () => {
   const queryClient = useQueryClient();
 
   const { data: restaurantsData } = useQuery({
-    queryKey: restaurantKeys.all,
+    queryKey: restaurantKeys.detail(id as string),
     queryFn: () => {
       return getRestaurantId(id);
     },
-    enabled: !!currentLocation,
+    enabled: !!currentLocation && !!id,
   });
 
   const showToast = () => {
@@ -71,7 +71,13 @@ const Restaurant = () => {
         cardId: acardId,
       });
       if (data.data.success) {
-        queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
+        queryClient.invalidateQueries({
+          queryKey: [
+            restaurantKeys.detail(id as string),
+            restaurantKeys.all,
+            userKeys.cards,
+          ],
+        });
         setIsClaimLoading(false);
         const owned = data.data.userCard;
         console.log(owned);
@@ -136,7 +142,15 @@ const Restaurant = () => {
         <View style={styles.attrContainer}>
           <View style={{ gap: 32 }}>
             <View style={{ gap: 16 }}>
-              <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>Rewards</Text>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                  color: Color.base.White,
+                }}
+              >
+                Rewards
+              </Text>
               <View>
                 <View style={styles.attribute}>
                   <Tick size={8} color={Color.Gray.gray100} />
@@ -147,7 +161,13 @@ const Restaurant = () => {
               </View>
             </View>
             <View style={{ gap: 16 }}>
-              <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                  color: Color.base.White,
+                }}
+              >
                 Locations
               </Text>
               <View>
@@ -160,7 +180,13 @@ const Restaurant = () => {
               </View>
             </View>
 
-            <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 16,
+                color: Color.base.White,
+              }}
+            >
               How it works
             </Text>
             <Text style={{ marginBottom: 100, color: Color.Gray.gray50 }}>

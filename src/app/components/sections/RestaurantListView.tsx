@@ -1,4 +1,4 @@
-import { restaurantKeys } from "@/app/lib/service/keysHelper";
+import { restaurantKeys, userKeys } from "@/app/lib/service/keysHelper";
 import { getRestaurants } from "@/app/lib/service/queryHelper";
 import { GetRestaurantsResponseType } from "@/app/lib/types/apiResponseType";
 import React, { useState } from "react";
@@ -16,7 +16,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-// const [restaurants, setRestaurants] = useState<RestaurantType[]>([]);
+  // const [restaurants, setRestaurants] = useState<RestaurantType[]>([]);
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const [cardLoadingStates, setCardLoadingStates] = useState<boolean[]>([]);
   const { authState } = useAuth();
@@ -65,6 +65,9 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
         newCardLoadingStates[index] = false;
         setCardLoadingStates(newCardLoadingStates);
         queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
+        queryClient.invalidateQueries({
+          queryKey: userKeys.cards,
+        });
       }
     }
   };

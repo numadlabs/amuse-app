@@ -26,6 +26,7 @@ import useLocationStore from "@/app/lib/store/userLocation";
 import SvgMarker from "../atom/svgMarker";
 import Color from "@/app/constants/Color";
 import Toast from "react-native-toast-message";
+import { mapStyle } from "@/app/constants/serverSettings";
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
@@ -34,220 +35,6 @@ const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
 const mapLatitudeDelta = 0.008;
 const mapLongitudeDelta = 0.008;
-
-const mapStyle = [
-  {
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#1b2328"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#9aa2a7"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#242e35"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.land_parcel",
-    "elementType": "labels",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.locality",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#8190c1"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#d59563"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#263c3f"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#6b9a76"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#38414e"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      {
-        "color": "#212a37"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "labels.icon",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#9ca5b3"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#58646c"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      {
-        "color": "#1f2835"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#6f7fd3"
-      }
-    ]
-  },
-  {
-    "featureType": "road.local",
-    "elementType": "labels",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "transit",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "transit",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#2f3948"
-      }
-    ]
-  },
-  {
-    "featureType": "transit.station",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#fdad32"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#0a2d43"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#515c6d"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#17263c"
-      }
-    ]
-  }
-]
 
 export default function RestaurantMapView() {
   const { authState } = useAuth();
@@ -437,22 +224,17 @@ export default function RestaurantMapView() {
     console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
     setIsClaimLoading(true);
     if (authState.userId) {
-      // const data
-      // try {
-      // const response = await getRestaurantCardById(restaurantId);
-
-      // console.log(
-      //   "🚀 ~ handleGetAcard ~ response.data.cards[0].id:",
-      //   response.data.cards[0].id
-      // );
       const data = await createGetAcardMutation({
         userId: authState.userId,
         cardId: acardId,
       });
       if (data.data.success) {
-        queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
         setIsClaimLoading(false);
-        queryClient.invalidateQueries({queryKey: userKeys.cards})
+        queryClient.invalidateQueries({
+          queryKey: userKeys.cards,
+        });
+        queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
+
         showToast();
       }
     }
@@ -591,7 +373,14 @@ export default function RestaurantMapView() {
                   }
                 />
               ) : (
-               <View style={{width:8, height:8, backgroundColor:Color.base.White, borderRadius:48}}/>
+                <View
+                  style={{
+                    width: 8,
+                    height: 8,
+                    backgroundColor: Color.base.White,
+                    borderRadius: 48,
+                  }}
+                />
               )}
             </Marker>
           );
@@ -664,7 +453,7 @@ export default function RestaurantMapView() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   map: {
     flex: 1,
