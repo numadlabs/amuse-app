@@ -295,7 +295,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   powerUpGrid: {
-   
     gap: 15,
   },
   textImageContainer: {

@@ -242,22 +242,13 @@ export default function RestaurantMapView() {
   const router = useRouter();
 
   const handleNavigation = (restaurant: RestaurantType) => {
-    if (restaurant.isOwned) {
-      router.push({
-        pathname: `/Acards/${restaurant.id}`,
-        params: {
-        
-        },
-      });
-    } else {
+ 
       router.push({
         pathname: `/restaurants/${restaurant.id}`,
         params: {
           cardId: restaurant.cardId,
-     
         },
       });
-    }
   };
 
   return (
