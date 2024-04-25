@@ -31,7 +31,7 @@ import APassCard from "../components/atom/cards/APassCard";
 const Restaurant = () => {
   const { cardId, id } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
-
+  const [showOwnedView, setShowOwnedView] = useState(false);
   const [visitCount, setVisitCount] = useState(0);
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const { authState } = useAuth();
@@ -69,17 +69,12 @@ const Restaurant = () => {
         cardId: acardId,
       });
       if (data.data.success) {
-        queryClient.invalidateQueries({
-          queryKey: [
-            restaurantKeys.detail(id as string),
-            restaurantKeys.all,
-            userKeys.cards,
-          ],
-        });
+        queryClient.invalidateQueries({queryKey: [restaurantKeys.detail(id as string)],});
+        queryClient.invalidateQueries({queryKey: restaurantKeys.all,})
+        queryClient.invalidateQueries({queryKey: userKeys.cards,})
         setIsClaimLoading(false);
-        const owned = data.data.userCard;
+        const owned = data.data.data.userCard;
         console.log(owned);
-        router.back()
         showToast();
       }
     }
