@@ -23,6 +23,7 @@ import HomeRestList from "../components/atom/cards/HomeRestList";
 import { InfoCircle } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
+import { height } from "../lib/utils";
 
 const Page = () => {
   const router = useRouter();
@@ -154,7 +155,7 @@ const Page = () => {
                   user?.dateOfBirth &&
                   user?.nickname &&
                   user?.location ? (
-                    ''
+                  ''
                 ) : (
                   <QuickInfo user={user} />
                 )}
@@ -238,24 +239,27 @@ const Page = () => {
           </View>
         )}
       </ScrollView>
-    {isOpen && (
-                <Animated.View
-                  style={[
-                    {
-                      position: "absolute",
-                      bottom: 100,
-                      width: "100%",
-                      backgroundColor: Color.Gray.gray500,
-                      borderTopLeftRadius: 32,
-                      borderTopRightRadius: 32,
-                      overflow: "hidden",
-                      left: 0,
-                    },
-                  ]}
-                >
-                  <Text>kasdbfjkas</Text>
-                </Animated.View>
-              )}
+      {isOpen && (
+        <Animated.View
+        style={[
+          {
+            position: "absolute",
+            bottom: 0,
+            width: "100%",
+            height:height/2,
+            backgroundColor: Color.Gray.gray500,
+            borderTopLeftRadius: 32,
+            borderTopRightRadius: 32,
+            overflow: "hidden",
+            zIndex: 1000, // Increase the z-index value
+            left: 0,
+          },
+          bottomSheetAnimatedStyle, // Apply animated style
+        ]}
+      >
+        <Text>kasdbfjkas</Text>
+      </Animated.View>
+      )}
     </GestureHandlerRootView>
   );
 };
@@ -266,7 +270,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
-    paddingHorizontal:16
+    paddingHorizontal: 16
   },
   modal: {
     position: "absolute",

@@ -4,7 +4,7 @@ import Header from '../components/layout/Header';
 import Steps from '../components/atom/Steps';
 import Color from '../constants/Color';
 import Button from '../components/ui/Button';
-import { router, useNavigation } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import FpLayout from './_layout';
 
 export enum KeyBoardTypes {
@@ -18,6 +18,7 @@ export enum KeyBoardTypes {
 }
 
 const SplitOTP = () => {
+  const {phoneNumber, prefix} = useLocalSearchParams()
   const [buttonPosition, setButtonPosition] = useState('bottom');
   const [isFocused, setIsFocused] = useState(false);
   const [text, onChangeText] = useState('');
@@ -27,6 +28,8 @@ const SplitOTP = () => {
       inputRef.current.focus();
     }
   };
+
+  console.log(phoneNumber, prefix)
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -53,6 +56,16 @@ const SplitOTP = () => {
   const onBlur = () => {
     setIsFocused(false);
   };
+
+  const handleNavigation = () => {
+    router.navigate({
+      pathname: '/forgotPassword/NewPassword',
+      params: {
+        phoneNumber: phoneNumber,
+        prefix: prefix,
+      }
+    })
+  }
 
   const otpContent = useMemo(() =>
     <View style={styles.containerStyle}>
@@ -99,7 +112,7 @@ const SplitOTP = () => {
                 </SafeAreaView>
               </View>
               <View style={[styles.buttonContainer, buttonPosition === 'bottom' ? styles.bottomPosition : styles.topPosition]}>
-                <Button variant='primary' textStyle='primary' size='default' onPress={() => router.navigate('/forgotpassword/NewPassword')}>Continue</Button>
+                <Button variant='primary' textStyle='primary' size='default' onPress={handleNavigation}>Skip for demo</Button>
               </View>
             </View>
           </TouchableWithoutFeedback>
@@ -111,7 +124,7 @@ const SplitOTP = () => {
 
 const styles = StyleSheet.create({
   body: {
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray600,
     height: '100%',
     paddingHorizontal:16
   },
@@ -119,7 +132,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingTop: 24,
     paddingBottom: 32,
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray600,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -134,9 +147,10 @@ const styles = StyleSheet.create({
   input: {
     height: 0,
     width: 0,
+    color: Color.base.White
   },
   inputFocused: {
-    borderColor: Color.Gray.gray600,
+    borderColor: Color.base.White,
   },
   containerStyle: {
     flexDirection: 'row',
@@ -171,12 +185,12 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   topText: {
-    color: Color.Gray.gray500,
+    color: Color.base.White,
     fontWeight: 'bold',
     fontSize: 24
   },
   bottomText: {
-    color: Color.Gray.gray400,
+    color: Color.base.White,
     fontSize: 12
   },
   buttonContainer: {

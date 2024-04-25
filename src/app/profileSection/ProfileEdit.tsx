@@ -59,7 +59,7 @@ const ProfileEdit = () => {
   }, [user]);
 
   useEffect(() => {
-    // Check if any data has changed
+    
     if (
       user.nickname !== nickname ||
       user.email !== email ||

@@ -76,7 +76,7 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
               uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker.logo}` as string,
             }}
             style={styles.cardImage}
-            // resizeMode="cover"
+          // resizeMode="cover"
           />
           <View style={styles.textContent}>
             <View>
@@ -118,41 +118,23 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                 </View>
               ) : (
                 <Button
-                  variant="primary"
+                  variant="secondary"
                   onPress={onPress}
                   size="small"
                   style={{
                     alignItems: "center",
-                    height: 36,
+                    height: 30,
                     justifyContent: "center",
+                    alignContent:'center',
+                    paddingHorizontal:20
                   }}
                 >
-                  {isClaimLoading ? (
-                    <ActivityIndicator size="small" color="white" />
-                  ) : (
-                    <>
-                      <WalletAdd1 size={16} color={Color.base.White} />
-                      <View
-                        style={{
-                          height: "100%",
-                          width: "100%",
-                          marginLeft: 8,
-                          alignItems: "center",
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        <Text style={{ fontSize: 11, color: Color.base.White }}>
-                          {isClaimLoading ? (
-                            <ActivityIndicator />
-                          ) : marker.isOwned ? (
-                            "Owned"
-                          ) : (
-                            "Add"
-                          )}
-                        </Text>
-                      </View>
-                    </>
-                  )}
+
+                  <Text style={{ fontSize: 11, lineHeight: 16, fontWeight: '600', color: Color.Gray.gray50 }}>
+                    Add
+                  </Text>
+
+
                 </Button>
               )}
             </View>

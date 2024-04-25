@@ -79,7 +79,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     alignSelf: 'center',
-    zIndex: 10
   },
   container: {
     backgroundColor: Color.Gray.gray600,
