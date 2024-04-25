@@ -54,7 +54,7 @@ const Area = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
-            <LinearGradient
+              <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
                 style={{
                   marginTop: 20,
@@ -63,42 +63,58 @@ const Area = () => {
                   borderRadius: 32,
                 }}
               >
-              <View style={styles.textContainer}>
-                <View style={{ gap: 8 }}>
-                  <Text style={styles.topText}>Area</Text>
-                  <Text style={styles.bottomText}>
-                  Restaurants love locals. Get rewarded extra for {"\n"} staying close to home.
-                  </Text>
+                <View style={styles.textContainer}>
+                  <View style={{ gap: 8 }}>
+                    <Text style={styles.topText}>Area</Text>
+                    <Text style={styles.bottomText}>
+                      Restaurants love locals. Get rewarded extra for {"\n"}{" "}
+                      staying close to home.
+                    </Text>
+                  </View>
+                  <LinearGradient
+                    colors={
+                      isFocused
+                        ? [Color.Brand.main.start, Color.Brand.main.end]
+                        : [Color.Gray.gray300, Color.Gray.gray300]
+                    }
+                    start={[0, 1]}
+                    end={[1, 0]}
+                    style={{
+                      marginTop: 10,
+                      borderRadius: 16,
+                      padding: 1,
+                    }}
+                  >
+                    <View
+                      style={{
+                        alignItems: "center",
+                        gap: 12,
+                        alignContent: "center",
+                        flexDirection: "row",
+                        height: 48,
+                        paddingHorizontal: 16,
+                        width: "100%",
+                        backgroundColor: Color.Gray.gray500,
+                        borderRadius: 16,
+                      }}
+                    >
+                      <TextInput
+                        value={area} // Set the value of the input to the area from the Zustand store
+                        onChangeText={handleAreaChange}
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                        placeholder="Area (ex. Dubai Marina)"
+                        style={{
+                          flex: 1,
+                          fontSize: 16,
+                          fontWeight: "400",
+                          lineHeight: 20,
+                          color: Color.base.White,
+                        }}
+                      />
+                    </View>
+                  </LinearGradient>
                 </View>
-                <TextInput
-                  value={area} // Set the value of the input to the area from the Zustand store
-                  onChangeText={handleAreaChange}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setIsFocused(false)}
-                  placeholder="Area (ex. Dubai Marina)"
-                  style={
-                    isFocused
-                      ? {
-                          borderColor: Color.Gray.gray300,
-                          height: 48,
-                          borderWidth: 1,
-                          borderRadius: 16,
-                          paddingHorizontal: 16,
-                          marginTop: 10,
-                          color: Color.base.White
-                        }
-                      : {
-                          height: 48,
-                          borderWidth: 1,
-                          borderColor: Color.Gray.gray300,
-                          borderRadius: 16,
-                          paddingHorizontal: 16,
-                          marginTop: 10,
-                          color: Color.base.White
-                        }
-                  }
-                />
-              </View>
               </LinearGradient>
             </View>
             <View

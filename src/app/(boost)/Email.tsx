@@ -69,36 +69,51 @@ const Email = () => {
                       priority reservations. Spam is so 20th century.
                     </Text>
                   </View>
-                  <TextInput
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
-                    value={email} // Set the value of the input to the email from the Zustand store
-                    onChangeText={handleEmailChange} // Call the handleEmailChange function when the text changes
-                    autoCapitalize="none"
-                    placeholder="Email"
-                    placeholderTextColor={Color.Gray.gray100}
-                    style={
+                  <LinearGradient
+                    colors={
                       isFocused
-                        ? {
-                            borderColor: Color.Gray.gray300,
-                            height: 48,
-                            borderWidth: 1,
-                            borderRadius: 16,
-                            paddingHorizontal: 16,
-                            marginTop: 10,
-                            color: Color.base.White,
-                          }
-                        : {
-                            height: 48,
-                            borderWidth: 1,
-                            borderColor: Color.Gray.gray300,
-                            borderRadius: 16,
-                            paddingHorizontal: 16,
-                            marginTop: 10,
-                            color: Color.base.White,
-                          }
+                        ? [Color.Brand.main.start, Color.Brand.main.end]
+                        : [Color.Gray.gray300, Color.Gray.gray300]
                     }
-                  />
+                    start={[0, 1]}
+                    end={[1, 0]}
+                    style={{
+                      marginTop: 10,
+                      borderRadius: 16,
+                      padding: 1,
+                    }}
+                  >
+                    <View
+                      style={{
+                        alignItems: "center",
+                        gap: 12,
+                        alignContent: "center",
+                        flexDirection: "row",
+                        height: 48,
+                        paddingHorizontal: 16,
+                        width: "100%",
+                        backgroundColor: Color.Gray.gray500,
+                        borderRadius: 16,
+                      }}
+                    >
+                      <TextInput
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                        value={email} // Set the value of the input to the email from the Zustand store
+                        onChangeText={handleEmailChange} // Call the handleEmailChange function when the text changes
+                        autoCapitalize="none"
+                        placeholder="Email"
+                        placeholderTextColor={Color.Gray.gray100}
+                        style={{
+                          flex: 1,
+                          fontSize: 16,
+                          fontWeight: "400",
+                          lineHeight: 20,
+                          color: Color.base.White,
+                        }}
+                      />
+                    </View>
+                  </LinearGradient>
                 </View>
               </LinearGradient>
             </View>

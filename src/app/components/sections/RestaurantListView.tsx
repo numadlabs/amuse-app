@@ -90,7 +90,8 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
   };
 
   return (
-    <ScrollView style={{ flex: 1, height: "100%" }}>
+    <View style={{ flex: 1, height: "100%", paddingBottom: 100 }}>
+    <ScrollView>
       {restaurantsData?.data?.restaurants &&
         restaurantsData.data.restaurants.map((item, index) => (
           <>
@@ -127,6 +128,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
         <Text>Loading...</Text>
       )} */}
     </ScrollView>
+    </View>
   );
 };
 

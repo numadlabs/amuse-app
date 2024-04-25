@@ -77,6 +77,7 @@ function Login() {
   const [password, setPassword] = useState<string>("");
   const [prefix, setPrefix] = useState<string>(data[0].prefix);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [focusedInput, setFocusedInput] = useState<'Phone number' | 'Password' | null>(null);
   const [phonePlaceholder, setPhonePlaceholder] =
     useState<string>("Phone number");
   const [passwordPlaceholder, setPasswordPlaceholder] =
@@ -221,16 +222,34 @@ function Login() {
               </Text>
 
               <View style={{ gap: 12 }}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    borderColor: error ? Color.System.systemError : Color.Gray.gray300,
-                    borderWidth: 1,
-                    borderRadius: 16,
-                    alignItems: "center",
-                    paddingHorizontal: 16,
-                  }}
-                >
+              <LinearGradient
+                    colors={
+                      focusedInput === "Phone number"
+                        ? [Color.Brand.main.start, Color.Brand.main.end]
+                        : [Color.Gray.gray300, Color.Gray.gray300]
+                    }
+                    start={[0, 1]}
+                    end={[1, 0]}
+                    style={{
+                      marginTop: 10,
+                      borderRadius: 16,
+                      padding: 1,
+                    }}
+                  >
+                    <View
+                      style={{
+                        alignItems: "center",
+                        gap: 12,
+                        alignContent: "center",
+                        flexDirection: "row",
+                        height: 48,
+                        paddingHorizontal: 16,
+                        width: "100%",
+                        backgroundColor: Color.Gray.gray500,
+                        borderRadius: 16,
+                      }}
+                    >
+               
                   <AnimatedPressable
                     entering={FadeIn}
                     exiting={FadeOut}
@@ -260,8 +279,8 @@ function Login() {
                     inputMode="tel"
                     placeholder={phonePlaceholder}
                     placeholderTextColor={Color.Gray.gray100}
-                    onFocus={onFocusPhone}
-                    onBlur={onBlurPhone}
+                    onFocus={() => setFocusedInput('Phone number')}
+                    onBlur={() => setFocusedInput(null)}
                     style={{
                       height: 40,
                       fontSize: 16,
@@ -274,30 +293,47 @@ function Login() {
                     onChangeText={setPhoneNumber}
                   />
                 </View>
+                </LinearGradient>
                 {error && phoneNumber.length < 7 && 
                 <Text
                   style={{ color: Color.System.systemError, paddingHorizontal: 16 }}
                 >
                   {"Please enter valid phone number"}
                 </Text>}
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    height: 40,
-                    borderColor: error ? Color.System.systemError : Color.Gray.gray300,
-                    borderWidth: 1,
-                    borderRadius: 16,
-                    paddingHorizontal: 10,
-                    marginTop: 10,
-                  }}
-                >
+
+                <LinearGradient
+                    colors={
+                      focusedInput === "Password"
+                        ? [Color.Brand.main.start, Color.Brand.main.end]
+                        : [Color.Gray.gray300, Color.Gray.gray300]
+                    }
+                    start={[0, 1]}
+                    end={[1, 0]}
+                    style={{
+                      marginTop: 10,
+                      borderRadius: 16,
+                      padding: 1,
+                    }}
+                  >
+                    <View
+                      style={{
+                        alignItems: "center",
+                        gap: 12,
+                        alignContent: "center",
+                        flexDirection: "row",
+                        height: 48,
+                        paddingHorizontal: 16,
+                        width: "100%",
+                        backgroundColor: Color.Gray.gray500,
+                        borderRadius: 16,
+                      }}
+                    >
                   <TextInput
                     secureTextEntry={!showPassword}
                     placeholder={passwordPlaceholder}
                     placeholderTextColor={Color.Gray.gray100}
-                    onFocus={onFocusPassword}
-                    onBlur={onBlurPassword}
+                    onFocus={() => setFocusedInput('Password')}
+                    onBlur={() => setFocusedInput(null)}
                     style={{
                       flex: 1,
                       fontSize: 16,
@@ -316,6 +352,7 @@ function Login() {
                     />
                   </TouchableOpacity>
                 </View>
+                </LinearGradient>
                 {password.length < 8 && null && 
                   <Text
                   style={{ color: Color.System.systemError, paddingHorizontal: 16 }}
