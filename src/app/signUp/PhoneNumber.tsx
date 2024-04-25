@@ -38,46 +38,45 @@ const PhoneNumber = () => {
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
   const { onRegister } = useAuth();
 
+  const data = [
+    {
+      name: "UAE",
+      prefix: "971",
+    },
+    {
+      name: "Mongolia",
+      prefix: "976",
+    },
+    {
+      name: "United States",
+      prefix: "1",
+    },
+    {
+      name: "United Kingdom",
+      prefix: "44",
+    },
+    {
+      name: "Canada",
+      prefix: "1",
+    },
+    {
+      name: "Australia",
+      prefix: "61",
+    },
+    {
+      name: "Germany",
+      prefix: "49",
+    },
+    {
+      name: "France",
+      prefix: "33",
+    },
+    {
+      name: "Japan",
+      prefix: "81",
+    },
+  ];
 
-const data = [
-  {
-    name: "UAE",
-    prefix: "971",
-  },
-  {
-    name: "Mongolia",
-    prefix: "976",
-  },
-  {
-    name: "United States",
-    prefix: "1",
-  },
-  {
-    name: "United Kingdom",
-    prefix: "44",
-  },
-  {
-    name: "Canada",
-    prefix: "1",
-  },
-  {
-    name: "Australia",
-    prefix: "61",
-  },
-  {
-    name: "Germany",
-    prefix: "49",
-  },
-  {
-    name: "France",
-    prefix: "33",
-  },
-  {
-    name: "Japan",
-    prefix: "81",
-  },
-];
-  
   const offset = useSharedValue(300);
   const togglePrefix = () => {
     setIsOpen(!isOpen);
@@ -120,7 +119,7 @@ const data = [
       },
     });
 
-    console.log(prefix, phoneNumber)
+    console.log(prefix, phoneNumber);
   };
   return (
     <>
@@ -132,68 +131,84 @@ const data = [
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
-            <LinearGradient
-            colors={[Color.Brand.card.start, Color.Brand.card.end]}
-            style={{
-              width: "100%",
-              borderRadius: 32,
-               marginTop: 16,
-               borderWidth: 1,
-               borderColor: Color.Gray.gray400,
-               paddingBottom: 16,
-               paddingTop: 24,
-               paddingHorizontal: 16
-            }}>
-              <View style={styles.textContainer}>
-                <View style={{ gap: 8 }}>
-                  <Text style={styles.topText}>Phone Number</Text>
-                  <Text style={styles.bottomText}>
-                    This will be kept private. No surprise DMs.
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 12,
-                    alignContent: "center",
-                    borderColor: Color.Gray.gray300,
-                    height: 48,
-                    borderWidth: 1,
-                    borderRadius: 16,
-                    paddingHorizontal: 16,
-                    marginTop: 10,
-                    width: "100%",
-                  }}
-                >
-                  <AnimatedPressable
-                    entering={FadeIn}
-                    exiting={FadeOut}
-                    onPress={togglePrefix}
+              <LinearGradient
+                colors={[Color.Brand.card.start, Color.Brand.card.end]}
+                style={{
+                  width: "100%",
+                  borderRadius: 32,
+                  marginTop: 16,
+                  borderWidth: 1,
+                  borderColor: Color.Gray.gray400,
+                  paddingBottom: 16,
+                  paddingTop: 24,
+                  paddingHorizontal: 16,
+                }}
+              >
+                <View style={styles.textContainer}>
+                  <View style={{ gap: 8 }}>
+                    <Text style={styles.topText}>Phone Number</Text>
+                    <Text style={styles.bottomText}>
+                      This will be kept private. No surprise DMs.
+                    </Text>
+                  </View>
+                  <LinearGradient
+                    colors={
+                      isFocused
+                        ? [Color.Brand.main.start, Color.Brand.main.end]
+                        : [Color.Gray.gray300, Color.Gray.gray300]
+                    }
+                    start={[0, 1]}
+                    end={[1, 0]}
+                    style={{
+                      marginTop: 10,
+                      borderRadius: 16,
+                      padding: 1,
+                    }}
                   >
                     <View
                       style={{
-                        flexDirection: "row",
                         alignItems: "center",
-                        gap: 8,
+                        gap: 12,
+                        alignContent: "center",
+                        flexDirection: "row",
+                        height: 48,
+                        paddingHorizontal: 16,
+                        width: "100%",
+                        backgroundColor: Color.Gray.gray500,
+                        borderRadius: 16,
                       }}
                     >
-                      <Text style={{ color: Color.Gray.gray50 }}>+{prefix}</Text>
-                      <ArrowDown2 color={Color.Gray.gray50} />
+                      <AnimatedPressable
+                        entering={FadeIn}
+                        exiting={FadeOut}
+                        onPress={togglePrefix}
+                      >
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 8,
+                          }}
+                        >
+                          <Text style={{ color: Color.Gray.gray50 }}>
+                            +{prefix}
+                          </Text>
+                          <ArrowDown2 color={Color.Gray.gray50} />
+                        </View>
+                      </AnimatedPressable>
+                      <TextInput
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                        keyboardType="phone-pad"
+                        placeholder="XXXXXXXX"
+                        placeholderTextColor={Color.Gray.gray100}
+                        value={phoneNumber}
+                        style={styles.input}
+                        onChangeText={setPhoneNumber}
+                      />
                     </View>
-                  </AnimatedPressable>
-                  <TextInput
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
-                    keyboardType="phone-pad"
-                    placeholder="XXXXXXXX"
-                    placeholderTextColor={Color.Gray.gray100}
-                    value={phoneNumber}
-                    style={styles.input}
-                    onChangeText={setPhoneNumber}
-                  />
+                  </LinearGradient>
                 </View>
-              </View>
               </LinearGradient>
             </View>
             <KeyboardAvoidingView
@@ -217,7 +232,6 @@ const data = [
                 >
                   Send code
                 </Button>
-
               </View>
             </KeyboardAvoidingView>
 
@@ -270,7 +284,7 @@ const data = [
                             fontSize: 16,
                             fontWeight: "400",
                             lineHeight: 20,
-                            color: Color.base.White
+                            color: Color.base.White,
                           }}
                         >
                           {prefix.name}
@@ -280,7 +294,7 @@ const data = [
                             fontSize: 16,
                             fontWeight: "400",
                             lineHeight: 20,
-                            color: Color.Gray.gray50
+                            color: Color.Gray.gray50,
                           }}
                         >
                           +{prefix.prefix}
@@ -313,7 +327,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     gap: 24,
-    flexDirection: 'column'
+    flexDirection: "column",
   },
   prefixContainer: {
     position: "absolute",
@@ -368,6 +382,6 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 16,
     fontWeight: "normal",
-    color: Color.base.White
-  }
+    color: Color.base.White,
+  },
 });

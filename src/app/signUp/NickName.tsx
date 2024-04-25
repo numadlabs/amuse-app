@@ -86,37 +86,49 @@ const NickName = () => {
                     invites to feel special.
                   </Text>
                 </View>
-                <TextInput
-                  value={nickname}
-                  onChangeText={setNickname}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setIsFocused(false)}
-                  placeholderTextColor={Color.Gray.gray100}
-                  placeholder="Nickname"
-                  style={
-                    isFocused
-                      ? {
-                          borderColor: Color.Gray.gray100,
-                          height: 48,
-                          borderWidth: 1,
-                          borderRadius: 16,
-                          paddingHorizontal: 16,
-                          marginTop: 10,
+                <LinearGradient
+                    colors={
+                      isFocused
+                        ? [Color.Brand.main.start, Color.Brand.main.end]
+                        : [Color.Gray.gray300, Color.Gray.gray300]
+                    }
+                    start={[0, 1]}
+                    end={[1, 0]}
+                    style={{
+                      marginTop: 10,
+                      borderRadius: 16,
+                      padding: 1,
+                    }}
+                  >
+                    <View
+                      style={{
+                        alignItems: "center",
+                        gap: 12,
+                        alignContent: "center",
+                        flexDirection: "row",
+                        height: 48,
+                        paddingHorizontal: 16,
+                        width: "100%",
+                        backgroundColor: Color.Gray.gray500,
+                        borderRadius: 16,
+                      }}
+                    >
+                      <TextInput
+                        value={nickname}
+                        onChangeText={setNickname}
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                        placeholderTextColor={Color.Gray.gray100}
+                        placeholder="Nickname"
+                        style={{
+                          flex: 1,
                           fontSize: 16,
-                          color: Color.base.White
-                        }
-                      : {
-                          height: 48,
-                          borderWidth: 1,
-                          borderColor: Color.Gray.gray300,
-                          borderRadius: 16,
-                          paddingHorizontal: 16,
-                          marginTop: 10,
-                          fontSize: 16,
-                          color: Color.base.White
-                        }
-                  }
-                />
+                          fontWeight: "400",
+                          lineHeight: 20,
+                          color: Color.base.White,}}
+                      />
+                    </View>
+                  </LinearGradient>
               </View>
               </LinearGradient>
             </View>

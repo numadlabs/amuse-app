@@ -20,10 +20,14 @@ import { GetRestaurantsResponseType } from "../lib/types/apiResponseType";
 import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
 import { getRestaurants } from "../lib/service/queryHelper";
 import ResListCard from "../components/atom/cards/RestListCard";
+import { InfoCircle } from "iconsax-react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 
 const Page = () => {
   const router = useRouter();
   const [refreshPage, setRefreshPage] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const { authState } = useAuth();
 
   const { currentLocation } = useLocationStore();
@@ -58,6 +62,19 @@ const Page = () => {
       });
     },
     enabled: !!currentLocation,
+  });
+
+  const bottomSheetAnimation = useSharedValue(0);
+
+  const toggleBottomSheet = () => {
+    const toValue = isOpen ? 0 : 1;
+    bottomSheetAnimation.value = withTiming(toValue);
+    setIsOpen(!isOpen);
+  };
+
+  const bottomSheetAnimatedStyle = useAnimatedStyle(() => {
+    const translateY = bottomSheetAnimation.value * 500; // Adjust the translation value as needed
+    return { transform: [{ translateY }] };
   });
 
   const handleNavigation = (restaurant: RestaurantType) => {
@@ -96,105 +113,148 @@ const Page = () => {
     }
   };
 
-
   const restaurantsArray = restaurantsData?.data?.restaurants || [];
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {user && <Balance amount={user.balance} />}
-      <View style={{ marginTop: 24, gap: 12 }}>
-        <Text
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
+        {user && <Balance amount={user.balance} />}
+        <View style={{ marginTop: 24, gap: 12 }}>
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: "600",
+              color: Color.Gray.gray100,
+            }}
+          >
+            Featured
+          </Text>
+
+          {restaurantsArray?.length > 0 && (
+            <View style={{ alignItems: "center" }}>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              >
+                <TouchableOpacity
+                  onPress={() => handleNavigation(restaurantsArray[0])}
+                >
+                  <ResListCard
+                    isClaimLoading={true}
+                    marker={restaurantsArray[0]}
+                    key={restaurantsArray[0].id as string}
+                    onPress={() => handleNavigation(restaurantsArray[0])}
+                  />
+                </TouchableOpacity>
+                {user?.email &&
+                  user?.dateOfBirth &&
+                  user?.nickname &&
+                  user?.location ? (
+                    ''
+                ) : (
+                  <QuickInfo user={user} />
+                )}
+                <TouchableOpacity
+                  onPress={() => handleNavigation(restaurantsArray[1])}
+                >
+                  <ResListCard
+                    isClaimLoading={true}
+                    marker={restaurantsArray[1]}
+                    key={restaurantsArray[1].id as string}
+                    onPress={() => handleNavigation(restaurantsArray[1])}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => handleNavigation(restaurantsArray[2])}
+                >
+                  <ResListCard
+                    isClaimLoading={true}
+                    marker={restaurantsArray[2]}
+                    key={restaurantsArray[2].id as string}
+                    onPress={() => handleNavigation(restaurantsArray[2])}
+                  />
+                </TouchableOpacity>
+              </ScrollView>
+            </View>
+          )}
+        </View>
+        <View
           style={{
-            fontSize: 14,
-            fontWeight: "600",
-            color: Color.Gray.gray100,
+            flexDirection: "row",
+            alignItems: "center",
+            marginTop: 32,
+            marginBottom: 12,
+            justifyContent: "space-between",
           }}
         >
-          Featured
-        </Text>
-
-        {restaurantsArray?.length > 0 && (
-          <View style={{ alignItems: "center" }}>
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-            >
-              <TouchableOpacity onPress={() => handleNavigation(restaurantsArray[0])}>
-                <ResListCard
-                  isClaimLoading={true}
-                  marker={restaurantsArray[0]}
-                  key={restaurantsArray[0].id as string}
-                  onPress={() => handleNavigation(restaurantsArray[0])}
-                />
-              </TouchableOpacity >
-              {user?.email &&
-                user?.dateOfBirth &&
-                user?.nickname &&
-                user?.location ? "" : (
-                <QuickInfo user={user} />
-              )}
-              <TouchableOpacity onPress={() => handleNavigation(restaurantsArray[1])}>
-                <ResListCard
-                  isClaimLoading={true}
-                  marker={restaurantsArray[1]}
-                  key={restaurantsArray[1].id as string}
-                  onPress={() => handleNavigation(restaurantsArray[1])}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleNavigation(restaurantsArray[2])}>
-                <ResListCard
-                  isClaimLoading={true}
-                  marker={restaurantsArray[2]}
-                  key={restaurantsArray[2].id as string}
-                  onPress={() => handleNavigation(restaurantsArray[2])}
-                />
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
-        )}
-      </View>
-      <Text
-        style={{
-          fontSize: 14,
-          fontWeight: "600",
-          color: Color.Gray.gray100,
-          marginTop: 32,
-          marginBottom: 12,
-        }}
-      >
-        Memberships
-      </Text>
-      <View style={{}}>
-        <StackedCard key={refreshPage.toString()} />
-      </View>
-      {cards?.data?.cards.length === 0 ? (
-        ""
-      ) : (
-        <View style={{ width: "100%", alignItems: "center", marginBottom: 120 }}>
-          <TouchableOpacity onPress={() => router.push("/MyAcards")}>
-            <View
-              style={{
-                backgroundColor: Color.Gray.gray300,
-                marginTop: 16,
-                paddingVertical: 12,
-                paddingHorizontal: 16,
-                borderRadius: 32,
-              }}
-            >
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  color: Color.base.White,
-                  fontSize: 16,
-                }}
-              >
-                See all
-              </Text>
-            </View>
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: "600",
+              color: Color.Gray.gray100,
+            }}
+          >
+            Memberships
+          </Text>
+          <TouchableOpacity onPress={() => setIsOpen(!isOpen)}>
+            <InfoCircle size={18} color={Color.Gray.gray100} />
           </TouchableOpacity>
         </View>
-      )}
-    </ScrollView>
+        <View style={{}}>
+          <StackedCard key={refreshPage.toString()} />
+        </View>
+        {cards?.data?.cards.length === 0 ? (
+          ""
+        ) : (
+          <View
+            style={{ width: "100%", alignItems: "center", marginBottom: 120 }}
+          >
+            <TouchableOpacity onPress={() => router.push("/MyAcards")}>
+              <View
+                style={{
+                  backgroundColor: Color.Gray.gray300,
+                  marginTop: 16,
+                  paddingVertical: 12,
+                  paddingHorizontal: 16,
+                  borderRadius: 32,
+                }}
+              >
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    color: Color.base.White,
+                    fontSize: 16,
+                  }}
+                >
+                  See all
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
+      </ScrollView>
+    {isOpen && (
+                <Animated.View
+                  style={[
+                    {
+                      position: "absolute",
+                      bottom: 100,
+                      width: "100%",
+                      backgroundColor: Color.Gray.gray500,
+                      borderTopLeftRadius: 32,
+                      borderTopRightRadius: 32,
+                      overflow: "hidden",
+                      left: 0,
+                    },
+                  ]}
+                >
+                  <Text>kasdbfjkas</Text>
+                </Animated.View>
+              )}
+    </GestureHandlerRootView>
   );
 };
 

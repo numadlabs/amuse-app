@@ -2,10 +2,14 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import React from "react";
 import Color from "../../constants/Color";
 import BalanceStripes from "../icons/BalanceStripes";
+import { LinearGradient } from "expo-linear-gradient";
+import { BlurView } from "expo-blur";
+import { RadialGradient } from "react-native-svg";
 
 interface BalanceProps {
   amount?: number;
 }
+
 const Balance: React.FC<BalanceProps> = ({ amount }) => {
   const truncatedAmount =
     amount !== 0 ? amount?.toString().substring(0, 8) : "0.0000";
@@ -14,78 +18,80 @@ const Balance: React.FC<BalanceProps> = ({ amount }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.container1}>
-        <View style={styles.balanceInfo}>
-          <Text style={styles.balanceLabel}>Balance</Text>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-            <Image
-              style={{ width: 28, height: 28 }}
-              source={require("@/public/images/Bitcoin.png")}
-            />
-            <Text style={styles.balanceAmount}>
-              {truncatedAmount}
-              <Text
-                style={{
-                  lineHeight: 16,
-                  marginLeft: 4,
-                  fontSize: 20,
-                  fontWeight: "400",
-                  color: Color.Gray.gray400,
-                }}
+      <BlurView style={styles.blurContainer} intensity={100}>
+        <LinearGradient
+          colors={[Color.Brand.card.start, Color.Brand.card.end]}
+          style={{
+            borderRadius: 16,
+            borderWidth: 1,
+            borderColor: Color.Gray.gray400,
+          }}
+        >
+          <View style={styles.container1}>
+            <View
+              style={{ flexDirection: "column", gap: 8, alignItems: "center" }}
+            >
+              <Text style={styles.balanceLabel}>Total balance</Text>
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
               >
-                ≈${formattedCoin}
-              </Text>
+                <Image
+                  style={{ width: 28, height: 28 }}
+                  source={require("@/public/images/Bitcoin.png")}
+                />
+                <Text style={styles.balanceAmount}>{truncatedAmount} BTC</Text>
+              </View>
+            </View>
+            <Text
+              style={{
+                color: Color.base.White,
+                fontSize: 12,
+                lineHeight: 16,
+                fontWeight: "400",
+              }}
+            >
+              Estimated USD balance: ${formattedCoin}
             </Text>
           </View>
-        </View>
-        <View style={styles.balanceStripesContainer}>
-          <BalanceStripes />
-        </View>
-      </View>
+        </LinearGradient>
+      </BlurView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Color.base.White,
-    shadowColor: Color.Gray.gray400,
-
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
     borderRadius: 16,
     marginTop: 32,
   },
   container1: {
-    flexDirection: "row",
-    paddingHorizontal: 16,
+    flexDirection: "column",
+    alignItems: "center",
     paddingVertical: 12,
-    overflow: "hidden",
-    borderRadius: 16,
+    gap: 12,
   },
   balanceInfo: {
-    flex: 1,
     gap: 4,
   },
   balanceLabel: {
     fontSize: 12,
-    color: Color.Gray.gray400,
-    fontWeight: "bold",
+    color: Color.Gray.gray50,
+    fontWeight: "600",
+    lineHeight: 16,
   },
   balanceAmount: {
     fontSize: 28,
     lineHeight: 36,
-    color: Color.Gray.gray600,
-    fontWeight: "300",
+    color: Color.base.White,
+    fontWeight: "400",
   },
   balanceStripesContainer: {
     position: "absolute",
     right: 0,
+    overflow: "hidden",
+  },
+  blurContainer: {
+    borderRadius: 16,
     overflow: "hidden",
   },
 });

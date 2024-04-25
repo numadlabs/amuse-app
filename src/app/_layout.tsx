@@ -57,7 +57,12 @@ export default function Layout() {
             name="(modals)/StackedCardModal"
             options={{ presentation: "modal" }}
           />
+          <Stack.Screen
+            name="(modals)/MembershipModal"
+            options={{ presentation: "modal" }}
+          />
         </Stack>
+        
         <Toast config={toastConfig} />
       </AuthProvider>
     </QueryClientProvider>

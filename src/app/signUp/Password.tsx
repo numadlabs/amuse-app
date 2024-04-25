@@ -38,10 +38,10 @@ const validatePassword = (password: string): boolean => {
 
 const Password = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
-  const [isFocused, setIsFocused] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { prefix, phoneNumber } = useLocalSearchParams();
+  const { prefix, phoneNumber } = useLocalSearchParams(); 
   const { password, setPassword } = useSignUpStore();
+  const [focusedInput, setFocusedInput] = useState<'password' | 'confirmPassword' | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [passwordPlaceholder, setPasswordPlaceholder] =
     useState<string>("Password");
@@ -119,24 +119,39 @@ const Password = () => {
                   <Text style={styles.topText}>Create password</Text>
                 </View>
                 <View style={styles.inputContainer}>
+                <LinearGradient
+                    colors={
+                      focusedInput === 'password'
+                        ? [Color.Brand.main.start, Color.Brand.main.end]
+                        : [Color.Gray.gray300, Color.Gray.gray300]
+                    }
+                    start={[0, 1]}
+                    end={[1, 0]}
+                    style={{
+                      marginTop: 10,
+                      borderRadius: 16,
+                      padding: 1,
+                    }}
+                  >
                   <View
                     style={{
-                      flexDirection: "row",
                       alignItems: "center",
-                      height: 40,
-                      borderColor: Color.Gray.gray300,
-                      borderWidth: 1,
-                      borderRadius: 16,
-                      paddingHorizontal: 10,
-                      marginTop: 10,
+                        gap: 12,
+                        alignContent: "center",
+                        flexDirection: "row",
+                        height: 48,
+                        paddingHorizontal: 16,
+                        width: "100%",
+                        backgroundColor: Color.Gray.gray500,
+                        borderRadius: 16,
                     }}
                   >
                     <TextInput
                       secureTextEntry={!showPassword}
                       placeholder={passwordPlaceholder}
                       placeholderTextColor={Color.Gray.gray100}
-                      onFocus={onFocusPassword}
-                      onBlur={onBlurPassword}
+                      onFocus={() => setFocusedInput('password')}
+                      onBlur={() => setFocusedInput(null)}
                       style={{
                         flex: 1,
                         fontSize: 16,
@@ -155,24 +170,40 @@ const Password = () => {
                       />
                     </TouchableOpacity>
                   </View>
+                  </LinearGradient>
+                  <LinearGradient
+                    colors={
+                      focusedInput === 'confirmPassword'
+                        ? [Color.Brand.main.start, Color.Brand.main.end]
+                        : [Color.Gray.gray300, Color.Gray.gray300]
+                    }
+                    start={[0, 1]}
+                    end={[1, 0]}
+                    style={{
+                      marginTop: 10,
+                      borderRadius: 16,
+                      padding: 1,
+                    }}
+                  >
                   <View
                     style={{
-                      flexDirection: "row",
                       alignItems: "center",
-                      height: 40,
-                      borderColor: Color.Gray.gray300,
-                      borderWidth: 1,
-                      borderRadius: 16,
-                      paddingHorizontal: 10,
-                      marginTop: 10,
+                        gap: 12,
+                        alignContent: "center",
+                        flexDirection: "row",
+                        height: 48,
+                        paddingHorizontal: 16,
+                        width: "100%",
+                        backgroundColor: Color.Gray.gray500,
+                        borderRadius: 16,
                     }}
                   >
                     <TextInput
                       secureTextEntry={!showPassword}
                       placeholder={passwordPlaceholder}
                       placeholderTextColor={Color.Gray.gray100}
-                      onFocus={onFocusPassword}
-                      onBlur={onBlurPassword}
+                      onFocus={() => setFocusedInput('confirmPassword')}
+                      onBlur={() => setFocusedInput(null)}
                       style={{
                         flex: 1,
                         fontSize: 16,
@@ -191,6 +222,7 @@ const Password = () => {
                       />
                     </TouchableOpacity>
                   </View>
+                  </LinearGradient>
                 </View>
                 {!doPasswordsMatch && (
                   <Text style={styles.errorText}>Password doesn't match</Text>

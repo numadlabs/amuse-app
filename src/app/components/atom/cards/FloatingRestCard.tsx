@@ -15,6 +15,8 @@ import {
 } from "react-native";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
+import Button from "../../ui/Button";
+import { WalletAdd1 } from "iconsax-react-native";
 
 const { width } = Dimensions.get("window");
 
@@ -115,37 +117,43 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                   </Text>
                 </View>
               ) : (
-                <TouchableOpacity onPress={onPress}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      position: "relative",
-                      backgroundColor: Color.Gray.gray600,
-                      paddingVertical: 8,
-                      paddingHorizontal: 16,
-                      borderRadius: 48,
-                      marginLeft: 49,
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                   
-                    <Text
-                      style={{
-                        color: Color.Gray.gray50,
-                        fontWeight: "bold",
-                        fontSize: 11,
-                        lineHeight: 16,
-                      }}
-                    >
-                      {isClaimLoading
-                        ? (<ActivityIndicator/>)
-                        : marker.isOwned
-                        ? "Owned"
-                        : "Add"}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                <Button
+                  variant="primary"
+                  onPress={onPress}
+                  size="small"
+                  style={{
+                    alignItems: "center",
+                    height: 36,
+                    justifyContent: "center",
+                  }}
+                >
+                  {isClaimLoading ? (
+                    <ActivityIndicator size="small" color="white" />
+                  ) : (
+                    <>
+                      <WalletAdd1 size={16} color={Color.base.White} />
+                      <View
+                        style={{
+                          height: "100%",
+                          width: "100%",
+                          marginLeft: 8,
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <Text style={{ fontSize: 11, color: Color.base.White }}>
+                          {isClaimLoading ? (
+                            <ActivityIndicator />
+                          ) : marker.isOwned ? (
+                            "Owned"
+                          ) : (
+                            "Add"
+                          )}
+                        </Text>
+                      </View>
+                    </>
+                  )}
+                </Button>
               )}
             </View>
           </View>

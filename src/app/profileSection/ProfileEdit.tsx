@@ -39,6 +39,7 @@ const ProfileEdit = () => {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [dataChanged, setDataChanged] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [focusedInput, setFocusedInput] = useState<'Nickname' | 'Email' | 'Area'| 'Birthday' | null>(null);
   const showToast = () => {
     setTimeout(function () {
       Toast.show({
@@ -141,21 +142,53 @@ const ProfileEdit = () => {
                   <Text style={{ color: Color.base.White, fontSize: 14, lineHeight: 18, fontWeight: '600' }}>
                     Nickname
                   </Text>
-                  <View style={styles.input}>
+                  <LinearGradient
+                    colors={
+                      focusedInput === "Nickname"
+                        ? [Color.Brand.main.start, Color.Brand.main.end]
+                        : [Color.Gray.gray300, Color.Gray.gray300]
+                    }
+                    start={[0, 1]}
+                    end={[1, 0]}
+                    style={{
+                      borderRadius: 16,
+                      padding: 1,
+                      marginBottom: 12
+                    }}
+                  >
+                    <View
+                      style={styles.input}>
                     <User color={Color.Gray.gray50} />
                     <TextInput
                       placeholder="Nickname"
                       placeholderTextColor={Color.Gray.gray200}
                       value={nickname}
                       onChangeText={setNickname}
+                      onFocus={() => setFocusedInput('Nickname')}
+                      onBlur={() => setFocusedInput(null)}
                       style={{ fontSize: 20, color: Color.base.White }}
                     />
                   </View>
+                  </LinearGradient>
                 </View>
                 <View style={{ gap: 8 }}>
                   <Text style={{ color: Color.base.White, fontSize: 14, lineHeight: 18, fontWeight: '600' }}>
                     Email
                   </Text>
+                  <LinearGradient
+                    colors={
+                      focusedInput === "Email"
+                        ? [Color.Brand.main.start, Color.Brand.main.end]
+                        : [Color.Gray.gray300, Color.Gray.gray300]
+                    }
+                    start={[0, 1]}
+                    end={[1, 0]}
+                    style={{
+                      borderRadius: 16,
+                      padding: 1,
+                      marginBottom: 12
+                    }}
+                  >
                   <View style={styles.input}>
                     <Sms color={Color.Gray.gray50} />
                     <TextInput
@@ -163,14 +196,31 @@ const ProfileEdit = () => {
                       placeholder="Email"
                       value={email}
                       onChangeText={setEmail}
+                      onFocus={() => setFocusedInput('Email')}
+                      onBlur={() => setFocusedInput(null)}
                       style={{ fontSize: 20, color: Color.base.White }}
                     />
                   </View>
+                  </LinearGradient>
                 </View>
                 <View style={{ gap: 8 }}>
                   <Text style={{ color: Color.base.White, fontSize: 14, lineHeight: 18, fontWeight: '600' }}>
                     Area
                   </Text>
+                  <LinearGradient
+                    colors={
+                      focusedInput === "Area"
+                        ? [Color.Brand.main.start, Color.Brand.main.end]
+                        : [Color.Gray.gray300, Color.Gray.gray300]
+                    }
+                    start={[0, 1]}
+                    end={[1, 0]}
+                    style={{
+                      borderRadius: 16,
+                      padding: 1,
+                      marginBottom: 12
+                    }}
+                  >
                   <View style={styles.input}>
                     <Location color={Color.Gray.gray50} />
                     <TextInput
@@ -178,14 +228,31 @@ const ProfileEdit = () => {
                       placeholder="Location"
                       value={location}
                       onChangeText={setLocation}
+                      onFocus={() => setFocusedInput('Area')}
+                      onBlur={() => setFocusedInput(null)}
                       style={{ fontSize: 20, color: Color.base.White }}
                     />
                   </View>
+                  </LinearGradient>
                 </View>
                 <View style={{ gap: 8 }}>
                   <Text style={{ color: Color.base.White, fontSize: 14, lineHeight: 18, fontWeight: '600' }}>
                     Birthday
                   </Text>
+                  <LinearGradient
+                    colors={
+                      focusedInput === "Birthday"
+                        ? [Color.Brand.main.start, Color.Brand.main.end]
+                        : [Color.Gray.gray300, Color.Gray.gray300]
+                    }
+                    start={[0, 1]}
+                    end={[1, 0]}
+                    style={{
+                      borderRadius: 16,
+                      padding: 1,
+                      marginBottom: 12
+                    }}
+                  >
                   <View style={styles.input}>
                     <Cake color={Color.Gray.gray50} />
                     <DateTimePicker
@@ -197,6 +264,7 @@ const ProfileEdit = () => {
                       style={{ backgroundColor: Color.Gray.gray600 }}
                     />
                   </View>
+                  </LinearGradient>
                 </View>
               </View>
               <View style={{ gap: 8 }}>
@@ -298,13 +366,10 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: Color.Gray.gray600,
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: Color.Gray.gray300,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
     gap: 12,
-    marginBottom: 16,
   },
   profileName: {
     fontSize: 24,
