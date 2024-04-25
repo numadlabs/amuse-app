@@ -47,7 +47,7 @@ const ResListCard: React.FC<ResListCardProp> = ({
           />
           <View style={{ gap: 28 }}>
             <View style={{ gap: 4 }}>
-              <View style={{ width: "80%" }}>
+              <View style={{ width: "80%", flex: 1, overflow: 'hidden' }}>
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="tail"
@@ -59,7 +59,7 @@ const ResListCard: React.FC<ResListCardProp> = ({
               <Text style={styles.category}>{marker.category}</Text>
             </View>
             <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 25 }}
+              style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <View
@@ -82,14 +82,13 @@ const ResListCard: React.FC<ResListCardProp> = ({
                   {isOpen ? "Closed" : "Open"}
                 </Text>
               </View>
-
-              <View
+              {marker.isOwned ? <View
                 style={{
                   width: 1,
                   height: 14,
                   backgroundColor: Color.Gray.gray50,
                 }}
-              />
+              /> : ''}
               {marker.isOwned ? (
                 <View
                   style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
@@ -193,7 +192,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: Color.base.White,
-    width: "100%",
+    width: "80%",
   },
   category: {
     fontSize: 12,
