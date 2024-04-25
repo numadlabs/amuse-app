@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import Header from "./components/layout/Header";
 import Color from "./constants/Color";
-import { Notification1 } from "iconsax-react-native";
+import { Notification1, Bitcoin } from "iconsax-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 interface notProps {
@@ -29,37 +29,41 @@ const Notification = () => {
           >
             <View
               style={{
-                backgroundColor: Color.Gray.gray300,
-                width: 36,
-                height: 36,
+                backgroundColor: Color.Gray.gray400,
+                width: 40,
+                height: 40,
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: 100,
               }}
             >
-              <Notification1 size={20} color="#fff" />
+              <Bitcoin size={20} color="#fff" />
             </View>
             <View style={{ flexDirection: "column", gap: 4, flex: 1 }}>
               <Text
                 style={{
-                  color: Color.Gray.gray50,
+                  color: Color.base.White,
                   fontSize: 14,
-                  fontFamily: "Rubik-Medium",
+                  lineHeight: 18,
+                  fontWeight: '600',
                 }}
               >
-                {"Help"}
+                {"BTC earned"}
               </Text>
               <Text
                 style={{
-                  color: Color.Gray.gray100,
+                  color: Color.Gray.gray50,
                   fontSize: 12,
-                  fontFamily: "Rubik-Regular",
+                  fontWeight: '400'
                 }}
               >
-                {"description"}
+                {"You got $1 of BTC."}
               </Text>
             </View>
           </View>
+        </View>
+        <View style={{ position: 'absolute', top: 12, right: 12 }}>
+          <Text style={{ fontSize: 10, lineHeight: 12, color: Color.base.White }}>12h</Text>
         </View>
         </LinearGradient>
       </View>
