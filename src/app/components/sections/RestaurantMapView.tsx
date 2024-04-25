@@ -246,19 +246,7 @@ export default function RestaurantMapView() {
       router.push({
         pathname: `/Acards/${restaurant.id}`,
         params: {
-          id: restaurant.id,
-          cardId: restaurant.cardId,
-          name: restaurant.name,
-          location: restaurant.location,
-          about: restaurant.description,
-          category: restaurant.category,
-          isOwned: restaurant.isOwned,
-          benefits: [restaurant.benefits],
-          locations: restaurant.location,
-          artistInfo: restaurant.artistInfo,
-          expiryInfo: restaurant.expiryInfo,
-          instruction: restaurant.instruction,
-          logo: restaurant.logo,
+        
         },
       });
     } else {
@@ -266,7 +254,7 @@ export default function RestaurantMapView() {
         pathname: `/restaurants/${restaurant.id}`,
         params: {
           cardId: restaurant.cardId,
-          id: restaurant.id,
+     
         },
       });
     }
@@ -429,10 +417,7 @@ export default function RestaurantMapView() {
                   key={marker.id as string}
                   marker={marker}
                   isClaimLoading={isClaimLoading}
-                  onPress={() => {
-                    const aCardId = marker.cardId;
-                    handleGetAcard(aCardId);
-                  }}
+                  onPress={() => handleNavigation(marker)}
                 />
               </TouchableOpacity>
             ))}

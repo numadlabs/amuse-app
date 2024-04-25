@@ -2,9 +2,6 @@ import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { Location, TicketExpired, User, WalletAdd } from "iconsax-react-native";
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
-  Image,
-  ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
@@ -111,10 +108,10 @@ const Restaurant = () => {
       </View>
       <ScrollView style={styles.container}>
         <APassCard
-          name={restaurantsData.name}
-          image={restaurantsData.logo}
+          name={restaurantsData?.name}
+          image={restaurantsData?.logo}
           onPress={() => ""}
-          category={restaurantsData.category}
+          category={restaurantsData?.category}
           hasBonus={false}
           visitCount={0}
         />

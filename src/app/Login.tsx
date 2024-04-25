@@ -93,7 +93,7 @@ function Login() {
       const response = await onLogin(prefix, phoneNumber, password);
       if (response.success) {
         router.push("/(tabs)");
-      
+
       } else {
         console.log("Login failed:", response.data);
         setError(
@@ -152,7 +152,7 @@ function Login() {
   };
 
 
-  
+
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <GestureHandlerRootView
@@ -222,145 +222,145 @@ function Login() {
               </Text>
 
               <View style={{ gap: 12 }}>
-              <LinearGradient
-                    colors={
-                      focusedInput === "Phone number"
-                        ? [Color.Brand.main.start, Color.Brand.main.end]
-                        : [Color.Gray.gray300, Color.Gray.gray300]
-                    }
-                    start={[0, 1]}
-                    end={[1, 0]}
+                <LinearGradient
+                  colors={
+                    focusedInput === "Phone number"
+                      ? [Color.Brand.main.start, Color.Brand.main.end]
+                      : [Color.Gray.gray300, Color.Gray.gray300]
+                  }
+                  start={[0, 1]}
+                  end={[1, 0]}
+                  style={{
+                    marginTop: 10,
+                    borderRadius: 16,
+                    padding: 1,
+                  }}
+                >
+                  <View
                     style={{
-                      marginTop: 10,
+                      alignItems: "center",
+                      gap: 12,
+                      alignContent: "center",
+                      flexDirection: "row",
+                      height: 48,
+                      paddingHorizontal: 16,
+                      width: "100%",
+                      backgroundColor: Color.Gray.gray500,
                       borderRadius: 16,
-                      padding: 1,
                     }}
                   >
-                    <View
-                      style={{
-                        alignItems: "center",
-                        gap: 12,
-                        alignContent: "center",
-                        flexDirection: "row",
-                        height: 48,
-                        paddingHorizontal: 16,
-                        width: "100%",
-                        backgroundColor: Color.Gray.gray500,
-                        borderRadius: 16,
-                      }}
+
+                    <AnimatedPressable
+                      entering={FadeIn}
+                      exiting={FadeOut}
+                      onPress={togglePrefix}
                     >
-               
-                  <AnimatedPressable
-                    entering={FadeIn}
-                    exiting={FadeOut}
-                    onPress={togglePrefix}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 8,
-                      }}
-                    >
-                      <Text
+                      <View
                         style={{
-                          fontSize: 16,
-                          lineHeight: 20,
-                          color: Color.Gray.gray50,
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 8,
                         }}
                       >
-                        +{prefix}
-                      </Text>
-                      <ArrowDown2 color={Color.Gray.gray50} />
-                    </View>
-                  </AnimatedPressable>
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            lineHeight: 20,
+                            color: Color.Gray.gray50,
+                          }}
+                        >
+                          +{prefix}
+                        </Text>
+                        <ArrowDown2 color={Color.Gray.gray50} />
+                      </View>
+                    </AnimatedPressable>
 
-                  <TextInput
-                    inputMode="tel"
-                    placeholder={phonePlaceholder}
-                    placeholderTextColor={Color.Gray.gray100}
-                    onFocus={() => setFocusedInput('Phone number')}
-                    onBlur={() => setFocusedInput(null)}
-                    style={{
-                      height: 40,
-                      fontSize: 16,
-                      fontWeight: "400",
-                      lineHeight: 20,
-                      paddingLeft: 10,
-                      color: Color.base.White,
-                    }}
-                    value={phoneNumber}
-                    onChangeText={setPhoneNumber}
-                  />
-                </View>
+                    <TextInput
+                      inputMode="tel"
+                      placeholder={phonePlaceholder}
+                      placeholderTextColor={Color.Gray.gray100}
+                      onFocus={() => setFocusedInput('Phone number')}
+                      onBlur={() => setFocusedInput(null)}
+                      style={{
+                        height: 40,
+                        fontSize: 16,
+                        fontWeight: "400",
+                        lineHeight: 20,
+                        paddingLeft: 10,
+                        color: Color.base.White,
+                      }}
+                      value={phoneNumber}
+                      onChangeText={setPhoneNumber}
+                    />
+                  </View>
                 </LinearGradient>
-                {error && phoneNumber.length < 7 && 
-                <Text
-                  style={{ color: Color.System.systemError, paddingHorizontal: 16 }}
-                >
-                  {"Please enter valid phone number"}
-                </Text>}
+                {error && phoneNumber.length < 7 &&
+                  <Text
+                    style={{ color: Color.System.systemError, paddingHorizontal: 16 }}
+                  >
+                    {"Please enter valid phone number"}
+                  </Text>}
 
                 <LinearGradient
-                    colors={
-                      focusedInput === "Password"
-                        ? [Color.Brand.main.start, Color.Brand.main.end]
-                        : [Color.Gray.gray300, Color.Gray.gray300]
-                    }
-                    start={[0, 1]}
-                    end={[1, 0]}
+                  colors={
+                    focusedInput === "Password"
+                      ? [Color.Brand.main.start, Color.Brand.main.end]
+                      : [Color.Gray.gray300, Color.Gray.gray300]
+                  }
+                  start={[0, 1]}
+                  end={[1, 0]}
+                  style={{
+                    marginTop: 10,
+                    borderRadius: 16,
+                    padding: 1,
+                  }}
+                >
+                  <View
                     style={{
-                      marginTop: 10,
+                      alignItems: "center",
+                      gap: 12,
+                      alignContent: "center",
+                      flexDirection: "row",
+                      height: 48,
+                      paddingHorizontal: 16,
+                      width: "100%",
+                      backgroundColor: Color.Gray.gray500,
                       borderRadius: 16,
-                      padding: 1,
                     }}
                   >
-                    <View
+                    <TextInput
+                      secureTextEntry={!showPassword}
+                      placeholder={passwordPlaceholder}
+                      placeholderTextColor={Color.Gray.gray100}
+                      onFocus={() => setFocusedInput('Password')}
+                      onBlur={() => setFocusedInput(null)}
                       style={{
-                        alignItems: "center",
-                        gap: 12,
-                        alignContent: "center",
-                        flexDirection: "row",
-                        height: 48,
-                        paddingHorizontal: 16,
-                        width: "100%",
-                        backgroundColor: Color.Gray.gray500,
-                        borderRadius: 16,
+                        flex: 1,
+                        fontSize: 16,
+                        fontWeight: "400",
+                        lineHeight: 20,
+                        color: Color.base.White,
                       }}
-                    >
-                  <TextInput
-                    secureTextEntry={!showPassword}
-                    placeholder={passwordPlaceholder}
-                    placeholderTextColor={Color.Gray.gray100}
-                    onFocus={() => setFocusedInput('Password')}
-                    onBlur={() => setFocusedInput(null)}
-                    style={{
-                      flex: 1,
-                      fontSize: 16,
-                      fontWeight: "400",
-                      lineHeight: 20,
-                      color: Color.base.White,
-                    }}
-                    value={password}
-                    onChangeText={setPassword}
-                  />
-                  <TouchableOpacity onPress={toggleShowPassword}>
-                    <Ionicons
-                      name={showPassword ? "eye-outline" : "eye-off-outline"}
-                      size={24}
-                      color={Color.Gray.gray50}
+                      value={password}
+                      onChangeText={setPassword}
                     />
-                  </TouchableOpacity>
-                </View>
+                    <TouchableOpacity onPress={toggleShowPassword}>
+                      <Ionicons
+                        name={showPassword ? "eye-outline" : "eye-off-outline"}
+                        size={24}
+                        color={Color.Gray.gray50}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </LinearGradient>
-                {password.length < 8 && null && 
+                {password.length < 8 && null &&
                   <Text
-                  style={{ color: Color.System.systemError, paddingHorizontal: 16 }}
-                >
-                  {"Please enter valid password"}
-                </Text>
+                    style={{ color: Color.System.systemError, paddingHorizontal: 16 }}
+                  >
+                    {"Please enter valid password"}
+                  </Text>
                 }
-                
+
                 {error && (
                   <Text
                     style={{ color: Color.System.systemError, paddingHorizontal: 16 }}
@@ -392,7 +392,7 @@ function Login() {
                 <Button
                   style={{ zIndex: 0 }}
                   variant="text"
-                  onPress={() => router.push("/forgotpassword/ForgotPassword")}
+                  onPress={() => router.push("/forgotPassword/ForgotPassword")}
                 >
                   <Text
                     style={{
@@ -495,7 +495,7 @@ function Login() {
             alignItems: "center",
             justifyContent: "center",
             marginBottom: 24,
-            marginTop:24,
+            marginTop: 24,
             gap: 0,
             flexDirection: "column",
           }}
