@@ -11,7 +11,7 @@ export async function getRestaurantById(id: string) {
   return axiosClient.get(`/restaurants/${id}`).then((response) => {
     console.log("🚀 ~ returnaxiosClient.get ~ response:", response.data);
     if (response.data.success) {
-      return response?.data;
+      return response?.data.restaurant;
     } else {
       throw new Error(response.data.error);
     }
@@ -96,6 +96,16 @@ export async function getUserById(userID: string) {
   });
 }
 
+export async function getCardById(id){
+  return axiosClient.get(`/cards/${id}`).then((response) => {
+    if (response.data.success) {
+      return response?.data.data;
+    } else {
+      throw new Error(response.data.error);
+    }
+  });
+}
+
 export async function getRestaurantId(id) {
   return axiosClient.get(`/restaurants/${id}`).then((response) => {
     if (response.data.success) {
@@ -106,14 +116,4 @@ export async function getRestaurantId(id) {
   });
 }
 
-export async function getPrefixAndCountry() {
-  return axiosClient
-    .get("https://restcountries.com/v2/all?fields=name,callingCodes")
-    .then((response) => {
-      if (response.status === 200) {
-        return response.data;
-      } else {
-        throw new Error(response.data.error);
-      }
-    });
-}
+

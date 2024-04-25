@@ -29,6 +29,7 @@ import {
   getRestaurants,
 } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
+import APassCard from "../components/atom/cards/APassCard";
 
 const Restaurant = () => {
   const { cardId, id } = useLocalSearchParams();
@@ -60,7 +61,7 @@ const Restaurant = () => {
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => {},
+    onSuccess: (data, variables) => { },
   });
   const handleGetAcard = async (acardId: string) => {
     console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
@@ -81,6 +82,7 @@ const Restaurant = () => {
         setIsClaimLoading(false);
         const owned = data.data.userCard;
         console.log(owned);
+        router.back()
         showToast();
       }
     }
@@ -96,7 +98,7 @@ const Restaurant = () => {
   };
 
   return (
-    <View style={{ backgroundColor: Color.Gray.gray500, flex: 1 }}>
+    <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity
           style={[styles.button, styles.closeButton]}
@@ -108,37 +110,14 @@ const Restaurant = () => {
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.container}>
-        <ImageBackground
-          source={{
-            uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${restaurantsData?.logo}` as string,
-          }}
-          style={styles.textImageContainer}
-        >
-          <View style={styles.overlay} />
-          <BlurView intensity={24} style={styles.textImageContainer1}>
-            <View style={styles.textContainer}>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 16,
-                  color: Color.base.White,
-                }}
-              >
-                {restaurantsData?.name}
-              </Text>
-              <Text style={{ fontSize: 12, color: Color.Gray.gray50 }}>
-                {restaurantsData?.category}
-              </Text>
-            </View>
-            <Image
-              style={styles.image}
-              source={{
-                uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${restaurantsData?.logo}` as string,
-              }}
-            />
-          </BlurView>
-        </ImageBackground>
-
+        <APassCard
+          name={restaurantsData.name}
+          image={restaurantsData.logo}
+          onPress={() => ""}
+          category={restaurantsData.category}
+          hasBonus={false}
+          visitCount={0}
+        />
         <View style={styles.attrContainer}>
           <View style={{ gap: 32 }}>
             <View style={{ gap: 16 }}>
@@ -198,28 +177,32 @@ const Restaurant = () => {
         </View>
       </ScrollView>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
+        <Button
           onPress={() => {
             handleGetAcard(cardId as string);
           }}
-        >
-          <View style={styles.button1}>
-            <WalletAdd color={Color.Gray.gray50} />
+          size="small"
+          variant="primary"
+          style={{ alignItems: 'center', alignContent: 'center', justifyContent: 'center', }}>
+          <View style={{ flexDirection: 'row', alignContent: 'center', alignItems: 'center', gap: 12, top: 2 }}>
+            <WalletAdd color={Color.base.White} />
             <Text
               style={{
-                color: Color.Gray.gray50,
+                color: Color.base.White,
                 fontSize: 15,
                 fontWeight: "bold",
+                top: 2
               }}
             >
               {isClaimLoading
                 ? "Loading"
                 : restaurantsData?.visitCount === null
-                ? "Add a membership card"
-                : "Owned"}
+                  ? "Add a membership card"
+                  : "Owned"}
             </Text>
           </View>
-        </TouchableOpacity>
+
+        </Button>
         <Popup title="" isVisible={isPopupVisible} onClose={closePopup} />
       </View>
     </View>

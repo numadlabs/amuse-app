@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Flash, SearchNormal } from "iconsax-react-native";
 import Color from "../../constants/Color";
 import { useRouter } from "expo-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -44,7 +43,7 @@ const StackedCard = () => {
     transform: [
       {
         translateY: withTiming(cardPositions.value, {
-          duration: 600,
+          duration: 400,
         }),
       },
     ],

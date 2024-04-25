@@ -5,7 +5,7 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { BlurView } from "expo-blur";
 import Color from "@/app/constants/Color";
 import { height, scaleHeight } from "@/app/lib/utils";
@@ -13,6 +13,11 @@ import { Flash, TicketStar } from "iconsax-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import APassStripes from "../../icons/APassStripes";
 import Animated, {
+  Easing,
+  FadeIn,
+  FadeOut,
+  SlideInDown,
+  SlideOutDown,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -34,8 +39,12 @@ interface ApassProp {
   visitCount: number;
 }
 const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBonus, visitCount }) => {
-
+  const animatedValue = useSharedValue(visitCount)
   const pressed = useSharedValue(false);
+
+
+  const AnimatedText = Animated.createAnimatedComponent(Text)
+
 
   const tap = Gesture.Tap()
     .onBegin(() => {
@@ -48,6 +57,8 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{ scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) }],
   }));
+
+
 
 
   return (
@@ -78,17 +89,18 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
                       <Text style={[styles.buttonText, { bottom: 5 }]}>{category}</Text>
                     </View>
                   </View>
-                  {hasBonus ? <View
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "center",
-                      backgroundColor: Color.Gray.gray400,
-                      padding: 8,
-                      borderRadius: 12,
-                    }}
-                  >
-                    <TicketStar size={24} color={Color.base.White} />
-                  </View> : null}
+                  {hasBonus ?
+                    <View
+                      style={{
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: Color.Gray.gray400,
+                        padding: 8,
+                        borderRadius: 12,
+                      }}
+                    >
+                      <TicketStar size={24} color={Color.base.White} />
+                    </View> : null}
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20, rowGap: 12 }}>
                   <Image style={{ minWidth: 164, minHeight: 164, borderRadius: 12 }} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${image}` }} />
@@ -101,11 +113,11 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
                         colors={[Color.Brand.card.start, Color.Brand.card.end]}
                         start={{ x: 1, y: 0 }}
                         end={{ x: 2, y: 1 }}
-                        style={{ borderTopStartRadius: 12, borderTopEndRadius: 12, zIndex: 2 }}>
+                        style={{ borderTopStartRadius: 12, borderTopEndRadius: 12 }}>
                         <View style={{ padding: 33, justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
-                          <Text style={{ fontSize: 32, lineHeight: 40, fontWeight: '700', color: Color.base.White }}>
+                          <AnimatedText entering={FadeIn} exiting={FadeOut} style={{ fontSize: 32, lineHeight: 40, fontWeight: '700', color: Color.base.White }}>
                             {visitCount < 10 ? `0${visitCount}` : visitCount}
-                          </Text>
+                          </AnimatedText>
                           <Text style={{ fontSize: 12, lineHeight: 16, fontWeight: '600', color: Color.base.White }}>
                             Check-ins
                           </Text>
@@ -113,14 +125,16 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
                       </LinearGradient>
                     </BlurView>
                     {/* </LinearGradient> */}
-                    <View style={{  justifyContent: 'center', alignContent: 'center', alignItems: 'center',flexDirection: 'row', gap: 6,  borderTopWidth: 1, borderColor: Color.Gray.gray400 }}>
-                      <View style={{flexDirection:'row',  justifyContent: 'center', alignContent: 'center', alignItems: 'center', gap: 6, paddingVertical:10}}>
-                        <Text style={{ fontWeight: '700', fontSize: 14, lineHeight: 18, color: Color.base.White }}>{10 - visitCount}</Text>
+                    <View style={{ justifyContent: 'center', alignContent: 'center', alignItems: 'center', flexDirection: 'row', gap: 6, borderTopWidth: 1, borderColor: Color.Gray.gray400 }}>
+                      <View style={{ flexDirection: 'row', justifyContent: 'center', alignContent: 'center', alignItems: 'center', gap: 6, paddingVertical: 10 }}>
+
+                        {/*Todo:  find some better counting shit you fucker */}
+                        <AnimatedText entering={FadeIn} exiting={FadeOut} style={[{ fontWeight: '700', fontSize: 14, lineHeight: 18, color: Color.base.White }, animatedStyles]}>{Math.max(1, 3 - (visitCount % 3))}</AnimatedText>
+
                         <Text style={{ fontWeight: '400', fontSize: 10, lineHeight: 12, color: Color.base.White }}>
                           Until next perk
                         </Text>
                       </View>
-
                     </View>
                   </View>
                 </View>

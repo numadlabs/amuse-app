@@ -34,6 +34,8 @@ import { getUserPowerUps, getUserCard } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
 import PowerUpLogo from "../components/icons/PowerUpLogo";
 import { userKeys } from "../lib/service/keysHelper";
+import APassCard from "../components/atom/cards/APassCard";
+import PerkGradient from "../components/icons/PerkGradient";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const Restaurant = () => {
@@ -54,6 +56,7 @@ const Restaurant = () => {
     logo,
     taps,
   } = useLocalSearchParams();
+
   const [loading, setLoading] = useState(false);
   const translateY = useAnimatedStyle(() => ({
     transform: [{ translateY: offset.value }],
@@ -92,7 +95,7 @@ const Restaurant = () => {
 
   return (
     <GestureHandlerRootView
-      style={{ backgroundColor: Color.Gray.gray500, flex: 1 }}
+      style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}
     >
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity
@@ -105,83 +108,19 @@ const Restaurant = () => {
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.container}>
-        {loading ? ( // Conditionally render loading indicator
+        {loading ? ( 
           <View style={{ backgroundColor: "red", width: "100%" }}>
             <ActivityIndicator />
           </View>
         ) : (
-          <ImageBackground
-            source={{
-              uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${logo}` as string,
-            }}
-            style={styles.textImageContainer}
-          >
-            <View style={styles.overlay} />
-            <BlurView intensity={24} style={styles.textImageContainer1}>
-              <View style={styles.textContainer}>
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: 16,
-                    color: Color.base.White,
-                  }}
-                >
-                  {name}
-                </Text>
-                <Text style={{ fontSize: 12, color: Color.Gray.gray50 }}>
-                  {category}
-                </Text>
-              </View>
-              <Image
-                style={styles.image}
-                source={{
-                  uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${logo}` as string,
-                }}
-              />
-              <View style={styles.bottomDetailsContainer}>
-                <View style={styles.bottomDetails1}>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      color: Color.Gray.gray50,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    #267473
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      color: Color.Gray.gray50,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    MEMBERSHIP
-                  </Text>
-                </View>
-                <View style={styles.bottomDetails}>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 20,
-                      color: Color.base.White,
-                    }}
-                  >
-                    {taps}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      color: Color.Gray.gray50,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Check-ins
-                  </Text>
-                </View>
-              </View>
-            </BlurView>
-          </ImageBackground>
+          <APassCard
+            name={name as string}
+            image={logo as string}
+            onPress={() => ""}
+            category={category as string}
+            hasBonus={false}
+            visitCount={parseInt(taps as string)}
+          />
         )}
         <View style={styles.attrContainer}>
           <View
@@ -265,18 +204,15 @@ const Restaurant = () => {
                 ) : (
                   <View
                     style={{
-                      backgroundColor: Color.Gray.gray400,
-                      flex: 1,
-                      justifyContent: "center",
                       gap: 16,
                       padding: 24,
                       borderRadius: 16,
                     }}
                   >
                     <View
-                      style={{ justifyContent: "center", alignItems: "center" }}
+                      style={{padding:12, backgroundColor:Color.Gray.gray400, justifyContent: "center", alignItems: "center",width:52 }}
                     >
-                      <PowerUpLogo />
+                      <PerkGradient/>
                     </View>
 
                     <Text
@@ -349,10 +285,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   powerUpGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    marginTop: 16,
+   
     gap: 15,
   },
   textImageContainer: {

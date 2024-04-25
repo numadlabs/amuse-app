@@ -90,6 +90,7 @@ const QrModal = () => {
     getCameraPermissions();
   }, []);
 
+
   const {
     data,
     error,
@@ -108,7 +109,12 @@ const QrModal = () => {
       }
     },
   });
+  const handleNavigation = () => {
+   
+  };
+
   const visitCount = cards?.data?.cards[0].visitCount;
+  const card = cards?.data?.cards[0];
   const { mutateAsync: createRedeemMutation } = useMutation({
     mutationFn: redeemTap,
     onError: (error) => {
@@ -129,10 +135,26 @@ const QrModal = () => {
       queryClient.invalidateQueries({ queryKey: userKeys.info });
 
       if (visitCount % SERVER_SETTING.PERK_FREQUENCY === 0) {
-        togglePopup();
+        // togglePopup();
+        router.back()
+        router.navigate({
+          pathname: '/PerkScreen',
+          params: {
+            restaurantId: card.restaurantId,
+            btcAmount: data.data?.data?.increment,
+            powerUp: data.data?.data?.bonus?.name,
+          }
+        });
       } else {
-        toggleBtcPopup();
-        showToast();
+        router.back()
+        router.navigate({
+          pathname: '/PerkScreen',
+          params: {
+            restaurantId: card.restaurantId,
+            btcAmount: data.data?.data?.increment,
+            powerUp: data.data?.data?.bonus?.name,
+          }
+        });
       }
     },
   });
