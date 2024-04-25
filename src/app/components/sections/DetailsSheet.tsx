@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     height:height/5
   },
   content: {
-    backgroundColor:Color.Gray.gray500
+    backgroundColor:Color.Gray.gray600
   },
   textContainer: {
     alignItems: 'center',

@@ -1,23 +1,17 @@
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import { Location, TicketExpired, User, WalletAdd } from "iconsax-react-native";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
   Image,
-  ImageBackground,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { BlurView } from "expo-blur";
-
 import Color from "./constants/Color";
 import Close from "./components/icons/Close";
-import AmuseBlackLogo from "./components/icons/AmuseBlackLogo";
 import Popup from "./components/(feedback)/Popup";
 import Toast from "react-native-toast-message";
+import PerkGradient from "./components/icons/PerkGradient";
 
 const PowerUp = () => {
 
@@ -38,13 +32,9 @@ const PowerUp = () => {
   };
 
   const handleNavigation = () => {
-
     showToast()
     router.back()
   }
-
-
-
   return (
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
       <View style={styles.closeButtonContainer}>
@@ -73,7 +63,10 @@ const PowerUp = () => {
         <View
           style={{ justifyContent: "center", alignItems: "center", gap: 32 }}
         >
-          <AmuseBlackLogo />
+          <View style={{ padding: 12, backgroundColor: Color.Gray.gray400, borderRadius: 12, width:52, height:52 }}>
+            <PerkGradient />
+          </View>
+
           <View style={{ gap: 12, alignItems: 'center' }}>
             <Text
               style={{
@@ -129,7 +122,7 @@ const styles = StyleSheet.create({
   },
   container: {
     gap: 80,
-    marginTop: 16,
+    marginBottom: 40,
     paddingHorizontal: 16,
     flex: 1,
     justifyContent: "center",

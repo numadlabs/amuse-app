@@ -4,6 +4,9 @@ import { RestaurantType } from '@/app/lib/types'
 import PowerUpLogo from '../../icons/PowerUpLogo'
 import Color from '@/app/constants/Color'
 import PowerUpStripes from '../../icons/PowerUpStripes'
+import PerkGradient from '../../icons/PerkGradient'
+import Button from '../../ui/Button'
+import { LinearGradient } from 'expo-linear-gradient'
 
 
 interface PowerUpCardProp {
@@ -12,23 +15,29 @@ interface PowerUpCardProp {
 }
 const PowerUpCard: React.FC<PowerUpCardProp> = ({ title, onPress }) => {
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={[Color.Brand.card.start, Color.Brand.card.end]}
+      start={{ x: 1, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+        <PerkGradient />
+        <Text style={{ fontWeight: 'bold', fontSize: 14, color: Color.base.White, }}>{title}</Text>
+      </View>
 
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.stripesContainer}>
-          <PowerUpStripes />
-        </View>
-        <View style={{padding:12}}>
-        <PowerUpLogo />
-        <View style={{ gap: 8, marginTop: 20 }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 14, color: Color.Gray.gray50, }}>{title}</Text>
-        </View>
-
-        </View>
-      
-      </TouchableOpacity>
-
-    </View>
+      <Button variant='primary' style={{ width: '26%' }} onPress={onPress}>
+        <Text
+          style={{
+            color: "white",
+            fontSize: 11,
+            lineHeight: 16,
+            fontWeight: "bold",
+          }}
+        >
+          Use
+        </Text>
+      </Button>
+    </LinearGradient>
   )
 }
 
@@ -36,30 +45,21 @@ export default PowerUpCard
 
 const styles = StyleSheet.create({
   container: {
-    height: 164,
-    ...Platform.select({
-      ios: {
-        shadowColor: Color.Gray.gray500,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 12
-      },
-      android: {
-        elevation: 12,
-      },
-    }),
-    width: 164,
-    backgroundColor: Color.Gray.gray300,
+    flexDirection: 'row',
+    alignContent: 'center',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 18,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
     borderRadius: 16,
-    overflow: 'hidden',
-    borderColor: Color.Gray.gray300,
-    borderWidth:1
   },
   stripesContainer: {
     position: 'absolute',
     right: 0,
-    
- 
+
+
   }
 })

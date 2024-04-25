@@ -32,7 +32,7 @@ export const toastConfig: ToastConfig = {
 
 const styles = StyleSheet.create({
   toastContainer: {
-  
+    zIndex:999,
     gap: 8,
     height: 48,
     flexDirection: 'row',
