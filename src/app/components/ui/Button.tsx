@@ -92,8 +92,6 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 48,
     overflow: "hidden",
-    borderWidth:1,
-    borderColor: Color.Gray.gray50
   },
   gradient: {
     ...StyleSheet.absoluteFillObject,

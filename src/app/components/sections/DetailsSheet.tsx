@@ -89,7 +89,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
           <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>
             How it works
           </Text>
-          <Text style={(styles.attributeLocText)}>
+          <Text style={{color: Color.Gray.gray50, fontSize: 16, width: '90%'}}>
             Scan the restaurant’s QR code. Earn some Bitcoin. Activate perks when you get them. Repeat and stack your rewards.
           </Text>
         </View>
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   },
 
   attributeLocText: {
-    color: Color.Gray.gray50,
+    color: Color.System.systemInformation,
     fontSize: 16,
     width: '90%'
   },

@@ -38,6 +38,7 @@ export default {
     systemSuccessBg: '#2CB59E/20',
     systemError: '#FF5C69',
     systemErrorBg: '#FF5C69/20',
+    systemInformation: '#007FFF'
   }
 }
 

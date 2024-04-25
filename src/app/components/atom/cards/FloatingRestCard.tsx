@@ -123,10 +123,11 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                   size="small"
                   style={{
                     alignItems: "center",
-                    height: 30,
                     justifyContent: "center",
                     alignContent:'center',
-                    paddingHorizontal:20
+                    paddingHorizontal: 20,
+                    borderWidth: 1,
+                    borderColor: Color.Gray.gray50
                   }}
                 >
 

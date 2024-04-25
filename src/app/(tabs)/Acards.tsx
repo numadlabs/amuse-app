@@ -51,9 +51,9 @@ const Acards = () => {
               <TouchableOpacity
                 style={[
                   styles.toggleButton,
-                  !showMapView && styles.activeButton,
+                  showMapView && styles.activeButton,
                 ]}
-                onPress={() => toggleView(false)}
+                onPress={() => toggleView(true)}
               >
                 <Text
                   style={[styles.buttonText, !showMapView && styles.activeText]}
@@ -64,9 +64,9 @@ const Acards = () => {
               <TouchableOpacity
                 style={[
                   styles.toggleButton,
-                  showMapView && styles.activeButton,
+                  !showMapView && styles.activeButton,
                 ]}
-                onPress={() => toggleView(true)}
+                onPress={() => toggleView(false)}
               >
                 <Text
                   style={[styles.buttonText, showMapView && styles.activeText]}
@@ -77,7 +77,7 @@ const Acards = () => {
             </Animated.View>
           </View>
 
-          {showMapView ? <RestaurantListView /> : <RestaurantMapView />}
+          {showMapView ? <RestaurantMapView /> : <RestaurantListView />}
         </View>
       </View>
     </>
