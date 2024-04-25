@@ -58,7 +58,7 @@ const Acards = () => {
                 <Text
                   style={[styles.buttonText, !showMapView && styles.activeText]}
                 >
-                  List
+                  Map
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -71,13 +71,13 @@ const Acards = () => {
                 <Text
                   style={[styles.buttonText, showMapView && styles.activeText]}
                 >
-                  Map
+                  List
                 </Text>
               </TouchableOpacity>
             </Animated.View>
           </View>
 
-          {showMapView ? <RestaurantMapView /> : <RestaurantListView />}
+          {showMapView ? <RestaurantListView /> : <RestaurantMapView />}
         </View>
       </View>
     </>

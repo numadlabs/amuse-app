@@ -98,6 +98,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
             <TouchableOpacity
               key={`card-${item.id}`}
               onPress={() => handleNavigation(item)}
+              style={{ paddingHorizontal: 16 }}
             >
               <ResListCard
                 key={index}

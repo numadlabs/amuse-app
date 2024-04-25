@@ -19,7 +19,7 @@ import { RestaurantType } from "../lib/types";
 import { GetRestaurantsResponseType } from "../lib/types/apiResponseType";
 import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
 import { getRestaurants } from "../lib/service/queryHelper";
-import ResListCard from "../components/atom/cards/RestListCard";
+import HomeRestList from "../components/atom/cards/HomeRestList";
 import { InfoCircle } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
@@ -139,10 +139,11 @@ const Page = () => {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
               >
+                <View style={{ flexDirection: 'row', gap: 8 }}>
                 <TouchableOpacity
                   onPress={() => handleNavigation(restaurantsArray[0])}
                 >
-                  <ResListCard
+                  <HomeRestList
                     isClaimLoading={true}
                     marker={restaurantsArray[0]}
                     key={restaurantsArray[0].id as string}
@@ -160,7 +161,7 @@ const Page = () => {
                 <TouchableOpacity
                   onPress={() => handleNavigation(restaurantsArray[1])}
                 >
-                  <ResListCard
+                  <HomeRestList
                     isClaimLoading={true}
                     marker={restaurantsArray[1]}
                     key={restaurantsArray[1].id as string}
@@ -170,13 +171,14 @@ const Page = () => {
                 <TouchableOpacity
                   onPress={() => handleNavigation(restaurantsArray[2])}
                 >
-                  <ResListCard
+                  <HomeRestList
                     isClaimLoading={true}
                     marker={restaurantsArray[2]}
                     key={restaurantsArray[2].id as string}
                     onPress={() => handleNavigation(restaurantsArray[2])}
                   />
                 </TouchableOpacity>
+                </View>
               </ScrollView>
             </View>
           )}
@@ -203,7 +205,7 @@ const Page = () => {
             <InfoCircle size={18} color={Color.Gray.gray100} />
           </TouchableOpacity>
         </View>
-        <View style={{}}>
+        <View style={{  }}>
           <StackedCard key={refreshPage.toString()} />
         </View>
         {cards?.data?.cards.length === 0 ? (
