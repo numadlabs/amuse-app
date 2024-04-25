@@ -36,6 +36,7 @@ import PowerUpLogo from "../components/icons/PowerUpLogo";
 import { userKeys } from "../lib/service/keysHelper";
 import APassCard from "../components/atom/cards/APassCard";
 import PerkGradient from "../components/icons/PerkGradient";
+import { LinearGradient } from "expo-linear-gradient";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const Restaurant = () => {
@@ -202,15 +203,23 @@ const Restaurant = () => {
                     />
                   ))
                 ) : (
+                  <LinearGradient
+                    colors={[Color.Brand.card.start, Color.Brand.card.end]}
+                    style={{ borderRadius: 16 }}>
                   <View
                     style={{
                       gap: 16,
                       padding: 24,
                       borderRadius: 16,
+                      borderWidth: 1,
+                      borderColor: Color.Gray.gray400,
+                      alignItems: 'center',
+                      paddingVertical: 32,
+                       paddingHorizontal: 24
                     }}
                   >
                     <View
-                      style={{padding:12, backgroundColor:Color.Gray.gray400, justifyContent: "center", alignItems: "center",width:52 }}
+                      style={{padding:12, backgroundColor:Color.Gray.gray400, justifyContent: "center", alignItems: "center", width:52, borderRadius: 12 }}
                     >
                       <PerkGradient/>
                     </View>
@@ -228,6 +237,7 @@ const Restaurant = () => {
                       you will receive perks.
                     </Text>
                   </View>
+                  </LinearGradient>
                 )}
               </View>
             ) : (
