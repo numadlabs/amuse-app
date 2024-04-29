@@ -83,7 +83,6 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
     router.push({
       pathname: `/restaurants/${restaurant.id}`,
       params: {
-        id: restaurant.id,
         cardId: restaurant.cardId,
       },
     });

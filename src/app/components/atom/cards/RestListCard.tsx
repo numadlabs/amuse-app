@@ -112,6 +112,7 @@ const ResListCard: React.FC<ResListCardProp> = ({
                     justifyContent: "center",
                     borderWidth: 1,
                     borderRadius: 16,
+                    marginLeft:90,
                     borderColor: Color.base.White
                   }}
                 >

@@ -132,6 +132,7 @@ export default function RestaurantMapView() {
 
     enabled: !!currentLocation,
   });
+  
 
   const { mutateAsync: createGetAcardMutation } = useMutation({
     mutationFn: getAcard,

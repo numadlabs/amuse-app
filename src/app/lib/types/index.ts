@@ -36,6 +36,7 @@ export type RestaurantType = {
   latitude: number;
   longitude: number;
   opensAt: string;
+  restaurantId:string;
   closesAt: string;
   logo: string;
   cardId: string;

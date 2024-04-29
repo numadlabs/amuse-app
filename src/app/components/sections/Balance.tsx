@@ -1,10 +1,8 @@
 import { View, Text, StyleSheet, Image } from "react-native";
 import React from "react";
 import Color from "../../constants/Color";
-import BalanceStripes from "../icons/BalanceStripes";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
-import { RadialGradient } from "react-native-svg";
 
 interface BalanceProps {
   amount?: number;
@@ -12,9 +10,9 @@ interface BalanceProps {
 
 const Balance: React.FC<BalanceProps> = ({ amount }) => {
   const truncatedAmount =
-    amount !== 0 ? amount?.toString().substring(0, 6) : "0.0000";
+    amount !== 0 ? amount?.toString().substring(0, 9) : "0.0000";
   let coinAmout = parseFloat(truncatedAmount) * 70193;
-  let formattedCoin = coinAmout.toFixed(2);
+
 
   return (
     <View style={styles.container}>
@@ -39,7 +37,7 @@ const Balance: React.FC<BalanceProps> = ({ amount }) => {
                   style={{ width: 28, height: 28 }}
                   source={require("@/public/images/Bitcoin.png")}
                 />
-                <Text style={styles.balanceAmount}>{truncatedAmount} BTC</Text>
+                <Text style={styles.balanceAmount}>{truncatedAmount} bitcoin</Text>
               </View>
             </View>
             <Text
@@ -50,7 +48,7 @@ const Balance: React.FC<BalanceProps> = ({ amount }) => {
                 fontWeight: "400",
               }}
             >
-              Estimated USD balance: ${formattedCoin}
+              Estimated USD balance: ${coinAmout}
             </Text>
           </View>
         </LinearGradient>
