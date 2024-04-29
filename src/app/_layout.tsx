@@ -54,9 +54,7 @@ export default function Layout() {
           <Stack.Screen name="SplashScreen" />
           <Stack.Screen name="PerkScreen" />
           <Stack.Screen name="PowerUp" options={{ presentation: "modal" }} />
-
         </Stack>
-        
         <Toast config={toastConfig} />
       </AuthProvider>
     </QueryClientProvider>

@@ -2,6 +2,7 @@ import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { Location, TicketExpired, User, WalletAdd } from "iconsax-react-native";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
@@ -22,31 +23,29 @@ import {
   getRestaurantById,
   getRestaurantId,
   getRestaurants,
+  getUserPowerUps,
 } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
 import APassCard from "../components/atom/cards/APassCard";
 import Owned from "../components/sections/membership/Owned";
 import UnOwned from "../components/sections/membership/UnOwned";
+import Animated, { SlideInDown } from "react-native-reanimated";
 
 const Restaurant = () => {
   const { cardId, id } = useLocalSearchParams();
-  const [isPopupVisible, setPopupVisible] = useState(false);
-  const [showOwnedView, setShowOwnedView] = useState(false);
-  const [visitCount, setVisitCount] = useState(0);
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const { authState } = useAuth();
+  const [perkId, setPerkId] = useState<string>("")
   const { currentLocation } = useLocationStore();
   const queryClient = useQueryClient();
 
-  const { data: restaurantsData } = useQuery({
+  const { data: restaurantsData, isLoading } = useQuery({
     queryKey: restaurantKeys.detail(id as string),
     queryFn: () => {
       return getRestaurantId(id);
     },
     enabled: !!currentLocation && !!id,
   });
-
-  console.log()
 
   const showToast = () => {
     Toast.show({
@@ -55,12 +54,12 @@ const Restaurant = () => {
     });
   };
 
-  const { mutateAsync: createGetAcardMutation } = useMutation({
+  const { mutateAsync: createGetAcardMutation, } = useMutation({
     mutationFn: getAcard,
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => {},
+    onSuccess: (data, variables) => { },
   });
   const handleGetAcard = async (acardId: string) => {
     console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
@@ -72,36 +71,25 @@ const Restaurant = () => {
       });
       if (data.data.success) {
         setIsClaimLoading(false);
-        const owned = data.data.data.userCard.cardId;
-        console.log(owned);
-
+        setPerkId(data.data.data.userCard.cardId);
+        queryClient.invalidateQueries({
+          queryKey: restaurantKeys.all,
+        });
         showToast();
       }
     }
   };
 
-  const checkOwned = () => {
-    if (restaurantsData?.isOwned) {
-      return <Owned cardId={restaurantsData?.cardId}/>;
-    } else {
-      return (
-        <UnOwned
-          restaurant={restaurantsData}
-          isClaimLoading={isClaimLoading}
-          onPress={() => handleGetAcard(cardId as string)}
-        />
-      );
-    }
-  };
 
-  const openPopup = () => {
-    setPopupVisible(true);
-  };
 
-  const closePopup = () => {
-    setPopupVisible(false);
-    router.back();
-  };
+
+  const { data: perks = [] } = useQuery({
+    queryKey: userKeys.perks,
+    queryFn: () => {
+      return getUserPowerUps(cardId);
+    },
+    enabled: !!currentLocation,
+  });
 
   return (
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
@@ -122,52 +110,74 @@ const Restaurant = () => {
           onPress={() => ""}
           category={restaurantsData?.category}
           hasBonus={false}
-          visitCount={restaurantsData?.visitCount}
+          visitCount={restaurantsData?.visitCount === null ? 0 : restaurantsData?.visitCount}
         />
-        {checkOwned()}
+        {
+          isLoading ? (
+            <View style={{ flex: 1, justifyContent: 'center', marginTop:40}}>
+              <ActivityIndicator />
+            </View>
+
+          ) : (
+            <>
+              {restaurantsData?.isOwned ? (
+                <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>
+                  <Owned cardId={perkId} perks={perks} isLoading={isLoading}/>
+                </Animated.View>
+              ) : (
+                <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>
+                  <UnOwned
+                    restaurant={restaurantsData}
+                    isClaimLoading={isClaimLoading}
+                    onPress={() => handleGetAcard(cardId as string)} />
+                </Animated.View>
+              )}
+            </>
+          )
+        }
       </ScrollView>
       {restaurantsData?.isOwned ? (null) : (
         <View style={styles.buttonContainer}>
-        <Button
-          onPress={() => {
-            handleGetAcard(cardId as string);
-          }}
-          size="small"
-          variant="primary"
-          style={{
-            alignItems: "center",
-            alignContent: "center",
-            justifyContent: "center",
-          }}
-        >
-          <View
+          <Button
+            onPress={() => {
+              handleGetAcard(cardId as string);
+            }}
+            size="small"
+            variant="primary"
             style={{
-              flexDirection: "row",
-              alignContent: "center",
               alignItems: "center",
-              gap: 12,
-              top: 2,
+              alignContent: "center",
+              justifyContent: "center",
             }}
           >
-            <WalletAdd color={Color.base.White} />
-            <Text
+            <View
               style={{
-                color: Color.base.White,
-                fontSize: 15,
-                fontWeight: "bold",
+                flexDirection: "row",
+                alignContent: "center",
+                justifyContent: 'center',
+                alignItems: "center",
+                gap: 12,
                 top: 2,
               }}
             >
-              {isClaimLoading
-                ? "Loading"
-                : restaurantsData?.visitCount === null
-                ? "Add a membership card"
-                : "Owned"}
-            </Text>
-          </View>
-        </Button>
-        <Popup title="" isVisible={isPopupVisible} onClose={closePopup} />
-      </View>
+              <WalletAdd color={Color.base.White} />
+              <Text
+                style={{
+                  color: Color.base.White,
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  top: 2,
+                }}
+              >
+                {isClaimLoading
+                  ? <ActivityIndicator />
+                  : restaurantsData?.visitCount === null
+                    ? "Add a membership card"
+                    : "Owned"}
+              </Text>
+            </View>
+          </Button>
+        </View>
       )}
     </View>
   );

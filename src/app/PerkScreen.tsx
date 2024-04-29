@@ -1,11 +1,11 @@
 import { View, Text, ActivityIndicator, StyleSheet, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { router, useLocalSearchParams } from 'expo-router'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getRestaurantById } from './lib/service/queryHelper'
 import APassCard from './components/atom/cards/APassCard'
 import Button from './components/ui/Button'
-import { restaurantKeys } from './lib/service/keysHelper'
+import { restaurantKeys, userKeys } from './lib/service/keysHelper'
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated'
 import { height, width } from './lib/utils'
 import PowerUpCard from './components/atom/cards/PowerUpCard'
@@ -14,7 +14,8 @@ import Color from './constants/Color'
 
 const PerkScreen = () => {
   const { restaurantId, btcAmount, powerUp } = useLocalSearchParams()
-  console.log(restaurantId)
+
+  const queryClient = useQueryClient()
 
   const { data: card = [], isLoading } = useQuery({
     queryKey: [restaurantKeys.detail],
@@ -25,6 +26,7 @@ const PerkScreen = () => {
 
   const handleNavigation = () => {
     router.back()
+    queryClient.invalidateQueries({ queryKey: userKeys.info });
   }
 
   return (

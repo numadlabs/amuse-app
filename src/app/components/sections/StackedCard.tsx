@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import Color from "../../constants/Color";
 import { useRouter } from "expo-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -17,8 +17,6 @@ const StackedCard = () => {
   const cardPositions = useSharedValue(-400);
   const { currentLocation } = useLocationStore();
   const router = useRouter();
-  const queryClient = useQueryClient();
-  const [scrollViewHeight, setScrollViewHeight] = useState(0);
   const { data: cards = [], isLoading } = useQuery({
     queryKey: userKeys.cards,
     queryFn: () => {
@@ -27,11 +25,9 @@ const StackedCard = () => {
         longitude: currentLocation.longitude,
       });
     },
-
     enabled: !!currentLocation,
   });
 
-  console.log(cards)
 
   useEffect(() => {
     if (cards && cards.data && cards.data.cards) {
@@ -54,24 +50,16 @@ const StackedCard = () => {
 
   const latestCards = cards?.data?.cards.slice(0, 5);
 
+
   const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
-      pathname: `/Acards/${restaurant.id}`,
+      pathname: `/restaurants/${restaurant.restaurantId}`,
       params: {
-        name: restaurant.name,
-        location: restaurant.location,
-        about: restaurant.description,
-        category: restaurant.category,
-        isOwned: restaurant.isOwned,
-        logo: restaurant.logo,
-        taps: restaurant.visitCount,
-        artistInfo: restaurant.artistInfo,
-        benefits: restaurant.benefits,
-        membership: restaurant.expiryInfo,
-        instruction: restaurant.instruction,
+       
       },
     });
   };
+
 
   return (
     <>
@@ -99,20 +87,6 @@ const StackedCard = () => {
           </View>
         </LinearGradient>
       ) : (
-        // <View style={{ flex:1, overflow: "hidden" }}>
-        //   {cards?.data?.cards &&
-        //     latestCards.map((card, index) => (
-        //       <APassCard
-        //         key={index}
-        //         name={card.name}
-        //         image={card.logo}
-        //         onPress={() => handleNavigation(card)}
-        //         category={card.category}
-        //         hasBonus={card.hasBonus}
-        //         visitCount={card.visitCount}
-        //       />
-        //     ))}
-        // </View>
         <Animated.View style={{ flex: 1, overflow: 'hidden', paddingBottom: 230 }}>
           {latestCards?.map((card, index) => (
             <Animated.View

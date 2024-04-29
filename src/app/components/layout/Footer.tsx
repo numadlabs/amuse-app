@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: Color.Gray.gray600,
-    borderWidth: 1,
+    borderTopWidth: 1,
     borderColor: Color.Gray.gray400,
     width: "100%",
     alignItems: "center",

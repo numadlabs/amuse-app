@@ -176,7 +176,7 @@ export const AuthProvider = ({ children }: any) => {
         telNumber,
         password,
       });
-      console.log("birch", result.data.data, result.data.data.auth);
+      console.log(result.data.data.user.balance)
       if (result && result.data.data && result.data.data.auth) {
         // Successful login
         setAuthState({
