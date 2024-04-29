@@ -58,7 +58,7 @@ const Restaurant = () => {
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => { },
+    onSuccess: (data, variables) => {},
   });
   const handleGetAcard = async (acardId: string) => {
     console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
@@ -69,12 +69,15 @@ const Restaurant = () => {
         cardId: acardId,
       });
       if (data.data.success) {
+
         queryClient.invalidateQueries({queryKey: [restaurantKeys.detail(id as string)],});
         queryClient.invalidateQueries({queryKey: restaurantKeys.all,})
         queryClient.invalidateQueries({queryKey: userKeys.cards,})
+
         setIsClaimLoading(false);
         const owned = data.data.data.userCard;
         console.log(owned);
+
         showToast();
       }
     }
@@ -175,25 +178,37 @@ const Restaurant = () => {
           }}
           size="small"
           variant="primary"
-          style={{ alignItems: 'center', alignContent: 'center', justifyContent: 'center', }}>
-          <View style={{ flexDirection: 'row', alignContent: 'center', alignItems: 'center', gap: 12, top: 2 }}>
+          style={{
+            alignItems: "center",
+            alignContent: "center",
+            justifyContent: "center",
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              alignContent: "center",
+              alignItems: "center",
+              gap: 12,
+              top: 2,
+            }}
+          >
             <WalletAdd color={Color.base.White} />
             <Text
               style={{
                 color: Color.base.White,
                 fontSize: 15,
                 fontWeight: "bold",
-                top: 2
+                top: 2,
               }}
             >
               {isClaimLoading
                 ? "Loading"
                 : restaurantsData?.visitCount === null
-                  ? "Add a membership card"
-                  : "Owned"}
+                ? "Add a membership card"
+                : "Owned"}
             </Text>
           </View>
-
         </Button>
         <Popup title="" isVisible={isPopupVisible} onClose={closePopup} />
       </View>
