@@ -44,7 +44,7 @@ export type RestaurantType = {
   expiryInfo: string;
   instruction: string;
   nftImageUrl: string | string[];
-  isOwned: true;
+  isOwned: boolean;
   visitCount: number;
 };
 
