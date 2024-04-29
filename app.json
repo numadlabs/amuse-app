@@ -1,7 +1,7 @@
 {
   "expo": {
-    "version": "0.1.6",
-    "runtimeVersion": "0.1.6",
+    "version": "0.1.7",
+    "runtimeVersion": "0.1.7",
     "scheme": "acme",
     "owner": "numad-labs",
     "splash": {

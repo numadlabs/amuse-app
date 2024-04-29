@@ -7,23 +7,25 @@ import ProgressBar from "./ProgressBar";
 import { width } from "@/app/lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
 const QuickInfo = ({ user }) => {
-
   const [progress, setProgress] = useState(0);
 
-  console.log(user)
+  console.log(user);
 
   useEffect(() => {
+    if (user) {
+      const totalFields = 4;
+      const filledFields = [
+        user?.nickname,
+        user?.email,
+        user?.location,
+        user?.dateOfBirth,
+      ].filter((field) => field !== null).length;
+      const newProgress = filledFields / totalFields;
+      setProgress(newProgress);
+    }
+  }, [user]);
 
-    const totalFields = 4;
-    const filledFields = [user?.nickname, user?.email, user?.location, user?.dateOfBirth].filter(
-      field => field !== null
-    ).length;
-    const newProgress = filledFields / totalFields;
-    setProgress(newProgress);
-  }, [user.nickname, user.email, user.location, user.dateOfBirth]);
-
-
-return (
+  return (
     <View style={styles.container}>
       <LinearGradient
         colors={[Color.Brand.card.start, Color.Brand.card.end]}
@@ -31,7 +33,7 @@ return (
           paddingHorizontal: 16,
           paddingBottom: 16,
           paddingTop: 24,
-          borderRadius: 16
+          borderRadius: 16,
         }}
       >
         <View style={styles.container1}>
@@ -42,17 +44,23 @@ return (
           <View>
             <Button
               variant="primary"
-              onPress={() => router.push("(boost)/Email")}>
-              <Text style={{ color: Color.base.White }}>
-                Start
-              </Text>
+              onPress={() => router.push("(boost)/Email")}
+            >
+              <Text style={{ color: Color.base.White }}>Start</Text>
             </Button>
           </View>
         </View>
         <View style={styles.container2}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-            <ProgressBar progress={progress} width={'85%'} height={8} />
-            <Text style={{ color: Color.base.White, fontSize: 12, lineHeight: 16, fontWeight: '700' }}>{`${progress * 100}%`}</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+            <ProgressBar progress={progress} width={"85%"} height={8} />
+            <Text
+              style={{
+                color: Color.base.White,
+                fontSize: 12,
+                lineHeight: 16,
+                fontWeight: "700",
+              }}
+            >{`${progress * 100}%`}</Text>
           </View>
         </View>
       </LinearGradient>
@@ -67,7 +75,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
     borderColor: Color.Gray.gray400,
-    height: '90%'
+    height: "90%",
   },
   container1: {
     flexDirection: "row",
@@ -76,7 +84,7 @@ const styles = StyleSheet.create({
   container2: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width:300,
+    width: 300,
     marginTop: 20,
     alignItems: "center",
   },
