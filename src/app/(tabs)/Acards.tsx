@@ -51,27 +51,27 @@ const Acards = () => {
               <TouchableOpacity
                 style={[
                   styles.toggleButton,
-                  !showMapView && styles.activeButton,
-                ]}
-                onPress={() => toggleView(false)}
-              >
-                <Text
-                  style={[styles.buttonText, !showMapView && styles.activeText]}
-                >
-                  List
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.toggleButton,
                   showMapView && styles.activeButton,
                 ]}
                 onPress={() => toggleView(true)}
               >
                 <Text
-                  style={[styles.buttonText, showMapView && styles.activeText]}
+                  style={[styles.buttonText, !showMapView && styles.activeText]}
                 >
                   Map
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.toggleButton,
+                  !showMapView && styles.activeButton,
+                ]}
+                onPress={() => toggleView(false)}
+              >
+                <Text
+                  style={[styles.buttonText, showMapView && styles.activeText]}
+                >
+                  List
                 </Text>
               </TouchableOpacity>
             </Animated.View>

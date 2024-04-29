@@ -19,10 +19,11 @@ import { RestaurantType } from "../lib/types";
 import { GetRestaurantsResponseType } from "../lib/types/apiResponseType";
 import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
 import { getRestaurants } from "../lib/service/queryHelper";
-import ResListCard from "../components/atom/cards/RestListCard";
+import HomeRestList from "../components/atom/cards/HomeRestList";
 import { InfoCircle } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
+import { height } from "../lib/utils";
 
 const Page = () => {
   const router = useRouter();
@@ -139,10 +140,11 @@ const Page = () => {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
               >
+                <View style={{ flexDirection: 'row', gap: 8 }}>
                 <TouchableOpacity
                   onPress={() => handleNavigation(restaurantsArray[0])}
                 >
-                  <ResListCard
+                  <HomeRestList
                     isClaimLoading={true}
                     marker={restaurantsArray[0]}
                     key={restaurantsArray[0].id as string}
@@ -153,14 +155,14 @@ const Page = () => {
                   user?.dateOfBirth &&
                   user?.nickname &&
                   user?.location ? (
-                    ''
+                  ''
                 ) : (
                   <QuickInfo user={user} />
                 )}
                 <TouchableOpacity
                   onPress={() => handleNavigation(restaurantsArray[1])}
                 >
-                  <ResListCard
+                  <HomeRestList
                     isClaimLoading={true}
                     marker={restaurantsArray[1]}
                     key={restaurantsArray[1].id as string}
@@ -170,13 +172,14 @@ const Page = () => {
                 <TouchableOpacity
                   onPress={() => handleNavigation(restaurantsArray[2])}
                 >
-                  <ResListCard
+                  <HomeRestList
                     isClaimLoading={true}
                     marker={restaurantsArray[2]}
                     key={restaurantsArray[2].id as string}
                     onPress={() => handleNavigation(restaurantsArray[2])}
                   />
                 </TouchableOpacity>
+                </View>
               </ScrollView>
             </View>
           )}
@@ -203,7 +206,7 @@ const Page = () => {
             <InfoCircle size={18} color={Color.Gray.gray100} />
           </TouchableOpacity>
         </View>
-        <View style={{}}>
+        <View style={{  }}>
           <StackedCard key={refreshPage.toString()} />
         </View>
         {cards?.data?.cards.length === 0 ? (
@@ -236,24 +239,27 @@ const Page = () => {
           </View>
         )}
       </ScrollView>
-    {isOpen && (
-                <Animated.View
-                  style={[
-                    {
-                      position: "absolute",
-                      bottom: 100,
-                      width: "100%",
-                      backgroundColor: Color.Gray.gray500,
-                      borderTopLeftRadius: 32,
-                      borderTopRightRadius: 32,
-                      overflow: "hidden",
-                      left: 0,
-                    },
-                  ]}
-                >
-                  <Text>kasdbfjkas</Text>
-                </Animated.View>
-              )}
+      {isOpen && (
+        <Animated.View
+        style={[
+          {
+            position: "absolute",
+            bottom: 0,
+            width: "100%",
+            height:height/2,
+            backgroundColor: Color.Gray.gray500,
+            borderTopLeftRadius: 32,
+            borderTopRightRadius: 32,
+            overflow: "hidden",
+            zIndex: 1000, // Increase the z-index value
+            left: 0,
+          },
+          bottomSheetAnimatedStyle, // Apply animated style
+        ]}
+      >
+        <Text>kasdbfjkas</Text>
+      </Animated.View>
+      )}
     </GestureHandlerRootView>
   );
 };
@@ -264,7 +270,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
-    paddingHorizontal:16
+    paddingHorizontal: 16
   },
   modal: {
     position: "absolute",

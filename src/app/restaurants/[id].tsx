@@ -2,9 +2,6 @@ import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { Location, TicketExpired, User, WalletAdd } from "iconsax-react-native";
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
-  Image,
-  ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
@@ -34,7 +31,7 @@ import APassCard from "../components/atom/cards/APassCard";
 const Restaurant = () => {
   const { cardId, id } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
-
+  const [showOwnedView, setShowOwnedView] = useState(false);
   const [visitCount, setVisitCount] = useState(0);
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const { authState } = useAuth();
@@ -72,15 +69,15 @@ const Restaurant = () => {
         cardId: acardId,
       });
       if (data.data.success) {
-        queryClient.invalidateQueries({
-          queryKey: [restaurantKeys.detail(id as string)],
-        });
-        queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
-        queryClient.invalidateQueries({ queryKey: userKeys.cards });
+
+        queryClient.invalidateQueries({queryKey: [restaurantKeys.detail(id as string)],});
+        queryClient.invalidateQueries({queryKey: restaurantKeys.all,})
+        queryClient.invalidateQueries({queryKey: userKeys.cards,})
+
         setIsClaimLoading(false);
-        const owned = data.data.userCard;
+        const owned = data.data.data.userCard;
         console.log(owned);
-        router.back();
+
         showToast();
       }
     }
@@ -109,10 +106,10 @@ const Restaurant = () => {
       </View>
       <ScrollView style={styles.container}>
         <APassCard
-          name={restaurantsData.name}
-          image={restaurantsData.logo}
+          name={restaurantsData?.name}
+          image={restaurantsData?.logo}
           onPress={() => ""}
-          category={restaurantsData.category}
+          category={restaurantsData?.category}
           hasBonus={false}
           visitCount={0}
         />

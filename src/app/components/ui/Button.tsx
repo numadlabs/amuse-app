@@ -9,13 +9,13 @@ const buttonVariants = {
     primary: {
       zIndex: 0
     },
-    secondary: { backgroundColor: "white" },
+    secondary: { backgroundColor: 'transparent',borderWidth: 1, borderColor: Color.Gray.gray50 },
     tertiary: { backgroundColor: "#2D3A42" },
     text: { backgroundColor: "transparent" },
     disabled: { backgroundColor: Color.Gray.gray400 }
   },
   size: {
-    default: { paddingVertical: 12, paddingHorizontal: 24, width: "100%" },
+    default: { paddingVertical: 12, paddingHorizontal: 24, },
     small: { paddingVertical: 8, paddingHorizontal: 16 },
     large: { paddingVertical: 16, paddingHorizontal: 32 },
     text: { paddingVertical: 12, paddingHorizontal: 24 },
@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 48,
     overflow: "hidden",
+   
   },
   gradient: {
     ...StyleSheet.absoluteFillObject,
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
   blurContainer: {
     flex: 1,
     borderRadius: 48,
-    overflow: 'hidden', 
+    overflow: 'hidden',
   },
 });
 

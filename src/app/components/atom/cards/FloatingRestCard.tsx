@@ -21,7 +21,7 @@ import { WalletAdd1 } from "iconsax-react-native";
 const { width } = Dimensions.get("window");
 
 const CARD_HEIGHT = 150;
-const CARD_WIDTH = width * 0.8;
+const CARD_WIDTH = width * 0.83;
 
 // Define the props for the FloatingRestaurantCard component
 interface FloatingRestaurantCardProps {
@@ -76,7 +76,7 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
               uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker.logo}` as string,
             }}
             style={styles.cardImage}
-            // resizeMode="cover"
+          // resizeMode="cover"
           />
           <View style={styles.textContent}>
             <View>
@@ -118,41 +118,24 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                 </View>
               ) : (
                 <Button
-                  variant="primary"
+                  variant="secondary"
                   onPress={onPress}
                   size="small"
                   style={{
                     alignItems: "center",
-                    height: 36,
                     justifyContent: "center",
+                    alignContent:'center',
+                    paddingHorizontal: 20,
+                    borderWidth: 1,
+                    borderColor: Color.Gray.gray50
                   }}
                 >
-                  {isClaimLoading ? (
-                    <ActivityIndicator size="small" color="white" />
-                  ) : (
-                    <>
-                      <WalletAdd1 size={16} color={Color.base.White} />
-                      <View
-                        style={{
-                          height: "100%",
-                          width: "100%",
-                          marginLeft: 8,
-                          alignItems: "center",
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        <Text style={{ fontSize: 11, color: Color.base.White }}>
-                          {isClaimLoading ? (
-                            <ActivityIndicator />
-                          ) : marker.isOwned ? (
-                            "Owned"
-                          ) : (
-                            "Add"
-                          )}
-                        </Text>
-                      </View>
-                    </>
-                  )}
+
+                  <Text style={{ fontSize: 11, lineHeight: 16, fontWeight: '600', color: Color.Gray.gray50 }}>
+                    Add
+                  </Text>
+
+
                 </Button>
               )}
             </View>
@@ -166,7 +149,7 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
 const styles = StyleSheet.create({
   card: {
     justifyContent: "space-between",
-    marginHorizontal: 10,
+    marginRight: 10,
     width: CARD_WIDTH,
     overflow: "hidden",
     borderBottomLeftRadius: 16,
@@ -196,6 +179,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
+    gap: 12
   },
   dot: {
     width: 10,

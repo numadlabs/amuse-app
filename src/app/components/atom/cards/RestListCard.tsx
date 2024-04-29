@@ -5,6 +5,7 @@ import {
   Image,
   StyleSheet,
   ActivityIndicator,
+  Dimensions
 } from "react-native";
 import React, { useState } from "react";
 import { RestaurantType } from "@/app/lib/types";
@@ -28,15 +29,16 @@ const ResListCard: React.FC<ResListCardProp> = ({
   const opensAt = new Date(marker.opensAt);
   const closesAt = new Date(marker.closesAt);
   const currentTime = new Date();
+  const { width } = Dimensions.get("window");
+  const CARD_WIDTH = width * 0.85;
 
   const isOpen =
     currentTime.getTime() >= opensAt.getTime() &&
     currentTime.getTime() <= closesAt.getTime();
   return (
-    <View style={{ paddingHorizontal: 16 }}>
       <LinearGradient
         colors={[Color.Brand.card.start, Color.Brand.card.end]}
-        style={{ backgroundColor: "transparent", borderRadius: 16 }}
+        style={{ backgroundColor: "transparent", borderRadius: 16, width: '100%' }}
       >
         <View style={styles.container}>
           <Image
@@ -45,9 +47,9 @@ const ResListCard: React.FC<ResListCardProp> = ({
             }}
             style={styles.image}
           />
-          <View style={{ gap: 28 }}>
-            <View style={{ gap: 4 }}>
-              <View style={{ width: "80%" }}>
+          <View style={{ gap: 28, width: '100%' }}>
+            <View style={{ gap: 4, width: '100%' }}>
+              <View style={{ width: "80%", flex: 1, overflow: 'hidden' }}>
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="tail"
@@ -59,7 +61,7 @@ const ResListCard: React.FC<ResListCardProp> = ({
               <Text style={styles.category}>{marker.category}</Text>
             </View>
             <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 25 }}
+              style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <View
@@ -82,15 +84,14 @@ const ResListCard: React.FC<ResListCardProp> = ({
                   {isOpen ? "Closed" : "Open"}
                 </Text>
               </View>
-
-              <View
+              {marker.isOwned ? <View
                 style={{
                   width: 1,
                   height: 14,
                   backgroundColor: Color.Gray.gray50,
                 }}
-              />
-              {marker.isOwned ? (
+              /> : '' }
+              {marker.isOwned ?  (
                 <View
                   style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
                 >
@@ -101,7 +102,7 @@ const ResListCard: React.FC<ResListCardProp> = ({
                 </View>
               ) : (
                 <Button
-                  variant="primary"
+                  variant="text"
                   onPress={onPress}
                   disabled={loading}
                   size="small"
@@ -109,13 +110,15 @@ const ResListCard: React.FC<ResListCardProp> = ({
                     alignItems: "center",
                     height: 36,
                     justifyContent: "center",
+                    borderWidth: 1,
+                    borderRadius: 16,
+                    borderColor: Color.base.White
                   }}
                 >
                   {loading ? (
                     <ActivityIndicator size="small" color="white" />
                   ) : (
                     <>
-                      <WalletAdd1 size={16} color={Color.base.White} />
                       <View
                         style={{
                           height: "100%",
@@ -132,43 +135,11 @@ const ResListCard: React.FC<ResListCardProp> = ({
                     </>
                   )}
                 </Button>
-                // <TouchableOpacity onPress={onPress}>
-                //   <View
-                //     style={{
-                //       flexDirection: "row",
-                //       position: "relative",
-                //       backgroundColor: Color.Gray.gray600,
-                //       paddingVertical: 8,
-                //       paddingHorizontal: 16,
-                //       borderRadius: 48,
-                //       marginLeft: 49,
-                //       alignContent: "center",
-                //       alignItems: "center",
-                //     }}
-                //   >
-                //     <Wallet size={16} color={Color.Gray.gray50} />
-                //     <Text
-                //       style={{
-                //         color: Color.Gray.gray50,
-                //         fontWeight: "bold",
-                //         fontSize: 11,
-                //         lineHeight: 16,
-                //       }}
-                //     >
-                //       {isClaimLoading
-                //         ? "Loading"
-                //         : marker.isOwned
-                //         ? "Owned"
-                //         : " Add"}
-                //     </Text>
-                //   </View>
-                // </TouchableOpacity>
               )}
             </View>
           </View>
         </View>
       </LinearGradient>
-    </View>
   );
 };
 
@@ -183,6 +154,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     gap: 16,
     marginBottom: 12,
+    width: '100%'
   },
   image: {
     borderRadius: 8,
@@ -193,7 +165,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: Color.base.White,
-    width: "100%",
+    width: "80%",
   },
   category: {
     fontSize: 12,
