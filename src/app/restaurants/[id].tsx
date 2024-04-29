@@ -71,14 +71,10 @@ const Restaurant = () => {
         cardId: acardId,
       });
       if (data.data.success) {
-        queryClient.invalidateQueries({
-          queryKey: [restaurantKeys.detail(id as string)],
-        });
-        queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
-        queryClient.invalidateQueries({ queryKey: userKeys.cards });
         setIsClaimLoading(false);
         const owned = data.data.data.userCard.cardId;
         console.log(owned);
+
         showToast();
       }
     }
