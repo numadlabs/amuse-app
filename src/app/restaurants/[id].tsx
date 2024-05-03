@@ -3,11 +3,13 @@ import { Location, TicketExpired, User, WalletAdd } from "iconsax-react-native";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  Image
 } from "react-native";
 import Popup from "../components/(feedback)/Popup";
 import Button from "../components/ui/Button";
@@ -30,7 +32,8 @@ import useLocationStore from "../lib/store/userLocation";
 import APassCard from "../components/atom/cards/APassCard";
 import Owned from "../components/sections/membership/Owned";
 import UnOwned from "../components/sections/membership/UnOwned";
-import Animated, { SlideInDown } from "react-native-reanimated";
+import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { height, width } from "../lib/utils";
 
 const Restaurant = () => {
   const { cardId, id } = useLocalSearchParams();
@@ -39,7 +42,7 @@ const Restaurant = () => {
   const [perkId, setPerkId] = useState<string>("")
   const { currentLocation } = useLocationStore();
   const queryClient = useQueryClient();
-
+  const [bottomSheet, setBottomSheet] = useState(false);
   const { data: restaurantsData, isLoading } = useQuery({
     queryKey: restaurantKeys.detail(id as string),
     queryFn: () => {
@@ -54,6 +57,15 @@ const Restaurant = () => {
       text1: "Added membership card",
     });
   };
+
+  const toggleBottomSheet = () => {
+    setBottomSheet(!bottomSheet);
+  }
+
+  const pressed = useSharedValue(false);
+  const animatedStyles = useAnimatedStyle(() => ({
+    transform: [{ scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) }],
+  }));
 
   const { mutateAsync: createGetAcardMutation, } = useMutation({
     mutationFn: getAcard,
@@ -101,6 +113,7 @@ const Restaurant = () => {
   });
 
   console.log(perks)
+
   return (
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
       <View style={styles.closeButtonContainer}>
@@ -122,6 +135,8 @@ const Restaurant = () => {
           hasBonus={false}
           visitCount={restaurantsData?.visitCount === null ? 0 : restaurantsData?.visitCount}
         />
+
+
         {
           isLoading ? (
             <View style={{ flex: 1, justifyContent: 'center', marginTop: 40 }}>
@@ -132,7 +147,7 @@ const Restaurant = () => {
             <>
               {restaurantsData?.isOwned ? (
                 <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>
-                  <Owned cardId={perkId} perks={perks} isLoading={isLoading} />
+                  <Owned onPress={toggleBottomSheet} cardId={perkId} perks={perks} isLoading={isLoading} />
                 </Animated.View>
               ) : (
                 <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>
@@ -189,6 +204,66 @@ const Restaurant = () => {
           </Button>
         </View>
       )}
+      {
+        bottomSheet && (
+          <Modal transparent={true}>
+            <TouchableOpacity
+              style={{ flex: 1 }}
+              onPress={toggleBottomSheet}
+            >
+              <Animated.View
+                entering={FadeIn}
+                exiting={FadeOut}
+                style={[{
+                  position: 'absolute',
+                  backgroundColor: 'rgba(0, 0, 0, 0.2)', // Black background with 50% opacity
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  zIndex: 98, // Ensure overlay is below modal content
+                }, animatedStyles]}
+              />
+              <Animated.View
+                entering={SlideInDown.springify().damping(18)}
+                exiting={SlideOutDown.springify()}
+                style={[{
+                  backgroundColor: Color.Gray.gray600,
+                  height: height / 2.4,
+                  bottom: 0,
+                  width: width,
+                  zIndex: 99,
+                  position: 'absolute',
+                  borderTopStartRadius: 32,
+                  borderTopEndRadius: 32,
+                  gap: 24,
+                  padding: 16// Positioning the bottom sheet absolutely
+                }, animatedStyles]}
+              >
+                <View style={{ paddingVertical: 8, justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
+                  <Text style={{ fontSize: 20, lineHeight: 24, color: Color.base.White, fontWeight: 'bold', }}>Perk</Text>
+                </View>
+                <View style={{ alignItems: 'center', gap:16 }}>
+                <Image
+                  source={require("@/public/images/perk.png")}
+                  style={{ width: width/1.2, height: 58 }}
+                  resizeMode='contain'
+                />
+                <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray50, textAlign: 'center' }}>
+                  Lorem ipsum dolor sit amet, consectetur {"\n"} adipiscing elit. Curabitur sed justo ac urna fringilla rhoncus.
+                </Text>
+              </View>
+              <Button variant="primary" onPress={toggleBottomSheet}>
+                <Text>
+                  I understood
+                </Text>
+              </Button>
+              </Animated.View>
+            </TouchableOpacity>
+          </Modal>
+        )
+      }
+
     </View>
   );
 };
