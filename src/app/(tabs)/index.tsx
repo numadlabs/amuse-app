@@ -33,6 +33,7 @@ const Page = () => {
   const router = useRouter();
   const [refreshPage, setRefreshPage] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isQuickInfoVisible, setIsQuickInfoVisible] = useState(true);
   const pressed = useSharedValue(false);
   const [featured, setIsFeatured] = useState([]);
   const { authState } = useAuth();
@@ -96,8 +97,8 @@ const Page = () => {
   };
 
   const restaurantsArray = restaurantsData?.data?.restaurants || [];
+
   const filteredRestaurantsArray = restaurantsArray.filter(restaurant => !restaurant.isOwned);
-  const featuredRestaurants = filteredRestaurantsArray.slice(0, 2);
 
 
   return (
@@ -119,20 +120,20 @@ const Page = () => {
           </Text>
 
           {restaurantsArray?.length > 0 && (
-            <View style={{ alignItems: "center" }}>
+            <View style={{ alignItems: "center", gap: 8, }}>
               <ScrollView
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
               >
                 <View style={{ flexDirection: 'row', gap: 8 }}>
                   <TouchableOpacity
-                    onPress={() => handleNavigation(restaurantsArray[0])}
+                    onPress={() => handleNavigation(filteredRestaurantsArray[0])}
                   >
                     <HomeRestList
                       isClaimLoading={true}
-                      marker={restaurantsArray[0]}
-                      key={restaurantsArray[0].id as string}
-                      onPress={() => handleNavigation(restaurantsArray[0])}
+                      marker={filteredRestaurantsArray[0]}
+                      key={filteredRestaurantsArray[0].id as string}
+                      onPress={() => handleNavigation(filteredRestaurantsArray[0])}
                     />
                   </TouchableOpacity>
                   {user?.email &&
@@ -141,26 +142,28 @@ const Page = () => {
                     user?.location ? (
                     ''
                   ) : (
-                    <QuickInfo user={user} />
+                    isQuickInfoVisible && (
+                      <QuickInfo onPress={() => setIsQuickInfoVisible(false)} user={user} />
+                    )
                   )}
                   <TouchableOpacity
-                    onPress={() => handleNavigation(restaurantsArray[1])}
+                    onPress={() => handleNavigation(filteredRestaurantsArray[1])}
                   >
                     <HomeRestList
                       isClaimLoading={true}
-                      marker={restaurantsArray[1]}
-                      key={restaurantsArray[1].id as string}
-                      onPress={() => handleNavigation(restaurantsArray[1])}
+                      marker={filteredRestaurantsArray[1]}
+                      key={filteredRestaurantsArray[1].id as string}
+                      onPress={() => handleNavigation(filteredRestaurantsArray[1])}
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => handleNavigation(restaurantsArray[2])}
+                    onPress={() => handleNavigation(filteredRestaurantsArray[2])}
                   >
                     <HomeRestList
                       isClaimLoading={true}
-                      marker={restaurantsArray[2]}
-                      key={restaurantsArray[2].id as string}
-                      onPress={() => handleNavigation(restaurantsArray[2])}
+                      marker={filteredRestaurantsArray[2]}
+                      key={filteredRestaurantsArray[2].id as string}
+                      onPress={() => handleNavigation(filteredRestaurantsArray[2])}
                     />
                   </TouchableOpacity>
                 </View>
@@ -261,10 +264,10 @@ const Page = () => {
               <View style={{ paddingVertical: 8, justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
                 <Text style={{ fontSize: 20, lineHeight: 24, color: Color.base.White, fontWeight: 'bold', }}>Membership</Text>
               </View>
-              <View style={{ alignItems: 'center', gap:16 }}>
+              <View style={{ alignItems: 'center', gap: 16 }}>
                 <Image
                   source={require("@/public/images/membership.png")}
-                  style={{ width: width/1.8, height: 166 }}
+                  style={{ width: width / 1.8, height: 166 }}
                   resizeMode='contain'
                 />
                 <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray50, textAlign: 'center' }}>
