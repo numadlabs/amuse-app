@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import Color from "../../constants/Color";
 import { router } from "expo-router";
@@ -6,6 +6,8 @@ import Button from "../ui/Button";
 import ProgressBar from "./ProgressBar";
 import { width } from "@/app/lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
+import CloseSm from "../icons/CloseSm";
+
 const QuickInfo = ({ user }) => {
   const [progress, setProgress] = useState(0);
 
@@ -26,7 +28,7 @@ const QuickInfo = ({ user }) => {
   }, [user]);
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={() => router.push("(boost)/Email")}>
       <LinearGradient
         colors={[Color.Brand.card.start, Color.Brand.card.end]}
         style={{
@@ -36,18 +38,13 @@ const QuickInfo = ({ user }) => {
           borderRadius: 16,
         }}
       >
+        <TouchableOpacity style={styles.closeButton}>
+          <CloseSm />
+        </TouchableOpacity>
         <View style={styles.container1}>
           <View style={styles.textContainer}>
             <Text style={styles.topTitle}>Boost your rewards</Text>
             <Text style={styles.bottomTitle}>More data, more Bitcoin.</Text>
-          </View>
-          <View>
-            <Button
-              variant="primary"
-              onPress={() => router.push("(boost)/Email")}
-            >
-              <Text style={{ color: Color.base.White }}>Start</Text>
-            </Button>
           </View>
         </View>
         <View style={styles.container2}>
@@ -64,7 +61,7 @@ const QuickInfo = ({ user }) => {
           </View>
         </View>
       </LinearGradient>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -115,5 +112,16 @@ const styles = StyleSheet.create({
     color: Color.base.White,
     fontWeight: "bold",
     marginLeft: 8,
+  },
+  closeButton: {
+    height: 32,
+    width: 32,
+    backgroundColor: Color.Gray.gray400,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 48,
+    position: "absolute",
+    right: 12,
+    top: 12,
   },
 });
