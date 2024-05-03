@@ -8,7 +8,7 @@ import { width } from "@/app/lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
 import CloseSm from "../icons/CloseSm";
 
-const QuickInfo = ({ user }) => {
+const QuickInfo = ({ user, onPress }) => {
   const [progress, setProgress] = useState(0);
 
   console.log(user);
@@ -38,7 +38,7 @@ const QuickInfo = ({ user }) => {
           borderRadius: 16,
         }}
       >
-        <TouchableOpacity style={styles.closeButton}>
+        <TouchableOpacity style={styles.closeButton} onPress={onPress}>
           <CloseSm />
         </TouchableOpacity>
         <View style={styles.container1}>
@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   closeButton: {
+    zIndex:99,
     height: 32,
     width: 32,
     backgroundColor: Color.Gray.gray400,

@@ -9,6 +9,7 @@ import {
   loadUserId,
   saveUserId,
 } from "../lib/service/asyncStorageHelper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // impor
 interface AuthProps {
   authState?: {
@@ -247,8 +248,10 @@ export const AuthProvider = ({ children }: any) => {
     });
 
     await deleteUserId();
+    AsyncStorage.clear();
     queryCache.clear();
     router.push("/Login");
+   
   };
 
   const value = {

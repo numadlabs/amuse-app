@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
 import Header from "./components/layout/Header";
 import Color from "./constants/Color";
 import { Notification1, Bitcoin } from "iconsax-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import NotificationCard from "./components/atom/cards/NotificationCard";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const Notification = () => {
-  const [notificationData, setNotificationData] = useState([]);
 
+  const [notifications, setNotifcations] = useState(null)
   useEffect(() => {
     // Retrieve stored card information from AsyncStorage
     const retrieveCardInformation = async () => {
       try {
-        const storedCards = await AsyncStorage.getItem('restaurantCards');
-        if (storedCards !== null) {
+        const storedCard = await AsyncStorage.getItem('restaurantCard');
+        if (storedCard !== null) {
           // Parse the stored JSON data
-          const parsedCards = JSON.parse(storedCards);
+          const parsedCard = JSON.parse(storedCard);
           // Set the notification data
-          setNotificationData(parsedCards);
+          setNotifcations(parsedCard);
         }
-        console.log('Stored cards:', storedCards);
       } catch (error) {
         console.log('Error retrieving card information:', error);
       }
@@ -34,13 +34,12 @@ const Notification = () => {
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
       <Header title="Notifications" />
       <View style={styles.container}>
-        {notificationData.map((card, index) => (
+        {notifications && (
           <NotificationCard
-            key={index}
-            title={card.name}
-            description={`You received $1 of BTC from ${card.name}`}
+            title={notifications.name}
+            description={`You received $1 of BTC from ${notifications.name}`}
           />
-        ))}
+        )}
       </View>
     </View>
   );
@@ -49,9 +48,14 @@ const Notification = () => {
 export default Notification;
 
 const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+    backgroundColor: Color.Gray.gray600,
+    paddingHorizontal: 16,
+  },
   container: {
     borderWidth: 1,
     borderRadius: 16,
-    gap: 16,
+    gap:16
   },
 });
