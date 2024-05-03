@@ -88,10 +88,16 @@ const Restaurant = () => {
         queryClient.invalidateQueries({
           queryKey: restaurantKeys.all,
         });
+        queryClient.invalidateQueries({
+          queryKey: userKeys.cards,
+        });
         showToast();
       }
     }
   };
+
+
+
 
   const { data: userCardId = [] } = useQuery({
     queryKey: userKeys.perks,

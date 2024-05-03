@@ -1,87 +1,57 @@
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import React from "react";
 import Header from "./components/layout/Header";
 import Color from "./constants/Color";
 import { Notification1, Bitcoin } from "iconsax-react-native";
 import { LinearGradient } from "expo-linear-gradient";
-
-interface notProps {
-  title: string;
-  description: string;
-}
+import NotificationCard from "./components/atom/cards/NotificationCard";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Notification = () => {
+  const [notificationData, setNotificationData] = useState([]);
+
+  useEffect(() => {
+    // Retrieve stored card information from AsyncStorage
+    const retrieveCardInformation = async () => {
+      try {
+        const storedCards = await AsyncStorage.getItem('restaurantCards');
+        if (storedCards !== null) {
+          // Parse the stored JSON data
+          const parsedCards = JSON.parse(storedCards);
+          // Set the notification data
+          setNotificationData(parsedCards);
+        }
+        console.log('Stored cards:', storedCards);
+      } catch (error) {
+        console.log('Error retrieving card information:', error);
+      }
+    };
+
+    retrieveCardInformation();
+  }, []);
+
   return (
-    <>
+    <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
       <Header title="Notifications" />
-      <View style={styles.body}>
-      <LinearGradient
-            colors={[Color.Brand.card.start, Color.Brand.card.end]}
-            style={{ borderRadius: 16 }}>
-        <View style={styles.container}>
-          <View
-            style={{
-              marginHorizontal: 12,
-              marginVertical: 16,
-              flexDirection: "row",
-              gap: 12,
-            }}
-          >
-            <View
-              style={{
-                backgroundColor: Color.Gray.gray400,
-                width: 40,
-                height: 40,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 100,
-              }}
-            >
-              <Bitcoin size={20} color="#fff" />
-            </View>
-            <View style={{ flexDirection: "column", gap: 4, flex: 1 }}>
-              <Text
-                style={{
-                  color: Color.base.White,
-                  fontSize: 14,
-                  lineHeight: 18,
-                  fontWeight: '600',
-                }}
-              >
-                {"BTC earned"}
-              </Text>
-              <Text
-                style={{
-                  color: Color.Gray.gray50,
-                  fontSize: 12,
-                  fontWeight: '400'
-                }}
-              >
-                {"You got $1 of BTC."}
-              </Text>
-            </View>
-          </View>
-        </View>
-        <View style={{ position: 'absolute', top: 12, right: 12 }}>
-          <Text style={{ fontSize: 10, lineHeight: 12, color: Color.base.White }}>12h</Text>
-        </View>
-        </LinearGradient>
+      <View style={styles.container}>
+        {notificationData.map((card, index) => (
+          <NotificationCard
+            key={index}
+            title={card.name}
+            description={`You received $1 of BTC from ${card.name}`}
+          />
+        ))}
       </View>
-    </>
+    </View>
   );
 };
 
 export default Notification;
 
 const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    backgroundColor: Color.Gray.gray600,
-    paddingHorizontal: 16,
-  },
   container: {
     borderWidth: 1,
-    borderColor: Color.Gray.gray400,
     borderRadius: 16,
+    gap: 16,
   },
 });

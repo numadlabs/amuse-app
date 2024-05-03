@@ -11,6 +11,7 @@ import { height, width } from './lib/utils'
 import PowerUpCard from './components/atom/cards/PowerUpCard'
 import { LinearGradient } from 'expo-linear-gradient'
 import Color from './constants/Color'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PerkScreen = () => {
   const { restaurantId, btcAmount, powerUp } = useLocalSearchParams()
@@ -24,9 +25,17 @@ const PerkScreen = () => {
     },
   });
 
-  const handleNavigation = () => {
+  const handleNavigation = async () => {
     router.back()
     queryClient.invalidateQueries({ queryKey: userKeys.info });
+
+    // Store card information using AsyncStorage
+    try {
+      await AsyncStorage.setItem('restaurantCard', JSON.stringify(card));
+      console.log('Card information stored successfully.');
+    } catch (error) {
+      console.log('Error storing card information:', error);
+    }
   }
 
   return (
@@ -41,7 +50,6 @@ const PerkScreen = () => {
 
       {!isLoading && card && (
         <>
-
           <APassCard
             name={card.name}
             image={card.logo}
@@ -98,7 +106,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: "100%",
     bottom: 30,
-
-
   },
 })
