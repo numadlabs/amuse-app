@@ -29,6 +29,7 @@ const Page = () => {
   const router = useRouter();
   const [refreshPage, setRefreshPage] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [featured, setIsFeatured] = useState([]);
   const { authState } = useAuth();
 
   const { currentLocation } = useLocationStore();
@@ -65,13 +66,9 @@ const Page = () => {
     enabled: !!currentLocation,
   });
 
-  const bottomSheetAnimation = useSharedValue(0);
 
-  const toggleBottomSheet = () => {
-    const toValue = isOpen ? 0 : 1;
-    bottomSheetAnimation.value = withTiming(toValue);
-    setIsOpen(!isOpen);
-  };
+
+  const bottomSheetAnimation = useSharedValue(0);
 
   const bottomSheetAnimatedStyle = useAnimatedStyle(() => {
     const translateY = bottomSheetAnimation.value * 500; // Adjust the translation value as needed
@@ -79,39 +76,10 @@ const Page = () => {
   });
 
   const handleNavigation = (restaurant: RestaurantType) => {
-    if (restaurant.isOwned) {
-      router.push({
-        pathname: `/Acards/${restaurant.id}`,
-        params: {
-          name: restaurant.name,
-          location: restaurant.location,
-          about: restaurant.description,
-          category: restaurant.category,
-          isOwned: restaurant.isOwned,
-          logo: restaurant.logo,
-          taps: restaurant.visitCount,
-          artistInfo: restaurant.artistInfo,
-          benefits: restaurant.benefits,
-          membership: restaurant.expiryInfo,
-        },
-      });
-    } else {
       router.push({
         pathname: `/restaurants/${restaurant.id}`,
-        params: {
-          name: restaurant.name,
-          location: restaurant.location,
-          about: restaurant.description,
-          category: restaurant.category,
-          isOwned: restaurant.isOwned,
-          logo: restaurant.logo,
-          taps: restaurant.visitCount,
-          artistInfo: restaurant.artistInfo,
-          benefits: restaurant.benefits,
-          membership: restaurant.expiryInfo,
-        },
       });
-    }
+    
   };
 
   const restaurantsArray = restaurantsData?.data?.restaurants || [];

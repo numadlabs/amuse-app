@@ -60,6 +60,8 @@ const StackedCard = () => {
     });
   };
 
+  console.log(cards)
+
 
   return (
     <>
