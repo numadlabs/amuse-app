@@ -14,13 +14,14 @@ import { Reserve, Wallet } from "iconsax-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Button from "../../ui/Button";
 import { WalletAdd1 } from "iconsax-react-native";
+import { width } from "@/app/lib/utils";
 
 interface ResListCardProp {
   marker: RestaurantType;
   onPress: () => void;
   isClaimLoading: boolean;
 }
-const ResListCard: React.FC<ResListCardProp> = ({
+const HomeResListCard: React.FC<ResListCardProp> = ({
   marker,
   onPress,
   isClaimLoading,
@@ -144,7 +145,7 @@ const ResListCard: React.FC<ResListCardProp> = ({
   );
 };
 
-export default ResListCard;
+export default HomeResListCard;
 
 const styles = StyleSheet.create({
   container: {
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     gap: 16,
     marginBottom: 12,
-    width: '100%'
+    width: width * 0.90
   },
   image: {
     borderRadius: 8,

@@ -4,7 +4,7 @@ import { GetRestaurantsResponseType } from "@/app/lib/types/apiResponseType";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View, ScrollView } from "react-native";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import ResListCard from "../atom/cards/RestListCard";
+import ResListCard from "../atom/cards/HomeRestListCart";
 import { RestaurantType } from "@/app/lib/types";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/app/context/AuthContext";
