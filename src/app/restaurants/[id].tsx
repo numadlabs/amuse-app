@@ -20,6 +20,7 @@ import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
 import Toast from "react-native-toast-message";
 import { GetRestaurantsResponseType } from "../lib/types/apiResponseType";
 import {
+  getPerksByRestaurant,
   getRestaurantById,
   getRestaurantId,
   getRestaurants,
@@ -83,14 +84,23 @@ const Restaurant = () => {
 
 
 
-  const { data: perks = [] } = useQuery({
+  const { data: userCardId = [] } = useQuery({
     queryKey: userKeys.perks,
     queryFn: () => {
-      return getUserPowerUps(cardId);
+      return getPerksByRestaurant(id);
     },
     enabled: !!currentLocation,
   });
 
+  const { data: perks = [] } = useQuery({
+    queryKey: userKeys.perks,
+    queryFn: () => {
+      return getUserPowerUps(userCardId);
+    },
+    enabled: !!currentLocation,
+  });
+
+  console.log(perks)
   return (
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
       <View style={styles.closeButtonContainer}>
@@ -114,7 +124,7 @@ const Restaurant = () => {
         />
         {
           isLoading ? (
-            <View style={{ flex: 1, justifyContent: 'center', marginTop:40}}>
+            <View style={{ flex: 1, justifyContent: 'center', marginTop: 40 }}>
               <ActivityIndicator />
             </View>
 
@@ -122,7 +132,7 @@ const Restaurant = () => {
             <>
               {restaurantsData?.isOwned ? (
                 <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>
-                  <Owned cardId={perkId} perks={perks} isLoading={isLoading}/>
+                  <Owned cardId={perkId} perks={perks} isLoading={isLoading} />
                 </Animated.View>
               ) : (
                 <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>

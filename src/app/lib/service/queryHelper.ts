@@ -76,6 +76,17 @@ export async function getUserPowerUps(id) {
   });
 }
 
+export async function getPerksByRestaurant(id) {
+  return axiosClient.get(`/userBonus/${id}/restaurant`).then((response) => {
+    if (response.data.success) {
+      return response?.data.data.userBonuses;
+    } else {
+      throw new Error(response.data.error);
+    }
+  });
+}
+
+
 export async function getUserTaps() {
   return axiosClient.get(`/users/taps`).then((response) => {
     if (response.data.success) {

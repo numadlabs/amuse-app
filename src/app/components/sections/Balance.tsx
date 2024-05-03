@@ -3,6 +3,7 @@ import React from "react";
 import Color from "../../constants/Color";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 interface BalanceProps {
   amount?: number;
@@ -13,6 +14,8 @@ const Balance: React.FC<BalanceProps> = ({ amount }) => {
     amount !== 0 ? amount?.toString().substring(0, 9) : "0.0000";
   let coinAmout = parseFloat(truncatedAmount) * 70193;
 
+
+  const AnimatedText = Animated.createAnimatedComponent(Text)
 
   return (
     <View style={styles.container}>
@@ -37,7 +40,7 @@ const Balance: React.FC<BalanceProps> = ({ amount }) => {
                   style={{ width: 28, height: 28 }}
                   source={require("@/public/images/Bitcoin.png")}
                 />
-                <Text style={styles.balanceAmount}>{truncatedAmount} bitcoin</Text>
+                <AnimatedText entering={FadeIn} style={styles.balanceAmount}>{truncatedAmount} BTC</AnimatedText>
               </View>
             </View>
             <Text
