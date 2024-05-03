@@ -20,7 +20,7 @@ import {
     onPress: () => void;
     isClaimLoading: boolean;
   }
-  const HomeRestListCard: React.FC<ResListCardProp> = ({
+  const HomeRestList: React.FC<ResListCardProp> = ({
     marker,
     onPress,
     isClaimLoading,
@@ -30,7 +30,7 @@ import {
     const closesAt = new Date(marker.closesAt);
     const currentTime = new Date();
     const { width } = Dimensions.get("window");
-    const CARD_WIDTH = width * 0.83;
+    const CARD_WIDTH = width * 0.85;
   
     const isOpen =
       currentTime.getTime() >= opensAt.getTime() &&
@@ -38,7 +38,7 @@ import {
     return (
         <LinearGradient
           colors={[Color.Brand.card.start, Color.Brand.card.end]}
-          style={{ backgroundColor: "transparent", borderRadius: 20, width: CARD_WIDTH }}
+          style={{ backgroundColor: "transparent", borderRadius: 16, width: '100%' }}
         >
           <View style={styles.container}>
             <Image
@@ -49,7 +49,7 @@ import {
             />
             <View style={{ gap: 28 }}>
               <View style={{ gap: 4 }}>
-                <View style={{ width: '100%', flex: 1, overflow: 'hidden' }}>
+                <View style={{ width: "80%", flex: 1, overflow: 'hidden' }}>
                   <Text
                     numberOfLines={1}
                     ellipsizeMode="tail"
@@ -61,9 +61,9 @@ import {
                 <Text style={styles.category}>{marker.category}</Text>
               </View>
               <View
-                style={{ flexDirection: "row", alignItems: "center", width: '80%', justifyContent: 'space-between' }}
+                style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
               >
-                <View style={{ flexDirection: "row", alignItems: "center",  }}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <View
                     style={[
                       styles.dot,
@@ -135,6 +135,37 @@ import {
                       </>
                     )}
                   </Button>
+                  // <TouchableOpacity onPress={onPress}>
+                  //   <View
+                  //     style={{
+                  //       flexDirection: "row",
+                  //       position: "relative",
+                  //       backgroundColor: Color.Gray.gray600,
+                  //       paddingVertical: 8,
+                  //       paddingHorizontal: 16,
+                  //       borderRadius: 48,
+                  //       marginLeft: 49,
+                  //       alignContent: "center",
+                  //       alignItems: "center",
+                  //     }}
+                  //   >
+                  //     <Wallet size={16} color={Color.Gray.gray50} />
+                  //     <Text
+                  //       style={{
+                  //         color: Color.Gray.gray50,
+                  //         fontWeight: "bold",
+                  //         fontSize: 11,
+                  //         lineHeight: 16,
+                  //       }}
+                  //     >
+                  //       {isClaimLoading
+                  //         ? "Loading"
+                  //         : marker.isOwned
+                  //         ? "Owned"
+                  //         : " Add"}
+                  //     </Text>
+                  //   </View>
+                  // </TouchableOpacity>
                 )}
               </View>
             </View>
@@ -143,7 +174,7 @@ import {
     );
   };
   
-  export default HomeRestListCard;
+  export default HomeRestList;
   
   const styles = StyleSheet.create({
     container: {
