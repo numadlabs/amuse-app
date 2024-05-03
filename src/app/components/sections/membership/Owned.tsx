@@ -9,8 +9,6 @@ import { ActivityIndicator } from "react-native";
 import DetailsSheet from "../DetailsSheet";
 import { InfoCircle } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { BottomSheetRefProps } from "../../modals/PerkBottomSheet";
-import BottomSheet from "../../ui/BottomSheet";
 
 interface ownedProps {
   cardId: string;
@@ -110,7 +108,7 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress }) => {
               >
                 Perks
               </Text>
-              <TouchableOpacity onPress={onPress}>
+              <TouchableOpacity>
                 <InfoCircle size={20} color={Color.Gray.gray50} />
               </TouchableOpacity>
             </View>
