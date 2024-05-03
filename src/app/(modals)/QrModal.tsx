@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { CameraView, Camera } from "expo-camera/next";
@@ -36,6 +37,7 @@ const QrModal = () => {
   const [isModalVisible, setModalVisible] = useState(true);
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
   const [powerUp, setPowerUp] = useState("");
   const [btcAmount, setBTCAmount] = useState("");
@@ -160,6 +162,7 @@ const QrModal = () => {
   });
   const handleScanButtonPress = async () => {
     try {
+      setLoading(true);
       const firstCardId = cards?.data?.cards[0].restaurantId;
       console.log("🚀 ~ handleScanButtonPress ~ firstCardId:", firstCardId);
       if (!firstCardId) {
@@ -318,7 +321,12 @@ const QrModal = () => {
                 colors={[Color.Brand.main.start, Color.Brand.main.end]}
                 style={[styles.button]}
               >
-                <Flash color={Color.base.White} />
+                {loading ? (
+                  <ActivityIndicator color={Color.Gray.gray600}/>
+                ): (
+                  <Flash color={Color.base.White} />
+                )}
+               
               </LinearGradient>
             </TouchableOpacity>
 
@@ -378,6 +386,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: 48,
+    height: 48,
     padding: 12,
     borderRadius: 100,
     backgroundColor: Color.Gray.gray400,

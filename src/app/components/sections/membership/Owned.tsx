@@ -16,20 +16,12 @@ interface ownedProps {
   cardId: string;
   perks: any;
   isLoading: boolean;
+  onPress: () => void;
 }
 
-const Owned: React.FC<ownedProps> = ({ perks, isLoading }) => {
+const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress }) => {
   const [showPerks, setShowPerks] = useState(true);
-  const ref = useRef<BottomSheetRefProps>(null);
 
-  const onPress = useCallback(() => {
-    const isActive = ref?.current?.isActive();
-    if (isActive) {
-      ref?.current?.scrollTo(0);
-    } else {
-      ref?.current?.scrollTo(-200);
-    }
-  }, []);
   const backgroundColor = showPerks ? Color.Gray.gray300 : Color.Gray.gray400;
 
   const toggleView = (view) => {
