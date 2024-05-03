@@ -21,15 +21,13 @@ import { RestaurantType } from "../lib/types";
 import { GetRestaurantsResponseType } from "../lib/types/apiResponseType";
 import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
 import { getRestaurants } from "../lib/service/queryHelper";
-import HomeResListCard from "../components/atom/cards/HomeRestListCart";
+import HomeRestList from "../components/atom/cards/HomeRestList";
 import { InfoCircle } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-} from "react-native-reanimated";
-import { height } from "../lib/utils";
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, FadeIn, FadeOut, SlideInDown, SlideOutDown } from "react-native-reanimated";
+import { height, width } from "../lib/utils";
+import Button from "../components/ui/Button";
+
 
 const Page = () => {
   const router = useRouter();
@@ -81,6 +79,8 @@ const Page = () => {
     enabled: !!currentLocation,
   });
 
+
+
   const bottomSheetAnimation = useSharedValue(0);
 
   const bottomSheetAnimatedStyle = useAnimatedStyle(() => {
@@ -92,6 +92,7 @@ const Page = () => {
     router.push({
       pathname: `/restaurants/${restaurant.id}`,
     });
+
   };
 
   const restaurantsArray = restaurantsData?.data?.restaurants || [];
@@ -101,7 +102,10 @@ const Page = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
         {user && <Balance amount={user.balance} />}
         <View style={{ marginTop: 24, gap: 12 }}>
           <Text
@@ -114,38 +118,55 @@ const Page = () => {
             Featured
           </Text>
 
-          <View style={{ alignItems: "center", width: '100%' }}>
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-            >
-               <View style={{ flexDirection: "row", gap: 8, width: '100%' }}>
-              {user?.email &&
-              user?.dateOfBirth &&
-              user?.nickname &&
-              user?.location ? (
-                ''
-              ) : (
-                <QuickInfo user={user} />
-              )}
-                {restaurantsArray
-                  .filter((restaurant) => restaurant.isOwned === false)
-                  .slice(0, 3)
-                  .map((restaurant) => (
-                    <TouchableOpacity
-                      onPress={() => handleNavigation(restaurant)}
-                    >
-                      <HomeResListCard
-                        isClaimLoading={true}
-                        marker={restaurant}
-                        key={restaurant.id as string}
-                        onPress={() => handleNavigation(restaurant)}
-                      />
-                    </TouchableOpacity>
-                  ))}
-              </View>
-            </ScrollView>
-          </View>
+          {restaurantsArray?.length > 0 && (
+            <View style={{ alignItems: "center" }}>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              >
+                <View style={{ flexDirection: 'row', gap: 8 }}>
+                  <TouchableOpacity
+                    onPress={() => handleNavigation(restaurantsArray[0])}
+                  >
+                    <HomeRestList
+                      isClaimLoading={true}
+                      marker={restaurantsArray[0]}
+                      key={restaurantsArray[0].id as string}
+                      onPress={() => handleNavigation(restaurantsArray[0])}
+                    />
+                  </TouchableOpacity>
+                  {user?.email &&
+                    user?.dateOfBirth &&
+                    user?.nickname &&
+                    user?.location ? (
+                    ''
+                  ) : (
+                    <QuickInfo user={user} />
+                  )}
+                  <TouchableOpacity
+                    onPress={() => handleNavigation(restaurantsArray[1])}
+                  >
+                    <HomeRestList
+                      isClaimLoading={true}
+                      marker={restaurantsArray[1]}
+                      key={restaurantsArray[1].id as string}
+                      onPress={() => handleNavigation(restaurantsArray[1])}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleNavigation(restaurantsArray[2])}
+                  >
+                    <HomeRestList
+                      isClaimLoading={true}
+                      marker={restaurantsArray[2]}
+                      key={restaurantsArray[2].id as string}
+                      onPress={() => handleNavigation(restaurantsArray[2])}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
+            </View>
+          )}
         </View>
         <View
           style={{
@@ -203,25 +224,62 @@ const Page = () => {
         )}
       </ScrollView>
       {isOpen && (
-        <Animated.View
-          style={[
-            {
-              position: "absolute",
-              bottom: 0,
-              width: "100%",
-              height: height / 2,
-              backgroundColor: Color.Gray.gray500,
-              borderTopLeftRadius: 32,
-              borderTopRightRadius: 32,
-              overflow: "hidden",
-              zIndex: 1000, // Increase the z-index value
-              left: 0,
-            },
-            bottomSheetAnimatedStyle, // Apply animated style
-          ]}
-        >
-          <Text>kasdbfjkas</Text>
-        </Animated.View>
+        <Modal transparent={true}>
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            onPress={toggleBottomSheet}
+          >
+            <Animated.View
+              entering={FadeIn}
+              exiting={FadeOut}
+              style={[{
+                position: 'absolute',
+                backgroundColor: 'rgba(0, 0, 0, 0.25)',
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                zIndex: 98,
+              }, animatedStyles]}
+            />
+            <Animated.View
+              entering={SlideInDown.springify().damping(18)}
+              exiting={SlideOutDown.springify()}
+              style={[{
+                backgroundColor: Color.Gray.gray600,
+                height: height / 2,
+                bottom: 0,
+                width: width,
+                zIndex: 99,
+                position: 'absolute',
+                borderTopStartRadius: 32,
+                borderTopEndRadius: 32,
+                gap: 24,
+                padding: 16
+              }, animatedStyles]}
+            >
+              <View style={{ paddingVertical: 8, justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
+                <Text style={{ fontSize: 20, lineHeight: 24, color: Color.base.White, fontWeight: 'bold', }}>Membership</Text>
+              </View>
+              <View style={{ alignItems: 'center', gap:16 }}>
+                <Image
+                  source={require("@/public/images/membership.png")}
+                  style={{ width: width/1.8, height: 166 }}
+                  resizeMode='contain'
+                />
+                <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray50, textAlign: 'center' }}>
+                  Lorem ipsum dolor sit amet, consectetur {"\n"} adipiscing elit. Curabitur sed justo ac urna fringilla rhoncus.
+                </Text>
+              </View>
+
+              <Button variant="primary" onPress={toggleBottomSheet}>
+                <Text>
+                  I understood
+                </Text>
+              </Button>
+            </Animated.View>
+          </TouchableOpacity>
+        </Modal>
       )}
     </GestureHandlerRootView>
   );
@@ -233,7 +291,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
-    paddingHorizontal: 16,
+    paddingHorizontal: 16
   },
   modal: {
     position: "absolute",
