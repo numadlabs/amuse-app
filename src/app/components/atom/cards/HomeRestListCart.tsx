@@ -114,7 +114,7 @@ const HomeResListCard: React.FC<ResListCardProp> = ({
                     justifyContent: "center",
                     borderWidth: 1,
                     borderRadius: 16,
-                    marginLeft:110,
+                    marginLeft: 90,
                     borderColor: Color.base.White
                   }}
                 >
@@ -158,10 +158,9 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     gap: 16,
     marginBottom: 12,
-    width: width * 0.90
   },
   image: {
-    borderRadius: 8,
+    borderRadius: 12,
     width: 92,
     height: 92,
   },

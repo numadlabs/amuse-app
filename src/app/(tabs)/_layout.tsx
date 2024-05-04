@@ -8,6 +8,7 @@ import Color from "../constants/Color";
 import { useAuth } from "../context/AuthContext";
 import * as SplashScreen from "expo-splash-screen";
 import useLocationStore from "../lib/store/userLocation";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Layout = ({ navigation }) => {
   const { authState } = useAuth();
@@ -39,7 +40,10 @@ const Layout = ({ navigation }) => {
       <Tabs.Screen
         name="index"
         options={{
-          headerStyle: { shadowOpacity: 0, backgroundColor:Color.Gray.gray600 },
+          headerStyle: {
+            shadowOpacity: 0,
+            backgroundColor: Color.Gray.gray600,
+          },
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => router.push("/profileSection/Profile")}
@@ -53,6 +57,12 @@ const Layout = ({ navigation }) => {
             <TouchableOpacity onPress={() => router.push("/Notification")}>
               <View style={{ paddingHorizontal: 20 }}>
                 <Notification color={Color.base.White} />
+                <View style={{ position: 'absolute', right: 22 }}>
+                  <LinearGradient
+                    colors={[Color.Brand.main.start, Color.Brand.main.end]}
+                    style={{ width: 8, height: 8, borderRadius: 8 }}
+                  />
+                </View>
               </View>
             </TouchableOpacity>
           ),

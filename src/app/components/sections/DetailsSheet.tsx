@@ -73,9 +73,10 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
           <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>
             Locations
           </Text>
-          <View>
+          <View style={{ width: '90%' }}>
             <View style={styles.attribute}>
               <Location color={Color.Gray.gray100} />
+              <TouchableOpacity>
               <Text
                 style={
                   (styles.attributeLocText)
@@ -83,6 +84,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
               >
                 {locations}
               </Text>
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -156,7 +158,7 @@ const styles = StyleSheet.create({
   attributeLocText: {
     color: Color.System.systemInformation,
     fontSize: 16,
-    width: '90%'
+    width: '100%'
   },
   membershipContainer: {
     flexDirection: "row",

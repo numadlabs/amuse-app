@@ -53,10 +53,7 @@ const StackedCard = () => {
 
   const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
-      pathname: `/restaurants/${restaurant.restaurantId}`,
-      params: {
-       
-      },
+      pathname: `/restaurants/${restaurant.restaurantId}`
     });
   };
 
