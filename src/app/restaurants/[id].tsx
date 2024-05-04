@@ -39,6 +39,7 @@ const Restaurant = () => {
   const { cardId, id } = useLocalSearchParams();
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const { authState } = useAuth();
+  const [loading, setLoading] = useState(false);
   const [perkId, setPerkId] = useState<string>("")
   const { currentLocation } = useLocationStore();
   const queryClient = useQueryClient();
@@ -170,7 +171,9 @@ const Restaurant = () => {
         <View style={styles.buttonContainer}>
           <Button
             onPress={() => {
+              setLoading(true);
               handleGetAcard(cardId as string);
+              setLoading(false);
             }}
             size="small"
             variant="primary"

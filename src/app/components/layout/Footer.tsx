@@ -5,6 +5,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Color from "../../constants/Color";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
+import { height } from "@/app/lib/utils";
 
 const Footer = ({ navigation }) => {
   const [isActive, setIsActive] = useState("/");
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "space-between",
-    height: 80,
+    height: height/10.15,
     position: "absolute",
     bottom: 0,
     left: 0,
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: Color.Gray.gray500,
     borderRadius: 32,
-    bottom: 25,
+    bottom: 35,
     alignSelf: "center",
     position: 'absolute',
   },

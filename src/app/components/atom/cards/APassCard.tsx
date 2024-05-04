@@ -107,11 +107,11 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
                       <TicketStar size={24} color={Color.base.White} />
                     </View> : null}
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20, rowGap: 12 }}>
-               
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20,rowGap:16 }}>
 
-                      <Image cachePolicy='memory' style={{ minWidth: 164, minHeight: 164, borderRadius: 12 }} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${nftImage}` }} />
-            
+
+                  <Image cachePolicy='memory' contentFit='fill' style={{ minWidth: 210,height:210, borderRadius: 12,  }} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${nftImage}` }} />
+
                   <View style={{ borderWidth: 1, backgroundColor: Color.Gray.gray500, borderColor: Color.Gray.gray400, borderRadius: 12, overflow: 'hidden', }}>
                     {/* <LinearGradient
                       colors={[Color.Brand.main.start, Color.Brand.main.end]}
@@ -167,7 +167,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: Color.Gray.gray200,
     overflow: "hidden",
-    height: 264,
+    height: 304,
+    
   },
   blurContainer: {
     backgroundColor: Color.Gray.gray500,

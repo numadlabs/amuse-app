@@ -315,8 +315,8 @@ export default function RestaurantMapView() {
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         initialRegion={{
-          latitude: 25.276987,
-          longitude: 55.296249,
+          latitude: 25.2048,
+          longitude: 55.2708,
           latitudeDelta: 0.1, // Adjust the delta values for desired zoom level
           longitudeDelta: 0.1,
         }} // Pass the initialRegion prop here
@@ -369,6 +369,7 @@ export default function RestaurantMapView() {
                   style={{
                     width: 8,
                     height: 8,
+                    padding:4,
                     backgroundColor: Color.base.White,
                     borderRadius: 48,
                   }}

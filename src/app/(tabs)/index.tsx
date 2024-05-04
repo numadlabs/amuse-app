@@ -152,7 +152,7 @@ const Page = () => {
                     <HomeRestList
                       isClaimLoading={true}
                       marker={filteredRestaurantsArray[1]}
-                      key={filteredRestaurantsArray[1].id as string}
+                      key={filteredRestaurantsArray[1]?.id as string}
                       onPress={() => handleNavigation(filteredRestaurantsArray[1])}
                     />
                   </TouchableOpacity>
@@ -162,7 +162,7 @@ const Page = () => {
                     <HomeRestList
                       isClaimLoading={true}
                       marker={filteredRestaurantsArray[2]}
-                      key={filteredRestaurantsArray[2].id as string}
+                      key={filteredRestaurantsArray[2]?.id as string}
                       onPress={() => handleNavigation(filteredRestaurantsArray[2])}
                     />
                   </TouchableOpacity>

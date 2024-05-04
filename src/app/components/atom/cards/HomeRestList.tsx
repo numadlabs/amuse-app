@@ -27,15 +27,15 @@ const HomeRestList: React.FC<ResListCardProp> = ({
   isClaimLoading,
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const opensAt = new Date(marker.opensAt);
-  const closesAt = new Date(marker.closesAt);
+  const opensAt = new Date(marker?.opensAt);
+  const closesAt = new Date(marker?.closesAt);
   const currentTime = new Date();
   const { width } = Dimensions.get("window");
   const CARD_WIDTH = width * 0.88;
 
   const isOpen =
-    currentTime.getTime() >= opensAt.getTime() &&
-    currentTime.getTime() <= closesAt.getTime();
+    currentTime.getTime() >= opensAt?.getTime() &&
+    currentTime.getTime() <= closesAt?.getTime();
   return (
     <LinearGradient
       colors={[Color.Brand.card.start, Color.Brand.card.end]}
@@ -51,23 +51,23 @@ const HomeRestList: React.FC<ResListCardProp> = ({
       <View style={styles.container}>
         <Image
           source={{
-            uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker.logo}` as string,
+            uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker?.logo}` as string,
           }}
           style={styles.image}
         />
         <View style={{ height: 92, justifyContent: "space-between" }}>
           <View style={{ gap: 4 }}>
             <Text numberOfLines={1} ellipsizeMode="tail" style={styles.title}>
-              {marker.name}
+              {marker?.name}
             </Text>
-            <Text style={styles.category}>{marker.category}</Text>
+            <Text style={styles.category}>{marker?.category}</Text>
           </View>
           <View
             style={{
               flexDirection: "row",
               width: "80%",
               alignItems: "center",
-              ...(marker.isOwned
+              ...(marker?.isOwned
                 ? { gap: 12 }
                 : { justifyContent: "space-between" }),
             }}
@@ -93,7 +93,7 @@ const HomeRestList: React.FC<ResListCardProp> = ({
                 {isOpen ? "Closed" : "Open"}
               </Text>
             </View>
-            {marker.isOwned ? (
+            {marker?.isOwned ? (
               <View
                 style={{
                   width: 1,
@@ -104,13 +104,13 @@ const HomeRestList: React.FC<ResListCardProp> = ({
             ) : (
               ""
             )}
-            {marker.isOwned ? (
+            {marker?.isOwned ? (
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
               >
                 <Reserve color={Color.Gray.gray50} size={16} />
                 <Text style={{ color: Color.Gray.gray50 }}>
-                  {marker.visitCount} Check-ins
+                  {marker?.visitCount} Check-ins
                 </Text>
               </View>
             ) : (
