@@ -30,7 +30,7 @@ const Footer = ({ navigation }) => {
           Check-in
         </Text>
       </TouchableOpacity>
-      <View     style={[styles.container]}>
+      <View style={[styles.container]}>
 
      
       {/* <LinearGradient
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   container: {
-    backgroundColor: Color.Gray.gray600,
+    backgroundColor: Color.Gray.gray500,
     borderTopWidth: 1,
     borderColor: Color.Gray.gray400,
     width: "100%",
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 16,
-    backgroundColor: Color.Gray.gray600,
+    backgroundColor: Color.Gray.gray500,
     borderRadius: 32,
     bottom: 25,
     alignSelf: "center",

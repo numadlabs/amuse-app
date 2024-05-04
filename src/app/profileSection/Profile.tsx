@@ -73,7 +73,7 @@ const Profile = () => {
                   paddingHorizontal: 16,
                   paddingBottom: 16,
                   paddingTop: 24,
-                  borderRadius: 32,
+                  borderRadius: 16,
                   gap: 24,
                 }}>
 
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
 
 
-    borderRadius: 32,
+    borderRadius: 16,
 
     borderWidth: 1,
     borderColor: Color.Gray.gray400,

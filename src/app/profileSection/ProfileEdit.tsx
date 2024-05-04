@@ -23,6 +23,7 @@ import { userKeys } from "../lib/service/keysHelper";
 import ProgressBar from "../components/sections/ProgressBar";
 import { width } from "../lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
+import Animated from "react-native-reanimated";
 
 const ProfileEdit = () => {
   const { authState } = useAuth();
@@ -39,7 +40,7 @@ const ProfileEdit = () => {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [dataChanged, setDataChanged] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [focusedInput, setFocusedInput] = useState<'Nickname' | 'Email' | 'Area'| 'Birthday' | null>(null);
+  const [focusedInput, setFocusedInput] = useState<'Nickname' | 'Email' | 'Area' | 'Birthday' | null>(null);
   const showToast = () => {
     setTimeout(function () {
       Toast.show({
@@ -59,7 +60,7 @@ const ProfileEdit = () => {
   }, [user]);
 
   useEffect(() => {
-    
+
     if (
       user.nickname !== nickname ||
       user.email !== email ||
@@ -92,7 +93,7 @@ const ProfileEdit = () => {
       setLoading(false);
       setDataChanged(false);
       showToast();
-      queryClient.invalidateQueries({queryKey: userKeys.info})
+      queryClient.invalidateQueries({ queryKey: userKeys.info })
       router.navigate('/Success')
 
     } catch (error) {
@@ -133,7 +134,7 @@ const ProfileEdit = () => {
                   <View style={styles.profilePic}>
                     <User size={48} color={Color.Gray.gray50} />
                   </View>
-                  <View style={{ position: 'absolute', bottom: 20, right:width/3.5, backgroundColor: Color.Gray.gray400, padding: 8, borderRadius: 48 }}>
+                  <View style={{ position: 'absolute', bottom: 20, right: width / 3.5, backgroundColor: Color.Gray.gray400, padding: 8, borderRadius: 48 }}>
                     <Camera size={16} color={Color.Gray.gray50} />
                   </View>
 
@@ -253,21 +254,21 @@ const ProfileEdit = () => {
                       marginBottom: 12
                     }}
                   >
-                  <View style={styles.input}>
-                    <Cake color={Color.Gray.gray50} />
-                    <DateTimePicker
-                      value={dateOfBirth ? new Date(dateOfBirth) : new Date()}
-                      mode="date"
-                      display="default"
-                      onChange={onDateChange}
-                      maximumDate={new Date(Date.now())}
-                      style={{ backgroundColor: Color.Gray.gray600 }}
-                    />
-                  </View>
+                    <View style={styles.input}>
+                      <Cake color={Color.Gray.gray50} />
+                      <DateTimePicker
+                        value={dateOfBirth ? new Date(dateOfBirth) : new Date()}
+                        mode="date"
+                        display="default"
+                        onChange={onDateChange}
+                        maximumDate={new Date(Date.now())}
+                        style={{ backgroundColor: Color.Gray.gray600 }}
+                      />
+                    </View>
                   </LinearGradient>
                 </View>
               </View>
-              <View style={{ gap: 8 }}>
+              <Animated.View style={{ gap: 8 }}>
                 <Text style={{ fontSize: 14, lineHeight: 18, fontWeight: '600', color: Color.base.White }}>
                   For more rewards
                 </Text>
@@ -275,49 +276,29 @@ const ProfileEdit = () => {
                   <ProgressBar progress={progress} width={'85%'} height={8} />
                   <Text style={{ color: Color.base.White, fontSize: 12, lineHeight: 16, fontWeight: '700' }}>{`${progress * 100}%`}</Text>
                 </View>
-
-              </View>
+              </Animated.View>
             </LinearGradient>
           </View>
-
-
-
         </ScrollView>
         <View style={{ paddingHorizontal: 16, marginBottom: 30 }}>
-          {dataChanged ? (
-            <Button
-              variant="primary"
-              textStyle="primary"
-              size="default"
-              onPress={triggerUpdateUser}
-            >
-              {loading ? (
-                <ActivityIndicator size="small" color="white" />
-              ) : (
-                <Text
-                  style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
-                >
-                  Save changes
-                </Text>
-              )}
-            </Button>
-          ) : (
-            <Button
-              variant="disabled"
-              textStyle="disabled"
-              size="default"
-            >
-              {loading ? (
-                <ActivityIndicator size="small" color="white" />
-              ) : (
-                <Text
-                  style={{ fontSize: 16, fontWeight: "bold" }}
-                >
-                  Save changes
-                </Text>
-              )}
-            </Button>
-          )}
+       
+          <Button
+            variant={dataChanged ? "primary" : "disabled"}
+            textStyle={dataChanged ? "primary" : "disabled"}
+            size="default"
+            onPress={triggerUpdateUser}
+          >
+            {loading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text
+                style={{ fontSize: 16, fontWeight: "bold" }}
+              >
+                Save changes
+              </Text>
+            )}
+          </Button>
+
         </View>
       </SafeAreaView>
     </>
