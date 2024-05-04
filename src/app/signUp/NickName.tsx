@@ -17,10 +17,12 @@ import Color from "../constants/Color";
 import { useAuth } from "../context/AuthContext";
 import { useSignUpStore } from "../lib/store/signUpStore";
 import { LinearGradient } from "expo-linear-gradient";
+import Animated, { FadeIn, SlideInDown } from "react-native-reanimated";
 const NickName = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const { password, phoneNumber, prefix } = useLocalSearchParams();
   const { nickname, setNickname } = useSignUpStore();
+  const [error, setError] = useState<string>("")
   const [isFocused, setIsFocused] = useState(false);
 
   const { onRegister } = useAuth();
@@ -39,7 +41,11 @@ const NickName = () => {
       if (response.data) {
         console.log("Register successful:", response.data);
         router.push("/(tabs)");
-      } else {
+      } else if (response && response.error) {
+        setError("User already exists with this phone number");
+        console.log(error)
+      }
+      else {
         console.log("Register failed:", response.data);
       }
     } catch (error) {
@@ -65,6 +71,9 @@ const NickName = () => {
     };
   }, []);
 
+
+  const AnimatedText = Animated.createAnimatedComponent(Text)
+
   return (
     <>
       <Steps activeStep={3} />
@@ -75,18 +84,18 @@ const NickName = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
-            <LinearGradient
-            colors={[Color.Brand.card.start, Color.Brand.card.end]}
-            style={{ borderWidth: 1, borderColor: Color.Gray.gray400, borderRadius: 32, marginTop: 16 }}>
-              <View style={styles.textContainer}>
-                <View style={{ gap: 8 }}>
-                  <Text style={styles.topText}>Nickname</Text>
-                  <Text style={styles.bottomText}>
-                    This will be shared with others. We want exclusive {"\n"}
-                    invites to feel special.
-                  </Text>
-                </View>
-                <LinearGradient
+              <LinearGradient
+                colors={[Color.Brand.card.start, Color.Brand.card.end]}
+                style={{ borderWidth: 1, borderColor: Color.Gray.gray400, borderRadius: 32, marginTop: 16 }}>
+                <View style={styles.textContainer}>
+                  <View style={{ gap: 8 }}>
+                    <Text style={styles.topText}>Nickname</Text>
+                    <Text style={styles.bottomText}>
+                      This will be shared with others. We want exclusive {"\n"}
+                      invites to feel special.
+                    </Text>
+                  </View>
+                  <LinearGradient
                     colors={
                       isFocused
                         ? [Color.Brand.main.start, Color.Brand.main.end]
@@ -125,11 +134,18 @@ const NickName = () => {
                           fontSize: 16,
                           fontWeight: "400",
                           lineHeight: 20,
-                          color: Color.base.White,}}
+                          color: Color.base.White,
+                        }}
                       />
+
                     </View>
+
                   </LinearGradient>
-              </View>
+                  <View style={{justifyContent:'center', alignItems:'center'}}>
+                    {error ? <AnimatedText entering={FadeIn} style={{ color: Color.System.systemError, fontSize:15, textAlign:'center' }}>{error}</AnimatedText> : null}
+                  </View>
+
+                </View>
               </LinearGradient>
             </View>
             <KeyboardAvoidingView
@@ -146,19 +162,16 @@ const NickName = () => {
                 ]}
               >
                 <Button
-                  variant="primary"
+                  variant={!nickname ? "disabled" : 'primary'}
                   onPress={handleRegister}
+                  textStyle={!nickname ? "disabled" : 'primary'}
                   disabled={loading}
                 >
                   {loading ? (
                     <ActivityIndicator size="small" color="white" />
                   ) : (
+
                     <Text
-                      style={{
-                        color: "white",
-                        fontSize: 16,
-                        fontWeight: "bold",
-                      }}
                     >
                       Finish
                     </Text>
