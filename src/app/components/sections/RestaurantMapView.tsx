@@ -1,11 +1,9 @@
-import { useAuth } from "@/app/context/AuthContext";
 import { restaurantKeys, userKeys } from "@/app/lib/service/keysHelper";
-import { getAcard } from "@/app/lib/service/mutationHelper";
 import { getRestaurants } from "@/app/lib/service/queryHelper";
 import { RestaurantType } from "@/app/lib/types";
 import { GetRestaurantsResponseType } from "@/app/lib/types/apiResponseType";
 import { useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
@@ -15,17 +13,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import MapView, {
-  Marker,
-  PROVIDER_GOOGLE,
-  PROVIDER_DEFAULT,
-} from "react-native-maps";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { useQuery } from "@tanstack/react-query";
 import FloatingRestaurantCard from "../atom/cards/FloatingRestCard";
 import useLocationStore from "@/app/lib/store/userLocation";
 import SvgMarker from "../atom/svgMarker";
 import Color from "@/app/constants/Color";
-import Toast from "react-native-toast-message";
 import { mapStyle } from "@/app/constants/serverSettings";
 
 const { width, height } = Dimensions.get("window");
@@ -36,27 +29,71 @@ const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 const mapLatitudeDelta = 0.008;
 const mapLongitudeDelta = 0.008;
 
+const throttle = (func, delay) => {
+  let throttling = false;
+
+  return (...args) => {
+    console.log("throttle function called");
+    if (!throttling) {
+      console.log("Function execution allowed");
+      throttling = true;
+      func(...args);
+      setTimeout(() => {
+        throttling = false;
+      }, delay);
+    } else {
+      console.log("throttle Function execution blocked");
+    }
+  };
+};
+
+const throttleScroll = (func, delay) => {
+  let throttling = false;
+
+  return (...args) => {
+    console.log("throttleScroll function called");
+    if (!throttling) {
+      console.log("Function execution allowed");
+      throttling = true;
+      func(...args);
+      setTimeout(() => {
+        throttling = false;
+      }, delay);
+    } else {
+      console.log("throttleScroll function execution blocked");
+    }
+  };
+};
 export default function RestaurantMapView() {
-  const { authState } = useAuth();
+  const router = useRouter();
+
   const { currentLocation } = useLocationStore();
-  const queryClient = useQueryClient();
   const [selectedLocation, setSelectedLocation] = useState("current");
   const mapRef = useRef(null);
   const scrollViewRef = useRef(null);
-  const prevMarkerToScrollTo = useRef<RestaurantType | null>(null);
+
+  const prevCardIndexToScrollTo = useRef<number | null>(null);
 
   const [initialRegion, setInitialRegion] = useState(null);
   const [scrollViewHidden, setScrollViewHidden] = useState(true);
   const [selectedMarkerId, setSelectedMarkerId] = useState(null);
   const [isClaimLoading, setIsClaimLoading] = useState(false);
 
-  const [markerToScrollTo, setMarkerToScrollTo] =
-    useState<RestaurantType | null>(null);
-  const [cardIndexToScrollTo, setCardIndexToScrollTo] = useState<number | null>(
+  const [cardIndexToScroll, setCardIndexToScroll] = useState<number | null>(
     null
   );
+  const [pendingMarkerForMapCenter, setPendingMarkerForMapCenter] =
+    useState<RestaurantType | null>(null);
+  const [markerForMapCenter, setMarkerForMapCenter] =
+    useState<RestaurantType | null>(null);
 
   let mapAnimation = new Animated.Value(0);
+
+  const prevMarkerForMapCenter = useRef<RestaurantType | null>(null);
+  const prevCardIndexForScrollView = useRef<number | null>(null);
+  const [isScrollViewDragging, setIsScrollViewDragging] = useState(false);
+
+  const [activeMarker, setActiveMarker] = useState(null);
 
   // useEffect(() => {
   //   if (currentLocation) {
@@ -85,6 +122,12 @@ export default function RestaurantMapView() {
       });
     }
   }, [currentLocation, selectedLocation]);
+
+  const findMarkerIndex = (marker) => {
+    return restaurantsData?.data?.restaurants.findIndex(
+      (restaurant) => restaurant.id === marker.id
+    );
+  };
 
   const toggleLocation = () => {
     setSelectedLocation((prevLocation) =>
@@ -132,27 +175,17 @@ export default function RestaurantMapView() {
 
     enabled: !!currentLocation,
   });
-  
-
-  const { mutateAsync: createGetAcardMutation } = useMutation({
-    mutationFn: getAcard,
-    onError: (error) => {
-      console.log(error);
-    },
-    onSuccess: (data, variables) => {},
-  });
 
   const handleMapAnimation = ({ value }) => {
-    let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
+    let index = Math.floor(value / CARD_WIDTH + 0.3);
     if (index >= restaurantsData?.data?.restaurants.length) {
       index = restaurantsData?.data?.restaurants.length - 1;
     }
     if (index <= 0) {
       index = 0;
     }
-
-    setSelectedMarkerId(restaurantsData?.data?.restaurants[index].id);
-    setMarkerToScrollTo(restaurantsData?.data?.restaurants[index]);
+    const marker = restaurantsData?.data?.restaurants[index];
+    setMarkerForMapCenter(marker);
   };
 
   useEffect(() => {
@@ -163,137 +196,120 @@ export default function RestaurantMapView() {
     };
   }, [mapAnimation]); // Added mapAnimation as a dependency
 
-  const handleCalloutPress = (marker: RestaurantType) => {
-    // setSelectedMarker(marker);
+  useEffect(() => {
+    if (!scrollViewHidden && cardIndexToScroll !== null) {
+      console.log("useEffect triggered");
+      // Set a timeout to wait for 0.1 second
+      const timeoutId = setTimeout(() => {
+        scrollToCardIndex(cardIndexToScroll);
+        setCardIndexToScroll(null);
+      }, 100); // 100 milliseconds delay
+
+      // Clear the timeout if the component unmounts or variables change
+      return () => clearTimeout(timeoutId);
+    }
+  }, [scrollViewHidden, cardIndexToScroll]);
+
+  const handleMarkerPress = (marker) => {
+    console.log("🚀 ~ handleMarkerPress ~ marker:", marker.name);
+
+    setActiveMarker(marker);
+    const cardIndex = findMarkerIndex(marker);
+    console.log("🚀 ~ handleMarkerPress ~ cardIndex:", cardIndex);
     setScrollViewHidden(false);
-    setMarkerToScrollTo(marker);
-
-    // Find the index of the selected marker in the restaurantsData array
-    const cardIndex = restaurantsData?.data?.restaurants.findIndex(
-      (restaurant) => restaurant.id === marker.id
-    );
-    console.log("🚀 ~ handleCalloutPress ~ cardIndex:", cardIndex);
-
-    // If the index is found, set the cardIndexToScrollTo state
     if (cardIndex !== undefined) {
-      setCardIndexToScrollTo(cardIndex);
-    }
-  };
-
-  useEffect(() => {
-    if (markerToScrollTo && markerToScrollTo !== prevMarkerToScrollTo.current) {
-      // console.log("🚀 ~ useEffect ~ markerToScrollTo:", markerToScrollTo.id);
-      // if (prevMarkerToScrollTo.current) {
-      //   console.log(
-      //     "🚀 ~ useEffect ~ prevMarkerToScrollTo.current:",
-      //     prevMarkerToScrollTo?.current?.id
-      //   );
-      // }
-      setSelectedMarkerId(markerToScrollTo.id);
-      const region = {
-        latitude: markerToScrollTo.latitude,
-        longitude: markerToScrollTo.longitude,
-        latitudeDelta: mapLatitudeDelta,
-        longitudeDelta: mapLongitudeDelta,
-      };
-      mapRef.current.animateToRegion(region, 150);
-      prevMarkerToScrollTo.current = markerToScrollTo;
-    }
-  }, [markerToScrollTo]);
-
-  useEffect(() => {
-    if (
-      cardIndexToScrollTo !== null &&
-      scrollViewRef.current &&
-      scrollViewHidden == false
-    ) {
-      setTimeout(() => {
-        const x = cardIndexToScrollTo * CARD_WIDTH;
-        scrollViewRef.current.scrollTo({ x, animated: true });
-      }, 500); // 500 milliseconds = 0.5 seconds
-    }
-  }, [cardIndexToScrollTo, scrollViewHidden]);
-
-  const showToast = () => {
-    Toast.show({
-      type: "perkToast",
-      text1: "Added membership card",
-    });
-  };
-
-  const handleGetAcard = async (acardId: string) => {
-    console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
-    setIsClaimLoading(true);
-    if (authState.userId) {
-      const data = await createGetAcardMutation({
-        userId: authState.userId,
-        cardId: acardId,
-      });
-      if (data.data.success) {
-        setIsClaimLoading(false);
-        queryClient.invalidateQueries({
-          queryKey: userKeys.cards,
-        });
-        queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
-
-        showToast();
+      scrollToCardIndex(cardIndex);
+      if (cardIndexToScroll == null) {
+        setCardIndexToScroll(cardIndex);
       }
     }
   };
-  const router = useRouter();
+
+  const scrollToCardIndex = (index) => {
+    console.log("🚀 ~ scrollToCardIndex ~ index:", index);
+    if (scrollViewRef.current) {
+      console.log("🚀 ~ scrollToCardIndex ~ scrollViewRef.current:");
+      const x = index * (CARD_WIDTH + 20);
+      scrollViewRef.current.scrollTo({ x, animated: true });
+    }
+  };
+
+  const throttledCenter = useMemo(() => {
+    return throttle((marker) => {
+      console.log("🚀 ~ returnthrottle ~ cardIndex:", marker.name);
+      if (marker !== null) {
+        const region = {
+          latitude: marker.latitude,
+          longitude: marker.longitude,
+          latitudeDelta: mapLatitudeDelta,
+          longitudeDelta: mapLongitudeDelta,
+        };
+        mapRef.current.animateToRegion(region, 150);
+      }
+    }, 250);
+  }, []);
+
+  const handleScrollViewScroll = (event) => {
+    const offset = event.nativeEvent.contentOffset.x;
+    // console.log("🚀 ~ handleScrollViewScroll ~ offset:", offset);
+    const positiveNumber = offset < 0 ? -offset : offset;
+    const addedPadding = positiveNumber + 28;
+    // const positiveOffset = Math.max(offset, 0);
+    const index = Math.floor(addedPadding / (CARD_WIDTH + 20));
+    // console.log("🚀 ~ handleScrollViewScroll ~ index:", index);
+    const marker = restaurantsData?.data?.restaurants[index];
+    console.log("🚀 ~ handleScrollViewScroll ~ marker:", marker.name);
+    // if (marker && activeMarker == null) {
+    //   console.log("cond 0", !activeMarker);
+    //   setActiveMarker(marker);
+    // }
+
+    if (marker && marker.id !== activeMarker?.id) {
+      console.log("cond 1", activeMarker?.id !== marker?.id);
+      console.log("cond 2", isScrollViewDragging == false);
+
+      if (
+        isScrollViewDragging == false &&
+        activeMarker &&
+        marker?.id == activeMarker?.id
+      ) {
+        console.log("cond3:", isScrollViewDragging);
+        setActiveMarker(marker);
+        centerMapOnMarker(marker);
+      } else if (isScrollViewDragging && marker) {
+        console.log("cond4", isScrollViewDragging);
+
+        setActiveMarker(marker);
+        centerMapOnMarker(marker);
+      }
+    }
+  };
+
+  const centerMapOnMarker = (marker) => {
+    console.log(marker.name);
+    if (mapRef.current) {
+      const region = {
+        latitude: marker.latitude,
+        longitude: marker.longitude,
+        latitudeDelta: mapLatitudeDelta,
+        longitudeDelta: mapLongitudeDelta,
+      };
+      console.log("🚀 ~ centerMapOnMarker ~ region:", region);
+      mapRef.current.animateToRegion(region, 150);
+    }
+  };
 
   const handleNavigation = (restaurant: RestaurantType) => {
- 
-      router.push({
-        pathname: `/restaurants/${restaurant.id}`,
-        params: {
-          cardId: restaurant.cardId,
-        },
-      });
+    router.push({
+      pathname: `/restaurants/${restaurant.id}`,
+      params: {
+        cardId: restaurant.cardId,
+      },
+    });
   };
 
   return (
     <View style={styles.container}>
-      {/* <GooglePlacesAutocomplete
-        placeholder="Search or move the map"
-        fetchDetails={true}
-        onPress={(data, details) => {
-          console.log("🚀 ~ RestaurantMapView ~ data:", data);
-          const point = details?.geometry?.location;
-          console.log("🚀 ~ RestaurantMapView ~ point:", point);
-          if (!point) return;
-          // setLocation({
-          //   ...location,
-          //   latitude: point.lat,
-          //   longitude: point.lng,
-          // });
-        }}
-        query={{
-          key: process.env.EXPO_PUBLIC_GOOGLE_API_KEY,
-          language: "en",
-        }}
-        renderLeftButton={() => (
-          <View style={styles.boxIcon}>
-            <Ionicons name="search-outline" size={24} color="green" />
-          </View>
-        )}
-        styles={{
-          container: {
-            flex: 0,
-          },
-          textInput: {
-            backgroundColor: "#EEE9F0",
-            paddingLeft: 35,
-            borderRadius: 10,
-          },
-          textInputContainer: {
-            padding: 8,
-            backgroundColor: "#fff",
-          },
-        }}
-      /> */}
-      {/* <Header title="Map" /> */}
-
       <MapView
         ref={mapRef}
         style={styles.map}
@@ -339,13 +355,9 @@ export default function RestaurantMapView() {
                 latitude: restaurant.latitude,
                 longitude: restaurant.longitude,
               }}
-              onPress={() => handleCalloutPress(restaurant)}
+              onPress={() => handleMarkerPress(restaurant)}
             >
-              {selectedMarkerId === restaurant.id ? (
-                // <Image
-                //   source={require("@/public/images/restaurantPin.png")}
-                //   style={{ width: 32, height: 32 }}
-                // />
+              {activeMarker?.id === restaurant.id ? (
                 <SvgMarker
                   key={restaurant.id as string}
                   imageUrl={
@@ -366,55 +378,52 @@ export default function RestaurantMapView() {
           );
         })}
       </MapView>
-      {!scrollViewHidden && (
-        <Animated.ScrollView
-          ref={scrollViewRef}
-          horizontal
-          pagingEnabled
-          scrollEventThrottle={1}
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={CARD_WIDTH + 20}
-          snapToAlignment="center"
-          style={styles.scrollView}
-          contentInset={{
-            top: 0,
-            left: SPACING_FOR_CARD_INSET,
-            bottom: 10,
-            right: SPACING_FOR_CARD_INSET,
-          }}
-          contentContainerStyle={{
-            paddingHorizontal:
-              Platform.OS === "android" ? SPACING_FOR_CARD_INSET : 0,
-          }}
-          onScroll={Animated.event(
-            [
-              {
-                nativeEvent: {
-                  contentOffset: {
-                    x: mapAnimation,
-                  },
-                },
-              },
-            ],
-            { useNativeDriver: true }
-          )}
-        >
-          {restaurantsData?.data?.restaurants &&
-            restaurantsData.data.restaurants.map((marker, index) => (
-              <TouchableOpacity
-                key={`card-${marker.id}`}
+      {/* {!scrollViewHidden && ( */}
+      <Animated.ScrollView
+        ref={scrollViewRef}
+        horizontal
+        pagingEnabled
+        scrollEventThrottle={400}
+        showsHorizontalScrollIndicator={false}
+        snapToInterval={CARD_WIDTH + 20}
+        snapToAlignment="center"
+        style={styles.scrollView}
+        contentInset={{
+          top: 0,
+          left: SPACING_FOR_CARD_INSET,
+          bottom: 10,
+          right: SPACING_FOR_CARD_INSET,
+        }}
+        onMomentumScrollEnd={() => setIsScrollViewDragging(false)}
+        onScrollBeginDrag={() => setIsScrollViewDragging(true)}
+        // onScrollEndDrag={() => setIsScrollViewDragging(false)}
+        contentContainerStyle={{
+          paddingHorizontal:
+            Platform.OS === "android" ? SPACING_FOR_CARD_INSET : 0,
+        }}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: mapAnimation } } }],
+          { useNativeDriver: true, listener: handleScrollViewScroll }
+        )}
+        decelerationRate={0.1}
+      >
+        {!scrollViewHidden &&
+          restaurantsData?.data?.restaurants &&
+          restaurantsData.data.restaurants.map((marker, index) => (
+            <TouchableOpacity
+              key={`card-${marker.id}`}
+              onPress={() => handleNavigation(marker)}
+            >
+              <FloatingRestaurantCard
+                key={marker.id as string}
+                marker={marker}
+                isClaimLoading={isClaimLoading}
                 onPress={() => handleNavigation(marker)}
-              >
-                <FloatingRestaurantCard
-                  key={marker.id as string}
-                  marker={marker}
-                  isClaimLoading={isClaimLoading}
-                  onPress={() => handleNavigation(marker)}
-                />
-              </TouchableOpacity>
-            ))}
-        </Animated.ScrollView>
-      )}
+              />
+            </TouchableOpacity>
+          ))}
+      </Animated.ScrollView>
+      {/* )} */}
 
       {/* <View style={styles.absoluteBox}>
         <TouchableOpacity
