@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   container2: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: width / 1.24,
+    width: width / 1.28,
     marginTop: 20,
     alignItems: "center",
   },

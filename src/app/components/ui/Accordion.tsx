@@ -48,11 +48,13 @@ const Accordion = ({ text, title }) => {
         )}
       </TouchableOpacity>
       <Animated.View style={{ paddingTop: 8 }}>
+        <TouchableOpacity onPress={handlePress}>
         {open && (
           <Text style={{ color: Color.Gray.gray100, fontSize: 14 }}>
             {text}
           </Text>
         )}
+        </TouchableOpacity>
       </Animated.View>
     </LinearGradient>
   );
