@@ -39,10 +39,7 @@ export default function Layout() {
             name="restaurants/[id]"
             options={{ presentation: "modal" }}
           />
-          <Stack.Screen
-            name="Acards/[id]"
-            options={{ presentation: "modal" }}
-          />
+
           <Stack.Screen
             name="(modals)/QrModal"
             options={{ presentation: "modal" }}

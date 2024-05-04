@@ -225,8 +225,8 @@ const PhoneNumber = () => {
                 ]}
               >
                 <Button
-                  variant="primary"
-                  textStyle="primary"
+                  variant={!phoneNumber ? "disabled" : "primary"}
+                  textStyle={!phoneNumber ? "disabled" : "primary"}
                   size="default"
                   onPress={handleNavigation}
                 >

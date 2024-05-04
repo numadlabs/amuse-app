@@ -141,7 +141,11 @@ export const AuthProvider = ({ children }: any) => {
         await saveUserId(result.data.data.user.id);
         console.log(result.data);
         return result.data;
-      } else {
+      } else if (result.data.success === false && result.data.error === "User already exists with this phone number") {
+        return { error: true, msg: "User already exists with this phone number" };
+      }
+
+      else {
         // Register failed
         return { error: true, msg: "Invalid response from server" };
       }
@@ -251,7 +255,7 @@ export const AuthProvider = ({ children }: any) => {
     AsyncStorage.clear();
     queryCache.clear();
     router.push("/Login");
-   
+
   };
 
   const value = {
