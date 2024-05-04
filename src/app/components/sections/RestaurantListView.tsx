@@ -22,8 +22,6 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
   const [cardLoadingStates, setCardLoadingStates] = useState<boolean[]>([]);
   const { authState } = useAuth();
 
-
-
   const {
     data: restaurantsData,
     isLoading,
@@ -95,9 +93,10 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
   console.log(restaurantsData)
 
   return (
-    <View style={{ justifyContent: 'center', alignContent: 'center', alignItems: 'center', paddingHorizontal: 16,}}>
+    <View style={{ justifyContent: 'center', alignContent: 'center', alignItems: 'center', paddingHorizontal: 16}}>
 
       <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{ paddingBottom: 200 }}>
         {restaurantsData?.data?.restaurants &&
           restaurantsData.data.restaurants.map((item, index) => (
             <>
@@ -114,6 +113,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
               </TouchableOpacity>
             </>
           ))}
+          </View>
       </ScrollView>
     </View>
   );

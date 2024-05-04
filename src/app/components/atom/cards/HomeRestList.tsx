@@ -5,7 +5,7 @@ import {
   Image,
   StyleSheet,
   ActivityIndicator,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { RestaurantType } from "@/app/lib/types";
@@ -39,8 +39,14 @@ const HomeRestList: React.FC<ResListCardProp> = ({
   return (
     <LinearGradient
       colors={[Color.Brand.card.start, Color.Brand.card.end]}
-      style={{width: 350, overflow: 'hidden', borderRadius:20, borderWidth: 1,
-      borderColor: Color.Gray.gray400, marginBottom:16}}
+      style={{
+        width: 350,
+        overflow: "hidden",
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: Color.Gray.gray400,
+        marginBottom: 16,
+      }}
     >
       <View style={styles.container}>
         <Image
@@ -49,20 +55,14 @@ const HomeRestList: React.FC<ResListCardProp> = ({
           }}
           style={styles.image}
         />
-        <View style={{ height: 92, justifyContent: 'space-between' }}>
+        <View style={{ height: 92, justifyContent: "space-between" }}>
           <View style={{ gap: 4 }}>
-              <Text
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                style={styles.title}
-              >
-                {marker.name}
-              </Text>
+            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.title}>
+              {marker.name}
+            </Text>
             <Text style={styles.category}>{marker.category}</Text>
           </View>
-          <View
-            style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
-          >
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <View
                 style={[
@@ -84,13 +84,17 @@ const HomeRestList: React.FC<ResListCardProp> = ({
                 {isOpen ? "Closed" : "Open"}
               </Text>
             </View>
-            {marker.isOwned ? <View
-              style={{
-                width: 1,
-                height: 14,
-                backgroundColor: Color.Gray.gray50,
-              }}
-            /> : ''}
+            {marker.isOwned ? (
+              <View
+                style={{
+                  width: 1,
+                  height: 14,
+                  backgroundColor: Color.Gray.gray50,
+                }}
+              />
+            ) : (
+              ""
+            )}
             {marker.isOwned ? (
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
@@ -113,7 +117,6 @@ const HomeRestList: React.FC<ResListCardProp> = ({
                   borderWidth: 1,
                   borderRadius: 16,
                   borderColor: Color.base.White,
-          
                 }}
               >
                 {loading ? (
@@ -149,9 +152,9 @@ export default HomeRestList;
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    flex:1,
+    flex: 1,
     padding: 12,
-    
+
     borderRadius: 20,
     gap: 16,
     marginBottom: 12,
@@ -165,7 +168,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: Color.base.White,
-
   },
   category: {
     fontSize: 12,
