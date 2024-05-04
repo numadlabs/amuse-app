@@ -39,7 +39,7 @@ const QrModal = () => {
   const [scanned, setScanned] = useState(false);
   const [restaurantId, setRestaurantId] = useState("")
   const [loading, setLoading] = useState(false);
-
+  const [cardId, setCardId] = useState("")
   const [flashMode, setFlashMode] = useState(false);
   const [powerUp, setPowerUp] = useState("");
   const [emptyError, setEmptyError] = useState("");
@@ -93,7 +93,8 @@ const QrModal = () => {
       setHasPermission(status === "granted");
     };
     getCameraPermissions();
-    setRestaurantId("1fd7fc77-2c69-488f-bcae-2c7ed2cbf0bc");
+    setRestaurantId("a75dd3e7-c5d5-4fed-932a-ae107c8f4394");
+    setCardId("7041d334-20b5-4020-a086-66a52816b165")
   }, []);
 
 
@@ -105,7 +106,6 @@ const QrModal = () => {
   } = useMutation({
     mutationFn: generateTap,
     onError: (error) => {
-      router.navigate(`/restaurants/${data}`)
     },
     onSuccess: (data, variables) => {
       try {
@@ -141,22 +141,18 @@ const QrModal = () => {
         router.navigate({
           pathname: '/PerkScreen',
           params: {
-            restaurantId: cards.restaurantId,
+            restaurantId: restaurantId,
             btcAmount: data.data?.data?.increment,
             powerUp: data.data?.data?.bonus?.name,
           }
         });
-      } else if (visitCount === null) {
-        setEmptyError("Bro get a card")
-        console.log(emptyError)
       }
-
       else {
         router.back()
         router.navigate({
           pathname: '/PerkScreen',
           params: {
-            restaurantId: cards.restaurantId,
+            restaurantId: restaurantId,
             btcAmount: data.data?.data?.increment,
             powerUp: data.data?.data?.bonus?.name,
           }
@@ -172,14 +168,13 @@ const QrModal = () => {
 
       if (!userCard) {
         router.back()
-        router.push(`/restaurants/${restaurantId}`)
-      } else {
+        router.push({
+          pathname: `/restaurants/${restaurantId}`,
+          params: {cardId : cardId as any}
+        })
+      } else if (userCard) {
         const data = await createTapMutation(restaurantId);
       }
-
-
-
-
     } catch (error) {
       console.log("Map mutation failed:", error);
     }

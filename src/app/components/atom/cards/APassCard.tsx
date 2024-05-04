@@ -3,9 +3,10 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Image,
 } from "react-native";
-import React, { useEffect } from "react";
+
+import { Image } from 'expo-image'
+import React, { useEffect, useState } from "react";
 import { BlurView } from "expo-blur";
 import Color from "@/app/constants/Color";
 import { height, scaleHeight } from "@/app/lib/utils";
@@ -33,14 +34,18 @@ import {
 interface ApassProp {
   name: string;
   image: string;
+  nftImage: string;
   onPress: () => void;
   category: string;
   hasBonus: boolean;
   visitCount: number;
 }
-const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBonus, visitCount }) => {
+const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBonus, visitCount, nftImage }) => {
   const animatedValue = useSharedValue(visitCount)
   const pressed = useSharedValue(false);
+  const [loading, setIsLoading] = useState<boolean>()
+
+  console.log(nftImage)
 
 
   const AnimatedText = Animated.createAnimatedComponent(Text)
@@ -103,7 +108,10 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
                     </View> : null}
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20, rowGap: 12 }}>
-                  <Image style={{ minWidth: 164, minHeight: 164, borderRadius: 12 }} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${image}` }} />
+               
+
+                      <Image cachePolicy='memory' style={{ minWidth: 164, minHeight: 164, borderRadius: 12 }} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${nftImage}` }} />
+            
                   <View style={{ borderWidth: 1, backgroundColor: Color.Gray.gray500, borderColor: Color.Gray.gray400, borderRadius: 12, overflow: 'hidden', }}>
                     {/* <LinearGradient
                       colors={[Color.Brand.main.start, Color.Brand.main.end]}

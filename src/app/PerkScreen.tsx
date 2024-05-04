@@ -28,8 +28,6 @@ const PerkScreen = () => {
   const handleNavigation = async () => {
     router.back()
     queryClient.invalidateQueries({ queryKey: userKeys.info });
-
-    // Store card information using AsyncStorage
     try {
       await AsyncStorage.setItem('restaurantCard', JSON.stringify(card));
       console.log('Card information stored successfully.');
@@ -53,6 +51,7 @@ const PerkScreen = () => {
           <APassCard
             name={card.name}
             image={card.logo}
+            nftImage={card.nftImageUrl}
             onPress={() => ""}
             category={card.category}
             hasBonus={card.hasBonus}

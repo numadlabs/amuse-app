@@ -99,6 +99,7 @@ const StackedCard = () => {
             >
               <APassCard
                 name={card.name}
+                nftImage={card.nftImageUrl}
                 image={card.logo}
                 onPress={() => handleNavigation(card)}
                 category={card.category}
