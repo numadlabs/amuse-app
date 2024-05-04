@@ -166,7 +166,7 @@ const ProfileEdit = () => {
                       onChangeText={setNickname}
                       onFocus={() => setFocusedInput('Nickname')}
                       onBlur={() => setFocusedInput(null)}
-                      style={{ fontSize: 20, color: Color.base.White }}
+                      style={{ fontSize: 20, color: Color.base.White, width: '100%', height: 48 }}
                     />
                   </View>
                   </LinearGradient>
@@ -198,7 +198,7 @@ const ProfileEdit = () => {
                       onChangeText={setEmail}
                       onFocus={() => setFocusedInput('Email')}
                       onBlur={() => setFocusedInput(null)}
-                      style={{ fontSize: 20, color: Color.base.White }}
+                      style={{ fontSize: 20, color: Color.base.White, width: '100%', height: 48 }}
                     />
                   </View>
                   </LinearGradient>
@@ -230,7 +230,7 @@ const ProfileEdit = () => {
                       onChangeText={setLocation}
                       onFocus={() => setFocusedInput('Area')}
                       onBlur={() => setFocusedInput(null)}
-                      style={{ fontSize: 20, color: Color.base.White }}
+                      style={{ fontSize: 20, color: Color.base.White, width: '100%', height: 48 }}
                     />
                   </View>
                   </LinearGradient>

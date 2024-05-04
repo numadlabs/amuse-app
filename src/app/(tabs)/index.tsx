@@ -126,6 +126,16 @@ const Page = () => {
                 showsHorizontalScrollIndicator={false}
               >
                 <View style={{ flexDirection: 'row', gap: 8 }}>
+                {user?.email &&
+                    user?.dateOfBirth &&
+                    user?.nickname &&
+                    user?.location ? (
+                    ''
+                  ) : (
+                    isQuickInfoVisible && (
+                      <QuickInfo onPress={() => setIsQuickInfoVisible(false)} user={user} />
+                    )
+                  )}
                   <TouchableOpacity
                     onPress={() => handleNavigation(filteredRestaurantsArray[0])}
                   >
@@ -136,16 +146,6 @@ const Page = () => {
                       onPress={() => handleNavigation(filteredRestaurantsArray[0])}
                     />
                   </TouchableOpacity>
-                  {user?.email &&
-                    user?.dateOfBirth &&
-                    user?.nickname &&
-                    user?.location ? (
-                    ''
-                  ) : (
-                    isQuickInfoVisible && (
-                      <QuickInfo onPress={() => setIsQuickInfoVisible(false)} user={user} />
-                    )
-                  )}
                   <TouchableOpacity
                     onPress={() => handleNavigation(filteredRestaurantsArray[1])}
                   >

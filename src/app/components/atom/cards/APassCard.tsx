@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderRadius: 32,
     alignItems: "center",
-    borderColor: Color.Gray.gray400,
+    borderColor: Color.Gray.gray200,
     overflow: "hidden",
     height: 264,
   },
