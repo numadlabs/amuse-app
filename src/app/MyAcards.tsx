@@ -28,7 +28,7 @@ const MyAcards = () => {
   const router = useRouter();
   const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
-      pathname: `/Acards/${restaurant.id}`,
+      pathname: `/restaurants/${restaurant.restaurantId}`,
       params: {
         name: restaurant.name,
         location: restaurant.location,

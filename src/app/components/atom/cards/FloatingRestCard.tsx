@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     height: 92,
     alignSelf: "center",
     resizeMode: "cover",
-    borderRadius: 8,
+    borderRadius: 12,
   },
 
   textContent: {

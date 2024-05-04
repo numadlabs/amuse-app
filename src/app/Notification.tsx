@@ -7,6 +7,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import NotificationCard from "./components/atom/cards/NotificationCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+interface NotificationProps {
+  title: string;
+  description: string;
+}
+
 
 const Notification = () => {
 
@@ -54,7 +59,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   container: {
-    borderWidth: 1,
     borderRadius: 16,
     gap:16
   },

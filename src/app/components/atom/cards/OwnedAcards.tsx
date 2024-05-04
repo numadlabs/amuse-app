@@ -30,7 +30,6 @@ const OwnedAcards: React.FC<OwnedAcardsProp> = ({ marker, onPress }) => {
               padding: 12,
               alignItems: "center",
               gap: 16,
-              marginBottom: 12,
               borderRadius: 16,
             }}
           >
@@ -40,7 +39,7 @@ const OwnedAcards: React.FC<OwnedAcardsProp> = ({ marker, onPress }) => {
               }}
               style={styles.image}
             />
-            <View style={{ gap: 28 }}>
+            <View style={{ height: 92, justifyContent: 'space-between' }}>
               <View style={{ gap: 4 }}>
                 <View style={{ width: "80%" }}>
                   <Text style={styles.title}>{marker.name}</Text>
@@ -106,7 +105,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   image: {
-    borderRadius: 8,
+    borderRadius: 12,
     width: 92,
     height: 92,
   },
