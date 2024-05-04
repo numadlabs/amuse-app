@@ -31,7 +31,7 @@ const HomeRestList: React.FC<ResListCardProp> = ({
   const closesAt = new Date(marker.closesAt);
   const currentTime = new Date();
   const { width } = Dimensions.get("window");
-  const CARD_WIDTH = width * 0.85;
+  const CARD_WIDTH = width * 0.88;
 
   const isOpen =
     currentTime.getTime() >= opensAt.getTime() &&
@@ -40,7 +40,7 @@ const HomeRestList: React.FC<ResListCardProp> = ({
     <LinearGradient
       colors={[Color.Brand.card.start, Color.Brand.card.end]}
       style={{
-        width: 350,
+        width: CARD_WIDTH,
         overflow: "hidden",
         borderRadius: 20,
         borderWidth: 1,

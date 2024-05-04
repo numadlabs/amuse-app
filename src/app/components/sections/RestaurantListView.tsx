@@ -10,6 +10,7 @@ import { useRouter } from "expo-router";
 import { useAuth } from "@/app/context/AuthContext";
 import { getAcard } from "@/app/lib/service/mutationHelper";
 import { width } from "@/app/lib/utils";
+import RestListCard from "../atom/cards/RestListCard";
 
 interface RestaurantListViewProps { }
 
@@ -93,7 +94,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
   console.log(restaurantsData)
 
   return (
-    <View style={{ justifyContent: 'center', alignContent: 'center', alignItems: 'center', paddingHorizontal: 16}}>
+    <View style={{ paddingHorizontal: 16}}>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ paddingBottom: 200 }}>
@@ -104,7 +105,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
                 key={`card-${item.id}`}
                 onPress={() => handleNavigation(item)}
               >
-                <HomeRestList
+                <RestListCard
                   key={`card-${item.id}`}
                   marker={item}
                   onPress={() => handleNavigation(item)}

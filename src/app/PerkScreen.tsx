@@ -95,7 +95,8 @@ export default PerkScreen
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 70,
+    marginTop: height / 6
+    ,
     backgroundColor: Color.Gray.gray600,
     paddingHorizontal: 16,
     flex: 1,
