@@ -245,8 +245,8 @@ function ForgotPassword() {
                 ]}
               >
                 <Button
-                  variant="primary"
-                  textStyle="primary"
+                  variant={phoneNumber ? "primary" : 'disabled'}
+                  textStyle={phoneNumber ? "primary" : 'disabled'}
                   size="default"
                   onPress={handleNavigation}
                 >

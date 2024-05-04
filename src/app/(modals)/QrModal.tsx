@@ -93,8 +93,8 @@ const QrModal = () => {
       setHasPermission(status === "granted");
     };
     getCameraPermissions();
-    setRestaurantId("a75dd3e7-c5d5-4fed-932a-ae107c8f4394");
-    setCardId("7041d334-20b5-4020-a086-66a52816b165")
+    setRestaurantId("7733c679-cfe2-423f-976c-772482baec47");
+    setCardId("4b654db1-7124-4d61-88f5-5af072ef4ae1")
   }, []);
 
 
@@ -161,7 +161,6 @@ const QrModal = () => {
     },
   });
   const userCard = cards?.data?.cards.find((card) => card.restaurantId === restaurantId);
-
   const handleScanButtonPress = async () => {
     try {
       setLoading(true);

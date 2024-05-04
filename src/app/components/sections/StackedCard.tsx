@@ -45,7 +45,7 @@ const StackedCard = () => {
     ],
     zIndex: 999,
     top: cardPositions.value,
-    marginBottom: -190
+    marginBottom: -220
   }));
 
   const latestCards = cards?.data?.cards.slice(0, 5);
@@ -86,7 +86,7 @@ const StackedCard = () => {
           </View>
         </LinearGradient>
       ) : (
-        <Animated.View style={{ flex: 1, overflow: 'hidden', paddingBottom: 230 }}>
+        <Animated.View style={{ flex: 1, overflow: 'hidden', paddingBottom: 240 }}>
           {latestCards?.map((card, index) => (
             <Animated.View
               key={index}
