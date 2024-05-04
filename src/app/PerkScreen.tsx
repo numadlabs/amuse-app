@@ -73,9 +73,13 @@ const PerkScreen = () => {
                 Check-in successful.
               </Text>
             </LinearGradient>
-            {powerUp &&
+            {powerUp ?
+             <View style={{height:height/8}}>
+
+          
               <PowerUpCard title={powerUp as string} onPress={() => router.navigate('/PowerUp')} />
-            }
+              </View>
+            : <View style={{height:height/8}}/>}
           </Animated.View>
           <Button variant='primary' size='default' textStyle='primary' onPress={handleNavigation} style={{ bottom: 30 }}>
             <Text>
@@ -92,7 +96,7 @@ export default PerkScreen
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 50,
+    marginTop: 70,
     paddingHorizontal: 16,
     flex: 1,
     gap: 16

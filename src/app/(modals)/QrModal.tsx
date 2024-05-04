@@ -40,6 +40,7 @@ const QrModal = () => {
   const [loading, setLoading] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
   const [powerUp, setPowerUp] = useState("");
+  const [emptyError, setEmptyError] = useState("");
   const [btcAmount, setBTCAmount] = useState("");
 
   const togglePopup = () => {
@@ -58,6 +59,15 @@ const QrModal = () => {
   const toggleBtcPopup = () => {
     setBtcPopupVisible(!isBtcPopupVisible);
   };
+
+  useEffect(() => {
+    if (visitCount === undefined) {
+      setEmptyError("Bro, get a card!");
+    } else {
+      setEmptyError("");
+    }
+  }, [visitCount]);
+  
 
   const closeModal = () => {
     toggleBtcPopup();
@@ -137,7 +147,6 @@ const QrModal = () => {
       queryClient.invalidateQueries({ queryKey: userKeys.info });
 
       if (visitCount % SERVER_SETTING.PERK_FREQUENCY === 0) {
-        // togglePopup();
         router.back()
         router.navigate({
           pathname: '/PerkScreen',
@@ -147,7 +156,12 @@ const QrModal = () => {
             powerUp: data.data?.data?.bonus?.name,
           }
         });
-      } else {
+      } else if (visitCount === null){
+        setEmptyError("Bro get a card")
+        console.log(emptyError)
+      } 
+      
+      else {
         router.back()
         router.navigate({
           pathname: '/PerkScreen',

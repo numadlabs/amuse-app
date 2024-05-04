@@ -12,7 +12,7 @@ interface BalanceProps {
 const Balance: React.FC<BalanceProps> = ({ amount }) => {
   const truncatedAmount =
     amount !== 0 ? amount?.toString().substring(0, 9) : "0.0000";
-  let coinAmout = parseFloat(truncatedAmount) * 70193;
+  let coinAmount = parseFloat(truncatedAmount) * 70193;
 
 
   const AnimatedText = Animated.createAnimatedComponent(Text)
@@ -51,7 +51,7 @@ const Balance: React.FC<BalanceProps> = ({ amount }) => {
                 fontWeight: "400",
               }}
             >
-              Estimated USD balance: ${coinAmout}
+              Estimated USD balance: ${coinAmount.toFixed(2)}
             </Text>
           </View>
         </LinearGradient>
