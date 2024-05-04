@@ -1,15 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, KeyboardAvoidingView, Keyboard, Platform, TouchableWithoutFeedback, StyleSheet, Pressable, TouchableOpacity, ScrollView } from 'react-native';
-import Button from '../components/ui/Button';
-import Color from '../constants/Color';
-import { router, useNavigation } from 'expo-router';
-import FpLayout from './_layout';
-import Steps from '@/app/components/atom/Steps';
-import { ArrowDown2 } from 'iconsax-react-native';
-import Animated, { FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import { height } from '../lib/utils';
-import { LinearGradient } from 'expo-linear-gradient';
-import { usePasswordStore } from '../lib/store/passwordStore';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  KeyboardAvoidingView,
+  Keyboard,
+  Platform,
+  TouchableWithoutFeedback,
+  StyleSheet,
+  Pressable,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import Button from "../components/ui/Button";
+import Color from "../constants/Color";
+import { router, useNavigation } from "expo-router";
+import FpLayout from "./_layout";
+import Steps from "@/app/components/atom/Steps";
+import { ArrowDown2 } from "iconsax-react-native";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
+import { height } from "../lib/utils";
+import { LinearGradient } from "expo-linear-gradient";
+import { usePasswordStore } from "../lib/store/passwordStore";
 
 const data = [
   {
@@ -51,14 +69,15 @@ const data = [
 ];
 
 function ForgotPassword() {
-
-  const {phoneNumber, setPhoneNumber} = usePasswordStore()
-  const [buttonPosition, setButtonPosition] = useState('bottom');
-  const [isFocused, setIsFocused] = useState(false)
+  const { phoneNumber, setPhoneNumber } = usePasswordStore();
+  const [buttonPosition, setButtonPosition] = useState("bottom");
+  const [isFocused, setIsFocused] = useState(false);
   const [phonePlaceholder, setPhonePlaceholder] =
     useState<string>("Phone number");
   const [prefix, setPrefix] = useState<string>(data[0].prefix);
-  const [focusedInput, setFocusedInput] = useState<'Phone number' | 'Password' | null>(null);
+  const [focusedInput, setFocusedInput] = useState<
+    "Phone number" | "Password" | null
+  >(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const offset = useSharedValue(300);
 
@@ -88,21 +107,18 @@ function ForgotPassword() {
         phoneNumber: phoneNumber,
       },
     });
-  }
-
-
+  };
 
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => setButtonPosition('top')
+      "keyboardDidShow",
+      () => setButtonPosition("top")
     );
 
-
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => setButtonPosition('bottom')
+      "keyboardDidHide",
+      () => setButtonPosition("bottom")
     );
     return () => {
       keyboardDidShowListener.remove();
@@ -113,14 +129,32 @@ function ForgotPassword() {
   return (
     <>
       <Steps activeStep={1} />
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
+            <LinearGradient
+                colors={[Color.Brand.card.start, Color.Brand.card.end]}
+                style={{
+                  width: "100%",
+                  borderRadius: 32,
+                  marginTop: 16,
+                  borderWidth: 1,
+                  borderColor: Color.Gray.gray400,
+                  paddingBottom: 16,
+                  paddingTop: 24,
+                  paddingHorizontal: 16,
+                }}
+              >
               <View style={styles.textContainer}>
                 <View style={{ gap: 8 }}>
                   <Text style={styles.topText}>Phone Number</Text>
-                  <Text style={styles.bottomText}>We will send an SMS verification code.</Text>
+                  <Text style={styles.bottomText}>
+                    We will send an SMS verification code.
+                  </Text>
                 </View>
                 <LinearGradient
                   colors={
@@ -136,69 +170,89 @@ function ForgotPassword() {
                     padding: 1,
                   }}
                 >
-                <View
-                  style={{
-                    alignItems: "center",
-                    gap: 12,
-                    alignContent: "center",
-                    flexDirection: "row",
-                    height: 48,
-                    paddingHorizontal: 16,
-                    width: "100%",
-                    backgroundColor: Color.Gray.gray500,
-                    borderRadius: 16,
-                  }}
-                >
-
-                  <AnimatedPressable
-                    entering={FadeIn}
-                    exiting={FadeOut}
-                    onPress={togglePrefix}
+                  <View
+                    style={{
+                      alignItems: "center",
+                      gap: 12,
+                      alignContent: "center",
+                      flexDirection: "row",
+                      height: 48,
+                      paddingHorizontal: 16,
+                      width: "100%",
+                      backgroundColor: Color.Gray.gray500,
+                      borderRadius: 16,
+                    }}
                   >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 8,
-                      }}
+                    <AnimatedPressable
+                      entering={FadeIn}
+                      exiting={FadeOut}
+                      onPress={togglePrefix}
                     >
-                      <Text
+                      <View
                         style={{
-                          fontSize: 16,
-                          lineHeight: 20,
-                          color: Color.Gray.gray50,
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 8,
                         }}
                       >
-                        +{prefix}
-                      </Text>
-                      <ArrowDown2 color={Color.Gray.gray50} />
-                    </View>
-                  </AnimatedPressable>
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            lineHeight: 20,
+                            color: Color.Gray.gray50,
+                          }}
+                        >
+                          +{prefix}
+                        </Text>
+                        <ArrowDown2 color={Color.Gray.gray50} />
+                      </View>
+                    </AnimatedPressable>
 
-                  <TextInput
-                    inputMode="tel"
-                    placeholder={phonePlaceholder}
-                    placeholderTextColor={Color.Gray.gray100}
-                    onFocus={() => setFocusedInput('Phone number')}
-                    onBlur={() => setFocusedInput(null)}
-                    style={{
-                      height: 40,
-                      fontSize: 16,
-                      fontWeight: "400",
-                      lineHeight: 20,
-                      paddingLeft: 10,
-                      color: Color.base.White,
-                    }}
-                    value={phoneNumber}
-                    onChangeText={setPhoneNumber}
-                  />
-                </View>
+                    <TextInput
+                      inputMode="tel"
+                      placeholder={phonePlaceholder}
+                      placeholderTextColor={Color.Gray.gray100}
+                      onFocus={() => setFocusedInput("Phone number")}
+                      onBlur={() => setFocusedInput(null)}
+                      style={{
+                        height: 40,
+                        fontSize: 16,
+                        fontWeight: "400",
+                        lineHeight: 20,
+                        paddingLeft: 6,
+                        color: Color.base.White,
+                      }}
+                      value={phoneNumber}
+                      onChangeText={setPhoneNumber}
+                    />
+                  </View>
                 </LinearGradient>
               </View>
+              </LinearGradient>
             </View>
-            <View style={[styles.buttonContainer, buttonPosition === 'bottom' ? styles.bottomPosition : styles.topPosition]}>
-              <Button variant='primary' textStyle='primary' size='default' onPress={handleNavigation}>Send code</Button>
-            </View>
+            <KeyboardAvoidingView
+              style={{ flex: 1 }}
+              keyboardVerticalOffset={100}
+              behavior={Platform.OS === "ios" ? "height" : "padding"}
+            >
+              <View
+                style={[
+                  styles.buttonContainer,
+                  buttonPosition === "bottom"
+                    ? styles.bottomPosition
+                    : styles.topPosition,
+                ]}
+              >
+                <Button
+                  variant="primary"
+                  textStyle="primary"
+                  size="default"
+                  onPress={handleNavigation}
+                >
+                  Send code
+                </Button>
+              </View>
+            </KeyboardAvoidingView>
             {isOpen && (
               <Animated.View
                 style={[
@@ -276,41 +330,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   textContainer: {
-    marginTop: 20,
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    paddingTop: 24,
     gap: 24,
-    borderRadius: 32,
-    borderWidth: 1,
-    borderColor: Color.Gray.gray400,
   },
   buttonContainer: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     bottom: 10,
     paddingHorizontal: 20,
-    marginBottom: 20
+    marginBottom: 20,
   },
   bottomPosition: {
-    justifyContent: 'flex-end'
+    justifyContent: "flex-end",
   },
   topPosition: {
-    justifyContent: 'flex-start',
-    marginTop: 'auto',
+    justifyContent: "flex-start",
+    marginTop: "auto",
   },
   topText: {
     color: Color.base.White,
     fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center'
+    fontWeight: "bold",
+    textAlign: "center",
   },
   bottomText: {
     color: Color.base.White,
     fontSize: 12,
-    textAlign: 'center'
-  }
+    textAlign: "center",
+  },
 });
 
 export default ForgotPassword;

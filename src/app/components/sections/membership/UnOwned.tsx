@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import Color from "@/app/constants/Color";
 import Tick from "../../icons/Tick";
 import { Location, WalletAdd } from "iconsax-react-native";
@@ -59,12 +59,12 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant, isClaimLoading, onPress }) 
               Locations
             </Text>
             <View>
-              <View style={styles.attribute}>
+              <TouchableOpacity style={styles.attribute}>
                 <Location color={Color.Gray.gray100} />
                 <Text style={styles.attributeLocText}>
                   {restaurant?.location}
                 </Text>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
           <Text
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   attributeLocText: {
-    color: Color.Gray.gray50,
+    color: Color.System.systemInformation,
     fontSize: 16,
     width: "90%",
   },
