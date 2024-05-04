@@ -77,7 +77,7 @@ const StackedCard = () => {
         >
           <View style={styles.container1}>
             <SearchGradient />
-            <Text style={{ textAlign: "center", color: Color.Gray.gray50 }}>
+            <Text style={{ textAlign: "center", color: Color.Gray.gray50, fontSize: 12, lineHeight: 16 }}>
               Discover restaurants, add an membership card, and start earning
               rewards every time you check-in at a participating restaurant!
             </Text>
@@ -128,13 +128,15 @@ const styles = StyleSheet.create({
   },
   container1: {
     height: 232,
-    paddingHorizontal: 16,
+    paddingHorizontal: 32,
     borderRadius: 32,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     gap: 12,
     width: "100%",
+    borderWidth: 1,
+    borderColor: Color.Gray.gray200,
   },
   aCardContainer: {
     backgroundColor: Color.Gray.gray50,
@@ -174,15 +176,15 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 20,
     paddingVertical: 12,
-    backgroundColor: Color.Gray.gray600,
+    backgroundColor: Color.Gray.gray400,
     borderRadius: 48,
     marginTop: 24,
   },
   buttonText: {
-    color: Color.Gray.gray50,
-    fontSize: 12,
+    color: Color.base.White,
+    fontSize: 13,
     lineHeight: 16,
-    fontWeight: "bold",
+    fontWeight: "600",
   },
   image: {
     width: 300,

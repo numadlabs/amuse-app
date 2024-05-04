@@ -38,7 +38,7 @@ const HomeRestList: React.FC<ResListCardProp> = ({
   return (
     <LinearGradient
       colors={[Color.Brand.card.start, Color.Brand.card.end]}
-      style={{ backgroundColor: "transparent", borderRadius: 16, width: width/1.13 }}
+      style={{ backgroundColor: "transparent", borderRadius: 20, width: width/1.13 }}
     >
       <View style={styles.container}>
         <Image
@@ -47,7 +47,7 @@ const HomeRestList: React.FC<ResListCardProp> = ({
           }}
           style={styles.image}
         />
-        <View style={{ gap: 28 }}>
+        <View style={{ height: 92, justifyContent: 'space-between' }}>
           <View style={{ gap: 4 }}>
             <View style={{ width: "80%", flex: 1, overflow: 'hidden' }}>
               <Text
@@ -61,7 +61,7 @@ const HomeRestList: React.FC<ResListCardProp> = ({
             <Text style={styles.category}>{marker.category}</Text>
           </View>
           <View
-            style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
+            style={{ flexDirection: "row", alignItems: "center", gap: 36 }}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <View
@@ -136,37 +136,6 @@ const HomeRestList: React.FC<ResListCardProp> = ({
                   </>
                 )}
               </Button>
-              // <TouchableOpacity onPress={onPress}>
-              //   <View
-              //     style={{
-              //       flexDirection: "row",
-              //       position: "relative",
-              //       backgroundColor: Color.Gray.gray600,
-              //       paddingVertical: 8,
-              //       paddingHorizontal: 16,
-              //       borderRadius: 48,
-              //       marginLeft: 49,
-              //       alignContent: "center",
-              //       alignItems: "center",
-              //     }}
-              //   >
-              //     <Wallet size={16} color={Color.Gray.gray50} />
-              //     <Text
-              //       style={{
-              //         color: Color.Gray.gray50,
-              //         fontWeight: "bold",
-              //         fontSize: 11,
-              //         lineHeight: 16,
-              //       }}
-              //     >
-              //       {isClaimLoading
-              //         ? "Loading"
-              //         : marker.isOwned
-              //         ? "Owned"
-              //         : " Add"}
-              //     </Text>
-              //   </View>
-              // </TouchableOpacity>
             )}
           </View>
         </View>
@@ -183,7 +152,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderWidth: 1,
     borderColor: Color.Gray.gray400,
-    borderRadius: 16,
+    borderRadius: 20,
     gap: 16,
     marginBottom: 12,
   },

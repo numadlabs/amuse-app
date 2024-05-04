@@ -96,9 +96,6 @@ const Restaurant = () => {
     }
   };
 
-
-
-
   const { data: userCardId = [] } = useQuery({
     queryKey: userKeys.perks,
     queryFn: () => {

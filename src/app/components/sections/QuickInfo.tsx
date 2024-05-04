@@ -35,7 +35,7 @@ const QuickInfo = ({ user, onPress }) => {
           paddingHorizontal: 16,
           paddingBottom: 16,
           paddingTop: 24,
-          borderRadius: 16,
+          borderRadius: 20,
         }}
       >
         <TouchableOpacity style={styles.closeButton} onPress={onPress}>
@@ -43,8 +43,8 @@ const QuickInfo = ({ user, onPress }) => {
         </TouchableOpacity>
         <View style={styles.container1}>
           <View style={styles.textContainer}>
-            <Text style={styles.topTitle}>Boost your rewards</Text>
-            <Text style={styles.bottomTitle}>More data, more Bitcoin.</Text>
+            <Text style={styles.topTitle}>Earn 1.2x more reward</Text>
+            <Text style={styles.bottomTitle}>By completing your profile.</Text>
           </View>
         </View>
         <View style={styles.container2}>
@@ -69,7 +69,7 @@ export default QuickInfo;
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 16,
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: Color.Gray.gray400,
     height: "90%",
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   container2: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: 300,
+    width: width / 1.24,
     marginTop: 20,
     alignItems: "center",
   },

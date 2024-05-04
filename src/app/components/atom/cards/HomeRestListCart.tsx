@@ -37,9 +37,10 @@ const HomeResListCard: React.FC<ResListCardProp> = ({
     currentTime.getTime() >= opensAt.getTime() &&
     currentTime.getTime() <= closesAt.getTime();
   return (
+    <>
       <LinearGradient
         colors={[Color.Brand.card.start, Color.Brand.card.end]}
-        style={{ backgroundColor: "transparent", borderRadius: 16, width: '100%' }}
+        style={{ backgroundColor: "transparent", borderRadius: 16 }}
       >
         <View style={styles.container}>
           <Image
@@ -48,7 +49,7 @@ const HomeResListCard: React.FC<ResListCardProp> = ({
             }}
             style={styles.image}
           />
-          <View style={{ gap: 28, width: '100%' }}>
+          <View style={{ width: '100%', height: 92, justifyContent: 'space-between' }}>
             <View style={{ gap: 4, width: '100%' }}>
               <View style={{ width: "80%", flex: 1, overflow: 'hidden' }}>
                 <Text
@@ -113,7 +114,7 @@ const HomeResListCard: React.FC<ResListCardProp> = ({
                     justifyContent: "center",
                     borderWidth: 1,
                     borderRadius: 16,
-                    marginLeft:90,
+                    marginLeft:110,
                     borderColor: Color.base.White
                   }}
                 >
@@ -142,6 +143,7 @@ const HomeResListCard: React.FC<ResListCardProp> = ({
           </View>
         </View>
       </LinearGradient>
+      </>
   );
 };
 

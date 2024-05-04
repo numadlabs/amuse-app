@@ -80,7 +80,7 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
           />
           <View style={styles.textContent}>
             <View>
-              <Text numberOfLines={1} style={styles.cardtitle}>
+              <Text numberOfLines={1} ellipsizeMode="tail" style={styles.cardtitle}>
                 {marker.name}
               </Text>
               <Text numberOfLines={1} style={styles.cardDescription}>
@@ -169,9 +169,8 @@ const styles = StyleSheet.create({
   },
 
   textContent: {
-    flex: 1,
-    gap: 30,
-    // backgroundColor: "red",
+    height: 92,
+    justifyContent: 'space-between'
   },
 
   button: {
