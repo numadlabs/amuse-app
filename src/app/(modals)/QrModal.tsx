@@ -37,7 +37,9 @@ const QrModal = () => {
   const [isModalVisible, setModalVisible] = useState(true);
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [restaurantId, setRestaurantId] = useState("")
   const [loading, setLoading] = useState(false);
+
   const [flashMode, setFlashMode] = useState(false);
   const [powerUp, setPowerUp] = useState("");
   const [emptyError, setEmptyError] = useState("");
@@ -60,14 +62,6 @@ const QrModal = () => {
     setBtcPopupVisible(!isBtcPopupVisible);
   };
 
-  useEffect(() => {
-    if (visitCount === undefined) {
-      setEmptyError("Bro, get a card!");
-    } else {
-      setEmptyError("");
-    }
-  }, [visitCount]);
-  
 
   const closeModal = () => {
     toggleBtcPopup();
@@ -98,8 +92,8 @@ const QrModal = () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === "granted");
     };
-
     getCameraPermissions();
+    setRestaurantId("1fd7fc77-2c69-488f-bcae-2c7ed2cbf0bc");
   }, []);
 
 
@@ -111,7 +105,7 @@ const QrModal = () => {
   } = useMutation({
     mutationFn: generateTap,
     onError: (error) => {
-      console.log(error);
+      router.navigate(`/restaurants/${data}`)
     },
     onSuccess: (data, variables) => {
       try {
@@ -121,12 +115,9 @@ const QrModal = () => {
       }
     },
   });
-  const handleNavigation = () => {
-   
-  };
 
   const visitCount = cards?.data?.cards[0].visitCount;
-  const card = cards?.data?.cards[0];
+
   const { mutateAsync: createRedeemMutation } = useMutation({
     mutationFn: redeemTap,
     onError: (error) => {
@@ -138,7 +129,6 @@ const QrModal = () => {
         setPowerUp(data.data.data.bonus?.name);
         queryClient.invalidateQueries({ queryKey: userKeys.perks });
       }
-
       setBTCAmount(data.data?.data?.increment);
       queryClient.invalidateQueries({
         queryKey: restaurantKeys.all,
@@ -151,22 +141,22 @@ const QrModal = () => {
         router.navigate({
           pathname: '/PerkScreen',
           params: {
-            restaurantId: card.restaurantId,
+            restaurantId: cards.restaurantId,
             btcAmount: data.data?.data?.increment,
             powerUp: data.data?.data?.bonus?.name,
           }
         });
-      } else if (visitCount === null){
+      } else if (visitCount === null) {
         setEmptyError("Bro get a card")
         console.log(emptyError)
-      } 
-      
+      }
+
       else {
         router.back()
         router.navigate({
           pathname: '/PerkScreen',
           params: {
-            restaurantId: card.restaurantId,
+            restaurantId: cards.restaurantId,
             btcAmount: data.data?.data?.increment,
             powerUp: data.data?.data?.bonus?.name,
           }
@@ -174,20 +164,26 @@ const QrModal = () => {
       }
     },
   });
+  const userCard = cards?.data?.cards.find((card) => card.restaurantId === restaurantId);
+
   const handleScanButtonPress = async () => {
     try {
       setLoading(true);
-      const firstCardId = cards?.data?.cards[0].restaurantId;
-      console.log("🚀 ~ handleScanButtonPress ~ firstCardId:", firstCardId);
-      if (!firstCardId) {
-        return console.log("no card id");
+
+      if (!userCard) {
+        router.back()
+        router.push(`/restaurants/${restaurantId}`)
+      } else {
+        const data = await createTapMutation(restaurantId);
       }
-      const data = await createTapMutation(firstCardId);
+
+
+
+
     } catch (error) {
       console.log("Map mutation failed:", error);
     }
   };
-
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
@@ -277,7 +273,7 @@ const QrModal = () => {
               }}
               style={StyleSheet.absoluteFillObject}
               flash={flashMode == true ? "on" : "off"}
-              // flash="on"
+            // flash="on"
             />
             {/* Overlay for guiding user to place QR code within scan area */}
             <View
@@ -336,11 +332,11 @@ const QrModal = () => {
                 style={[styles.button]}
               >
                 {loading ? (
-                  <ActivityIndicator color={Color.Gray.gray600}/>
-                ): (
+                  <ActivityIndicator color={Color.Gray.gray600} />
+                ) : (
                   <Flash color={Color.base.White} />
                 )}
-               
+
               </LinearGradient>
             </TouchableOpacity>
 

@@ -14,6 +14,7 @@ import { Reserve, Wallet } from "iconsax-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Button from "../../ui/Button";
 import { WalletAdd1 } from "iconsax-react-native";
+import { width } from "@/app/lib/utils";
 
 interface ResListCardProp {
   marker: RestaurantType;
@@ -38,7 +39,8 @@ const HomeRestList: React.FC<ResListCardProp> = ({
   return (
     <LinearGradient
       colors={[Color.Brand.card.start, Color.Brand.card.end]}
-      style={{ backgroundColor: "transparent", borderRadius: 20, width: width/1.13 }}
+      style={{width: 350, overflow: 'hidden', borderRadius:20, borderWidth: 1,
+      borderColor: Color.Gray.gray400, marginBottom:16}}
     >
       <View style={styles.container}>
         <Image
@@ -49,7 +51,6 @@ const HomeRestList: React.FC<ResListCardProp> = ({
         />
         <View style={{ height: 92, justifyContent: 'space-between' }}>
           <View style={{ gap: 4 }}>
-            <View style={{ width: "80%", flex: 1, overflow: 'hidden' }}>
               <Text
                 numberOfLines={1}
                 ellipsizeMode="tail"
@@ -57,7 +58,6 @@ const HomeRestList: React.FC<ResListCardProp> = ({
               >
                 {marker.name}
               </Text>
-            </View>
             <Text style={styles.category}>{marker.category}</Text>
           </View>
           <View
@@ -113,7 +113,7 @@ const HomeRestList: React.FC<ResListCardProp> = ({
                   borderWidth: 1,
                   borderRadius: 16,
                   borderColor: Color.base.White,
-                  marginLeft: 80,
+          
                 }}
               >
                 {loading ? (
@@ -149,9 +149,9 @@ export default HomeRestList;
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
+    flex:1,
     padding: 12,
-    borderWidth: 1,
-    borderColor: Color.Gray.gray400,
+    
     borderRadius: 20,
     gap: 16,
     marginBottom: 12,
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: Color.base.White,
-    width: "80%",
+
   },
   category: {
     fontSize: 12,

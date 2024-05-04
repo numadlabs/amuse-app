@@ -4,13 +4,14 @@ import { GetRestaurantsResponseType } from "@/app/lib/types/apiResponseType";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View, ScrollView } from "react-native";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import ResListCard from "../atom/cards/HomeRestListCart";
+import HomeRestList from "../atom/cards/HomeRestList";
 import { RestaurantType } from "@/app/lib/types";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/app/context/AuthContext";
 import { getAcard } from "@/app/lib/service/mutationHelper";
+import { width } from "@/app/lib/utils";
 
-interface RestaurantListViewProps {}
+interface RestaurantListViewProps { }
 
 const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
   const router = useRouter();
@@ -20,6 +21,9 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const [cardLoadingStates, setCardLoadingStates] = useState<boolean[]>([]);
   const { authState } = useAuth();
+
+
+
   const {
     data: restaurantsData,
     isLoading,
@@ -42,7 +46,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => {},
+    onSuccess: (data, variables) => { },
   });
   // if (data.data.success) {
   //   queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
@@ -88,46 +92,29 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
     });
   };
 
+  console.log(restaurantsData)
+
   return (
-    <View style={{ flex: 1, height: "100%", paddingBottom: 100 }}>
-    <ScrollView>
-      {restaurantsData?.data?.restaurants &&
-        restaurantsData.data.restaurants.map((item, index) => (
-          <>
-            <TouchableOpacity
-              key={`card-${item.id}`}
-              onPress={() => handleNavigation(item)}
-              style={{ paddingHorizontal: 16 }}
-            >
-              <ResListCard
-                key={index}
-                marker={item}
-                onPress={() => {
-                  const aCardId = item.cardId;
-                  handleGetAcard(index, item.cardId);
-                }}
-                isClaimLoading={isClaimLoading}
-              />
-            </TouchableOpacity>
-          </>
-        ))}
-      {/* {restaurants && restaurants.length > 0 ? (
-        restaurants.map((item, index) => (
-          <>
-            <TouchableOpacity key={`card-${item.id}`} onPress={() => handleNavigation(item)}>
-              <ResListCard
-                key={index}
-                marker={item}
-                onPress={() => handleGetAcard(index, item.cardId)}
-                isClaimLoading={cardLoadingStates[index] || false}
-              />
-            </TouchableOpacity>
-          </>
-        ))
-      ) : (
-        <Text>Loading...</Text>
-      )} */}
-    </ScrollView>
+    <View style={{ justifyContent: 'center', alignContent: 'center', alignItems: 'center', paddingHorizontal: 16,}}>
+
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {restaurantsData?.data?.restaurants &&
+          restaurantsData.data.restaurants.map((item, index) => (
+            <>
+              <TouchableOpacity
+                key={`card-${item.id}`}
+                onPress={() => handleNavigation(item)}
+              >
+                <HomeRestList
+                  key={`card-${item.id}`}
+                  marker={item}
+                  onPress={() => handleNavigation(item)}
+                  isClaimLoading={isClaimLoading}
+                />
+              </TouchableOpacity>
+            </>
+          ))}
+      </ScrollView>
     </View>
   );
 };
