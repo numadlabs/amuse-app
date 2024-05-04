@@ -62,7 +62,16 @@ const HomeRestList: React.FC<ResListCardProp> = ({
             </Text>
             <Text style={styles.category}>{marker.category}</Text>
           </View>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              width: "80%",
+              alignItems: "center",
+              ...(marker.isOwned
+                ? { gap: 12 }
+                : { justifyContent: "space-between" }),
+            }}
+          >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <View
                 style={[
@@ -157,7 +166,6 @@ const styles = StyleSheet.create({
 
     borderRadius: 20,
     gap: 16,
-    marginBottom: 12,
   },
   image: {
     borderRadius: 12,

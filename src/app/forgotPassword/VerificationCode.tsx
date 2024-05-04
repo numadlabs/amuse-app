@@ -81,19 +81,43 @@ const SplitOTP = () => {
     () => (
       <View style={styles.containerStyle}>
         {Array.from({ length: 4 }).map((_, i) => (
-          <Text
-            key={i}
-            onPress={onPress}
-            style={[
-              styles.textStyle,
-              text[i] ? styles.filledStyle : {},
-              text[i]
-                ? { borderColor: Color.Gray.gray600 }
-                : { borderColor: Color.Gray.gray100 },
-            ]}
+          <LinearGradient
+            colors={
+              isFocused
+                ? [Color.Brand.main.start, Color.Brand.main.end]
+                : [Color.Gray.gray500, Color.Gray.gray500]
+            }
+            start={[0, 1]}
+            end={[1, 0]}
+            style={{
+              marginTop: 10,
+              padding: 1,
+              borderRadius: 16,
+            }}
           >
-            {text[i]}
-          </Text>
+            <View
+              style={{
+                width: 48,
+                height: 48,
+                backgroundColor: Color.Gray.gray500,
+                borderRadius: 16,
+              }}
+            >
+              <Text
+                key={i}
+                onPress={onPress}
+                style={[
+                  styles.textStyle,
+                  text[i] ? styles.filledStyle : {},
+                  text[i]
+                    ? { borderColor: Color.Gray.gray300 }
+                    : { borderColor: Color.Gray.gray300 },
+                ]}
+              >
+                {text[i]}
+              </Text>
+            </View>
+          </LinearGradient>
         ))}
       </View>
     ),
@@ -110,7 +134,7 @@ const SplitOTP = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.body}>
             <View style={styles.container}>
-            <LinearGradient
+              <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
                 style={{
                   width: "100%",
@@ -118,34 +142,34 @@ const SplitOTP = () => {
                   marginTop: 16,
                   borderWidth: 1,
                   borderColor: Color.Gray.gray400,
-                  paddingBottom: 16,
+                  paddingBottom: 32,
                   paddingTop: 24,
                   paddingHorizontal: 16,
                 }}
               >
-              <View style={styles.textContainer}>
-                <View>
-                  <Text style={styles.topText}>Verification code</Text>
+                <View style={styles.textContainer}>
+                  <View>
+                    <Text style={styles.topText}>Verification code</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.bottomText}>
+                      We will send an SMS verification code.
+                    </Text>
+                  </View>
                 </View>
-                <View>
-                  <Text style={styles.bottomText}>
-                    We will send an SMS verification code.
-                  </Text>
-                </View>
-              </View>
-              <SafeAreaView style={styles.safeAreaStyle}>
-                <TextInput
-                  maxLength={4}
-                  ref={inputRef}
-                  style={styles.input}
-                  onChangeText={(text) => onChangeText(text)}
-                  value={text}
-                  keyboardType={KeyBoardTypes.number}
-                  onFocus={onFocus}
-                  onBlur={onBlur}
-                />
-                {otpContent}
-              </SafeAreaView>
+                <SafeAreaView style={styles.safeAreaStyle}>
+                  <TextInput
+                    maxLength={4}
+                    ref={inputRef}
+                    style={styles.input}
+                    onChangeText={(text) => onChangeText(text)}
+                    value={text}
+                    keyboardType={KeyBoardTypes.number}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                  />
+                  {otpContent}
+                </SafeAreaView>
               </LinearGradient>
             </View>
             <KeyboardAvoidingView
@@ -185,11 +209,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   container: {
-    paddingVertical: 16,
-    paddingTop: 24,
-    paddingBottom: 32,
-    backgroundColor: Color.Gray.gray600,
     borderRadius: 32,
+    marginTop: 16,
   },
   input: {
     height: 0,
@@ -213,7 +234,6 @@ const styles = StyleSheet.create({
   textStyle: {
     height: 48,
     width: 48,
-    borderColor: Color.Gray.gray100,
     borderWidth: 1,
     borderRadius: 16,
     fontSize: 16,
@@ -238,8 +258,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   bottomText: {
-    color: Color.base.White,
+    color: Color.Gray.gray100,
     fontSize: 12,
+    lineHeight: 16,
   },
   buttonContainer: {
     position: "absolute",

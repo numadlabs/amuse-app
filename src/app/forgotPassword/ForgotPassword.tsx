@@ -221,6 +221,7 @@ function ForgotPassword() {
                         lineHeight: 20,
                         paddingLeft: 6,
                         color: Color.base.White,
+                        width: '100%',
                       }}
                       value={phoneNumber}
                       onChangeText={setPhoneNumber}

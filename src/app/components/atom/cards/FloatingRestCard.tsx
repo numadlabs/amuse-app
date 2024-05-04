@@ -76,11 +76,15 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
               uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker.logo}` as string,
             }}
             style={styles.cardImage}
-          // resizeMode="cover"
+            // resizeMode="cover"
           />
           <View style={styles.textContent}>
             <View>
-              <Text numberOfLines={1} ellipsizeMode="tail" style={styles.cardtitle}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.cardtitle}
+              >
                 {marker.name}
               </Text>
               <Text numberOfLines={1} style={styles.cardDescription}>
@@ -88,7 +92,16 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
               </Text>
             </View>
 
-            <View style={styles.button}>
+            <View
+              style={{
+                flexDirection: "row",
+                width: "80%",
+                alignItems: "center",
+                ...(marker.isOwned
+                  ? { gap: 12 }
+                  : { justifyContent: "space-between" }),
+              }}
+            >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <View
                   style={[
@@ -100,13 +113,17 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                   {isOpen ? "Open" : "Closed"}
                 </Text>
               </View>
-              <View
-                style={{
-                  width: 1,
-                  height: 14,
-                  backgroundColor: Color.Gray.gray50,
-                }}
-              />
+              {marker.isOwned ? (
+                <View
+                  style={{
+                    width: 1,
+                    height: 14,
+                    backgroundColor: Color.Gray.gray50,
+                  }}
+                />
+              ) : (
+                ""
+              )}
               {marker.isOwned ? (
                 <View
                   style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
@@ -124,18 +141,22 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                   style={{
                     alignItems: "center",
                     justifyContent: "center",
-                    alignContent:'center',
+                    alignContent: "center",
                     paddingHorizontal: 20,
                     borderWidth: 1,
-                    borderColor: Color.Gray.gray50
+                    borderColor: Color.Gray.gray50,
                   }}
                 >
-
-                  <Text style={{ fontSize: 11, lineHeight: 16, fontWeight: '600', color: Color.Gray.gray50 }}>
+                  <Text
+                    style={{
+                      fontSize: 11,
+                      lineHeight: 16,
+                      fontWeight: "600",
+                      color: Color.Gray.gray50,
+                    }}
+                  >
                     Add
                   </Text>
-
-
                 </Button>
               )}
             </View>
@@ -170,15 +191,14 @@ const styles = StyleSheet.create({
 
   textContent: {
     height: 92,
-    justifyContent: 'space-between'
+    justifyContent: "space-between",
   },
 
   button: {
-    // backgroundColor: "#FFF",
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
-    gap: 12
+    gap: 12,
   },
   dot: {
     width: 10,

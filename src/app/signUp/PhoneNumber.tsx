@@ -383,5 +383,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "normal",
     color: Color.base.White,
+    width: '100%',
+    height: 48
   },
 });
