@@ -51,6 +51,8 @@ const Restaurant = () => {
     enabled: !!currentLocation && !!id,
   });
 
+  console.log(cardId)
+
   const showToast = () => {
     Toast.show({
       type: "perkToast",
@@ -61,6 +63,8 @@ const Restaurant = () => {
   const toggleBottomSheet = () => {
     setBottomSheet(!bottomSheet);
   }
+
+
 
   const pressed = useSharedValue(false);
   const animatedStyles = useAnimatedStyle(() => ({
@@ -74,13 +78,13 @@ const Restaurant = () => {
     },
     onSuccess: (data, variables) => { },
   });
-  const handleGetAcard = async (acardId: string) => {
-    console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
+  const handleGetAcard = async (id: string) => {
+    console.log("🚀 ~ RestaurantMapView ~ aCardId:", id);
     setIsClaimLoading(true);
     if (authState.userId) {
       const data = await createGetAcardMutation({
         userId: authState.userId,
-        cardId: acardId,
+        cardId: id,
       });
       if (data.data.success) {
         setIsClaimLoading(false);
@@ -131,6 +135,7 @@ const Restaurant = () => {
           name={restaurantsData?.name}
           image={restaurantsData?.logo}
           onPress={() => ""}
+          nftImage={restaurantsData?.nftImageUrl}
           category={restaurantsData?.category}
           hasBonus={false}
           visitCount={restaurantsData?.visitCount === null ? 0 : restaurantsData?.visitCount}
