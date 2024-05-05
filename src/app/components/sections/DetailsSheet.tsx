@@ -57,17 +57,10 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
           <View style={styles.attribute}>
             <Tick size={24} color={Color.Gray.gray100} />
             <Text style={styles.attributeText}>
-              {/* {benefits} */}
-              $1 in Bitcoin for every check in
+              {benefits}
             </Text>
           </View>
-          <View style={styles.attribute}>
-            <Tick size={24} color={Color.Gray.gray100} />
-            <Text style={styles.attributeText}>
-              {/* {benefits} */}
-              1 perk unlock every 10th check in
-            </Text>
-          </View>
+       
         </View>
         <View style={{ gap: 16 }}>
           <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>
@@ -78,6 +71,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
               <Location color={Color.Gray.gray100} />
               <TouchableOpacity>
               <Text
+              numberOfLines={3}
                 style={
                   (styles.attributeLocText)
                 }
@@ -92,7 +86,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
             How it works
           </Text>
           <Text style={{color: Color.Gray.gray50, fontSize: 16, width: '90%'}}>
-            Scan the restaurant’s QR code. Earn some Bitcoin. Activate perks when you get them. Repeat and stack your rewards.
+            {instruction}
           </Text>
         </View>
       </View>
@@ -112,10 +106,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   bottomSheet: {
-    backgroundColor: Color.base.White,
+    backgroundColor: Color.Gray.gray600,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     width: '100%',
+
     zIndex: 999,
     height:height/5
   },
@@ -153,12 +148,13 @@ const styles = StyleSheet.create({
   attributeText: {
     color: Color.Gray.gray50,
     fontSize: 16,
+    width: "95%",
   },
 
   attributeLocText: {
     color: Color.System.systemInformation,
     fontSize: 16,
-    width: '100%'
+    width: '50%'
   },
   membershipContainer: {
     flexDirection: "row",

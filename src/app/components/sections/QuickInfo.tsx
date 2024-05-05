@@ -27,6 +27,9 @@ const QuickInfo = ({ user, onPress }) => {
     }
   }, [user]);
 
+
+  console.log("heeelps",user)
+
   return (
     <TouchableOpacity style={styles.container} onPress={() => router.push("(boost)/Email")}>
       <LinearGradient

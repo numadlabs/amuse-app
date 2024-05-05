@@ -148,12 +148,11 @@ const Restaurant = () => {
             <View style={{ flex: 1, justifyContent: 'center', marginTop: 40 }}>
               <ActivityIndicator />
             </View>
-
           ) : (
             <>
               {restaurantsData?.isOwned ? (
                 <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>
-                  <Owned onPress={toggleBottomSheet} cardId={perkId} perks={perks} isLoading={isLoading} />
+                  <Owned benefits={restaurantsData?.benefits} location={restaurantsData?.location} instruction={restaurantsData?.instruction} onPress={toggleBottomSheet} cardId={perkId} perks={perks} isLoading={isLoading} />
                 </Animated.View>
               ) : (
                 <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>

@@ -13,7 +13,7 @@ import Balance from "../components/sections/Balance";
 import QuickInfo from "../components/sections/QuickInfo";
 import StackedCard from "../components/sections/StackedCard";
 import { useAuth } from "../context/AuthContext";
-import { useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { getUserById, getUserCard } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
@@ -33,10 +33,11 @@ const Page = () => {
   const router = useRouter();
   const [refreshPage, setRefreshPage] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isQuickInfoVisible, setIsQuickInfoVisible] = useState(true);
+  const [isQuickInfoVisible, setIsQuickInfoVisible] = useState(true)
   const pressed = useSharedValue(false);
   const [featured, setIsFeatured] = useState([]);
   const { authState } = useAuth();
+
 
   const { currentLocation } = useLocationStore();
   const { data: user, isSuccess } = useQuery({
@@ -92,6 +93,9 @@ const Page = () => {
   const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
       pathname: `/restaurants/${restaurant.id}`,
+      params: {
+        cardId: restaurant.cardId,
+      }
     });
 
   };
