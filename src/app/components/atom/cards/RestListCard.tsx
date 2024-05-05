@@ -65,7 +65,7 @@ import {
             <View
               style={{
                 flexDirection: "row",
-                width: "83%",
+                width: "82%",
                 alignItems: "center",
                 ...(marker.isOwned
                   ? { gap: 12 }
