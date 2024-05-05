@@ -21,8 +21,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PerkScreen = () => {
   const { restaurantId, btcAmount, powerUp } = useLocalSearchParams();
-
   const queryClient = useQueryClient();
+  const [showPowerUp, setShowPowerUp] = useState(false);
 
   const { data: card = [], isLoading } = useQuery({
     queryKey: [restaurantKeys.detail],
@@ -30,6 +30,14 @@ const PerkScreen = () => {
       return getRestaurantById(restaurantId as string);
     },
   });
+
+  const [visitCount, setVisitCount] = useState(card.visitCount);
+
+  useEffect(() => {
+    setVisitCount(card.visitCount);
+    setShowPowerUp(card.visitCount % 4 === 3);
+  }, [card.visitCount]);
+  
 
   const handleNavigation = async () => {
     router.back();
@@ -73,7 +81,7 @@ const PerkScreen = () => {
           />
 
           <Animated.View
-            style={{ marginBottom: 10, flexDirection: 'column' }}
+            style={{ marginBottom: 10, flexDirection: "column" }}
             entering={SlideInDown.springify().damping(20).delay(200)}
           >
             <LinearGradient
@@ -89,7 +97,7 @@ const PerkScreen = () => {
                 alignItems: "center",
                 borderWidth: 1,
                 borderColor: Color.Gray.gray400,
-                marginBottom: 16
+                marginBottom: 16,
               }}
             >
               <Text
@@ -113,15 +121,16 @@ const PerkScreen = () => {
                 Check-in successful.
               </Text>
             </LinearGradient>
-            {powerUp ? (
-              <View style={{ height: height / 8 }}>
-                <PowerUpCard
-                  title={powerUp as string}
-                  onPress={() => router.navigate("/PowerUp")}
-                />
-              </View>
-            ) : ( ""
-            )}
+            {showPowerUp && powerUp ? (
+  <View style={{ height: height / 8 }}>
+    <PowerUpCard
+      title={powerUp as string}
+      onPress={() => router.navigate("/PowerUp")}
+    />
+  </View>
+) : ('')}
+
+
           </Animated.View>
           <Button
             variant="primary"
@@ -132,7 +141,6 @@ const PerkScreen = () => {
           >
             <Text>Confirm</Text>
           </Button>
-
         </>
       )}
     </Animated.View>
