@@ -65,7 +65,7 @@ const HomeRestList: React.FC<ResListCardProp> = ({
           <View
             style={{
               flexDirection: "row",
-              width: "80%",
+              width: "82%",
               alignItems: "center",
               ...(marker?.isOwned
                 ? { gap: 12 }

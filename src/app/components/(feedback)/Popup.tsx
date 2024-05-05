@@ -1,9 +1,9 @@
 import Color from '@/app/constants/Color';
-import { TickCircle } from 'iconsax-react-native';
 import React, { useEffect } from 'react';
 import { View, Text, Modal, StyleSheet } from 'react-native';
 import Button from '../ui/Button';
 import Animated, { withSpring, useSharedValue, ReduceMotion } from 'react-native-reanimated';
+import TickCircle from '../icons/TickCircle';
 
 interface PopupProps {
   isVisible: boolean;
@@ -36,7 +36,7 @@ const Popup: React.FC<PopupProps> = ({ isVisible, onClose, title }) => {
       <View style={styles.container}>
         <Animated.View style={[styles.popup, { transform: [{ translateY }] }]}>
           <View style={styles.content}>
-            <TickCircle size={72} color={Color.System.systemSuccess} />
+            <TickCircle/>
             <View style={styles.textContainer}>
               <Text style={styles.title}>+1$ of BTC</Text>
               <Text style={styles.message}>Check-in successful.</Text>
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     padding:16
   },
   popup: {
-    backgroundColor: 'white',
+    backgroundColor: Color.Gray.gray600,
     padding: 20,
     borderRadius: 32,
     width: '100%',
@@ -83,12 +83,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    color: Color.Gray.gray600,
+    color: Color.base.White,
     fontWeight: 'bold',
   },
   message: {
     fontSize: 16,
-    color: Color.Gray.gray400,
+    color: Color.Gray.gray50,
     fontWeight: 'normal',
   },
   buttonContainer:{

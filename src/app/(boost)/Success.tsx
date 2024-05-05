@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Color from "../constants/Color";
-import { TickCircle } from "iconsax-react-native";
 import Button from "../components/ui/Button";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { useQueryClient } from "@tanstack/react-query";
 import { userKeys } from "../lib/service/keysHelper";
+import TickCircle from "../components/icons/TickCircle";
 
 const Success = () => {
   const queryClient = useQueryClient()
@@ -26,7 +26,7 @@ const Success = () => {
         end={{ x: 1, y: 1 }}
         style={styles.container}>
         <View style={styles.svgContainer}>
-          <TickCircle color={Color.System.systemSuccess} size={64} />
+          <TickCircle/>
           <Text style={styles.topText}>Congratulations!</Text>
           <Text style={styles.bottomText}>
             You will earn extra rewards every time you use an Membership.
