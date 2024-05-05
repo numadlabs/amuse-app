@@ -97,7 +97,7 @@ const Restaurant = () => {
         queryClient.invalidateQueries({
           queryKey: userKeys.cards,
         });
-        showToast();
+        // showToast();
       }
     }
   };
@@ -152,8 +152,8 @@ const Restaurant = () => {
           ) : (
             <>
               {restaurantsData?.isOwned ? (
-                <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>
-                  <Owned benefits={restaurantsData?.benefits} longitude={restaurantsData?.longitude} latitude={restaurantsData?.latitude} location={restaurantsData?.location} instruction={restaurantsData?.instruction} onPress={toggleBottomSheet} cardId={perkId} perks={perks} isLoading={isLoading} />
+                <Animated.View style={{ paddingBottom: 100 }} entering={SlideInDown.springify().damping(20).delay(200)}>
+                  <Owned descriptions={restaurantsData?.description} benefits={restaurantsData?.benefits} longitude={restaurantsData?.longitude} latitude={restaurantsData?.latitude} location={restaurantsData?.location} instruction={restaurantsData?.instruction} onPress={toggleBottomSheet} cardId={perkId} perks={perks} isLoading={isLoading} />
                 </Animated.View>
               ) : (
                 <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>
@@ -251,21 +251,21 @@ const Restaurant = () => {
                 <View style={{ paddingVertical: 8, justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
                   <Text style={{ fontSize: 20, lineHeight: 24, color: Color.base.White, fontWeight: 'bold', }}>Perk</Text>
                 </View>
-                <View style={{ alignItems: 'center', gap:16 }}>
-                <Image
-                  source={require("@/public/images/perk.png")}
-                  style={{ width: width/1.2, height: 58 }}
-                  resizeMode='contain'
-                />
-                <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray50, textAlign: 'center' }}>
-                  Lorem ipsum dolor sit amet, consectetur {"\n"} adipiscing elit. Curabitur sed justo ac urna fringilla rhoncus.
-                </Text>
-              </View>
-              <Button variant="primary" onPress={toggleBottomSheet}>
-                <Text>
-                  I understood
-                </Text>
-              </Button>
+                <View style={{ alignItems: 'center', gap: 16 }}>
+                  <Image
+                    source={require("@/public/images/perk.png")}
+                    style={{ width: width / 1.2, height: 58 }}
+                    resizeMode='contain'
+                  />
+                  <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray50, textAlign: 'center' }}>
+                    Earn perks with every 3 check-ins! Keep checking in to unlock more rewards!
+                  </Text>
+                </View>
+                <Button variant="primary" textStyle="primary" onPress={toggleBottomSheet}>
+                  <Text>
+                    Got it
+                  </Text>
+                </Button>
               </Animated.View>
             </TouchableOpacity>
           </Modal>

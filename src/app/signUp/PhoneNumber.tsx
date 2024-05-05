@@ -230,7 +230,7 @@ const PhoneNumber = () => {
                   size="default"
                   onPress={handleNavigation}
                 >
-                  Send code
+                  Continue
                 </Button>
               </View>
             </KeyboardAvoidingView>

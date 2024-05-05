@@ -32,7 +32,7 @@ const PowerUp = () => {
   };
 
   const handleNavigation = () => {
-    showToast()
+    // showToast()
     router.back()
   }
   return (
@@ -56,7 +56,7 @@ const PowerUp = () => {
         </TouchableOpacity>
 
         <Popup
-          title="Power-up consumed."
+          title="Perk consumed."
           isVisible={isPopupVisible}
           onClose={handleNavigation}
         />

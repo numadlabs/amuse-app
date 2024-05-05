@@ -9,11 +9,13 @@ import { useAuth } from "../context/AuthContext";
 import * as SplashScreen from "expo-splash-screen";
 import useLocationStore from "../lib/store/userLocation";
 import { LinearGradient } from "expo-linear-gradient";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Layout = ({ navigation }) => {
   const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState(false);
   const { getLocation, currentLocation } = useLocationStore();
+  const [notification, setNotification] = useState("")
 
   useEffect(() => {
     async function prepareApp() {
@@ -26,6 +28,19 @@ const Layout = ({ navigation }) => {
       }
     }
     prepareApp();
+
+    const checkNotification = async () => {
+      const storedCard = await AsyncStorage.getItem("restaurantCard");
+      if (storedCard) {
+        setNotification(storedCard);
+       
+        await AsyncStorage.removeItem("restaurantCard");
+      }
+    };
+
+    // Call the function to check for the notification
+    checkNotification();
+
   }, [currentLocation, authState.loading]);
   if (!appIsReady) {
     return null;
@@ -34,7 +49,6 @@ const Layout = ({ navigation }) => {
   if (authState.authenticated === false) {
     return <Redirect href={"/Login"} />;
   }
-
   return (
     <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
       <Tabs.Screen
@@ -58,10 +72,15 @@ const Layout = ({ navigation }) => {
               <View style={{ paddingHorizontal: 20 }}>
                 <Notification color={Color.base.White} />
                 <View style={{ position: 'absolute', right: 22 }}>
-                  <LinearGradient
-                    colors={[Color.Brand.main.start, Color.Brand.main.end]}
-                    style={{ width: 8, height: 8, borderRadius: 8 }}
-                  />
+                  {notification ? (
+                    <LinearGradient
+                      colors={[Color.Brand.main.start, Color.Brand.main.end]}
+                      style={{ width: 8, height: 8, borderRadius: 8 }}
+                    />
+                  ) : (
+                    ""
+                  )}
+
                 </View>
               </View>
             </TouchableOpacity>

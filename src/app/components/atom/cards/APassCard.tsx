@@ -239,6 +239,7 @@ const APassCard: React.FC<ApassProp> = ({
                         }}
                       >
                         {/*Todo:  find some better counting shit you fucker */}
+
                         <AnimatedText
                           entering={FadeIn}
                           exiting={FadeOut}
