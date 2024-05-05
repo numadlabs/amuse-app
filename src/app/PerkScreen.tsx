@@ -132,6 +132,7 @@ const PerkScreen = () => {
           >
             <Text>Confirm</Text>
           </Button>
+
         </>
       )}
     </Animated.View>
