@@ -13,18 +13,26 @@ import { BottomSheetRefProps } from "../../modals/PerkBottomSheet";
 import BottomSheet from "../../ui/BottomSheet";
 import Animated from "react-native-reanimated";
 
+
+
+
 interface ownedProps {
   cardId: string;
   perks: any;
   benefits: string;
   location: string;
   instruction: string;
+  latitude: string;
+  longitude: string;
   isLoading: boolean;
   onPress: () => void;
 }
 
-const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, benefits, location, instruction }) => {
+const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, benefits, location, instruction, longitude, latitude }) => {
   const [showPerks, setShowPerks] = useState(true);
+
+
+
 
   const backgroundColor = showPerks ? Color.Gray.gray300 : Color.Gray.gray400;
 
@@ -161,6 +169,8 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, benefits, loca
               benefits={benefits}
               locations={location}
               memberships={"membership"}
+              latitude={latitude}
+              longitude={longitude}
               about={"about"}
               instruction={instruction}
               artistInfo={"artistInfo"}

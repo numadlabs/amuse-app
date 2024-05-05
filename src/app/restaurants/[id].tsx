@@ -14,6 +14,7 @@ import {
 import Popup from "../components/(feedback)/Popup";
 import Button from "../components/ui/Button";
 import Color from "../constants/Color";
+
 import Close from "../components/icons/Close";
 import { useAuth } from "../context/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -152,7 +153,7 @@ const Restaurant = () => {
             <>
               {restaurantsData?.isOwned ? (
                 <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>
-                  <Owned benefits={restaurantsData?.benefits} location={restaurantsData?.location} instruction={restaurantsData?.instruction} onPress={toggleBottomSheet} cardId={perkId} perks={perks} isLoading={isLoading} />
+                  <Owned benefits={restaurantsData?.benefits} longitude={restaurantsData?.longitude} latitude={restaurantsData?.latitude} location={restaurantsData?.location} instruction={restaurantsData?.instruction} onPress={toggleBottomSheet} cardId={perkId} perks={perks} isLoading={isLoading} />
                 </Animated.View>
               ) : (
                 <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>

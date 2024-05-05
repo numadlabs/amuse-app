@@ -6,6 +6,7 @@ import Color from '@/app/constants/Color';
 import Tick from '../icons/Tick';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { height } from '@/app/lib/utils';
+import * as Linking from 'expo-linking';
 
 
 
@@ -15,41 +16,24 @@ interface BottomSheetProps {
   locations: string | string[],
   memberships: string | string[],
   about: string | string[],
+  latitude: string;
+  longitude: string;
   instruction: string | string[],
   artistInfo: string | string[]
 }
 
-const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, memberships, about, instruction, artistInfo }) => {
-  // const translateY = useSharedValue(0);
-
-  // useEffect(() => {
-  //   translateY.value = withSpring(isVisible ? 0 : 1000, {
-  //     mass: 1.5,
-  //     damping: 40,
-  //     stiffness: 398,
-  //     overshootClamping: false,
-  //     restDisplacementThreshold: 0.01,
-  //     restSpeedThreshold: 20,
-  //     reduceMotion: ReduceMotion.System,
-  //   });
-  // }, [translateY, isVisible]);
-
-  // const handleOutsidePress = () => {
-  //   onClose()
-  // }
+const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, memberships, about, instruction, artistInfo, latitude, longitude }) => {
+  const handleLocationPress = () => {
+  
+    if (latitude && longitude) {
+      const mapURL = `https://maps.google.com/?q=${latitude},${longitude}`;
+      Linking.openURL(mapURL);
+    } else {
+      console.warn('Latitude and longitude are not available');
+    }
+  };
 
   return (
-    // <Modal
-    //   animationType="none"
-    //   transparent={true}
-    //   visible={isVisible}
-    //   onRequestClose={onClose}
-    // >
-    //   <TouchableWithoutFeedback onPress={handleOutsidePress}>
-
-
-
-
     <View style={[styles.bottomSheet]}>
       <View style={styles.content}>
         <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>Rewards</Text>
@@ -60,7 +44,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
               {benefits}
             </Text>
           </View>
-       
+
         </View>
         <View style={{ gap: 16 }}>
           <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>
@@ -69,15 +53,15 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
           <View style={{ width: '90%' }}>
             <View style={styles.attribute}>
               <Location color={Color.Gray.gray100} />
-              <TouchableOpacity>
-              <Text
-              numberOfLines={3}
-                style={
-                  (styles.attributeLocText)
-                }
-              >
-                {locations}
-              </Text>
+              <TouchableOpacity onPress={handleLocationPress}>
+                <Text
+                  numberOfLines={2}
+                  style={
+                    (styles.attributeLocText)
+                  }
+                >
+                  {locations}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -85,16 +69,12 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
           <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>
             How it works
           </Text>
-          <Text style={{color: Color.Gray.gray50, fontSize: 16, width: '90%'}}>
+          <Text style={{ color: Color.Gray.gray50, fontSize: 16, width: '90%' }}>
             {instruction}
           </Text>
         </View>
       </View>
     </View>
-
-
-    //   </TouchableWithoutFeedback>
-    // </Modal>
   );
 };
 
@@ -112,10 +92,10 @@ const styles = StyleSheet.create({
     width: '100%',
 
     zIndex: 999,
-    height:height/5
+    height: height / 5
   },
   content: {
-    backgroundColor:Color.Gray.gray600
+    backgroundColor: Color.Gray.gray600
   },
   textContainer: {
     alignItems: 'center',
@@ -154,7 +134,8 @@ const styles = StyleSheet.create({
   attributeLocText: {
     color: Color.System.systemInformation,
     fontSize: 16,
-    width: '50%'
+    lineHeight:20,
+    flex:1
   },
   membershipContainer: {
     flexDirection: "row",
