@@ -58,7 +58,7 @@ const PerkScreen = () => {
             visitCount={card.visitCount}
           />
 
-          <Animated.View style={{ gap: 16, marginBottom: 50 }}
+          <Animated.View style={{ gap: 16, marginBottom: 10 }}
             entering={SlideInDown.springify().damping(20).delay(200)}>
             <LinearGradient
               colors={[Color.Brand.card.start, Color.Brand.card.end]}
@@ -95,8 +95,7 @@ export default PerkScreen
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: height / 6
-    ,
+    marginTop: height / 10,
     backgroundColor: Color.Gray.gray600,
     paddingHorizontal: 16,
     flex: 1,

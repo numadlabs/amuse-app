@@ -11,16 +11,28 @@ import { InfoCircle } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetRefProps } from "../../modals/PerkBottomSheet";
 import BottomSheet from "../../ui/BottomSheet";
+import Animated from "react-native-reanimated";
+
+
+
 
 interface ownedProps {
   cardId: string;
   perks: any;
+  benefits: string;
+  location: string;
+  instruction: string;
+  latitude: string;
+  longitude: string;
   isLoading: boolean;
   onPress: () => void;
 }
 
-const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress }) => {
+const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, benefits, location, instruction, longitude, latitude }) => {
   const [showPerks, setShowPerks] = useState(true);
+
+
+
 
   const backgroundColor = showPerks ? Color.Gray.gray300 : Color.Gray.gray400;
 
@@ -30,63 +42,36 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress }) => {
 
   return (
     <GestureHandlerRootView style={styles.attrContainer}>
-      <View
-        style={{
-          backgroundColor: Color.Gray.gray400,
-          justifyContent: "space-between",
-          borderRadius: 48,
-          height: 48,
-          width: "100%",
-          flexDirection: "row",
-          padding: 4,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => toggleView(true)}
-          style={{
-            backgroundColor: backgroundColor,
-            alignItems: "center",
-            borderRadius: 48,
-            justifyContent: "center",
-            width: "50%",
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 15,
-              color: Color.base.White,
-              fontWeight: "bold",
-            }}
-          >
-            Perks
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => toggleView(false)}>
-          <View
-            style={{
-              backgroundColor: showPerks
-                ? Color.Gray.gray400
-                : Color.Gray.gray300,
-              flex: 1,
-              flexGrow: 1,
-              alignItems: "center",
-              paddingHorizontal: 60,
-              justifyContent: "center",
-              borderRadius: 48,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 15,
-                color: Color.base.White,
-                fontWeight: "bold",
-              }}
-            >
-              Details
-            </Text>
+        <View>
+            <Animated.View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.toggleButton,
+                  showPerks && styles.activeButton,
+                ]}
+                onPress={() => toggleView(true)}
+              >
+                <Text
+                  style={[styles.buttonText, !showPerks && styles.activeText]}
+                >
+                  Perks
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.toggleButton,
+                  !showPerks && styles.activeButton,
+                ]}
+                onPress={() => toggleView(false)}
+              >
+                <Text
+                  style={[styles.buttonText, showPerks && styles.activeText]}
+                >
+                  Details
+                </Text>
+              </TouchableOpacity>
+            </Animated.View>
           </View>
-        </TouchableOpacity>
-      </View>
       <View style={{ flex: 1, flexGrow: 1, marginTop: 24 }}>
         {isLoading ? (
           <ActivityIndicator color={Color.Gray.gray600} />
@@ -178,14 +163,16 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress }) => {
           </View>
         ) : (
           <View
-            style={{ flex: 1, flexGrow: 1, marginBottom: 150, padding: 8 }}
+            style={{ flex: 1, flexGrow: 1, marginBottom: 150, paddingHorizontal: 8 }}
           >
             <DetailsSheet
-              benefits={"benefits"}
-              locations={"location"}
+              benefits={benefits}
+              locations={location}
               memberships={"membership"}
+              latitude={latitude}
+              longitude={longitude}
               about={"about"}
-              instruction={"instruction"}
+              instruction={instruction}
               artistInfo={"artistInfo"}
             />
           </View>
@@ -200,6 +187,31 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 32,
     marginBottom: 40,
+  },
+  toggleButton: {
+    paddingVertical: 12,
+    alignItems: "center",
+    width: "48%",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: Color.Gray.gray500,
+    paddingVertical: 4,
+    borderRadius: 48,
+  },
+  activeText: {
+    color: Color.base.White,
+  },
+  activeButton: {
+    backgroundColor: Color.Gray.gray400,
+    borderRadius: 48,
+  },
+  buttonText: {
+    fontSize: 13,
+    lineHeight: 16,
+    fontWeight: "bold",
+    color: Color.base.White,
   },
   powerUpGrid: {
     gap: 15,

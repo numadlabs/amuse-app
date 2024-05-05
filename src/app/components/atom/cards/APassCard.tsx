@@ -9,7 +9,7 @@ import { Image } from 'expo-image'
 import React, { useEffect, useState } from "react";
 import { BlurView } from "expo-blur";
 import Color from "@/app/constants/Color";
-import { height, scaleHeight } from "@/app/lib/utils";
+import { height, scaleHeight, width } from "@/app/lib/utils";
 import { Flash, TicketStar } from "iconsax-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import APassStripes from "../../icons/APassStripes";
@@ -107,10 +107,10 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
                       <TicketStar size={24} color={Color.base.White} />
                     </View> : null}
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20,rowGap:16 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20, gap:16, paddingHorizontal:20, }}>
 
 
-                  <Image cachePolicy='memory' contentFit='fill' style={{ minWidth: 210,height:210, borderRadius: 12,  }} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${nftImage}` }} />
+                  <Image cachePolicy='memory' contentFit='fill' style={{ minWidth: width/2.1,aspectRatio:1, borderRadius: 12, }} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${nftImage}` }} />
 
                   <View style={{ borderWidth: 1, backgroundColor: Color.Gray.gray500, borderColor: Color.Gray.gray400, borderRadius: 12, overflow: 'hidden', }}>
                     {/* <LinearGradient
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray200,
     overflow: "hidden",
     height: 304,
-    
+
   },
   blurContainer: {
     backgroundColor: Color.Gray.gray500,

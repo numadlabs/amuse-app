@@ -78,7 +78,7 @@ export default Footer;
 const styles = StyleSheet.create({
   qrButton: {
     position: 'absolute',
-    bottom: 20,
+    bottom: height/34,
     alignSelf: 'center',
   },
   container: {
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: Color.Gray.gray500,
     borderRadius: 32,
-    bottom: 35,
+    bottom: 25,
     alignSelf: "center",
     position: 'absolute',
   },
