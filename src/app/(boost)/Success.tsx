@@ -26,10 +26,10 @@ const Success = () => {
         end={{ x: 1, y: 1 }}
         style={styles.container}>
         <View style={styles.svgContainer}>
-          <TickCircle/>
+          <TickCircle />
           <Text style={styles.topText}>Congratulations!</Text>
           <Text style={styles.bottomText}>
-            You will earn extra rewards every time you use an Membership.
+            You will earn 1.2x more rewards every time you use your Memberships.
           </Text>
         </View>
       </LinearGradient>

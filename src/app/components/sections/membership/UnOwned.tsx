@@ -6,6 +6,7 @@ import { Location, WalletAdd } from "iconsax-react-native";
 import Button from "../../ui/Button";
 import Popup from "../../(feedback)/Popup";
 import { router } from "expo-router";
+import * as Linking from 'expo-linking';
 import { RestaurantType } from "@/app/lib/types";
 
 interface ownedProps {
@@ -20,6 +21,16 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant, isClaimLoading, onPress }) 
     setPopupVisible(true);
   };
 
+  const handleLocationPress = () => {
+
+    if (restaurant?.latitude && restaurant?.longitude) {
+      const mapURL = `https://maps.google.com/?q=${restaurant?.latitude},${restaurant?.longitude}`;
+      Linking.openURL(mapURL);
+    } else {
+      console.warn('Latitude and longitude are not available');
+    }
+  };
+
   const closePopup = () => {
     setPopupVisible(false);
     router.back();
@@ -28,7 +39,7 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant, isClaimLoading, onPress }) 
   return (
     <>
       <View style={styles.attrContainer}>
-        <View style={{ gap: 32 }}>
+        <View style={{ gap: 32, paddingBottom:100 }}>
           <View style={{ gap: 16 }}>
             <Text
               style={{
@@ -41,7 +52,7 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant, isClaimLoading, onPress }) 
             </Text>
             <View>
               <View style={styles.attribute}>
-                <Tick size={8} color={Color.Gray.gray100} />
+                <Tick size={24} color={Color.Gray.gray100} />
                 <Text style={styles.attributeText}>
                   {restaurant?.benefits}
                 </Text>
@@ -59,7 +70,7 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant, isClaimLoading, onPress }) 
               Locations
             </Text>
             <View>
-              <TouchableOpacity style={styles.attribute}>
+              <TouchableOpacity style={styles.attribute} onPress={handleLocationPress}>
                 <Location color={Color.Gray.gray100} />
                 <Text style={styles.attributeLocText}>
                   {restaurant?.location}
@@ -67,20 +78,38 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant, isClaimLoading, onPress }) 
               </TouchableOpacity>
             </View>
           </View>
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 16,
-              color: Color.base.White,
-            }}
-          >
-            How it works
-          </Text>
-          <Text style={{ marginBottom: 100, color: Color.Gray.gray50 }}>
-            Open your app to the homepage, scan the QR code from your waiter or
-            hostess, and earn rewards for checking in. Activate power-ups for
-            extra rewards.
-          </Text>
+          <View style={{ gap: 16 }}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 16,
+                color: Color.base.White,
+              }}
+            >
+              About
+            </Text>
+            <View>
+              <Text style={styles.attributeText}>
+                {restaurant?.description}
+              </Text>
+            </View>
+          </View>
+          <View style={{ gap: 16 }}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 16,
+                color: Color.base.White,
+              }}
+            >
+              How to earn
+            </Text>
+            <View>
+              <Text style={styles.attributeText}>
+                {restaurant?.instruction}
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
     </>
@@ -99,7 +128,7 @@ const styles = StyleSheet.create({
   attributeText: {
     color: Color.Gray.gray50,
     fontSize: 16,
-    width: "90%",
+    flex: 1
   },
   attributeLocText: {
     color: Color.System.systemInformation,

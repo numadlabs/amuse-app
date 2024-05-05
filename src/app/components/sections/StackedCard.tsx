@@ -78,7 +78,7 @@ const StackedCard = () => {
               Discover restaurants, add an membership card, and start earning
               rewards every time you check-in at a participating restaurant!
             </Text>
-            <TouchableOpacity onPress={() => router.navigate("/SplashScreen")}>
+            <TouchableOpacity onPress={() => router.navigate("/Acards")}>
               <View style={styles.button}>
                 <Text style={styles.buttonText}>Explore</Text>
               </View>

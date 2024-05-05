@@ -146,7 +146,7 @@ const Page = () => {
                     <HomeRestList
                       isClaimLoading={true}
                       marker={filteredRestaurantsArray[0]}
-                      key={filteredRestaurantsArray[0].id as string}
+                      key={filteredRestaurantsArray[0]?.id as string}
                       onPress={() => handleNavigation(filteredRestaurantsArray[0])}
                     />
                   </TouchableOpacity>
@@ -275,13 +275,13 @@ const Page = () => {
                   resizeMode='contain'
                 />
                 <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray50, textAlign: 'center' }}>
-                  Lorem ipsum dolor sit amet, consectetur {"\n"} adipiscing elit. Curabitur sed justo ac urna fringilla rhoncus.
+                Earn Bitcoin and other rewards simply by using our membership cards when you visit your favorite restaurants.
                 </Text>
               </View>
 
-              <Button variant="primary" onPress={toggleBottomSheet}>
+              <Button variant="primary" textStyle="primary" onPress={toggleBottomSheet}>
                 <Text>
-                  I understood
+                  Got it
                 </Text>
               </Button>
             </Animated.View>
