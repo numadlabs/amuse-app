@@ -80,11 +80,14 @@ const PerkScreen = () => {
               </View>
             : <View style={{height:height/8}}/>}
           </Animated.View>
-          <Button variant='primary' size='default' textStyle='primary' onPress={handleNavigation} style={{ bottom: 30 }}>
+
+          <Button variant='primary' size='default' textStyle='primary' onPress={handleNavigation} style={{marginHorizontal:"5%", position:'absolute', bottom:25, width:'100%' }}>
             <Text>
               Confirm
             </Text>
           </Button>
+
+        
         </>
       )}
     </Animated.View>
