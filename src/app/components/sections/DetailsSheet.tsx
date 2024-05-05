@@ -17,14 +17,15 @@ interface BottomSheetProps {
   memberships: string | string[],
   about: string | string[],
   latitude: string;
+  description: string,
   longitude: string;
   instruction: string | string[],
   artistInfo: string | string[]
 }
 
-const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, memberships, about, instruction, artistInfo, latitude, longitude }) => {
+const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, memberships, about, instruction, artistInfo, latitude, description, longitude }) => {
   const handleLocationPress = () => {
-  
+
     if (latitude && longitude) {
       const mapURL = `https://maps.google.com/?q=${latitude},${longitude}`;
       Linking.openURL(mapURL);
@@ -65,13 +66,39 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ benefits, locations, members
               </TouchableOpacity>
             </View>
           </View>
+          <View style={{ gap: 16 }}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 16,
+                color: Color.base.White,
+              }}
+            >
+              About
+            </Text>
+            <View>
+              <Text style={styles.attributeText}>
+                {description}
+              </Text>
+            </View>
+          </View>
 
-          <Text style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}>
-            How it works
-          </Text>
-          <Text style={{ color: Color.Gray.gray50, fontSize: 16, width: '90%' }}>
-            {instruction}
-          </Text>
+          <View style={{ gap: 16 }}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 16,
+                color: Color.base.White,
+              }}
+            >
+              How to earn
+            </Text>
+            <View>
+              <Text style={styles.attributeText}>
+                {instruction}
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
     </View>
@@ -84,13 +111,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    
   },
   bottomSheet: {
     backgroundColor: Color.Gray.gray600,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     width: '100%',
-
     zIndex: 999,
     height: height / 5
   },
@@ -134,8 +161,8 @@ const styles = StyleSheet.create({
   attributeLocText: {
     color: Color.System.systemInformation,
     fontSize: 16,
-    lineHeight:20,
-    flex:1
+    lineHeight: 20,
+    flex: 1
   },
   membershipContainer: {
     flexDirection: "row",

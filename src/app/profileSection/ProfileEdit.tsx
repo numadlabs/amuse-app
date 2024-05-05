@@ -92,7 +92,7 @@ const ProfileEdit = () => {
       await refetch();
       setLoading(false);
       setDataChanged(false);
-      showToast();
+      // showToast();
       queryClient.invalidateQueries({ queryKey: userKeys.info })
       router.navigate('/Success')
 
@@ -268,7 +268,7 @@ const ProfileEdit = () => {
                   </LinearGradient>
                 </View>
               </View>
-              <Animated.View style={{ gap: 8 }}>
+              {/* <Animated.View style={{ gap: 8 }}>
                 <Text style={{ fontSize: 14, lineHeight: 18, fontWeight: '600', color: Color.base.White }}>
                   For more rewards
                 </Text>
@@ -276,7 +276,7 @@ const ProfileEdit = () => {
                   <ProgressBar progress={progress} width={'85%'} height={8} />
                   <Text style={{ color: Color.base.White, fontSize: 12, lineHeight: 16, fontWeight: '700' }}>{`${progress * 100}%`}</Text>
                 </View>
-              </Animated.View>
+              </Animated.View> */}
             </LinearGradient>
           </View>
         </ScrollView>

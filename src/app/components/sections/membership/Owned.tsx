@@ -23,12 +23,13 @@ interface ownedProps {
   location: string;
   instruction: string;
   latitude: string;
+  descriptions: string;
   longitude: string;
   isLoading: boolean;
   onPress: () => void;
 }
 
-const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, benefits, location, instruction, longitude, latitude }) => {
+const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, descriptions, benefits, location, instruction, longitude, latitude }) => {
   const [showPerks, setShowPerks] = useState(true);
 
 
@@ -154,8 +155,7 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, benefits, loca
                       color: Color.Gray.gray50,
                     }}
                   >
-                    You haven’t got any perks yet.{"\n"} Every 10th check-in,
-                    you will receive perks.
+                   You don't have any perks yet. Check-in to unlock new perks.
                   </Text>
                 </View>
               </LinearGradient>
@@ -168,6 +168,7 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, benefits, loca
             <DetailsSheet
               benefits={benefits}
               locations={location}
+              description={descriptions}
               memberships={"membership"}
               latitude={latitude}
               longitude={longitude}

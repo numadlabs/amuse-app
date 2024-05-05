@@ -38,8 +38,8 @@ const Popup: React.FC<PopupProps> = ({ isVisible, onClose, title }) => {
           <View style={styles.content}>
             <TickCircle/>
             <View style={styles.textContainer}>
-              <Text style={styles.title}>+1$ of BTC</Text>
-              <Text style={styles.message}>Check-in successful.</Text>
+              <Text style={styles.title}>Perk consumed.</Text>
+              {/* <Text style={styles.message}>Check-in successful.</Text> */}
             </View>
             <View style={styles.buttonContainer}>
             <Button

@@ -40,6 +40,7 @@ const QrModal = () => {
   const [restaurantId, setRestaurantId] = useState("")
   const [loading, setLoading] = useState(false);
   const [cardId, setCardId] = useState("")
+  const [visitCount, setVisitCount] = useState(0)
   const [flashMode, setFlashMode] = useState(false);
   const [powerUp, setPowerUp] = useState("");
   const [emptyError, setEmptyError] = useState("");
@@ -66,7 +67,7 @@ const QrModal = () => {
   const closeModal = () => {
     toggleBtcPopup();
     togglePopup();
-    showToast();
+    // showToast();
   };
 
   const queryClient = useQueryClient();
@@ -93,8 +94,9 @@ const QrModal = () => {
       setHasPermission(status === "granted");
     };
     getCameraPermissions();
-    setRestaurantId("7733c679-cfe2-423f-976c-772482baec47");
-    setCardId("4b654db1-7124-4d61-88f5-5af072ef4ae1")
+    setRestaurantId("1e7c4243-9c14-4b88-ac67-ed3167c255f0");
+    setCardId("675bb6ad-197e-4ed1-b2e0-898b541abaf7")
+    setVisitCount(1)
   }, []);
 
 
@@ -116,7 +118,7 @@ const QrModal = () => {
     },
   });
 
-  const visitCount = cards?.data?.cards[0].visitCount;
+  
 
   const { mutateAsync: createRedeemMutation } = useMutation({
     mutationFn: redeemTap,
@@ -136,7 +138,7 @@ const QrModal = () => {
       queryClient.invalidateQueries({ queryKey: userKeys.cards });
       queryClient.invalidateQueries({ queryKey: userKeys.info });
 
-      if (visitCount % SERVER_SETTING.PERK_FREQUENCY === 0) {
+      if (visitCount % SERVER_SETTING.PERK_FREQUENCY === null) {
         router.back()
         router.navigate({
           pathname: '/PerkScreen',
@@ -403,7 +405,7 @@ const styles = StyleSheet.create({
   },
   flashButton: {
     position: "absolute",
-    right: "38%",
+    marginHorizontal:"44%",
     bottom: "0%",
     marginRight: 16,
     marginBottom: 100,
