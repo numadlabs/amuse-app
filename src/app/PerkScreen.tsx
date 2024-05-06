@@ -37,7 +37,7 @@ const PerkScreen = () => {
     setVisitCount(card.visitCount);
     setShowPowerUp(card.visitCount % 4 === 3);
   }, [card.visitCount]);
-  
+
 
   const handleNavigation = async () => {
     router.back();
@@ -121,14 +121,14 @@ const PerkScreen = () => {
                 Check-in successful.
               </Text>
             </LinearGradient>
-            {showPowerUp && powerUp ? (
-  <View style={{ height: height / 8 }}>
-    <PowerUpCard
-      title={powerUp as string}
-      onPress={() => router.navigate("/PowerUp")}
-    />
-  </View>
-) : ('')}
+            {powerUp ? (
+              <Animated.View  entering={SlideInDown.springify().damping(20).delay(250)} style={{ height: height / 8 }}>
+                <PowerUpCard
+                  title={powerUp as string}
+                  onPress={() => router.navigate("/PowerUp")}
+                />
+              </Animated.View>
+            ) : ('')}
 
 
           </Animated.View>
@@ -137,7 +137,7 @@ const PerkScreen = () => {
             size="default"
             textStyle="primary"
             onPress={handleNavigation}
-            style={{ bottom: 30 }}
+            style={{ bottom: 40, position:'absolute', width:'100%', marginHorizontal:'5%' }}
           >
             <Text>Confirm</Text>
           </Button>

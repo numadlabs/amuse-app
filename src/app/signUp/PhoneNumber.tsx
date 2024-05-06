@@ -121,6 +121,14 @@ const PhoneNumber = () => {
 
     console.log(prefix, phoneNumber);
   };
+
+
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+    if(isOpen){
+      togglePrefix()
+    }
+  };
   return (
     <>
       <Steps activeStep={1} />
@@ -128,7 +136,7 @@ const PhoneNumber = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <TouchableWithoutFeedback onPress={dismissKeyboard}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
               <LinearGradient

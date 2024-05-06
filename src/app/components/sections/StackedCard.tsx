@@ -75,7 +75,7 @@ const StackedCard = () => {
           <View style={styles.container1}>
             <SearchGradient />
             <Text style={{ textAlign: "center", color: Color.Gray.gray50, fontSize: 12, lineHeight: 16 }}>
-              Discover restaurants, add an membership card, and start earning
+              Discover restaurants, add a membership card, and start earning
               rewards every time you check-in at a participating restaurant!
             </Text>
             <TouchableOpacity onPress={() => router.navigate("/Acards")}>

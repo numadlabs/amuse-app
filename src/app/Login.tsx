@@ -116,6 +116,9 @@ function Login() {
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
+    if(isOpen){
+      togglePrefix()
+    }
   };
 
   const onFocusPhone = () => {

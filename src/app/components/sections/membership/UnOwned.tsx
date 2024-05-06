@@ -8,6 +8,7 @@ import Popup from "../../(feedback)/Popup";
 import { router } from "expo-router";
 import * as Linking from 'expo-linking';
 import { RestaurantType } from "@/app/lib/types";
+import Animated, { SlideInDown } from "react-native-reanimated";
 
 interface ownedProps {
   restaurant: RestaurantType;
@@ -36,11 +37,13 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant, isClaimLoading, onPress }) 
     router.back();
   };
 
+ 
+
   return (
     <>
       <View style={styles.attrContainer}>
         <View style={{ gap: 32, paddingBottom:100 }}>
-          <View style={{ gap: 16 }}>
+        <Animated.View entering={SlideInDown.springify().damping(20).delay(200)} style={{ gap: 16 }}>
             <Text
               style={{
                 fontWeight: "bold",
@@ -58,8 +61,8 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant, isClaimLoading, onPress }) 
                 </Text>
               </View>
             </View>
-          </View>
-          <View style={{ gap: 16 }}>
+          </Animated.View>
+          <Animated.View entering={SlideInDown.springify().damping(20).delay(200)} style={{ gap: 16 }}>
             <Text
               style={{
                 fontWeight: "bold",
@@ -77,8 +80,8 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant, isClaimLoading, onPress }) 
                 </Text>
               </TouchableOpacity>
             </View>
-          </View>
-          <View style={{ gap: 16 }}>
+          </Animated.View>
+          <Animated.View entering={SlideInDown.springify().damping(20).delay(200)} style={{ gap: 16 }}>
             <Text
               style={{
                 fontWeight: "bold",
@@ -93,8 +96,8 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant, isClaimLoading, onPress }) 
                 {restaurant?.description}
               </Text>
             </View>
-          </View>
-          <View style={{ gap: 16 }}>
+          </Animated.View>
+          <Animated.View entering={SlideInDown.springify().damping(20).delay(200)} style={{ gap: 16 }}>
             <Text
               style={{
                 fontWeight: "bold",
@@ -109,7 +112,7 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant, isClaimLoading, onPress }) 
                 {restaurant?.instruction}
               </Text>
             </View>
-          </View>
+          </Animated.View>
         </View>
       </View>
     </>
