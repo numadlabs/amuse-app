@@ -5,8 +5,9 @@
     "scheme": "acme",
     "owner": "numad-labs",
     "splash": {
-      "image": "./src/public/images/Image.png",
-      "backgroundColor": "#1B2328"
+      "image": "./src/public/images/splash.png",
+      "backgroundColor": "#1B2328",
+      "padding": "10px",
     },
     "userInterfaceStyle": "dark",
     "orientation": "portrait",
