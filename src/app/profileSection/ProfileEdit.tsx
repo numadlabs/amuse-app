@@ -159,17 +159,17 @@ const ProfileEdit = () => {
                   >
                     <View
                       style={styles.input}>
-                    <User color={Color.Gray.gray50} />
-                    <TextInput
-                      placeholder="Nickname"
-                      placeholderTextColor={Color.Gray.gray200}
-                      value={nickname}
-                      onChangeText={setNickname}
-                      onFocus={() => setFocusedInput('Nickname')}
-                      onBlur={() => setFocusedInput(null)}
-                      style={{ fontSize: 20, color: Color.base.White, width: '100%', height: 48 }}
-                    />
-                  </View>
+                      <User color={Color.Gray.gray50} />
+                      <TextInput
+                        placeholder="Nickname"
+                        placeholderTextColor={Color.Gray.gray200}
+                        value={nickname}
+                        onChangeText={setNickname}
+                        onFocus={() => setFocusedInput('Nickname')}
+                        onBlur={() => setFocusedInput(null)}
+                        style={{ fontSize: 20, color: Color.base.White, width: '100%', height: 48 }}
+                      />
+                    </View>
                   </LinearGradient>
                 </View>
                 <View style={{ gap: 8 }}>
@@ -190,18 +190,18 @@ const ProfileEdit = () => {
                       marginBottom: 12
                     }}
                   >
-                  <View style={styles.input}>
-                    <Sms color={Color.Gray.gray50} />
-                    <TextInput
-                      placeholderTextColor={Color.Gray.gray100}
-                      placeholder="Email"
-                      value={email}
-                      onChangeText={setEmail}
-                      onFocus={() => setFocusedInput('Email')}
-                      onBlur={() => setFocusedInput(null)}
-                      style={{ fontSize: 20, color: Color.base.White, width: '100%', height: 48 }}
-                    />
-                  </View>
+                    <View style={styles.input}>
+                      <Sms color={Color.Gray.gray50} />
+                      <TextInput
+                        placeholderTextColor={Color.Gray.gray100}
+                        placeholder="Email"
+                        value={email}
+                        onChangeText={setEmail}
+                        onFocus={() => setFocusedInput('Email')}
+                        onBlur={() => setFocusedInput(null)}
+                        style={{ fontSize: 20, color: Color.base.White, width: '100%', height: 48 }}
+                      />
+                    </View>
                   </LinearGradient>
                 </View>
                 <View style={{ gap: 8 }}>
@@ -222,18 +222,18 @@ const ProfileEdit = () => {
                       marginBottom: 12
                     }}
                   >
-                  <View style={styles.input}>
-                    <Location color={Color.Gray.gray50} />
-                    <TextInput
-                      placeholderTextColor={Color.Gray.gray200}
-                      placeholder="Location"
-                      value={location}
-                      onChangeText={setLocation}
-                      onFocus={() => setFocusedInput('Area')}
-                      onBlur={() => setFocusedInput(null)}
-                      style={{ fontSize: 20, color: Color.base.White, width: '100%', height: 48 }}
-                    />
-                  </View>
+                    <View style={styles.input}>
+                      <Location color={Color.Gray.gray50} />
+                      <TextInput
+                        placeholderTextColor={Color.Gray.gray200}
+                        placeholder="Location"
+                        value={location}
+                        onChangeText={setLocation}
+                        onFocus={() => setFocusedInput('Area')}
+                        onBlur={() => setFocusedInput(null)}
+                        style={{ fontSize: 20, color: Color.base.White, width: '100%', height: 48 }}
+                      />
+                    </View>
                   </LinearGradient>
                 </View>
                 <View style={{ gap: 8 }}>
@@ -254,16 +254,18 @@ const ProfileEdit = () => {
                       marginBottom: 12
                     }}
                   >
-                    <View style={styles.input}>
+                    <View style={[styles.input]}>
                       <Cake color={Color.Gray.gray50} />
-                      <DateTimePicker
-                        value={dateOfBirth ? new Date(dateOfBirth) : new Date()}
-                        mode="date"
-                        display="default"
-                        onChange={onDateChange}
-                        maximumDate={new Date(Date.now())}
-                        style={{ backgroundColor: Color.Gray.gray600 }}
-                      />
+                     
+                        <DateTimePicker
+                          value={dateOfBirth ? new Date(dateOfBirth) : new Date()}
+                          mode="date"
+                          display="default"
+                          onChange={onDateChange}
+                          maximumDate={new Date(Date.now())}
+                          style={{ backgroundColor: Color.Gray.gray600 }}
+                        />
+
                     </View>
                   </LinearGradient>
                 </View>
@@ -281,7 +283,7 @@ const ProfileEdit = () => {
           </View>
         </ScrollView>
         <View style={{ paddingHorizontal: 16, marginBottom: 30 }}>
-       
+
           <Button
             variant={dataChanged ? "primary" : "disabled"}
             textStyle={dataChanged ? "primary" : "disabled"}

@@ -46,8 +46,8 @@ const QuickInfo = ({ user, onPress }) => {
         </TouchableOpacity>
         <View style={styles.container1}>
           <View style={styles.textContainer}>
-            <Text style={styles.topTitle}>Earn 1.2x more reward</Text>
-            <Text style={styles.bottomTitle}>By completing your profile.</Text>
+            <Text style={styles.topTitle}>Earn 1.2x more rewards</Text>
+            <Text style={styles.bottomTitle}>By completing your profile</Text>
           </View>
         </View>
         <View style={styles.container2}>

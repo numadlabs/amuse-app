@@ -205,7 +205,7 @@ const Restaurant = () => {
                 {isClaimLoading
                   ? <ActivityIndicator />
                   : restaurantsData?.visitCount === null
-                    ? "Add a membership card"
+                    ? "Add membership card"
                     : "Owned"}
               </Text>
             </View>
@@ -258,7 +258,7 @@ const Restaurant = () => {
                     resizeMode='contain'
                   />
                   <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray50, textAlign: 'center' }}>
-                    Earn perks with every 3 check-ins! Keep checking in to unlock more rewards!
+                  Earn perks after every 3 check-ins. Keep visiting your favorite spots and multiply your rewards!
                   </Text>
                 </View>
                 <Button variant="primary" textStyle="primary" onPress={toggleBottomSheet}>

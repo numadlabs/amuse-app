@@ -1,6 +1,11 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 
-import { Image } from "expo-image";
+import { Image } from 'expo-image'
 import React, { useEffect, useState } from "react";
 import { BlurView } from "expo-blur";
 import Color from "@/app/constants/Color";
@@ -17,13 +22,13 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from "react-native-reanimated";
+} from 'react-native-reanimated';
 // highlight-start
 import {
   Gesture,
   GestureDetector,
   GestureHandlerRootView,
-} from "react-native-gesture-handler";
+} from 'react-native-gesture-handler';
 
 // In the APassCard component
 interface ApassProp {
@@ -35,22 +40,16 @@ interface ApassProp {
   hasBonus: boolean;
   visitCount: number;
 }
-const APassCard: React.FC<ApassProp> = ({
-  name,
-  category,
-  image,
-  onPress,
-  hasBonus,
-  visitCount,
-  nftImage,
-}) => {
-  const animatedValue = useSharedValue(visitCount);
+const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBonus, visitCount, nftImage }) => {
+  const animatedValue = useSharedValue(visitCount)
   const pressed = useSharedValue(false);
-  const [loading, setIsLoading] = useState<boolean>();
+  const [loading, setIsLoading] = useState<boolean>()
 
-  console.log(nftImage);
+  console.log(nftImage)
 
-  const AnimatedText = Animated.createAnimatedComponent(Text);
+
+  const AnimatedText = Animated.createAnimatedComponent(Text)
+
 
   const tap = Gesture.Tap()
     .onBegin(() => {
@@ -61,10 +60,11 @@ const APassCard: React.FC<ApassProp> = ({
     });
 
   const animatedStyles = useAnimatedStyle(() => ({
-    transform: [
-      { scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) },
-    ],
+    transform: [{ scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) }],
   }));
+
+
+
 
   return (
     <GestureHandlerRootView>
@@ -78,34 +78,11 @@ const APassCard: React.FC<ApassProp> = ({
               {/* in case old design returns : Turn below view into blurview and intensity was 24
               also remove background color */}
               <View style={styles.blurContainer}>
-                <View
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    right: -20,
-                    width: "50%",
-                  }}
-                >
+                <View style={{ position: 'absolute', top: 0, right: -20, width: '50%' }}>
                   <APassStripes />
                 </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    width: "100%",
-                    gap: 12,
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 12,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      alignContent: "center",
-                    }}
-                  >
+                <View style={{ flexDirection: 'row', width: '100%', gap: 12, justifyContent: 'space-between', alignItems: 'center' }}>
+                  <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center', justifyContent: 'center', alignContent: 'center' }}>
                     <Image
                       style={styles.logo}
                       source={{
@@ -113,19 +90,11 @@ const APassCard: React.FC<ApassProp> = ({
                       }}
                     />
                     <View>
-                      <Text
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                        style={styles.titleText}
-                      >
-                        {name}
-                      </Text>
-                      <Text style={[styles.buttonText, { bottom: 5 }]}>
-                        {category}
-                      </Text>
+                      <Text numberOfLines={1} ellipsizeMode="tail" style={styles.titleText}>{name}</Text>
+                      <Text style={[styles.buttonText, { bottom: 5 }]}>{category}</Text>
                     </View>
                   </View>
-                  {hasBonus ? (
+                  {hasBonus ?
                     <View
                       style={{
                         alignItems: "center",
@@ -136,40 +105,11 @@ const APassCard: React.FC<ApassProp> = ({
                       }}
                     >
                       <TicketStar size={24} color={Color.base.White} />
-                    </View>
-                  ) : null}
+                    </View> : null}
                 </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    marginTop: 20,
-                    gap: 16,
-                    paddingHorizontal: 20,
-                  }}
-                >
-                  <Image
-                    cachePolicy="memory"
-                    contentFit="fill"
-                    style={{
-                      minWidth: width / 2.1,
-                      aspectRatio: 1,
-                      borderRadius: 12,
-                    }}
-                    source={{
-                      uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${nftImage}`,
-                    }}
-                  />
-
-                  <View
-                    style={{
-                      borderWidth: 1,
-                      backgroundColor: Color.Gray.gray500,
-                      borderColor: Color.Gray.gray400,
-                      borderRadius: 12,
-                      overflow: "hidden",
-                    }}
-                  >
+                <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20, gap: 16, paddingHorizontal: 20, }}>
+                  <Image cachePolicy='memory' contentFit='fill' style={{ minWidth: width / 2.1, aspectRatio: 1, borderRadius: 12, }} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${nftImage}` }} />
+                  <View style={{ borderWidth: 1, backgroundColor: Color.Gray.gray500, borderColor: Color.Gray.gray400, borderRadius: 12, overflow: 'hidden', }}>
                     {/* <LinearGradient
                       colors={[Color.Brand.main.start, Color.Brand.main.end]}
                       style={{ borderRadius: 0, padding: 1 }}> */}
@@ -178,92 +118,27 @@ const APassCard: React.FC<ApassProp> = ({
                         colors={[Color.Brand.card.start, Color.Brand.card.end]}
                         start={{ x: 1, y: 0 }}
                         end={{ x: 2, y: 1 }}
-                        style={{
-                          borderTopStartRadius: 12,
-                          borderTopEndRadius: 12,
-                        }}
-                      >
-                        <View
-                          style={{
-                            padding: 33,
-                            justifyContent: "center",
-                            alignContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <AnimatedText
-                            entering={FadeIn}
-                            exiting={FadeOut}
-                            style={{
-                              fontSize: 32,
-                              lineHeight: 40,
-                              fontWeight: "700",
-                              color: Color.base.White,
-                            }}
-                          >
+                        style={{ borderTopStartRadius: 12, borderTopEndRadius: 12 }}>
+                        <View style={{ padding: 33, justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
+                          <AnimatedText entering={FadeIn} exiting={FadeOut} style={{ fontSize: 32, lineHeight: 40, fontWeight: '700', color: Color.base.White }}>
                             {visitCount < 10 ? `0${visitCount}` : visitCount}
                           </AnimatedText>
-                          <Text
-                            style={{
-                              fontSize: 12,
-                              lineHeight: 16,
-                              fontWeight: "600",
-                              color: Color.base.White,
-                            }}
-                          >
+                          <Text style={{ fontSize: 12, lineHeight: 16, fontWeight: '600', color: Color.base.White }}>
                             Check-ins
                           </Text>
                         </View>
                       </LinearGradient>
                     </BlurView>
                     {/* </LinearGradient> */}
-                    <View
-                      style={{
-                        justifyContent: "center",
-                        alignContent: "center",
-                        alignItems: "center",
-                        flexDirection: "row",
-                        gap: 6,
-                        borderTopWidth: 1,
-                        borderColor: Color.Gray.gray400,
-                      }}
-                    >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "center",
-                          alignContent: "center",
-                          alignItems: "center",
-                          gap: 6,
-                          paddingVertical: 10,
-                        }}
-                      >
-                        {/*Todo:  find some better counting shit you fucker */}
+                    <View style={{ justifyContent: 'center', alignContent: 'center', alignItems: 'center', flexDirection: 'row', gap: 6, borderTopWidth: 1, borderColor: Color.Gray.gray400 }}>
+                      <View style={{ flexDirection: 'row', justifyContent: 'center', alignContent: 'center', alignItems: 'center', gap: 6, paddingVertical: 10 }}>
 
-                        <AnimatedText
-                          entering={FadeIn}
-                          exiting={FadeOut}
-                          style={[
-                            {
-                              fontWeight: "700",
-                              fontSize: 14,
-                              lineHeight: 18,
-                              color: Color.base.White,
-                            },
-                            animatedStyles,
-                          ]}
-                        >
-                          {Math.max(0, 3 - (visitCount % 4))}
+                        {/*Todo:  find some better counting shit you fucker */}
+                        <AnimatedText entering={FadeIn} exiting={FadeOut} style={[{ fontWeight: '700', fontSize: 14, lineHeight: 18, color: Color.base.White }, animatedStyles]}>
+                        {3 - (visitCount % 3)}
                         </AnimatedText>
 
-                        <Text
-                          style={{
-                            fontWeight: "400",
-                            fontSize: 10,
-                            lineHeight: 12,
-                            color: Color.base.White,
-                          }}
-                        >
+                        <Text style={{ fontWeight: '400', fontSize: 10, lineHeight: 12, color: Color.base.White }}>
                           Until next perk
                         </Text>
                       </View>
@@ -284,12 +159,13 @@ export default APassCard;
 const styles = StyleSheet.create({
   aCardContainer: {
     borderWidth: 1,
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
     borderRadius: 32,
     alignItems: "center",
     borderColor: Color.Gray.gray200,
     overflow: "hidden",
     height: 304,
+
   },
   blurContainer: {
     backgroundColor: Color.Gray.gray500,
@@ -303,7 +179,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 10,
     fontWeight: "bold",
-    width: 210,
+    width: 210
+
   },
   buttonText: {
     color: Color.Gray.gray50,
