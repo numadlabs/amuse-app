@@ -8,8 +8,9 @@ import { Bitcoin } from 'iconsax-react-native'
 interface NotificationProps {
   title: string;
   description: string;
+  time: string;
 }
-const NotificationCard: React.FC<NotificationProps> = ({title, description}) => {
+const NotificationCard: React.FC<NotificationProps> = ({title, description, time}) => {
   return (
     <View>
       <View style={styles.body}>
@@ -61,7 +62,7 @@ const NotificationCard: React.FC<NotificationProps> = ({title, description}) => 
             </View>
           </View>
           <View style={{ position: 'absolute', top: 12, right: 12 }}>
-            <Text style={{ fontSize: 10, lineHeight: 12, color: Color.base.White }}>12h</Text>
+            <Text style={{ fontSize: 10, lineHeight: 12, color: Color.base.White }}>{time}</Text>
           </View>
         </LinearGradient>
       </View>
