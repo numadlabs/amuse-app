@@ -6,7 +6,9 @@ import { BlurView } from "expo-blur";
 
 const buttonVariants = {
   variant: {
-    primary: {},
+    primary: {
+
+    },
     secondary: { backgroundColor: 'transparent', borderWidth: 1, borderColor: Color.Gray.gray50 },
     tertiary: { backgroundColor: "#2D3A42" },
     text: { backgroundColor: "transparent" },
@@ -21,7 +23,7 @@ const buttonVariants = {
 };
 
 const textStyles = {
-  primary: { fontSize: 16, fontWeight: "bold", color: Color.base.White },
+  primary: { fontSize: 16, fontWeight: "bold", color: "white" },
   secondary: { fontSize: 16, fontWeight: "bold", color: "black" },
   disabled: { fontSize: 11, lineHeight: 16, fontWeight: "bold", color: Color.Gray.gray200 },
   tertiary: { fontSize: 18, color: "white" },

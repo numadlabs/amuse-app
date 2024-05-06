@@ -25,13 +25,11 @@ const PowerUpCard: React.FC<PowerUpCardProp> = ({ title, onPress }) => {
         <Text style={{ fontWeight: 'bold', fontSize: 14, color: Color.base.White, }}>{title}</Text>
       </View>
 
-      <Button variant='primary' style={{ width: '26%' }} onPress={onPress}>
+      <Button variant='disabled' size='small' textStyle='primary'  onPress={onPress}>
         <Text
           style={{
-            color: "white",
             fontSize: 11,
             lineHeight: 16,
-            fontWeight: "bold",
           }}
         >
           Use

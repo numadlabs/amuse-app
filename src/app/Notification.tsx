@@ -11,11 +11,13 @@ interface NotificationProps {
   title: string;
   description: string;
 }
-function formatDate(dateString) {
+
+const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
   const options = { year: "numeric", month: "long", day: "numeric" };
-  return date.toLocaleDateString("en-US", options);
-}
+  return date.toLocaleDateString("en-US");
+};
+
 
 const Notification = () => {
   const [notifications, setNotifications] = useState(null);
@@ -25,6 +27,7 @@ const Notification = () => {
         const storedNotifications = await AsyncStorage.getItem(
           "restaurantCard"
         );
+        console.log(storedNotifications)
         if (storedNotifications !== null) {
           const parsedNotifications = JSON.parse(storedNotifications);
           setNotifications(parsedNotifications);
@@ -42,10 +45,11 @@ const Notification = () => {
   return (
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
       <Header title="Notifications" />
+      {notifications &&
       <View style={styles.container}>
         {notifications !== null &&
-          notifications.length !== 0 &&
-          notifications.map((notification, index) => (
+          notifications?.length !== 0 &&
+          notifications?.map((notification, index) => (
             <NotificationCard
               key={index}
               title={notification.name}
@@ -54,6 +58,7 @@ const Notification = () => {
             />
           ))}
       </View>
+      }
     </View>
   );
 };
