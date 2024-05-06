@@ -38,12 +38,14 @@ const PerkScreen = () => {
     setShowPowerUp(card.visitCount % 4 === 3);
   }, [card.visitCount]);
 
-
   const handleNavigation = async () => {
     router.back();
     queryClient.invalidateQueries({ queryKey: userKeys.info });
     try {
-      await AsyncStorage.setItem("restaurantCard", JSON.stringify(card));
+      await AsyncStorage.setItem(
+        "restaurantCard",
+        JSON.stringify({ ...card, date: new Date() })
+      );
       console.log("Card information stored successfully.");
     } catch (error) {
       console.log("Error storing card information:", error);
@@ -122,22 +124,30 @@ const PerkScreen = () => {
               </Text>
             </LinearGradient>
             {powerUp ? (
-              <Animated.View  entering={SlideInDown.springify().damping(20).delay(250)} style={{ height: height / 8 }}>
+              <Animated.View
+                entering={SlideInDown.springify().damping(20).delay(250)}
+                style={{ height: height / 8 }}
+              >
                 <PowerUpCard
                   title={powerUp as string}
                   onPress={() => router.navigate("/PowerUp")}
                 />
               </Animated.View>
-            ) : ('')}
-
-
+            ) : (
+              ""
+            )}
           </Animated.View>
           <Button
             variant="primary"
             size="default"
             textStyle="primary"
             onPress={handleNavigation}
-            style={{ bottom: 40, position:'absolute', width:'100%', marginHorizontal:'5%' }}
+            style={{
+              bottom: 40,
+              position: "absolute",
+              width: "100%",
+              marginHorizontal: "5%",
+            }}
           >
             <Text>Confirm</Text>
           </Button>

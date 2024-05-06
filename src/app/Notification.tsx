@@ -11,40 +11,48 @@ interface NotificationProps {
   title: string;
   description: string;
 }
-
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  return date.toLocaleDateString("en-US", options);
+}
 
 const Notification = () => {
-
-  const [notifications, setNotifcations] = useState(null)
+  const [notifications, setNotifications] = useState(null);
   useEffect(() => {
-    // Retrieve stored card information from AsyncStorage
-    const retrieveCardInformation = async () => {
+    const retrieveNotifications = async () => {
       try {
-        const storedCard = await AsyncStorage.getItem('restaurantCard');
-        if (storedCard !== null) {
-          // Parse the stored JSON data
-          const parsedCard = JSON.parse(storedCard);
-          // Set the notification data
-          setNotifcations(parsedCard);
+        const storedNotifications = await AsyncStorage.getItem(
+          "restaurantCard"
+        );
+        if (storedNotifications !== null) {
+          const parsedNotifications = JSON.parse(storedNotifications);
+          setNotifications(parsedNotifications);
         }
       } catch (error) {
-        console.log('Error retrieving card information:', error);
+        console.log("Error retrieving notifications:", error);
       }
     };
 
-    retrieveCardInformation();
+    retrieveNotifications();
   }, []);
+
+  console.log("aas", notifications);
 
   return (
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
       <Header title="Notifications" />
       <View style={styles.container}>
-        {notifications && (
-          <NotificationCard
-            title={notifications.name}
-            description={`You received $1 of BTC from ${notifications.name}`}
-          />
-        )}
+        {notifications !== null &&
+          notifications.length !== 0 &&
+          notifications.map((notification, index) => (
+            <NotificationCard
+              key={index}
+              title={notification.name}
+              description={`You received $1 of BTC from ${notification.name}`}
+              time={formatDate(notification.date).toString()}
+            />
+          ))}
       </View>
     </View>
   );
@@ -60,6 +68,6 @@ const styles = StyleSheet.create({
   },
   container: {
     borderRadius: 16,
-    gap:16
+    gap: 16,
   },
 });
