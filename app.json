@@ -1,13 +1,13 @@
 {
   "expo": {
-    "version": "0.2.6",
-    "runtimeVersion": "0.2.6",
+    "version": "0.2.7",
+    "runtimeVersion": "0.2.7",
     "scheme": "acme",
     "owner": "numad-labs",
     "splash": {
       "image": "./src/public/images/splash.png",
       "backgroundColor": "#1B2328",
-      "padding": "10px",
+      "resizeMode": "contain"
     },
     "userInterfaceStyle": "dark",
     "orientation": "portrait",

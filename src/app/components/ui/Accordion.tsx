@@ -1,20 +1,16 @@
 import Color from "@/app/constants/Color";
 import React, { useRef, useState } from "react";
-import { View, Text, Animated, TouchableOpacity, Platform } from "react-native";
+import { View, Text, TouchableOpacity, Platform } from "react-native";
 import { ArrowUp2, ArrowDown2 } from "iconsax-react-native";
+import Animated, { FadeIn } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 
 const Accordion = ({ text, title }) => {
   const [open, setOpen] = useState(false);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  // const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const handlePress = () => {
     setOpen(!open);
-    Animated.timing(fadeAnim, {
-      toValue: open ? 0 : 1,
-      duration: 300,
-      useNativeDriver: false,
-    });
   };
 
   return (
@@ -26,6 +22,7 @@ const Accordion = ({ text, title }) => {
         borderWidth: 1,
         borderColor: Color.Gray.gray300,
         justifyContent: "center",
+        
       }}
     >
       <TouchableOpacity
@@ -34,6 +31,8 @@ const Accordion = ({ text, title }) => {
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
+          alignContent:'center',
+          
         }}
       >
         <Text
@@ -47,13 +46,17 @@ const Accordion = ({ text, title }) => {
           <ArrowDown2 size={20} color={Color.Gray.gray100} />
         )}
       </TouchableOpacity>
-      <Animated.View style={{ paddingTop: 8 }}>
+      <Animated.View entering={FadeIn}>
         <TouchableOpacity onPress={handlePress}>
-        {open && (
-          <Text style={{ color: Color.Gray.gray100, fontSize: 14 }}>
-            {text}
-          </Text>
-        )}
+          {open && (
+            <Animated.View>
+
+
+              <Text style={{ color: Color.Gray.gray100, fontSize: 14, marginTop:8 }}>
+                {text}
+              </Text>
+            </Animated.View>
+          )}
         </TouchableOpacity>
       </Animated.View>
     </LinearGradient>
