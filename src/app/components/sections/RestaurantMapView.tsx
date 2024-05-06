@@ -47,23 +47,6 @@ const throttle = (func, delay) => {
   };
 };
 
-const throttleScroll = (func, delay) => {
-  let throttling = false;
-
-  return (...args) => {
-    console.log("throttleScroll function called");
-    if (!throttling) {
-      console.log("Function execution allowed");
-      throttling = true;
-      func(...args);
-      setTimeout(() => {
-        throttling = false;
-      }, delay);
-    } else {
-      console.log("throttleScroll function execution blocked");
-    }
-  };
-};
 export default function RestaurantMapView() {
   const router = useRouter();
 
@@ -71,40 +54,20 @@ export default function RestaurantMapView() {
   const [selectedLocation, setSelectedLocation] = useState("current");
   const mapRef = useRef(null);
   const scrollViewRef = useRef(null);
-
-  const prevCardIndexToScrollTo = useRef<number | null>(null);
-
   const [initialRegion, setInitialRegion] = useState(null);
   const [scrollViewHidden, setScrollViewHidden] = useState(true);
-  const [selectedMarkerId, setSelectedMarkerId] = useState(null);
   const [isClaimLoading, setIsClaimLoading] = useState(false);
 
   const [cardIndexToScroll, setCardIndexToScroll] = useState<number | null>(
     null
   );
-  const [pendingMarkerForMapCenter, setPendingMarkerForMapCenter] =
-    useState<RestaurantType | null>(null);
-  const [markerForMapCenter, setMarkerForMapCenter] =
-    useState<RestaurantType | null>(null);
 
   let mapAnimation = new Animated.Value(0);
 
-  const prevMarkerForMapCenter = useRef<RestaurantType | null>(null);
-  const prevCardIndexForScrollView = useRef<number | null>(null);
   const [isScrollViewDragging, setIsScrollViewDragging] = useState(false);
 
   const [activeMarker, setActiveMarker] = useState(null);
 
-  // useEffect(() => {
-  //   if (currentLocation) {
-  //     setInitialRegion({
-  //       latitude: currentLocation.latitude,
-  //       longitude: currentLocation.longitude,
-  //       latitudeDelta: mapLatitudeDelta,
-  //       longitudeDelta: mapLongitudeDelta,
-  //     });
-  //   }
-  // }, [currentLocation]);
   useEffect(() => {
     if (selectedLocation === "current" && currentLocation) {
       setInitialRegion({
@@ -176,25 +139,25 @@ export default function RestaurantMapView() {
     enabled: !!currentLocation,
   });
 
-  const handleMapAnimation = ({ value }) => {
-    let index = Math.floor(value / CARD_WIDTH + 0.3);
-    if (index >= restaurantsData?.data?.restaurants.length) {
-      index = restaurantsData?.data?.restaurants.length - 1;
-    }
-    if (index <= 0) {
-      index = 0;
-    }
-    const marker = restaurantsData?.data?.restaurants[index];
-    setMarkerForMapCenter(marker);
-  };
+  // const handleMapAnimation = ({ value }) => {
+  //   let index = Math.floor(value / CARD_WIDTH + 0.3);
+  //   if (index >= restaurantsData?.data?.restaurants.length) {
+  //     index = restaurantsData?.data?.restaurants.length - 1;
+  //   }
+  //   if (index <= 0) {
+  //     index = 0;
+  //   }
+  //   const marker = restaurantsData?.data?.restaurants[index];
+  //   // setMarkerForMapCenter(marker);
+  // };
 
-  useEffect(() => {
-    const listener = mapAnimation.addListener(handleMapAnimation);
+  // useEffect(() => {
+  //   const listener = mapAnimation.addListener(handleMapAnimation);
 
-    return () => {
-      mapAnimation.removeListener(listener);
-    };
-  }, [mapAnimation]); // Added mapAnimation as a dependency
+  //   return () => {
+  //     mapAnimation.removeListener(listener);
+  //   };
+  // }, [mapAnimation]); // Added mapAnimation as a dependency
 
   useEffect(() => {
     if (!scrollViewHidden && cardIndexToScroll !== null) {
@@ -251,40 +214,38 @@ export default function RestaurantMapView() {
 
   const handleScrollViewScroll = (event) => {
     const offset = event.nativeEvent.contentOffset.x;
-    // console.log("🚀 ~ handleScrollViewScroll ~ offset:", offset);
     const positiveNumber = offset < 0 ? -offset : offset;
-    const addedPadding = positiveNumber + 28;
-    // const positiveOffset = Math.max(offset, 0);
+
+    const addedPadding = positiveNumber + width * 0.1;
     const index = Math.floor(addedPadding / (CARD_WIDTH + 20));
-    // console.log("🚀 ~ handleScrollViewScroll ~ index:", index);
-    const marker = restaurantsData?.data?.restaurants[index];
-    console.log("🚀 ~ handleScrollViewScroll ~ marker:", marker.name);
-    // if (marker && activeMarker == null) {
-    //   console.log("cond 0", !activeMarker);
-    //   setActiveMarker(marker);
-    // }
 
-    if (marker && marker.id !== activeMarker?.id) {
-      console.log("cond 1", activeMarker?.id !== marker?.id);
-      console.log("cond 2", isScrollViewDragging == false);
+    // Check if the index is within the valid range of the restaurants array
+    if (index >= 0 && index < restaurantsData?.data?.restaurants.length) {
+      const marker = restaurantsData?.data?.restaurants[index];
 
-      if (
-        isScrollViewDragging == false &&
-        activeMarker &&
-        marker?.id == activeMarker?.id
-      ) {
-        console.log("cond3:", isScrollViewDragging);
-        setActiveMarker(marker);
-        centerMapOnMarker(marker);
-      } else if (isScrollViewDragging && marker) {
-        console.log("cond4", isScrollViewDragging);
+      if (marker && marker.id !== activeMarker?.id) {
+        console.log("cond 1", activeMarker?.id !== marker?.id);
+        console.log("cond 2", isScrollViewDragging == false);
 
-        setActiveMarker(marker);
-        centerMapOnMarker(marker);
+        if (
+          isScrollViewDragging == false &&
+          activeMarker &&
+          marker?.id == activeMarker?.id
+        ) {
+          console.log("cond3:", isScrollViewDragging);
+          setActiveMarker(marker);
+          centerMapOnMarker(marker);
+        } else if (isScrollViewDragging && marker) {
+          console.log("cond4", isScrollViewDragging);
+
+          setActiveMarker(marker);
+          centerMapOnMarker(marker);
+        }
       }
+    } else {
+      console.log("Index out of bounds");
     }
   };
-
   const centerMapOnMarker = (marker) => {
     console.log(marker.name);
     if (mapRef.current) {
@@ -369,7 +330,7 @@ export default function RestaurantMapView() {
                   style={{
                     width: 8,
                     height: 8,
-                    padding:4,
+                    padding: 4,
                     backgroundColor: Color.base.White,
                     borderRadius: 48,
                   }}
