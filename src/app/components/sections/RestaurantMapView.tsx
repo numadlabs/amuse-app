@@ -26,8 +26,8 @@ const CARD_HEIGHT = 150;
 const CARD_WIDTH = width * 0.8;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
-const mapLatitudeDelta = 0.008;
-const mapLongitudeDelta = 0.008;
+const mapLatitudeDelta = 0.1;
+const mapLongitudeDelta = 0.1;
 
 const throttle = (func, delay) => {
   let throttling = false;
