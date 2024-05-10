@@ -42,20 +42,10 @@ const PerkScreen = () => {
     router.back();
     queryClient.invalidateQueries({ queryKey: userKeys.info });
     try {
-      
-      const storedNotifications = await AsyncStorage.getItem(
-        "restaurantCard"
-      );
-      if (storedNotifications !== null) {
-      await AsyncStorage.setItem(
-        "restaurantCard",
-        JSON.stringify([storedNotifications,{ ...card, date: new Date() }])
-      );}else{
-        await AsyncStorage.setItem(
-          "restaurantCard",
-          JSON.stringify([storedNotifications,{ ...card, date: new Date() }])
-        )
-      }
+      const existingNotifications = await AsyncStorage.getItem("restaurantCard");
+      const parsedNotifications = existingNotifications ? JSON.parse(existingNotifications) : [];
+      const updatedNotifications = [...parsedNotifications, { ...card, date: new Date() }];
+      await AsyncStorage.setItem("restaurantCard", JSON.stringify(updatedNotifications));
       console.log("Card information stored successfully.");
     } catch (error) {
       console.log("Error storing card information:", error);
