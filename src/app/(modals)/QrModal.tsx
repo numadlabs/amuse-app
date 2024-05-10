@@ -45,6 +45,7 @@ const QrModal = () => {
   const [powerUp, setPowerUp] = useState("");
   const [emptyError, setEmptyError] = useState("");
   const [btcAmount, setBTCAmount] = useState("");
+  const [isButtonPressed, setIsButtonPressed] = useState(false);
 
   const togglePopup = () => {
     setPopupVisible(!isPopupVisible);
@@ -322,6 +323,9 @@ const QrModal = () => {
             <TouchableOpacity
               onPress={handleScanButtonPress}
               style={styles.flashButton}
+              disabled={loading || isButtonPressed}
+              onPressIn={() => setIsButtonPressed(true)}
+              onPressOut={() => setIsButtonPressed(false)}
             >
               <LinearGradient
                 colors={[Color.Brand.main.start, Color.Brand.main.end]}
