@@ -53,6 +53,7 @@ export default function Layout() {
           <Stack.Screen name="PerkMarket" options={{presentation: 'modal'}}/>
           <Stack.Screen name="PowerUp" options={{ presentation: "modal" }} />
           <Stack.Screen name="NotOwnedPerk" options={{ presentation: "modal" }} />
+          <Stack.Screen name="PerkBuy" options={{ presentation: "modal" }} />
         </Stack>
         <Toast config={toastConfig} />
       </AuthProvider>
