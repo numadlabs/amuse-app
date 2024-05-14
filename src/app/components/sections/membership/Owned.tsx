@@ -36,9 +36,6 @@ interface ownedProps {
 const Owned: React.FC<ownedProps> = ({ perks, isLoading, visitCount, onPress, descriptions, followingPerk, benefits, location, instruction, longitude, latitude, marker }) => {
   const [showPerks, setShowPerks] = useState(true);
 
-
-
-
   const backgroundColor = showPerks ? Color.Gray.gray300 : Color.Gray.gray400;
 
   const toggleView = (view) => {
@@ -121,8 +118,8 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, visitCount, onPress, de
                     }
                   />
                 ))}
-                <View
-                  style={styles.container}>
+                <TouchableOpacity
+                  style={styles.container} onPress={() => router.navigate('/NotOwnedPerk')}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
                     <TicketStar size={28} color={Color.base.White} />
                     <Text style={{ fontWeight: 'bold', fontSize: 14, color: Color.base.White, }}>{followingPerk}</Text>
@@ -139,7 +136,7 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, visitCount, onPress, de
                       {3 - (visitCount % 3)}/3
                     </Text>
                   </View>
-                </View>
+                </TouchableOpacity>
               </>
 
             ) : (
