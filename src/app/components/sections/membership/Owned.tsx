@@ -12,6 +12,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetRefProps } from "../../modals/PerkBottomSheet";
 import BottomSheet from "../../ui/BottomSheet";
 import Animated from "react-native-reanimated";
+import { RestaurantType } from "@/app/lib/types";
 
 
 
@@ -27,9 +28,10 @@ interface ownedProps {
   longitude: string;
   isLoading: boolean;
   onPress: () => void;
+  marker: RestaurantType
 }
 
-const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, descriptions, benefits, location, instruction, longitude, latitude }) => {
+const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, descriptions, benefits, location, instruction, longitude, latitude, marker }) => {
   const [showPerks, setShowPerks] = useState(true);
 
 
@@ -163,7 +165,7 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, descriptions, 
           </View>
         ) : (
           <View
-            style={{ flex: 1, flexGrow: 1, marginBottom: 150, paddingHorizontal: 8 }}
+            style={{ flex: 1, flexGrow: 1, marginBottom: 450, paddingHorizontal: 8 }}
           >
             <DetailsSheet
               benefits={benefits}
@@ -175,6 +177,7 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, descriptions, 
               about={"about"}
               instruction={instruction}
               artistInfo={"artistInfo"}
+              marker={marker}
             />
           </View>
         )}
