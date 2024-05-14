@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import Color from "./constants/Color";
-import { useQuery } from "@tanstack/react-query";
-import { restaurantKeys } from "./lib/service/keysHelper";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { restaurantKeys, userKeys } from './lib/service/keysHelper';
 import { getPurchaseablePerks } from "./lib/service/queryHelper";
 import useLocationStore from "./lib/store/userLocation";
 import { useLocalSearchParams } from "expo-router";
@@ -14,15 +14,19 @@ import {
 import Close from "./components/icons/Close";
 import { router } from "expo-router";
 import PerkGradientSm from "./components/icons/PerkGradientSm";
+import PerkGradient from './components/icons/PerkGradient';
+import { purchasePerk } from './lib/service/mutationHelper';
+import { useAuth } from './context/AuthContext';
 
 const PerkMarket = () => {
-  const { id } = useLocalSearchParams();
+  const { id, userCardId } = useLocalSearchParams();
+  const [isClaimLoading, setIsClaimLoading] = useState(false);
   const { currentLocation } = useLocationStore();
-  const {
-    data: perks = [],
-    isLoading,
-    isError,
-  } = useQuery({
+  const [balance, setBalance] = useState("")
+  const queryClient = useQueryClient();
+  const {authState} = useAuth()
+
+  const { data: perks = [], isLoading, isError } = useQuery({
     queryKey: restaurantKeys.all,
     queryFn: () => {
       return getPurchaseablePerks(id);
@@ -37,9 +41,12 @@ const PerkMarket = () => {
         name: perkName,
         id: perkId,
         price: perkPrice,
+        userCardId: userCardId
       }
     })
   }
+ 
+
 
   return (
     <GestureHandlerRootView style={styles.container}>

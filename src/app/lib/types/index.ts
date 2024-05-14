@@ -49,6 +49,7 @@ export type RestaurantType = {
   visitCount: number;
 };
 
+
 export type UserBoostData = {
   email: string;
   area: string;

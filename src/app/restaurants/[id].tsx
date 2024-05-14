@@ -117,6 +117,9 @@ const Restaurant = () => {
     enabled: !!currentLocation,
   });
 
+
+
+
   const { data: perks = [] } = useQuery({
     queryKey: userKeys.perks,
     queryFn: () => {
@@ -167,19 +170,13 @@ const Restaurant = () => {
                 entering={SlideInDown.springify().damping(20).delay(200)}
               >
                 <Owned
-                  id={restaurantsData?.id}
-                  visitCount={restaurantsData?.visitCount}
+                  userCardId={perks?.userBonuses?.[0]?.userCardId}
                   followingPerk={perks?.followingBonus?.name}
-                  descriptions={restaurantsData?.description}
-                  benefits={restaurantsData?.benefits}
-                  longitude={restaurantsData?.longitude}
-                  latitude={restaurantsData?.latitude}
-                  location={restaurantsData?.location}
-                  instruction={restaurantsData?.instruction}
                   onPress={toggleBottomSheet}
                   cardId={perkId}
-                  perks={perks.userBonuses}
+                  perks={perks?.userBonuses}
                   isLoading={isLoading}
+                  data={restaurantsData}
                   marker={restaurantsData?.isOwned}
                 />
               </Animated.View>
