@@ -92,8 +92,8 @@ const HomeResListCard: React.FC<ResListCardProp> = ({
                   height: 14,
                   backgroundColor: Color.Gray.gray50,
                 }}
-              /> : '' }
-              {marker.isOwned ?  (
+              /> : ''}
+              {marker.isOwned ? (
                 <View
                   style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
                 >
@@ -105,6 +105,7 @@ const HomeResListCard: React.FC<ResListCardProp> = ({
               ) : (
                 <Button
                   variant="text"
+                  textStyle="primary"
                   onPress={onPress}
                   disabled={loading}
                   size="small"
@@ -131,9 +132,7 @@ const HomeResListCard: React.FC<ResListCardProp> = ({
                           justifyContent: "flex-end",
                         }}
                       >
-                        <Text style={{ fontSize: 11, color: Color.base.White }}>
-                          Add
-                        </Text>
+                        {"Add"}
                       </View>
                     </>
                   )}
@@ -143,7 +142,7 @@ const HomeResListCard: React.FC<ResListCardProp> = ({
           </View>
         </View>
       </LinearGradient>
-      </>
+    </>
   );
 };
 

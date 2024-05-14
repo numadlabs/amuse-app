@@ -86,6 +86,16 @@ export async function getPerksByRestaurant(id) {
   });
 }
 
+export async function getPurchaseablePerks(id) {
+  return axiosClient.get(`/bonus/${id}/restaurant`).then((response) => {
+    if (response.data.success) {
+      return response?.data.data;
+    } else {
+      throw new Error(response.data.error);
+    }
+  });
+}
+
 export async function getUserTaps() {
   return axiosClient.get(`/users/taps`).then((response) => {
     if (response.data.success) {

@@ -79,6 +79,7 @@ const Button = React.forwardRef<TouchableOpacity, ButtonProps>(
             gap: 8,
           }}
         >
+          
           <Text style={textStyles[textStyle]}>{children}</Text>
         </View>
       </TouchableOpacity>
