@@ -151,8 +151,10 @@ const Owned: React.FC<ownedProps> = ({ perks, id, isLoading, visitCount, onPress
                 </TouchableOpacity>
                 
                 <Button onPress={handleNavigation} textStyle='primary' variant='disabled' size="large">
-                  <Add color={Color.base.White} size={24} />
-                  <Text>Add Perk</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, justifyContent: 'center' }}>
+                    <Add color={Color.base.White} size={24} />
+                    <Text style={{ fontSize: 15, fontWeight: '600', lineHeight: 24, color: Color.base.White }}>Add Perk</Text>
+                  </View>
                 </Button>
               </>
 
