@@ -22,7 +22,6 @@ const Accordion = ({ text, title }) => {
         borderWidth: 1,
         borderColor: Color.Gray.gray300,
         justifyContent: "center",
-        
       }}
     >
       <TouchableOpacity
@@ -31,8 +30,7 @@ const Accordion = ({ text, title }) => {
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          alignContent:'center',
-          
+          alignContent: "center",
         }}
       >
         <Text
@@ -50,9 +48,13 @@ const Accordion = ({ text, title }) => {
         <TouchableOpacity onPress={handlePress}>
           {open && (
             <Animated.View>
-
-
-              <Text style={{ color: Color.Gray.gray100, fontSize: 14, marginTop:8 }}>
+              <Text
+                style={{
+                  color: Color.Gray.gray100,
+                  fontSize: 14,
+                  marginTop: 8,
+                }}
+              >
                 {text}
               </Text>
             </Animated.View>

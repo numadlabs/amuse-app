@@ -9,7 +9,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image
+  Image,
 } from "react-native";
 import Popup from "../components/(feedback)/Popup";
 import Button from "../components/ui/Button";
@@ -33,7 +33,15 @@ import useLocationStore from "../lib/store/userLocation";
 import APassCard from "../components/atom/cards/APassCard";
 import Owned from "../components/sections/membership/Owned";
 import UnOwned from "../components/sections/membership/UnOwned";
-import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  SlideInDown,
+  SlideOutDown,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { height, width } from "../lib/utils";
 
 const Restaurant = () => {
@@ -41,7 +49,7 @@ const Restaurant = () => {
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const { authState } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [perkId, setPerkId] = useState<string>("")
+  const [perkId, setPerkId] = useState<string>("");
   const { currentLocation } = useLocationStore();
   const queryClient = useQueryClient();
   const [bottomSheet, setBottomSheet] = useState(false);
@@ -53,7 +61,7 @@ const Restaurant = () => {
     enabled: !!currentLocation && !!id,
   });
 
-  console.log(cardId)
+  console.log(cardId);
 
   const showToast = () => {
     Toast.show({
@@ -64,21 +72,21 @@ const Restaurant = () => {
 
   const toggleBottomSheet = () => {
     setBottomSheet(!bottomSheet);
-  }
-
-
+  };
 
   const pressed = useSharedValue(false);
   const animatedStyles = useAnimatedStyle(() => ({
-    transform: [{ scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) }],
+    transform: [
+      { scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) },
+    ],
   }));
 
-  const { mutateAsync: createGetAcardMutation, } = useMutation({
+  const { mutateAsync: createGetAcardMutation } = useMutation({
     mutationFn: getAcard,
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => { },
+    onSuccess: (data, variables) => {},
   });
   const handleGetAcard = async (id: string) => {
     console.log("🚀 ~ RestaurantMapView ~ aCardId:", id);
@@ -118,7 +126,7 @@ const Restaurant = () => {
     enabled: !!currentLocation,
   });
 
-  console.log(perks)
+  console.log(perks);
 
   return (
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
@@ -140,35 +148,53 @@ const Restaurant = () => {
           nftImage={restaurantsData?.nftImageUrl}
           category={restaurantsData?.category}
           hasBonus={false}
-          visitCount={restaurantsData?.visitCount === null ? 0 : restaurantsData?.visitCount}
+          visitCount={
+            restaurantsData?.visitCount === null
+              ? 0
+              : restaurantsData?.visitCount
+          }
         />
 
-
-        {
-          isLoading ? (
-            <View style={{ flex: 1, justifyContent: 'center', marginTop: 40 }}>
-              <ActivityIndicator />
-            </View>
-          ) : (
-            <>
-              {restaurantsData?.isOwned ? (
-                <Animated.View style={{ paddingBottom: 100 }} entering={SlideInDown.springify().damping(20).delay(200)}>
-                  <Owned descriptions={restaurantsData?.description} benefits={restaurantsData?.benefits} longitude={restaurantsData?.longitude} latitude={restaurantsData?.latitude} location={restaurantsData?.location} instruction={restaurantsData?.instruction} onPress={toggleBottomSheet} cardId={perkId} perks={perks} isLoading={isLoading} />
-               
-                </Animated.View>
-              ) : (
-                <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>
-                  <UnOwned
-                    restaurant={restaurantsData}
-                    isClaimLoading={isClaimLoading}
-                    onPress={() => handleGetAcard(cardId as string)} />
-                </Animated.View>
-              )}
-            </>
-          )
-        }
+        {isLoading ? (
+          <View style={{ flex: 1, justifyContent: "center", marginTop: 40 }}>
+            <ActivityIndicator />
+          </View>
+        ) : (
+          <>
+            {restaurantsData?.isOwned ? (
+              <Animated.View
+                style={{ paddingBottom: 100 }}
+                entering={SlideInDown.springify().damping(20).delay(200)}
+              >
+                <Owned
+                  descriptions={restaurantsData?.description}
+                  benefits={restaurantsData?.benefits}
+                  longitude={restaurantsData?.longitude}
+                  latitude={restaurantsData?.latitude}
+                  location={restaurantsData?.location}
+                  instruction={restaurantsData?.instruction}
+                  onPress={toggleBottomSheet}
+                  cardId={perkId}
+                  perks={perks}
+                  isLoading={isLoading}
+                  marker={restaurantsData?.isOwned}
+                />
+              </Animated.View>
+            ) : (
+              <Animated.View
+                entering={SlideInDown.springify().damping(20).delay(200)}
+              >
+                <UnOwned
+                  restaurant={restaurantsData}
+                  isClaimLoading={isClaimLoading}
+                  onPress={() => handleGetAcard(cardId as string)}
+                />
+              </Animated.View>
+            )}
+          </>
+        )}
       </ScrollView>
-      {restaurantsData?.isOwned ? (null) : (
+      {restaurantsData?.isOwned ? null : (
         <View style={styles.buttonContainer}>
           <Button
             onPress={() => {
@@ -188,7 +214,7 @@ const Restaurant = () => {
               style={{
                 flexDirection: "row",
                 alignContent: "center",
-                justifyContent: 'center',
+                justifyContent: "center",
                 alignItems: "center",
                 gap: 12,
                 top: 2,
@@ -203,76 +229,104 @@ const Restaurant = () => {
                   top: 2,
                 }}
               >
-                {isClaimLoading
-                  ? <ActivityIndicator />
-                  : restaurantsData?.visitCount === null
-                    ? "Add membership card"
-                    : "Owned"}
+                {isClaimLoading ? (
+                  <ActivityIndicator />
+                ) : restaurantsData?.visitCount === null ? (
+                  "Add membership card"
+                ) : (
+                  "Owned"
+                )}
               </Text>
             </View>
           </Button>
         </View>
       )}
-      {
-        bottomSheet && (
-          <Modal transparent={true}>
-            <TouchableOpacity
-              style={{ flex: 1 }}
-              onPress={toggleBottomSheet}
-            >
-              <Animated.View
-                entering={FadeIn}
-                exiting={FadeOut}
-                style={[{
-                  position: 'absolute',
-                  backgroundColor: 'rgba(0, 0, 0, 0.2)', // Black background with 50% opacity
+      {bottomSheet && (
+        <Modal transparent={true}>
+          <TouchableOpacity style={{ flex: 1 }} onPress={toggleBottomSheet}>
+            <Animated.View
+              entering={FadeIn}
+              exiting={FadeOut}
+              style={[
+                {
+                  position: "absolute",
+                  backgroundColor: "rgba(0, 0, 0, 0.2)", // Black background with 50% opacity
                   top: 0,
                   bottom: 0,
                   left: 0,
                   right: 0,
                   zIndex: 98, // Ensure overlay is below modal content
-                }, animatedStyles]}
-              />
-              <Animated.View
-                entering={SlideInDown.springify().damping(18)}
-                exiting={SlideOutDown.springify()}
-                style={[{
+                },
+                animatedStyles,
+              ]}
+            />
+            <Animated.View
+              entering={SlideInDown.springify().damping(18)}
+              exiting={SlideOutDown.springify()}
+              style={[
+                {
                   backgroundColor: Color.Gray.gray600,
                   height: height / 2.4,
                   bottom: 0,
                   width: width,
                   zIndex: 99,
-                  position: 'absolute',
+                  position: "absolute",
                   borderTopStartRadius: 32,
                   borderTopEndRadius: 32,
                   gap: 24,
-                  padding: 16// Positioning the bottom sheet absolutely
-                }, animatedStyles]}
+                  padding: 16, // Positioning the bottom sheet absolutely
+                },
+                animatedStyles,
+              ]}
+            >
+              <View
+                style={{
+                  paddingVertical: 8,
+                  justifyContent: "center",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
               >
-                <View style={{ paddingVertical: 8, justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
-                  <Text style={{ fontSize: 20, lineHeight: 24, color: Color.base.White, fontWeight: 'bold', }}>Perk</Text>
-                </View>
-                <View style={{ alignItems: 'center', gap: 16 }}>
-                  <Image
-                    source={require("@/public/images/perk.png")}
-                    style={{ width: width / 1.2, height: 58 }}
-                    resizeMode='contain'
-                  />
-                  <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray50, textAlign: 'center' }}>
-                  Earn perks after every 3 check-ins. Keep visiting your favorite spots and multiply your rewards!
-                  </Text>
-                </View>
-                <Button variant="primary" textStyle="primary" onPress={toggleBottomSheet}>
-                  <Text>
-                    Got it
-                  </Text>
-                </Button>
-              </Animated.View>
-            </TouchableOpacity>
-          </Modal>
-        )
-      }
-
+                <Text
+                  style={{
+                    fontSize: 20,
+                    lineHeight: 24,
+                    color: Color.base.White,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Perk
+                </Text>
+              </View>
+              <View style={{ alignItems: "center", gap: 16 }}>
+                <Image
+                  source={require("@/public/images/perk.png")}
+                  style={{ width: width / 1.2, height: 58 }}
+                  resizeMode="contain"
+                />
+                <Text
+                  style={{
+                    lineHeight: 18,
+                    fontSize: 14,
+                    color: Color.Gray.gray50,
+                    textAlign: "center",
+                  }}
+                >
+                  Earn perks after every 3 check-ins. Keep visiting your
+                  favorite spots and multiply your rewards!
+                </Text>
+              </View>
+              <Button
+                variant="primary"
+                textStyle="primary"
+                onPress={toggleBottomSheet}
+              >
+                <Text>Got it</Text>
+              </Button>
+            </Animated.View>
+          </TouchableOpacity>
+        </Modal>
+      )}
     </View>
   );
 };
