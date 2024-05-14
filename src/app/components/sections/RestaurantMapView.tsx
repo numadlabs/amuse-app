@@ -63,7 +63,7 @@ export default function RestaurantMapView() {
   );
 
   let mapAnimation = new Animated.Value(0);
-
+  const hitSlopArea = { top: 20, bottom: 20, left: 20, right: 20 };
   const [isScrollViewDragging, setIsScrollViewDragging] = useState(false);
 
   const [activeMarker, setActiveMarker] = useState(null);
@@ -303,7 +303,7 @@ export default function RestaurantMapView() {
               latitude: currentLocation.latitude,
               longitude: currentLocation.longitude,
             }}
-            // title="Your Location"
+          // title="Your Location"
           >
             <Image source={require("@/public/images/locationPin.png")} />
           </Marker>
@@ -326,15 +326,20 @@ export default function RestaurantMapView() {
                   }
                 />
               ) : (
-                <View
-                  style={{
-                    width: 8,
-                    height: 8,
-                    padding: 4,
-                    backgroundColor: Color.base.White,
-                    borderRadius: 48,
-                  }}
-                />
+                <TouchableOpacity
+                  onPress={() => handleMarkerPress(restaurant)}
+                  hitSlop={hitSlopArea}
+                >
+                  <View
+                    style={{
+                      width: 8,
+                      height: 8,
+                      padding: 4,
+                      backgroundColor: Color.base.White,
+                      borderRadius: 48,
+                    }}
+                  />
+                </TouchableOpacity>
               )}
             </Marker>
           );

@@ -7,7 +7,7 @@ import { router } from "expo-router";
 import PowerUpCard from "../../atom/cards/PowerUpCard";
 import { ActivityIndicator } from "react-native";
 import DetailsSheet from "../DetailsSheet";
-import { InfoCircle } from "iconsax-react-native";
+import { InfoCircle, TicketStar } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetRefProps } from "../../modals/PerkBottomSheet";
 import BottomSheet from "../../ui/BottomSheet";
@@ -45,36 +45,36 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, descriptions, 
 
   return (
     <GestureHandlerRootView style={styles.attrContainer}>
-        <View>
-            <Animated.View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.toggleButton,
-                  showPerks && styles.activeButton,
-                ]}
-                onPress={() => toggleView(true)}
-              >
-                <Text
-                  style={[styles.buttonText, !showPerks && styles.activeText]}
-                >
-                  Perks
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.toggleButton,
-                  !showPerks && styles.activeButton,
-                ]}
-                onPress={() => toggleView(false)}
-              >
-                <Text
-                  style={[styles.buttonText, showPerks && styles.activeText]}
-                >
-                  Details
-                </Text>
-              </TouchableOpacity>
-            </Animated.View>
-          </View>
+      <View>
+        <Animated.View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[
+              styles.toggleButton,
+              showPerks && styles.activeButton,
+            ]}
+            onPress={() => toggleView(true)}
+          >
+            <Text
+              style={[styles.buttonText, !showPerks && styles.activeText]}
+            >
+              Perks
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.toggleButton,
+              !showPerks && styles.activeButton,
+            ]}
+            onPress={() => toggleView(false)}
+          >
+            <Text
+              style={[styles.buttonText, showPerks && styles.activeText]}
+            >
+              Details
+            </Text>
+          </TouchableOpacity>
+        </Animated.View>
+      </View>
       <View style={{ flex: 1, flexGrow: 1, marginTop: 24 }}>
         {isLoading ? (
           <ActivityIndicator color={Color.Gray.gray600} />
@@ -103,27 +103,50 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, descriptions, 
               </TouchableOpacity>
             </View>
             {perks && perks.length > 0 ? (
-              perks.map((item, index) => (
-                <PowerUpCard
-                  key={index}
-                  title={item.name}
-                  onPress={() =>
-                    router.push({
-                      pathname: `/PowerUp`,
-                      params: {
-                        name: item.name,
-                        id: item.id,
-                      },
-                    })
-                  }
-                />
-              ))
+              <>
+                {perks.map((item, index) => (
+                  <PowerUpCard
+                    key={index}
+                    title={item.name}
+                    onPress={() =>
+                      router.push({
+                        pathname: `/PowerUp`,
+                        params: {
+                          name: item.name,
+                          id: item.id,
+                        },
+                      })
+                    }
+                  />
+                ))}
+                <View
+                  style={styles.container}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                    <TicketStar size={28} color={Color.base.White} />
+                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: Color.base.White, }}>sad</Text>
+                  </View>
+
+                  <View style={{ }}>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        lineHeight: 18,
+                        color: Color.base.White,
+                        fontWeight:'600',
+                      }}
+                    >
+                      1/5
+                    </Text>
+                  </View>
+                </View>
+              </>
+
             ) : (
               <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
                 style={{ borderRadius: 16 }}
               >
-                <View   
+                <View
                   style={{
                     gap: 16,
                     padding: 24,
@@ -157,7 +180,7 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, descriptions, 
                       color: Color.Gray.gray50,
                     }}
                   >
-                   You don't have any perks yet. Check-in to unlock new perks.
+                    You don't have any perks yet. Check-in to unlock new perks.
                   </Text>
                 </View>
               </LinearGradient>
@@ -196,6 +219,20 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     alignItems: "center",
     width: "48%",
+  },
+  container: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 23,
+    paddingRight: 30,
+    paddingLeft:16,
+    borderWidth: 1,
+    borderStyle:'dashed',
+    borderColor: Color.Gray.gray400,
+    borderRadius: 16,
   },
   buttonContainer: {
     flexDirection: "row",
