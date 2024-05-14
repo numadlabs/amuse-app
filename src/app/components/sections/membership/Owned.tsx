@@ -19,19 +19,21 @@ import { RestaurantType } from "@/app/lib/types";
 
 interface ownedProps {
   cardId: string;
-  perks: any;
+  perks: any[];
   benefits: string;
+  visitCount: number;
   location: string;
   instruction: string;
   latitude: string;
   descriptions: string;
   longitude: string;
+  followingPerk: string;
   isLoading: boolean;
   onPress: () => void;
   marker: RestaurantType
 }
 
-const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, descriptions, benefits, location, instruction, longitude, latitude, marker }) => {
+const Owned: React.FC<ownedProps> = ({ perks, isLoading, visitCount, onPress, descriptions, followingPerk, benefits, location, instruction, longitude, latitude, marker }) => {
   const [showPerks, setShowPerks] = useState(true);
 
 
@@ -123,19 +125,18 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, descriptions, 
                   style={styles.container}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
                     <TicketStar size={28} color={Color.base.White} />
-                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: Color.base.White, }}>sad</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: Color.base.White, }}>{followingPerk}</Text>
                   </View>
-
-                  <View style={{ }}>
+                  <View style={{}}>
                     <Text
                       style={{
                         fontSize: 14,
                         lineHeight: 18,
                         color: Color.base.White,
-                        fontWeight:'600',
+                        fontWeight: '600',
                       }}
                     >
-                      1/5
+                      {3 - (visitCount % 3)}/3
                     </Text>
                   </View>
                 </View>
@@ -228,9 +229,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 23,
     paddingRight: 30,
-    paddingLeft:16,
+    paddingLeft: 16,
     borderWidth: 1,
-    borderStyle:'dashed',
+    borderStyle: 'dashed',
     borderColor: Color.Gray.gray400,
     borderRadius: 16,
   },
