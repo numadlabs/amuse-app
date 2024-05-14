@@ -1,7 +1,7 @@
 {
   "expo": {
-    "version": "0.2.7",
-    "runtimeVersion": "0.2.7",
+    "version": "0.2.8",
+    "runtimeVersion": "0.2.8",
     "scheme": "acme",
     "owner": "numad-labs",
     "splash": {
@@ -26,7 +26,7 @@
       "expo-font",
       "expo-build-properties"
     ],
-    "icon": "./src/public/images/logo1024px.png",
+    "icon": "./src/public/images/icon.png",
     "name": "Amuse Bouche",
     "slug": "amuse-app",
     "ios": {

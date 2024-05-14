@@ -7,7 +7,7 @@ import { getUserCard } from "@/app/lib/service/queryHelper";
 import useLocationStore from "@/app/lib/store/userLocation";
 import { RestaurantType } from "@/app/lib/types";
 import APassCard from "../atom/cards/APassCard";
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, SlideInDown, withSpring } from 'react-native-reanimated';
 import { userKeys } from "@/app/lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -38,8 +38,9 @@ const StackedCard = () => {
   const animatedCardStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateY: withTiming(cardPositions.value, {
-          duration: 400,
+        translateY: withSpring(cardPositions.value, {
+          damping:15,
+          
         }),
       },
     ],

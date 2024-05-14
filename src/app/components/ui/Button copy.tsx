@@ -6,9 +6,7 @@ import { BlurView } from "expo-blur";
 
 const buttonVariants = {
   variant: {
-    primary: {
-
-    },
+    primary: {},
     secondary: { backgroundColor: 'transparent', borderWidth: 1, borderColor: Color.Gray.gray50 },
     tertiary: { backgroundColor: "#2D3A42" },
     text: { backgroundColor: "transparent" },

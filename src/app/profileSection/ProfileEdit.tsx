@@ -37,6 +37,7 @@ const ProfileEdit = () => {
   const [email, setEmail] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [location, setLocation] = useState("");
+  const [initialDate, setInitialDate] = useState(new Date());
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [dataChanged, setDataChanged] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -81,6 +82,7 @@ const ProfileEdit = () => {
     setShowDatePicker(false);
     if (selectedDate) {
       setDateOfBirth(selectedDate.toISOString());
+      setInitialDate(selectedDate);
     }
   };
   const queryClient = useQueryClient()
@@ -89,7 +91,7 @@ const ProfileEdit = () => {
     const userData = { nickname, email, location, dateOfBirth };
     try {
       await updateUserInfo({ userId: authState.userId, data: userData });
-      await refetch();
+
       setLoading(false);
       setDataChanged(false);
       // showToast();
@@ -258,7 +260,7 @@ const ProfileEdit = () => {
                       <Cake color={Color.Gray.gray50} />
                      
                         <DateTimePicker
-                          value={dateOfBirth ? new Date(dateOfBirth) : new Date()}
+                         value={initialDate}
                           mode="date"
                           display="default"
                           onChange={onDateChange}

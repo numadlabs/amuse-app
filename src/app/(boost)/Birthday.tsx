@@ -97,7 +97,6 @@ const Email = () => {
       email,
       location: area,
       dateOfBirth: birthdate,
-      // Add any other data you want to send
     };
     try {
       const data = await handleUpdateUser({
