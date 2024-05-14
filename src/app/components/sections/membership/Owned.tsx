@@ -121,7 +121,7 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, onPress, descriptions, 
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
                 style={{ borderRadius: 16 }}
               >
-                <View
+                <View   
                   style={{
                     gap: 16,
                     padding: 24,

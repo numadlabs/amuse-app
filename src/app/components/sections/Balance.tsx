@@ -17,6 +17,7 @@ const Balance: React.FC<BalanceProps> = ({ amount }) => {
 
   const AnimatedText = Animated.createAnimatedComponent(Text)
 
+  
   return (
     <View style={styles.container}>
       <BlurView style={styles.blurContainer} intensity={100}>
@@ -40,7 +41,7 @@ const Balance: React.FC<BalanceProps> = ({ amount }) => {
                   style={{ width: 28, height: 28 }}
                   source={require("@/public/images/Bitcoin.png")}
                 />
-                <AnimatedText entering={FadeIn} style={styles.balanceAmount}>{truncatedAmount} BTC</AnimatedText>
+                <Text style={styles.balanceAmount}>{truncatedAmount} BTC</Text>
               </View>
             </View>
             <Text

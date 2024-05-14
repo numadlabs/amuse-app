@@ -154,6 +154,7 @@ const Restaurant = () => {
               {restaurantsData?.isOwned ? (
                 <Animated.View style={{ paddingBottom: 100 }} entering={SlideInDown.springify().damping(20).delay(200)}>
                   <Owned descriptions={restaurantsData?.description} benefits={restaurantsData?.benefits} longitude={restaurantsData?.longitude} latitude={restaurantsData?.latitude} location={restaurantsData?.location} instruction={restaurantsData?.instruction} onPress={toggleBottomSheet} cardId={perkId} perks={perks} isLoading={isLoading} />
+               
                 </Animated.View>
               ) : (
                 <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>

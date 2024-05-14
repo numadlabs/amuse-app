@@ -16,7 +16,7 @@ const SuccessScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <PowerUp isVisible={isPopupVisible} onClose={togglePopup} />
+      <PowerUp isVisible={isPopupVisible} onClose={togglePopup} powerUpTitle={""} title={""} subText={""} />
     </View>
   );
 };

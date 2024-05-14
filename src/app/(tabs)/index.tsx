@@ -24,7 +24,7 @@ import { getRestaurants } from "../lib/service/queryHelper";
 import HomeRestList from "../components/atom/cards/HomeRestList";
 import { InfoCircle } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Animated, { useSharedValue, useAnimatedStyle, withTiming, FadeIn, FadeOut, SlideInDown, SlideOutDown } from "react-native-reanimated";
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, FadeIn, FadeOut, SlideInDown, SlideOutDown, SlideInLeft } from "react-native-reanimated";
 import { height, width } from "../lib/utils";
 import Button from "../components/ui/Button";
 
@@ -47,6 +47,10 @@ const Page = () => {
     },
     enabled: !!authState.userId,
   });
+
+  const closeBoost = () => {
+    setIsQuickInfoVisible(false);
+  }
 
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
@@ -111,7 +115,10 @@ const Page = () => {
         style={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        {user && <Balance amount={user.balance} />}
+        <Animated.View entering={SlideOutDown}>
+          {user && <Balance amount={user.balance} />}
+        </Animated.View>
+
         <View style={{ marginTop: 24, gap: 12 }}>
           <Text
             style={{
@@ -125,12 +132,13 @@ const Page = () => {
 
           {restaurantsArray?.length > 0 && (
             <View style={{ alignItems: "center", gap: 8, }}>
-              <ScrollView
+              <Animated.ScrollView
+                entering={SlideInLeft}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
               >
-                <View style={{ flexDirection: 'row', gap: 8 }}>
-                {user?.email &&
+                <Animated.View entering={SlideInLeft.springify().damping(15)} style={{ flexDirection: 'row', gap: 8 }}>
+                  {user?.email &&
                     user?.dateOfBirth &&
                     user?.nickname &&
                     user?.location ? (
@@ -170,8 +178,8 @@ const Page = () => {
                       onPress={() => handleNavigation(filteredRestaurantsArray[2])}
                     />
                   </TouchableOpacity>
-                </View>
-              </ScrollView>
+                </Animated.View>
+              </Animated.ScrollView>
             </View>
           )}
         </View>
@@ -275,7 +283,7 @@ const Page = () => {
                   resizeMode='contain'
                 />
                 <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray50, textAlign: 'center' }}>
-                Earn Bitcoin and other rewards simply by using our membership cards when you visit your favorite restaurants.
+                  Earn Bitcoin and other rewards simply by using our membership cards when you visit your favorite restaurants.
                 </Text>
               </View>
 
