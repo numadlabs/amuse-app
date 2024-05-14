@@ -167,6 +167,7 @@ const Restaurant = () => {
                 entering={SlideInDown.springify().damping(20).delay(200)}
               >
                 <Owned
+                  id={restaurantsData?.id}
                   visitCount={restaurantsData?.visitCount}
                   followingPerk={perks?.followingBonus?.name}
                   descriptions={restaurantsData?.description}

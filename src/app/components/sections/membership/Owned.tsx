@@ -7,17 +7,19 @@ import { router } from "expo-router";
 import PowerUpCard from "../../atom/cards/PowerUpCard";
 import { ActivityIndicator } from "react-native";
 import DetailsSheet from "../DetailsSheet";
-import { InfoCircle, TicketStar } from "iconsax-react-native";
+import { Add, InfoCircle, TicketStar } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetRefProps } from "../../modals/PerkBottomSheet";
 import BottomSheet from "../../ui/BottomSheet";
 import Animated from "react-native-reanimated";
 import { RestaurantType } from "@/app/lib/types";
+import Button from "../../ui/Button";
 
 
 
 
 interface ownedProps {
+  id: string | string[];
   cardId: string;
   perks: any[];
   benefits: string;
@@ -33,8 +35,18 @@ interface ownedProps {
   marker: RestaurantType
 }
 
-const Owned: React.FC<ownedProps> = ({ perks, isLoading, visitCount, onPress, descriptions, followingPerk, benefits, location, instruction, longitude, latitude, marker }) => {
+const Owned: React.FC<ownedProps> = ({ perks, id, isLoading, visitCount, onPress, descriptions, followingPerk, benefits, location, instruction, longitude, latitude, marker }) => {
   const [showPerks, setShowPerks] = useState(true);
+  console.log(id)
+
+  const handleNavigation = () => {
+    router.push({
+      pathname: '/PerkMarket',
+      params: {
+        id: id,
+      }
+    })
+  }
 
   const backgroundColor = showPerks ? Color.Gray.gray300 : Color.Gray.gray400;
 
@@ -137,6 +149,11 @@ const Owned: React.FC<ownedProps> = ({ perks, isLoading, visitCount, onPress, de
                     </Text>
                   </View>
                 </TouchableOpacity>
+                
+                <Button onPress={handleNavigation} textStyle='primary' variant='disabled' size="large">
+                  <Add color={Color.base.White} size={24} />
+                  <Text>Add Perk</Text>
+                </Button>
               </>
 
             ) : (
