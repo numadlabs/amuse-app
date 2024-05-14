@@ -19,31 +19,25 @@ import Button from "../../ui/Button";
 
 
 interface ownedProps {
-  id: string | string[];
+  userCardId: string;
+  data: RestaurantType
   cardId: string;
   perks: any[];
-  benefits: string;
-  visitCount: number;
-  location: string;
-  instruction: string;
-  latitude: string;
-  descriptions: string;
-  longitude: string;
   followingPerk: string;
   isLoading: boolean;
   onPress: () => void;
   marker: RestaurantType
 }
 
-const Owned: React.FC<ownedProps> = ({ perks, id, isLoading, visitCount, onPress, descriptions, followingPerk, benefits, location, instruction, longitude, latitude, marker }) => {
+const Owned: React.FC<ownedProps> = ({ perks,data, userCardId, isLoading, onPress, followingPerk, marker }) => {
   const [showPerks, setShowPerks] = useState(true);
-  console.log(id)
 
   const handleNavigation = () => {
     router.push({
       pathname: '/PerkMarket',
       params: {
-        id: id,
+        id: data.id,
+        userCardId: userCardId,
       }
     })
   }
@@ -145,11 +139,11 @@ const Owned: React.FC<ownedProps> = ({ perks, id, isLoading, visitCount, onPress
                         fontWeight: '600',
                       }}
                     >
-                      {3 - (visitCount % 3)}/3
+                      {3 - (data.visitCount % 3)}/3
                     </Text>
                   </View>
                 </TouchableOpacity>
-                
+
                 <Button onPress={handleNavigation} textStyle='primary' variant='disabled' size="large">
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, justifyContent: 'center' }}>
                     <Add color={Color.base.White} size={24} />
@@ -208,16 +202,7 @@ const Owned: React.FC<ownedProps> = ({ perks, id, isLoading, visitCount, onPress
             style={{ flex: 1, flexGrow: 1, marginBottom: 450, paddingHorizontal: 8 }}
           >
             <DetailsSheet
-              benefits={benefits}
-              locations={location}
-              description={descriptions}
-              memberships={"membership"}
-              latitude={latitude}
-              longitude={longitude}
-              about={"about"}
-              instruction={instruction}
-              artistInfo={"artistInfo"}
-              marker={marker}
+              data={data}
             />
           </View>
         )}

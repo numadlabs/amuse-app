@@ -40,6 +40,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
       }),
   });
 
+
   const { mutateAsync: createGetAcardMutation } = useMutation({
     mutationFn: getAcard,
     onError: (error) => {
@@ -91,7 +92,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
     });
   };
 
-  console.log(restaurantsData)
+  console.log(restaurantsData?.data?.restaurants)
 
   return (
     <View style={{ paddingHorizontal: 16}}>

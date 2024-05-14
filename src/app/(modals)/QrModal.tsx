@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { CameraView, Camera } from "expo-camera";
+import { CameraView, Camera } from "expo-camera/next";
 import Color from "../constants/Color";
 import { useRouter } from "expo-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -23,9 +23,7 @@ import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
 import { SERVER_SETTING } from "../constants/serverSettings";
 import { LinearGradient } from "expo-linear-gradient";
 import Close from "../components/icons/Close";
-
 const { width, height } = Dimensions.get("window");
-
 const markerSize = 250;
 const halfMarkerSize = markerSize / 2;
 

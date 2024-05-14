@@ -33,33 +33,13 @@ import { RestaurantType } from "@/app/lib/types";
 import TimeAccordion from "../ui/TimeAccordion";
 
 interface BottomSheetProps {
-  benefits: string | string[];
-  locations: string | string[];
-  memberships: string | string[];
-  about: string | string[];
-  latitude: string;
-  description: string;
-  longitude: string;
-  instruction: string | string[];
-  artistInfo: string | string[];
-  marker: RestaurantType;
+  data: RestaurantType;
 }
 
-const DetailsSheet: React.FC<BottomSheetProps> = ({
-  benefits,
-  locations,
-  memberships,
-  about,
-  instruction,
-  artistInfo,
-  latitude,
-  description,
-  longitude,
-  marker,
-}) => {
+const DetailsSheet: React.FC<BottomSheetProps> = ({data}) => {
   const handleLocationPress = () => {
-    if (latitude && longitude) {
-      const mapURL = `https://maps.google.com/?q=${latitude},${longitude}`;
+    if (data.latitude && data.longitude) {
+      const mapURL = `https://maps.google.com/?q=${data.latitude},${data.longitude}`;
       Linking.openURL(mapURL);
     } else {
       console.warn("Latitude and longitude are not available");
@@ -71,13 +51,13 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({
     setOpen(!open);
   };
   const currentTime = new Date();
-  const opensAt = new Date(marker?.opensAt);
-  const closesAt = new Date(marker?.closesAt);
+  const opensAt = new Date(data?.opensAt);
+  const closesAt = new Date(data?.closesAt);
   const isOpen =
     currentTime.getTime() >= opensAt?.getTime() &&
     currentTime.getTime() <= closesAt?.getTime();
 
-  const data = [
+  const operatingHours = [
     {
       title: "Monday",
       text: "12:00 - 23:00",
@@ -119,7 +99,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({
         <View style={{ marginVertical: 16 }}>
           <View style={styles.attribute}>
             <Tick size={24} color={Color.Gray.gray100} />
-            <Text style={styles.attributeText}>{benefits}</Text>
+            <Text style={styles.attributeText}>{data.benefits}</Text>
           </View>
         </View>
         <View style={{ gap: 16 }}>
@@ -137,7 +117,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({
               <Location color={Color.Gray.gray100} />
               <TouchableOpacity onPress={handleLocationPress}>
                 <Text numberOfLines={2} style={styles.attributeLocText}>
-                  {locations}
+                  {data.location}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -153,7 +133,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({
               About
             </Text>
             <View>
-              <Text style={styles.attributeText}>{description}</Text>
+              <Text style={styles.attributeText}>{data.description}</Text>
             </View>
           </View>
 
@@ -220,7 +200,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({
                 {open && (
                   <Animated.View>
                     <View style={{ flexDirection: 'column', gap: 16 }}>
-                      {data.map((item, index) => (
+                      {operatingHours.map((item, index) => (
                         <TimeAccordion
                           time={item.text}
                           title={item.title}
@@ -245,7 +225,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({
               How to earn
             </Text>
             <View>
-              <Text style={styles.attributeText}>{instruction}</Text>
+              <Text style={styles.attributeText}>{data.instruction}</Text>
             </View>
           </View>
         </View>

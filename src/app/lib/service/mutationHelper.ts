@@ -42,6 +42,20 @@ export function getAcard({
     });
 }
 
+export function purchasePerk({
+  bonusId,
+  userCardId,
+}: {
+  bonusId: string;
+  userCardId: string;
+}) {
+  return axiosClient
+    .post("/userBonus/buy", { bonusId, userCardId })
+    .then((response) => {
+      return response;
+    });
+}
+
 export async function updateUserInfo({
   userId,
   data,

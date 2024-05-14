@@ -1,13 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Color from "./constants/Color";
 import Close from "./components/icons/Close";
 import { router, useLocalSearchParams } from "expo-router";
 import PerkGradient from "./components/icons/PerkGradient";
 import Button from "./components/ui/Button";
+import { purchasePerk } from "./lib/service/mutationHelper";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "./context/AuthContext";
+import { restaurantKeys, userKeys } from "./lib/service/keysHelper";
 
 const PerkBuy = () => {
-    const { name, id, price } = useLocalSearchParams();
+    const { name, id, price, userCardId } = useLocalSearchParams();
+    const [isClaimLoading, setIsClaimLoading] = useState(false);
+    const [balance, setBalance] = useState("")
+    const { authState } = useAuth();
+    const queryClient = useQueryClient()
+    const { mutateAsync: purchasePerkMutation } = useMutation({
+      mutationFn: purchasePerk,
+      onError: (error) => {
+        console.log(error);
+      },
+      onSuccess: (data, variables) => { },
+    });
+  
+    const handleGetAcard = async (id: string) => {
+      console.log("🚀 ~ Purchase perk ~ aCardId:", id);
+      setIsClaimLoading(true);
+      if (authState.userId) {
+        const data = await purchasePerkMutation({
+          bonusId: id,
+          userCardId: userCardId as string,
+        });
+        if (data.data.success) {
+          setIsClaimLoading(false);
+          console.log("🚀 ~ Purchase successful");
+          queryClient.invalidateQueries({
+            queryKey: restaurantKeys.all,
+          });
+          queryClient.invalidateQueries({
+            queryKey: userKeys.info
+          });
+        }else{
+          console.log("🚀 ~ Purchase failed");
+          setBalance("Insufficient funds");
+        }
+      }
+    };
+  
 
   return (
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1, paddingHorizontal: 16 }} key={id as string}>
@@ -48,7 +88,7 @@ const PerkBuy = () => {
             <Text style={{ color: Color.Gray.gray100, fontSize: 14, lineHeight: 18, textAlign: 'center' }}>Purchase perk, use it on next visit.</Text>
         </View>
       </View>
-      <Button variant="primary" size="large">
+      <Button variant="primary" size="large" onPress={() => handleGetAcard(id as string)}>
         <Text style={{ fontSize: 15, fontWeight: '600', color: Color.base.White }}>{`Buy ${price} BTC`}</Text>
       </Button>
     </View>
