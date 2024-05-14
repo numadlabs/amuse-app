@@ -61,7 +61,6 @@ const Restaurant = () => {
     enabled: !!currentLocation && !!id,
   });
 
-  console.log(cardId);
 
   const showToast = () => {
     Toast.show({
@@ -86,7 +85,7 @@ const Restaurant = () => {
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => {},
+    onSuccess: (data, variables) => { },
   });
   const handleGetAcard = async (id: string) => {
     console.log("🚀 ~ RestaurantMapView ~ aCardId:", id);
@@ -126,7 +125,8 @@ const Restaurant = () => {
     enabled: !!currentLocation,
   });
 
-  console.log(perks);
+
+
 
   return (
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
@@ -167,6 +167,8 @@ const Restaurant = () => {
                 entering={SlideInDown.springify().damping(20).delay(200)}
               >
                 <Owned
+                  visitCount={restaurantsData?.visitCount}
+                  followingPerk={perks?.followingBonus?.name}
                   descriptions={restaurantsData?.description}
                   benefits={restaurantsData?.benefits}
                   longitude={restaurantsData?.longitude}
@@ -175,7 +177,7 @@ const Restaurant = () => {
                   instruction={restaurantsData?.instruction}
                   onPress={toggleBottomSheet}
                   cardId={perkId}
-                  perks={perks}
+                  perks={perks.userBonuses}
                   isLoading={isLoading}
                   marker={restaurantsData?.isOwned}
                 />

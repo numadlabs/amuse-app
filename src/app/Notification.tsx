@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
 import Header from "./components/layout/Header";
 import Color from "./constants/Color";
@@ -12,7 +12,7 @@ function formatDate(dateString) {
 }
 
 const Notification = () => {
-  const [notifications, setNotifications] = useState(null);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     const retrieveNotifications = async () => {
@@ -31,20 +31,21 @@ const Notification = () => {
   }, []);
 
   return (
-    <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
+    <View style={styles.body}>
       <Header title="Notifications" />
-      <View style={styles.container}>
-        {notifications !== null &&
-          notifications.length !== 0 &&
-          notifications.map((notification, index) => (
-            <NotificationCard
-              key={index}
-              title={notification.name}
-              description={`You received $1 of BTC from ${notification.name}`}
-              time={formatDate(notification.date).toString()}
-            />
-          ))}
-      </View>
+      <FlatList
+      style={styles.container}
+      ItemSeparatorComponent={() => <View style={{height: 20}} />}
+        data={notifications}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <NotificationCard
+            title={item.name}
+            description={`You received $1 of BTC from ${item.name}`}
+            time={formatDate(item.date)}
+          />
+        )}
+      />
     </View>
   );
 };
@@ -55,10 +56,18 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
-    paddingHorizontal: 16,
+  
   },
   container: {
-    borderRadius: 16,
-    gap: 16,
+    gap:16
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyText: {
+    color: Color.base.White,
+    fontSize: 16,
   },
 });
