@@ -12,6 +12,9 @@ import Close from "./components/icons/Close";
 import Popup from "./components/(feedback)/Popup";
 import Toast from "react-native-toast-message";
 import PerkGradient from "./components/icons/PerkGradient";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { redeemBonus, useBonus } from "./lib/service/mutationHelper";
+import { restaurantKeys, userKeys } from "./lib/service/keysHelper";
 
 const PowerUp = () => {
 
@@ -25,14 +28,52 @@ const PowerUp = () => {
   }
   const { id, name } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
-  console.log(id)
+  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient()
 
-  const togglePopup = () => {
-    setPopupVisible(!isPopupVisible);
+  const {
+    data,
+    error,
+    status,
+    mutateAsync: createBonusMutation,
+  } = useMutation({
+    mutationFn: useBonus,
+    onError: (error) => {
+    },
+    onSuccess: (data, variables) => {
+      try {
+        const resp = createRedeemBonusMutation(data.data.data);
+        
+      } catch (error) {
+        console.error("Bonus mutation failed:", error);
+      }
+    },
+  });
+
+
+  const { mutateAsync: createRedeemBonusMutation } = useMutation({
+    mutationFn: redeemBonus,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (data, variables) => {
+      console.log("🚀 ~ Bonus ~ data:", data.data.data);
+    
+    },
+  });
+
+  const handleUseBonus = async (bonusId: string) => {
+    try {
+      const data = await createBonusMutation(bonusId);
+      queryClient.invalidateQueries({ queryKey: userKeys.perks });
+      setPopupVisible(!isPopupVisible);
+    } catch (error) {
+      console.log("Bonus mutation failed:", error);
+    }
+    
   };
 
   const handleNavigation = () => {
-    // showToast()
     router.back()
   }
   return (
@@ -48,7 +89,7 @@ const PowerUp = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.container} key={id as string}>
-        <TouchableOpacity onPress={togglePopup}>
+        <TouchableOpacity onPress={() => handleUseBonus(id as string)}>
           <Image
             style={{ width: 247, height: 247 }}
             source={require("@/public/images/pqr.png")}
@@ -63,7 +104,7 @@ const PowerUp = () => {
         <View
           style={{ justifyContent: "center", alignItems: "center", gap: 32 }}
         >
-          <View style={{ padding: 12, backgroundColor: Color.Gray.gray400, borderRadius: 12, width:52, height:52 }}>
+          <View style={{ padding: 12, backgroundColor: Color.Gray.gray400, borderRadius: 12, width: 52, height: 52 }}>
             <PerkGradient />
           </View>
 

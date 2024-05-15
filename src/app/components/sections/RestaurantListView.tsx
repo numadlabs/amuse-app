@@ -48,10 +48,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
     },
     onSuccess: (data, variables) => { },
   });
-  // if (data.data.success) {
-  //   queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
-  //   setIsClaimLoading(false);
-  // }
+
 
   const handleGetAcard = async (index: number, acardId: string) => {
     console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);

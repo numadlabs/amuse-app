@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import Color from "./constants/Color";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { restaurantKeys, userKeys } from './lib/service/keysHelper';
+import { restaurantKeys } from './lib/service/keysHelper';
 import { getPurchaseablePerks } from "./lib/service/queryHelper";
 import useLocationStore from "./lib/store/userLocation";
 import { useLocalSearchParams } from "expo-router";
@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    aspectRatio:1,
     width: "100%",
     paddingHorizontal: 12,
     paddingTop: 20,
@@ -145,12 +146,12 @@ const styles = StyleSheet.create({
   perkItem: {
     borderRadius: 10,
     padding: 20,
-
-    width: "48%", // Adjust as needed
+    width: "48%", 
     alignItems: "center",
   },
   perkName: {
     fontSize: 12,
+    height:30,
     lineHeight: 16,
     fontWeight: "bold",
     textAlign: "center",

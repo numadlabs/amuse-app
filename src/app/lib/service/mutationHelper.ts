@@ -20,6 +20,24 @@ export function generateTap(id: string) {
     });
 }
 
+
+export function useBonus(id: string) {
+  console.log("🚀 ~ use bonus ~ id:", { id });
+  return axiosClient
+   .post(`/userBonus/${id}/use`, { restaurantId: id })
+   .then((response) => {
+      return response;
+    });
+}
+
+export function redeemBonus(encryptedData: string) {
+  return axiosClient
+   .post("/userBonus/redeem", { encryptedData })
+   .then((response) => {
+      return response;
+    });
+}
+
 export function redeemTap(encryptedData: string) {
   return axiosClient
     .post("/taps/redeem", { encryptedData })

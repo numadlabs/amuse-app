@@ -93,8 +93,8 @@ const QrModal = () => {
       setHasPermission(status === "granted");
     };
     getCameraPermissions();
-    setRestaurantId("9418fefa-14e7-4981-9e05-f012060254fb");
-    setCardId("d3078e47-a405-412b-8a66-0b34372b4cdd")
+    setRestaurantId("7c0489fc-94fd-4c3d-95a0-8ede22f6ea28");
+    setCardId("fd97915d-72a3-49e5-85dd-b9fed5c599a8")
     setVisitCount(1)
   }, []);
 

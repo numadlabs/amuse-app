@@ -49,6 +49,8 @@ const StackedCard = () => {
     marginBottom: -220
   }));
 
+  console.log(cards)
+
   const latestCards = cards?.data?.cards.slice(0, 5);
 
 
