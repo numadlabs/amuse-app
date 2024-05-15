@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: Color.Gray.gray50,
+    height: 32
   },
   perkPrice: {
     fontSize: 11,

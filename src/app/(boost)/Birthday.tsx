@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   TextInput,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Steps from "../components/atom/Steps";
@@ -113,6 +114,25 @@ const Email = () => {
     }
   };
 
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === "ios");
+    setDate(currentDate);
+  };
+
+  const showDatepicker = () => {
+    setShow(true);
+  };
+
+  const confirmDate = () => {
+    setShow(false);
+    // Here you can handle the confirmed date, such as saving it to a database or state
+    console.log("Selected Date:", date);
+  };
+
   return (
     <>
       <Steps activeStep={3} />
@@ -123,7 +143,7 @@ const Email = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
-            <LinearGradient
+              <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
                 style={{
                   marginTop: 20,
@@ -132,15 +152,15 @@ const Email = () => {
                   borderRadius: 32,
                 }}
               >
-              <View style={styles.textContainer}>
-                <View style={{ gap: 8 }}>
-                  <Text style={styles.topText}>Birthday</Text>
-                  <Text style={styles.bottomText}>
-                    Rewarding the wise, the reckless, and everyone in between.
-                  </Text>
-                </View>
-                {/* <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} placeholder='Birthday' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, }} /> */}
-                {/* <Button
+                <View style={styles.textContainer}>
+                  <View style={{ gap: 8 }}>
+                    <Text style={styles.topText}>Birthday</Text>
+                    <Text style={styles.bottomText}>
+                      Rewarding the wise, the reckless, and everyone in between.
+                    </Text>
+                  </View>
+                  {/* <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} placeholder='Birthday' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, }} /> */}
+                  {/* <Button
                   onPress={openDatePicker}
                   variant="secondary"
                   textStyle="secondary"
@@ -156,33 +176,14 @@ const Email = () => {
                     onChange={onDateChange}
                   />
                 )} */}
-                {showDatePicker ? (
-                  <DateTimePicker
-                    value={birthdate ? new Date(birthdate) : new Date()}
-                    mode="date"
-                    display="default"
-                    onChange={onDateChange}
-                    // textColor={"#333"}
-                    // // accentColor={accentColor || undefined}
-                    // neutralButton={{ label: "#F3F4F6" }}
-                    // negativeButton={{ label: "Cancel", textColor: "red" }}
-                    // positiveButton={{ label: "OK", textColor: "green" }}
-                    // neutralButton={{ label: "Clear", textColor: "grey" }}
-                    maximumDate={new Date(Date.now())}
-                    // minimumDate={new Date(1900, 0, 1)}
-                    // themeVariant="dark"
-                  />
-                ) : (
-                  <Button
-                    onPress={openDatePicker}
-                    variant="primary"
-                    textStyle="primary"
-                    size="default"
-                  >
-                    Select Birthdate
-                  </Button>
-                )}
-              </View>
+                  <TouchableOpacity onPress={showDatepicker}>
+                    <View style={{ width: '100%', borderWidth: 1, borderColor: Color.Gray.gray300, height: 48, borderRadius: 16, justifyContent: 'center', paddingHorizontal: 16 }}>
+                      <Text style={{ color: Color.base.White }}>
+                        {date.toDateString()}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </LinearGradient>
             </View>
             <View
@@ -205,11 +206,41 @@ const Email = () => {
                   <Text
                     style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
                   >
-                    Continue
+                    Finish
                   </Text>
                 )}
               </Button>
             </View>
+            {show && (
+              <View
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  right: 0,
+                  width: "100%",
+                  backgroundColor: Color.Gray.gray500,
+                  padding: 16,
+                }}
+              >
+                <DateTimePicker
+                  value={date}
+                  mode="date"
+                  display="spinner"
+                  onChange={onChange}
+                />
+                <Button variant="tertiary" onPress={confirmDate}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontWeight: "600",
+                      color: Color.base.White,
+                    }}
+                  >
+                    Confirm date
+                  </Text>
+                </Button>
+              </View>
+            )}
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
@@ -264,5 +295,16 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "flex-start",
+  },
+  confirmButton: {
+    marginTop: 20,
+    backgroundColor: "#2196F3",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  confirmButtonText: {
+    color: "white",
+    fontSize: 16,
   },
 });

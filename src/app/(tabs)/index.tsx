@@ -140,7 +140,8 @@ const Page = () => {
                     user?.dateOfBirth &&
                     user?.nickname &&
                     user?.location ? (
-                    ''
+                      // <QuickInfo onPress={() => setIsQuickInfoVisible(false)} user={user} />
+                      ""
                   ) : (
                     isQuickInfoVisible && (
                       <QuickInfo onPress={() => setIsQuickInfoVisible(false)} user={user} />
