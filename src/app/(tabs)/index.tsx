@@ -70,7 +70,6 @@ const Page = () => {
     transform: [{ scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) }],
   }));
 
-
   const { data: restaurantsData } = useQuery<GetRestaurantsResponseType>({
     queryKey: restaurantKeys.all,
     queryFn: () => {
@@ -101,7 +100,6 @@ const Page = () => {
         cardId: restaurant.cardId,
       }
     });
-
   };
 
   const restaurantsArray = restaurantsData?.data?.restaurants || [];

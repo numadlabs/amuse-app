@@ -45,7 +45,6 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
   const pressed = useSharedValue(false);
   const [loading, setIsLoading] = useState<boolean>()
 
-  console.log(nftImage)
 
 
   const AnimatedText = Animated.createAnimatedComponent(Text)

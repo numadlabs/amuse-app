@@ -1,5 +1,5 @@
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import { Location, TicketExpired, User, WalletAdd } from "iconsax-react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { WalletAdd } from "iconsax-react-native";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -11,63 +11,48 @@ import {
   View,
   Image,
 } from "react-native";
-import Popup from "../components/(feedback)/Popup";
 import Button from "../components/ui/Button";
 import Color from "../constants/Color";
-
 import Close from "../components/icons/Close";
 import { useAuth } from "../context/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAcard } from "../lib/service/mutationHelper";
 import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
-import Toast from "react-native-toast-message";
-import { GetRestaurantsResponseType } from "../lib/types/apiResponseType";
-import {
-  getPerksByRestaurant,
-  getRestaurantById,
-  getRestaurantId,
-  getRestaurants,
-  getUserPowerUps,
-} from "../lib/service/queryHelper";
+import { getPerksByRestaurant, getRestaurantId, getUserPowerUps } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
 import APassCard from "../components/atom/cards/APassCard";
 import Owned from "../components/sections/membership/Owned";
 import UnOwned from "../components/sections/membership/UnOwned";
-import Animated, {
-  FadeIn,
-  FadeOut,
-  SlideInDown,
-  SlideOutDown,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { height, width } from "../lib/utils";
 
 const Restaurant = () => {
   const { cardId, id } = useLocalSearchParams();
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const { authState } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [perkId, setPerkId] = useState<string>("");
-  const { currentLocation } = useLocationStore();
-  const queryClient = useQueryClient();
   const [bottomSheet, setBottomSheet] = useState(false);
+  const queryClient = useQueryClient();
+  const { currentLocation } = useLocationStore();
+  const [perkId, setPerkId] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+
   const { data: restaurantsData, isLoading } = useQuery({
     queryKey: restaurantKeys.detail(id as string),
-    queryFn: () => {
-      return getRestaurantId(id);
-    },
+    queryFn: () => getRestaurantId(id),
     enabled: !!currentLocation && !!id,
   });
 
+  // const { data: userCardId = [] } = useQuery({
+  //   queryKey: userKeys.perks,
+  //   queryFn: () => getPerksByRestaurant(id),
+  //   enabled: !!currentLocation,
+  // });
 
-  const showToast = () => {
-    Toast.show({
-      type: "perkToast",
-      text1: "Added membership card",
-    });
-  };
+  // const { data: perks = [] } = useQuery({
+  //   queryKey: userKeys.perks,
+  //   queryFn: () => getUserPowerUps(userCardId),
+  //   enabled: !!currentLocation,
+  // });
 
   const toggleBottomSheet = () => {
     setBottomSheet(!bottomSheet);
@@ -75,71 +60,35 @@ const Restaurant = () => {
 
   const pressed = useSharedValue(false);
   const animatedStyles = useAnimatedStyle(() => ({
-    transform: [
-      { scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) },
-    ],
+    transform: [{ scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) }],
   }));
 
   const { mutateAsync: createGetAcardMutation } = useMutation({
     mutationFn: getAcard,
-    onError: (error) => {
-      console.log(error);
+    onError: (error) => console.log(error),
+    onSuccess: (data) => {
+      if (data.data.success) {
+        setPerkId(data.data.data.userCard.cardId);
+        queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
+        queryClient.invalidateQueries({ queryKey: userKeys.cards });
+        setIsClaimLoading(false);
+      }
     },
-    onSuccess: (data, variables) => { },
   });
+
+  
+
   const handleGetAcard = async (id: string) => {
-    console.log("🚀 ~ RestaurantMapView ~ aCardId:", id);
     setIsClaimLoading(true);
     if (authState.userId) {
-      const data = await createGetAcardMutation({
-        userId: authState.userId,
-        cardId: id,
-      });
-      if (data.data.success) {
-        setIsClaimLoading(false);
-        setPerkId(data.data.data.userCard.cardId);
-        queryClient.invalidateQueries({
-          queryKey: restaurantKeys.all,
-        });
-        queryClient.invalidateQueries({
-          queryKey: userKeys.cards,
-        });
-        // showToast();
-      }
+      await createGetAcardMutation({ userId: authState.userId, cardId: id });
     }
   };
-
-  const { data: userCardId = [] } = useQuery({
-    queryKey: userKeys.perks,
-    queryFn: () => {
-      return getPerksByRestaurant(id);
-    },
-    enabled: !!currentLocation,
-  });
-
-
-
-
-  const { data: perks = [] } = useQuery({
-    queryKey: userKeys.perks,
-    queryFn: () => {
-      return getUserPowerUps(userCardId);
-    },
-    enabled: !!currentLocation,
-  });
-
-
-
 
   return (
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
       <View style={styles.closeButtonContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.closeButton]}
-          onPress={() => {
-            router.back();
-          }}
-        >
+        <TouchableOpacity style={[styles.button, styles.closeButton]} onPress={() => router.back()}>
           <Close />
         </TouchableOpacity>
       </View>
@@ -151,11 +100,7 @@ const Restaurant = () => {
           nftImage={restaurantsData?.nftImageUrl}
           category={restaurantsData?.category}
           hasBonus={false}
-          visitCount={
-            restaurantsData?.visitCount === null
-              ? 0
-              : restaurantsData?.visitCount
-          }
+          visitCount={restaurantsData?.visitCount || 0}
         />
 
         {isLoading ? (
@@ -165,25 +110,20 @@ const Restaurant = () => {
         ) : (
           <>
             {restaurantsData?.isOwned ? (
-              <Animated.View
-                style={{ paddingBottom: 100 }}
-                entering={SlideInDown.springify().damping(20).delay(200)}
-              >
+              <Animated.View style={{ paddingBottom: 100 }} entering={SlideInDown.springify().damping(20).delay(200)}>
                 <Owned
-                  userCardId={perks?.userBonuses?.[0]?.userCardId}
-                  followingPerk={perks?.followingBonus?.name}
+                  // userCardId={perks?.userBonuses?.[0]?.userCardId}
+                  // followingPerk={perks?.followingBonus?.name}
                   onPress={toggleBottomSheet}
                   cardId={perkId}
-                  perks={perks?.userBonuses}
+                  // perks={perks?.userBonuses}
                   isLoading={isLoading}
                   data={restaurantsData}
                   marker={restaurantsData?.isOwned}
                 />
               </Animated.View>
             ) : (
-              <Animated.View
-                entering={SlideInDown.springify().damping(20).delay(200)}
-              >
+              <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>
                 <UnOwned
                   restaurant={restaurantsData}
                   isClaimLoading={isClaimLoading}
@@ -204,38 +144,12 @@ const Restaurant = () => {
             }}
             size="small"
             variant="primary"
-            style={{
-              alignItems: "center",
-              alignContent: "center",
-              justifyContent: "center",
-            }}
+            style={{ alignItems: "center", justifyContent: "center" }}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                alignContent: "center",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 12,
-                top: 2,
-              }}
-            >
+            <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 12, top: 2 }}>
               <WalletAdd color={Color.base.White} />
-              <Text
-                style={{
-                  color: Color.base.White,
-                  fontSize: 15,
-                  fontWeight: "bold",
-                  top: 2,
-                }}
-              >
-                {isClaimLoading ? (
-                  <ActivityIndicator />
-                ) : restaurantsData?.visitCount === null ? (
-                  "Add membership card"
-                ) : (
-                  "Owned"
-                )}
+              <Text style={{ color: Color.base.White, fontSize: 15, fontWeight: "bold", top: 2 }}>
+                {isClaimLoading ? <ActivityIndicator /> : "Add membership card"}
               </Text>
             </View>
           </Button>
@@ -250,12 +164,12 @@ const Restaurant = () => {
               style={[
                 {
                   position: "absolute",
-                  backgroundColor: "rgba(0, 0, 0, 0.2)", // Black background with 50% opacity
+                  backgroundColor: "rgba(0, 0, 0, 0.2)",
                   top: 0,
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  zIndex: 98, // Ensure overlay is below modal content
+                  zIndex: 98,
                 },
                 animatedStyles,
               ]}
@@ -274,53 +188,21 @@ const Restaurant = () => {
                   borderTopStartRadius: 32,
                   borderTopEndRadius: 32,
                   gap: 24,
-                  padding: 16, // Positioning the bottom sheet absolutely
+                  padding: 16,
                 },
                 animatedStyles,
               ]}
             >
-              <View
-                style={{
-                  paddingVertical: 8,
-                  justifyContent: "center",
-                  alignContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 20,
-                    lineHeight: 24,
-                    color: Color.base.White,
-                    fontWeight: "bold",
-                  }}
-                >
-                  Perk
-                </Text>
+              <View style={{ paddingVertical: 8, justifyContent: "center", alignItems: "center" }}>
+                <Text style={{ fontSize: 20, lineHeight: 24, color: Color.base.White, fontWeight: "bold" }}>Perk</Text>
               </View>
               <View style={{ alignItems: "center", gap: 16 }}>
-                <Image
-                  source={require("@/public/images/perk.png")}
-                  style={{ width: width / 1.2, height: 58 }}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={{
-                    lineHeight: 18,
-                    fontSize: 14,
-                    color: Color.Gray.gray50,
-                    textAlign: "center",
-                  }}
-                >
-                  Earn perks after every 3 check-ins. Keep visiting your
-                  favorite spots and multiply your rewards!
+                <Image source={require("@/public/images/perk.png")} style={{ width: width / 1.2, height: 58 }} resizeMode="contain" />
+                <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray50, textAlign: "center" }}>
+                  Earn perks after every 3 check-ins. Keep visiting your favorite spots and multiply your rewards!
                 </Text>
               </View>
-              <Button
-                variant="primary"
-                textStyle="primary"
-                onPress={toggleBottomSheet}
-              >
+              <Button variant="primary" textStyle="primary" onPress={toggleBottomSheet}>
                 <Text>Got it</Text>
               </Button>
             </Animated.View>
@@ -336,7 +218,6 @@ export default Restaurant;
 const styles = StyleSheet.create({
   button: {
     alignItems: "center",
-    alignContent: "center",
     justifyContent: "center",
     width: 48,
     padding: 12,

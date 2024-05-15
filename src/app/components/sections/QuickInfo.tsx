@@ -11,8 +11,6 @@ import CloseSm from "../icons/CloseSm";
 const QuickInfo = ({ user, onPress }) => {
   const [progress, setProgress] = useState(0);
 
-  console.log(user);
-
   useEffect(() => {
     if (user) {
       const totalFields = 4;
@@ -27,8 +25,6 @@ const QuickInfo = ({ user, onPress }) => {
     }
   }, [user]);
 
-
-  console.log("heeelps",user)
 
   return (
     <TouchableOpacity style={styles.container} onPress={() => router.push("(boost)/Email")}>

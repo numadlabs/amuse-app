@@ -1,211 +1,137 @@
-import React, { useCallback, useRef, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import Color from "@/app/constants/Color";
 import { LinearGradient } from "expo-linear-gradient";
 import PerkGradient from "../../icons/PerkGradient";
 import { router } from "expo-router";
 import PowerUpCard from "../../atom/cards/PowerUpCard";
-import { ActivityIndicator } from "react-native";
 import DetailsSheet from "../DetailsSheet";
 import { Add, InfoCircle, TicketStar } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { BottomSheetRefProps } from "../../modals/PerkBottomSheet";
-import BottomSheet from "../../ui/BottomSheet";
 import Animated from "react-native-reanimated";
 import { RestaurantType } from "@/app/lib/types";
-import Button from "../../ui/Button";
+import { useQuery } from "@tanstack/react-query";
+import { getPerksByRestaurant, getUserPowerUps } from "@/app/lib/service/queryHelper";
+import { userKeys } from "@/app/lib/service/keysHelper";
+import useLocationStore from "@/app/lib/store/userLocation";
 
-
-
-
-interface ownedProps {
-  userCardId: string;
-  data: RestaurantType
+interface OwnedProps {
+  // userCardId: string;
+  data: RestaurantType;
   cardId: string;
-  perks: any[];
-  followingPerk: string;
+  // perks: any[];
+  // followingPerk: string;
   isLoading: boolean;
   onPress: () => void;
-  marker: RestaurantType
+  marker: RestaurantType;
 }
 
-const Owned: React.FC<ownedProps> = ({ perks,data, userCardId, isLoading, onPress, followingPerk, marker }) => {
+const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
   const [showPerks, setShowPerks] = useState(true);
+  const currentLocation = useLocationStore()
+
+  const { data: cardId = [] } = useQuery({
+    queryKey: userKeys.perks,
+    queryFn: () => getPerksByRestaurant(data.id),
+    enabled: !!currentLocation,
+  });
+
+  const { data: perks = [] } = useQuery({
+    queryKey: userKeys.perks,
+    queryFn: () => getUserPowerUps(data?.id),
+    enabled: !!currentLocation,
+  });
+
 
   const handleNavigation = () => {
     router.push({
       pathname: '/PerkMarket',
       params: {
         id: data.id,
-        userCardId: userCardId,
+        userCardId: perks?.userBonuses?.[0]?.userCardId
       }
-    })
-  }
+    });
+  };
 
-  const backgroundColor = showPerks ? Color.Gray.gray300 : Color.Gray.gray400;
+  const notOwnedNavigation = () => {
+    router.push({
+      pathname: '/NotOwnedPerk',
+      params: { visitCount: data.visitCount }
+    });
+  };
 
-  const toggleView = (view) => {
+  const toggleView = (view: boolean) => {
     setShowPerks(view);
   };
+
+  const renderPerks = () => (
+    <View style={styles.powerUpGrid}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Perks</Text>
+        <TouchableOpacity onPress={onPress}>
+          <InfoCircle size={20} color={Color.Gray.gray50} />
+        </TouchableOpacity>
+      </View>
+      {perks && perks?.userBonuses?.length > 0 ? (
+        <>
+          {perks?.userBonuses?.map((item, index) => (
+            <PowerUpCard
+              key={index}
+              title={item.name}
+              onPress={() => router.push({ pathname: `/PowerUp`, params: { name: item.name, id: item.id } })}
+            />
+          ))}
+          <TouchableOpacity style={styles.container} onPress={notOwnedNavigation}>
+            <View style={styles.perkDetails}>
+              <TicketStar size={28} color={Color.base.White} />
+              <Text style={styles.perkText}>{perks?.followingBonus.name}</Text>
+            </View>
+            <View>
+              <Text style={styles.perkCount}>{(data.visitCount % 3) + 1}/3</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleNavigation}>
+            <View style={styles.addPerkButton}>
+              <Add color={Color.base.White} size={24} />
+              <Text style={styles.addPerkText}>Add Perk</Text>
+            </View>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <LinearGradient colors={[Color.Brand.card.start, Color.Brand.card.end]} style={styles.gradientContainer}>
+          <View style={styles.noPerksContainer}>
+            <View style={styles.noPerksIcon}>
+              <PerkGradient />
+            </View>
+            <Text style={styles.noPerksText}>You don't have any perks yet. Check-in to unlock new perks.</Text>
+          </View>
+        </LinearGradient>
+      )}
+    </View>
+  );
+
+  const renderDetails = () => (
+    <View style={styles.detailsContainer}>
+      <DetailsSheet data={data} />
+    </View>
+  );
 
   return (
     <GestureHandlerRootView style={styles.attrContainer}>
       <View>
         <Animated.View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[
-              styles.toggleButton,
-              showPerks && styles.activeButton,
-            ]}
-            onPress={() => toggleView(true)}
-          >
-            <Text
-              style={[styles.buttonText, !showPerks && styles.activeText]}
-            >
-              Perks
-            </Text>
+          <TouchableOpacity style={[styles.toggleButton, showPerks && styles.activeButton]} onPress={() => toggleView(true)}>
+            <Text style={[styles.buttonText, !showPerks && styles.activeText]}>Perks</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.toggleButton,
-              !showPerks && styles.activeButton,
-            ]}
-            onPress={() => toggleView(false)}
-          >
-            <Text
-              style={[styles.buttonText, showPerks && styles.activeText]}
-            >
-              Details
-            </Text>
+          <TouchableOpacity style={[styles.toggleButton, !showPerks && styles.activeButton]} onPress={() => toggleView(false)}>
+            <Text style={[styles.buttonText, showPerks && styles.activeText]}>Details</Text>
           </TouchableOpacity>
         </Animated.View>
       </View>
-      <View style={{ flex: 1, flexGrow: 1, marginTop: 24 }}>
+      <View style={styles.contentContainer}>
         {isLoading ? (
           <ActivityIndicator color={Color.Gray.gray600} />
-        ) : showPerks ? (
-          <View style={styles.powerUpGrid}>
-            <View
-              style={{
-                flexDirection: "row",
-                width: "100%",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{
-                  fontWeight: "700",
-                  fontSize: 16,
-                  lineHeight: 20,
-                  color: Color.base.White,
-                }}
-              >
-                Perks
-              </Text>
-              <TouchableOpacity onPress={onPress}>
-                <InfoCircle size={20} color={Color.Gray.gray50} />
-              </TouchableOpacity>
-            </View>
-            {perks && perks.length > 0 ? (
-              <>
-                {perks.map((item, index) => (
-                  <PowerUpCard
-                    key={index}
-                    title={item.name}
-                    onPress={() =>
-                      router.push({
-                        pathname: `/PowerUp`,
-                        params: {
-                          name: item.name,
-                          id: item.id,
-                        },
-                      })
-                    }
-                  />
-                ))}
-                <TouchableOpacity
-                  style={styles.container} onPress={() => router.navigate('/NotOwnedPerk')}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                    <TicketStar size={28} color={Color.base.White} />
-                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: Color.base.White, }}>{followingPerk}</Text>
-                  </View>
-                  <View style={{}}>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        lineHeight: 18,
-                        color: Color.base.White,
-                        fontWeight: '600',
-                      }}
-                    >
-                      {3 - (data.visitCount % 3)}/3
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-
-                <Button onPress={handleNavigation} textStyle='primary' variant='disabled' size="large">
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, justifyContent: 'center' }}>
-                    <Add color={Color.base.White} size={24} />
-                    <Text style={{ fontSize: 15, fontWeight: '600', lineHeight: 24, color: Color.base.White }}>Add Perk</Text>
-                  </View>
-                </Button>
-              </>
-
-            ) : (
-              <LinearGradient
-                colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                style={{ borderRadius: 16 }}
-              >
-                <View
-                  style={{
-                    gap: 16,
-                    padding: 24,
-                    borderRadius: 16,
-                    borderWidth: 1,
-                    borderColor: Color.Gray.gray400,
-                    alignItems: "center",
-                    paddingVertical: 32,
-                    paddingHorizontal: 24,
-                  }}
-                >
-                  <View
-                    style={{
-                      padding: 12,
-                      backgroundColor: Color.Gray.gray400,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: 52,
-                      borderRadius: 12,
-                    }}
-                  >
-                    <PerkGradient />
-                  </View>
-
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      lineHeight: 16,
-                      fontSize: 12,
-                      fontWeight: "400",
-                      color: Color.Gray.gray50,
-                    }}
-                  >
-                    You don't have any perks yet. Check-in to unlock new perks.
-                  </Text>
-                </View>
-              </LinearGradient>
-            )}
-          </View>
-        ) : (
-          <View
-            style={{ flex: 1, flexGrow: 1, marginBottom: 450, paddingHorizontal: 8 }}
-          >
-            <DetailsSheet
-              data={data}
-            />
-          </View>
-        )}
+        ) : showPerks ? renderPerks() : renderDetails()}
       </View>
     </GestureHandlerRootView>
   );
@@ -217,10 +143,50 @@ const styles = StyleSheet.create({
     marginTop: 32,
     marginBottom: 40,
   },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: Color.Gray.gray500,
+    paddingVertical: 4,
+    borderRadius: 48,
+  },
   toggleButton: {
     paddingVertical: 12,
     alignItems: "center",
     width: "48%",
+  },
+  activeButton: {
+    backgroundColor: Color.Gray.gray400,
+    borderRadius: 48,
+  },
+  buttonText: {
+    fontSize: 13,
+    lineHeight: 16,
+    fontWeight: "bold",
+    color: Color.base.White,
+  },
+  activeText: {
+    color: Color.base.White,
+  },
+  contentContainer: {
+    flex: 1,
+    flexGrow: 1,
+    marginTop: 24,
+  },
+  powerUpGrid: {
+    gap: 15,
+  },
+  header: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  headerText: {
+    fontWeight: "700",
+    fontSize: 16,
+    lineHeight: 20,
+    color: Color.base.White,
   },
   container: {
     flexDirection: 'row',
@@ -236,28 +202,70 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray400,
     borderRadius: 16,
   },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    backgroundColor: Color.Gray.gray500,
-    paddingVertical: 4,
-    borderRadius: 48,
+  perkDetails: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
   },
-  activeText: {
+  perkText: {
+    fontWeight: 'bold',
+    fontSize: 14,
     color: Color.base.White,
   },
-  activeButton: {
+  perkCount: {
+    fontSize: 14,
+    lineHeight: 18,
+    color: Color.base.White,
+    fontWeight: '600',
+  },
+  addPerkButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    justifyContent: 'center',
     backgroundColor: Color.Gray.gray400,
+    height: 48,
     borderRadius: 48,
   },
-  buttonText: {
-    fontSize: 13,
-    lineHeight: 16,
-    fontWeight: "bold",
+  addPerkText: {
+    fontSize: 15,
+    fontWeight: '600',
+    lineHeight: 24,
     color: Color.base.White,
   },
-  powerUpGrid: {
-    gap: 15,
+  gradientContainer: {
+    borderRadius: 16,
+  },
+  noPerksContainer: {
+    gap: 16,
+    padding: 24,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
+    alignItems: "center",
+    paddingVertical: 32,
+    paddingHorizontal: 24,
+  },
+  noPerksIcon: {
+    padding: 12,
+    backgroundColor: Color.Gray.gray400,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 52,
+    borderRadius: 12,
+  },
+  noPerksText: {
+    textAlign: "center",
+    lineHeight: 16,
+    fontSize: 12,
+    fontWeight: "400",
+    color: Color.Gray.gray50,
+  },
+  detailsContainer: {
+    flex: 1,
+    flexGrow: 1,
+    marginBottom: 450,
+    paddingHorizontal: 8,
   },
 });
 
