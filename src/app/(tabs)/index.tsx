@@ -5,7 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image
+  Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Color from "../constants/Color";
@@ -24,20 +24,28 @@ import { getRestaurants } from "../lib/service/queryHelper";
 import HomeRestList from "../components/atom/cards/HomeRestList";
 import { InfoCircle } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Animated, { useSharedValue, useAnimatedStyle, withTiming, FadeIn, FadeOut, SlideInDown, SlideOutDown, SlideInLeft } from "react-native-reanimated";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  FadeIn,
+  FadeOut,
+  SlideInDown,
+  SlideOutDown,
+  SlideInLeft,
+} from "react-native-reanimated";
 import { height, width } from "../lib/utils";
 import Button from "../components/ui/Button";
-
 
 const Page = () => {
   const router = useRouter();
   const [refreshPage, setRefreshPage] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isQuickInfoVisible, setIsQuickInfoVisible] = useState(true)
+  const [isOpenBalance, setIsOpenBalance] = useState<boolean>(false);
+  const [isQuickInfoVisible, setIsQuickInfoVisible] = useState(true);
   const pressed = useSharedValue(false);
   const [featured, setIsFeatured] = useState([]);
   const { authState } = useAuth();
-
 
   const { currentLocation } = useLocationStore();
   const { data: user, isSuccess } = useQuery({
@@ -50,7 +58,7 @@ const Page = () => {
 
   const closeBoost = () => {
     setIsQuickInfoVisible(false);
-  }
+  };
 
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
@@ -65,9 +73,14 @@ const Page = () => {
 
   const toggleBottomSheet = () => {
     setIsOpen(!isOpen);
-  }
+  };
+  const toggleBalanceBottomSheet = () => {
+    setIsOpenBalance(!isOpenBalance);
+  };
   const animatedStyles = useAnimatedStyle(() => ({
-    transform: [{ scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) }],
+    transform: [
+      { scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) },
+    ],
   }));
 
   const { data: restaurantsData } = useQuery<GetRestaurantsResponseType>({
@@ -84,8 +97,6 @@ const Page = () => {
     enabled: !!currentLocation,
   });
 
-
-
   const bottomSheetAnimation = useSharedValue(0);
 
   const bottomSheetAnimatedStyle = useAnimatedStyle(() => {
@@ -98,23 +109,26 @@ const Page = () => {
       pathname: `/restaurants/${restaurant.id}`,
       params: {
         cardId: restaurant.cardId,
-      }
+      },
     });
   };
 
   const restaurantsArray = restaurantsData?.data?.restaurants || [];
 
-  const filteredRestaurantsArray = restaurantsArray.filter(restaurant => !restaurant.isOwned);
-
+  const filteredRestaurantsArray = restaurantsArray.filter(
+    (restaurant) => !restaurant.isOwned
+  );
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ScrollView
-        style={styles.container}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <Animated.View entering={SlideOutDown}>
-          {user && <Balance amount={user.balance} />}
+          {user && (
+            <Balance
+              amount={user.balance}
+              handleToggle={() => toggleBalanceBottomSheet()}
+            />
+          )}
         </Animated.View>
 
         <View style={{ marginTop: 24, gap: 12 }}>
@@ -129,52 +143,68 @@ const Page = () => {
           </Text>
 
           {restaurantsArray?.length > 0 && (
-            <View style={{ alignItems: "center", gap: 8, }}>
+            <View style={{ alignItems: "center", gap: 8 }}>
               <Animated.ScrollView
                 entering={SlideInLeft}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
               >
-                <Animated.View entering={SlideInLeft.springify().damping(15)} style={{ flexDirection: 'row', gap: 8 }}>
+                <Animated.View
+                  entering={SlideInLeft.springify().damping(15)}
+                  style={{ flexDirection: "row", gap: 8 }}
+                >
                   {user?.email &&
-                    user?.dateOfBirth &&
-                    user?.nickname &&
-                    user?.location ? (
-                      // <QuickInfo onPress={() => setIsQuickInfoVisible(false)} user={user} />
-                      ""
-                  ) : (
-                    isQuickInfoVisible && (
-                      <QuickInfo onPress={() => setIsQuickInfoVisible(false)} user={user} />
-                    )
-                  )}
+                  user?.dateOfBirth &&
+                  user?.nickname &&
+                  user?.location
+                     ? // <QuickInfo onPress={() => setIsQuickInfoVisible(false)} user={user} />
+                       ""
+                    : isQuickInfoVisible && (
+                        <QuickInfo
+                          onPress={() => setIsQuickInfoVisible(false)}
+                          user={user}
+                        />
+                      )}
                   <TouchableOpacity
-                    onPress={() => handleNavigation(filteredRestaurantsArray[0])}
+                    onPress={() =>
+                      handleNavigation(filteredRestaurantsArray[0])
+                    }
                   >
                     <HomeRestList
                       isClaimLoading={true}
                       marker={filteredRestaurantsArray[0]}
                       key={filteredRestaurantsArray[0]?.id as string}
-                      onPress={() => handleNavigation(filteredRestaurantsArray[0])}
+                      onPress={() =>
+                        handleNavigation(filteredRestaurantsArray[0])
+                      }
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => handleNavigation(filteredRestaurantsArray[1])}
+                    onPress={() =>
+                      handleNavigation(filteredRestaurantsArray[1])
+                    }
                   >
                     <HomeRestList
                       isClaimLoading={true}
                       marker={filteredRestaurantsArray[1]}
                       key={filteredRestaurantsArray[1]?.id as string}
-                      onPress={() => handleNavigation(filteredRestaurantsArray[1])}
+                      onPress={() =>
+                        handleNavigation(filteredRestaurantsArray[1])
+                      }
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => handleNavigation(filteredRestaurantsArray[2])}
+                    onPress={() =>
+                      handleNavigation(filteredRestaurantsArray[2])
+                    }
                   >
                     <HomeRestList
                       isClaimLoading={true}
                       marker={filteredRestaurantsArray[2]}
                       key={filteredRestaurantsArray[2]?.id as string}
-                      onPress={() => handleNavigation(filteredRestaurantsArray[2])}
+                      onPress={() =>
+                        handleNavigation(filteredRestaurantsArray[2])
+                      }
                     />
                   </TouchableOpacity>
                 </Animated.View>
@@ -237,59 +267,171 @@ const Page = () => {
           </View>
         )}
       </ScrollView>
-      {isOpen && (
+      {isOpenBalance && (
         <Modal transparent={true}>
           <TouchableOpacity
             style={{ flex: 1 }}
-            onPress={toggleBottomSheet}
+            onPress={toggleBalanceBottomSheet}
           >
             <Animated.View
               entering={FadeIn}
               exiting={FadeOut}
-              style={[{
-                position: 'absolute',
-                backgroundColor: 'rgba(0, 0, 0, 0.25)',
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                zIndex: 98,
-              }, animatedStyles]}
+              style={[
+                {
+                  position: "absolute",
+                  backgroundColor: "rgba(0, 0, 0, 0.25)",
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  zIndex: 98,
+                },
+                animatedStyles,
+              ]}
             />
             <Animated.View
               entering={SlideInDown.springify().damping(18)}
               exiting={SlideOutDown.springify()}
-              style={[{
-                backgroundColor: Color.Gray.gray600,
-                height: height / 2,
-                bottom: 0,
-                width: width,
-                zIndex: 99,
-                position: 'absolute',
-                borderTopStartRadius: 32,
-                borderTopEndRadius: 32,
-                gap: 24,
-                padding: 16
-              }, animatedStyles]}
+              style={[
+                {
+                  backgroundColor: Color.Gray.gray600,
+                  height: height / 2.38,
+                  bottom: 0,
+                  width: width,
+                  zIndex: 99,
+                  position: "absolute",
+                  borderTopStartRadius: 32,
+                  borderTopEndRadius: 32,
+                  gap: 24,
+                  padding: 16,
+                  alignItems: "center",
+                },
+                animatedStyles,
+              ]}
             >
-              <View style={{ paddingVertical: 8, justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: 20, lineHeight: 24, color: Color.base.White, fontWeight: 'bold', }}>Membership</Text>
+              <View
+                style={{
+                  paddingVertical: 8,
+                  justifyContent: "center",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    lineHeight: 24,
+                    color: Color.base.White,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Balance
+                </Text>
               </View>
-              <View style={{ alignItems: 'center', gap: 16 }}>
+              <Image
+                source={require("../../public/images/balanceInfo.png")}
+                style={{ height: 64, width: 204 }}
+              />
+              <Text style={{ textAlign: 'center', fontSize: 14, color: Color.Gray.gray50, lineHeight: 18 }}>
+                You earned ALYS Bitcoin, which is faster and cheaper to use but
+                still pegged 1:1 with mainchain Bitcoin. Use your balance to
+                redeem perks at restaurants. Withdrawals to external crypto
+                wallets coming soon.
+              </Text>
+              <Button
+                variant="tertiary"
+                textStyle="primary"
+                onPress={toggleBalanceBottomSheet}
+                style={{ width: "100%" }}
+              >
+                <Text>Got it</Text>
+              </Button>
+            </Animated.View>
+          </TouchableOpacity>
+        </Modal>
+      )}
+      {isOpen && (
+        <Modal transparent={true}>
+          <TouchableOpacity style={{ flex: 1 }} onPress={toggleBottomSheet}>
+            <Animated.View
+              entering={FadeIn}
+              exiting={FadeOut}
+              style={[
+                {
+                  position: "absolute",
+                  backgroundColor: "rgba(0, 0, 0, 0.25)",
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  zIndex: 98,
+                },
+                animatedStyles,
+              ]}
+            />
+            <Animated.View
+              entering={SlideInDown.springify().damping(18)}
+              exiting={SlideOutDown.springify()}
+              style={[
+                {
+                  backgroundColor: Color.Gray.gray600,
+                  height: height / 2,
+                  bottom: 0,
+                  width: width,
+                  zIndex: 99,
+                  position: "absolute",
+                  borderTopStartRadius: 32,
+                  borderTopEndRadius: 32,
+                  gap: 24,
+                  padding: 16,
+                },
+                animatedStyles,
+              ]}
+            >
+              <View
+                style={{
+                  paddingVertical: 8,
+                  justifyContent: "center",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    lineHeight: 24,
+                    color: Color.base.White,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Membership
+                </Text>
+              </View>
+              <View style={{ alignItems: "center", gap: 16 }}>
                 <Image
                   source={require("@/public/images/membership.png")}
                   style={{ width: width / 1.8, height: 166 }}
-                  resizeMode='contain'
+                  resizeMode="contain"
                 />
-                <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray50, textAlign: 'center' }}>
-                  Earn Bitcoin and other rewards simply by using our membership cards when you visit your favorite restaurants.
+                <Text
+                  style={{
+                    lineHeight: 18,
+                    fontSize: 14,
+                    color: Color.Gray.gray50,
+                    textAlign: "center",
+                  }}
+                >
+                  Earn Bitcoin and other rewards simply by using our membership
+                  cards when you visit your favorite restaurants.
                 </Text>
               </View>
 
-              <Button variant="primary" textStyle="primary" onPress={toggleBottomSheet}>
-                <Text>
-                  Got it
-                </Text>
+              <Button
+                variant="primary"
+                textStyle="primary"
+                onPress={toggleBottomSheet}
+              >
+                <Text>Got it</Text>
               </Button>
             </Animated.View>
           </TouchableOpacity>
@@ -305,7 +447,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
   },
   modal: {
     position: "absolute",
