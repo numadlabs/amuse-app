@@ -22,7 +22,7 @@ const PerkBuy = () => {
   const { mutateAsync: purchasePerkMutation } = useMutation({
     mutationFn: purchasePerk,
     onError: (error) => {
-      setBalance("Insufficient BTC balance");
+      setBalance("Insufficient Bitcoin balance");
       setIsClaimLoading(false);
       console.log(error);
     },
@@ -100,7 +100,7 @@ const PerkBuy = () => {
           isClaimLoading ? (
             <ActivityIndicator />
           ) : (
-            <Text style={{ fontSize: 15, fontWeight: '600', color: Color.base.White }}>{`Buy ${price} BTC`}</Text>
+            <Text style={{ fontSize: 15, fontWeight: '600', color: Color.base.White }}>{`Buy ${price} Bitcoin`}</Text>
           )
         }
       </Button>

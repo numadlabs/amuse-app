@@ -39,8 +39,8 @@ const StackedCard = () => {
     transform: [
       {
         translateY: withSpring(cardPositions.value, {
-          damping:15,
-          
+          damping: 15,
+
         }),
       },
     ],
@@ -88,7 +88,7 @@ const StackedCard = () => {
           </View>
         </LinearGradient>
       ) : (
-        <Animated.View style={{ flex: 1, overflow: 'hidden', paddingBottom: 240 }}>
+        <Animated.View style={{ flex: 1, paddingBottom: 240, paddingHorizontal:16 }}>
           {latestCards?.map((card, index) => (
             <Animated.View
               key={index}
@@ -96,6 +96,14 @@ const StackedCard = () => {
                 animatedCardStyle,
                 {
                   zIndex: latestCards.length - index,
+                  shadowColor: Color.Gray.gray600,
+                  shadowOpacity: 1,
+                  shadowOffset: {
+                    width: 0,
+                    height: 0,
+                  },
+                  shadowRadius: 32,
+                  elevation: 12
                 },
               ]}
             >

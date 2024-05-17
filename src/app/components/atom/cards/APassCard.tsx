@@ -29,6 +29,7 @@ import {
   GestureDetector,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
+import BalanceStripes from "../../icons/BalanceStripes";
 
 // In the APassCard component
 interface ApassProp {
@@ -77,9 +78,10 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
               {/* in case old design returns : Turn below view into blurview and intensity was 24
               also remove background color */}
               <View style={styles.blurContainer}>
-                <View style={{ position: 'absolute', top: 0, right: -20, width: '50%' }}>
-                  <APassStripes />
+                <View style={{position:'absolute',top:25, right:-120, transform: [{ rotate: '270deg' }] }}>
+                <APassStripes/>
                 </View>
+              
                 <View style={{ flexDirection: 'row', width: '100%', gap: 12, justifyContent: 'space-between', alignItems: 'center' }}>
                   <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center', justifyContent: 'center', alignContent: 'center' }}>
                     <Image
@@ -131,10 +133,8 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
                     {/* </LinearGradient> */}
                     <View style={{ justifyContent: 'center', alignContent: 'center', alignItems: 'center', flexDirection: 'row', gap: 6, borderTopWidth: 1, borderColor: Color.Gray.gray400 }}>
                       <View style={{ flexDirection: 'row', justifyContent: 'center', alignContent: 'center', alignItems: 'center', gap: 6, paddingVertical: 10 }}>
-
-                        {/*Todo:  find some better counting shit you fucker */}
                         <AnimatedText entering={FadeIn} exiting={FadeOut} style={[{ fontWeight: '700', fontSize: 14, lineHeight: 18, color: Color.base.White }, animatedStyles]}>
-                        {3 - (visitCount % 3)}
+                          {3 - (visitCount % 3)}
                         </AnimatedText>
 
                         <Text style={{ fontWeight: '400', fontSize: 10, lineHeight: 12, color: Color.base.White }}>
@@ -158,13 +158,12 @@ export default APassCard;
 const styles = StyleSheet.create({
   aCardContainer: {
     borderWidth: 1,
-    backgroundColor: 'transparent',
-    borderRadius: 32,
+    backgroundColor: Color.Gray.gray500,
+    borderRadius: 24,
     alignItems: "center",
-    borderColor: Color.Gray.gray200,
-    overflow: "hidden",
+    borderColor: Color.Gray.gray400,
+ 
     height: 304,
-
   },
   blurContainer: {
     backgroundColor: Color.Gray.gray500,

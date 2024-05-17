@@ -20,6 +20,7 @@ import useLocationStore from "@/app/lib/store/userLocation";
 import SvgMarker from "../atom/svgMarker";
 import Color from "@/app/constants/Color";
 import { mapStyle } from "@/app/constants/serverSettings";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
@@ -270,7 +271,7 @@ export default function RestaurantMapView() {
   };
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <MapView
         ref={mapRef}
         style={styles.map}
@@ -334,7 +335,7 @@ export default function RestaurantMapView() {
                     style={{
                       width: 8,
                       height: 8,
-                      padding: 4,
+                  
                       backgroundColor: Color.base.White,
                       borderRadius: 48,
                     }}
@@ -346,50 +347,53 @@ export default function RestaurantMapView() {
         })}
       </MapView>
       {/* {!scrollViewHidden && ( */}
-      <Animated.ScrollView
-        ref={scrollViewRef}
-        horizontal
-        pagingEnabled
-        scrollEventThrottle={400}
-        showsHorizontalScrollIndicator={false}
-        snapToInterval={CARD_WIDTH + 20}
-        snapToAlignment="center"
-        style={styles.scrollView}
-        contentInset={{
-          top: 0,
-          left: SPACING_FOR_CARD_INSET,
-          bottom: 10,
-          right: SPACING_FOR_CARD_INSET,
-        }}
-        onMomentumScrollEnd={() => setIsScrollViewDragging(false)}
-        onScrollBeginDrag={() => setIsScrollViewDragging(true)}
-        // onScrollEndDrag={() => setIsScrollViewDragging(false)}
-        contentContainerStyle={{
-          paddingHorizontal:
-            Platform.OS === "android" ? SPACING_FOR_CARD_INSET : 0,
-        }}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: mapAnimation } } }],
-          { useNativeDriver: true, listener: handleScrollViewScroll }
-        )}
-        decelerationRate={0.1}
-      >
-        {!scrollViewHidden &&
-          restaurantsData?.data?.restaurants &&
-          restaurantsData.data.restaurants.map((marker, index) => (
-            <TouchableOpacity
-              key={`card-${marker.id}`}
-              onPress={() => handleNavigation(marker)}
-            >
-              <FloatingRestaurantCard
-                key={marker.id as string}
-                marker={marker}
-                isClaimLoading={isClaimLoading}
+      <View style={{ alignItems: "center" }}>
+        <Animated.ScrollView
+          ref={scrollViewRef}
+          horizontal
+          scrollEventThrottle={400}
+          showsHorizontalScrollIndicator={false}
+          snapToInterval={width - 16}
+          snapToAlignment="center"
+          style={styles.scrollView}
+          contentInset={{
+            top: 0,
+            left: SPACING_FOR_CARD_INSET,
+            bottom: 10,
+            right: SPACING_FOR_CARD_INSET,
+          }}
+          onMomentumScrollEnd={() => setIsScrollViewDragging(false)}
+          onScrollBeginDrag={() => setIsScrollViewDragging(true)}
+          // onScrollEndDrag={() => setIsScrollViewDragging(false)}
+          contentContainerStyle={{
+            paddingHorizontal:
+              Platform.OS === "android" ? SPACING_FOR_CARD_INSET : 0,
+          }}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { x: mapAnimation } } }],
+            { useNativeDriver: true, listener: handleScrollViewScroll }
+          )}
+          decelerationRate={0.1}
+        >
+          <View style={{gap:8, flexDirection:'row', flex:1}}>
+          {!scrollViewHidden &&
+            restaurantsData?.data?.restaurants &&
+            restaurantsData.data.restaurants.map((marker, index) => (
+              <TouchableOpacity
+                key={`card-${marker.id}`}
                 onPress={() => handleNavigation(marker)}
-              />
-            </TouchableOpacity>
-          ))}
-      </Animated.ScrollView>
+              >
+                <FloatingRestaurantCard
+                  key={marker.id as string}
+                  marker={marker}
+                  isClaimLoading={isClaimLoading}
+                  onPress={() => handleNavigation(marker)}
+                />
+              </TouchableOpacity>
+            ))}
+             </View>
+        </Animated.ScrollView>
+      </View>
       {/* )} */}
 
       {/* <View style={styles.absoluteBox}>
@@ -400,7 +404,7 @@ export default function RestaurantMapView() {
           <Text style={styles.buttonText}>Confirm</Text>
         </TouchableOpacity>
       </View> */}
-    </View>
+    </GestureHandlerRootView>
   );
 }
 
@@ -436,15 +440,12 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     position: "absolute",
-    bottom: 70,
-    left: 0,
-    right: 0,
+    bottom: 128,
     paddingVertical: 10,
-    marginBottom: 36,
   },
-  endPadding: {
-    paddingRight: width - CARD_WIDTH,
-  },
+  // endPadding: {
+  //   paddingRight: width - CARD_WIDTH,
+  // },
   card: {
     // padding: 10,
     elevation: 2,
@@ -457,7 +458,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     // shadowOffset: { x: 2, y: -2 },
     height: CARD_HEIGHT,
-    width: CARD_WIDTH,
+  
     overflow: "hidden",
   },
   cardImage: {

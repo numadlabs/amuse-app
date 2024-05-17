@@ -40,7 +40,7 @@ const HomeRestList: React.FC<ResListCardProp> = ({
     <LinearGradient
       colors={[Color.Brand.card.start, Color.Brand.card.end]}
       style={{
-        width: CARD_WIDTH,
+        width: width-32,
         overflow: "hidden",
         borderRadius: 20,
         borderWidth: 1,

@@ -98,7 +98,7 @@ const Restaurant = () => {
         ) : (
           <>
             {restaurantsData?.isOwned ? (
-              <Animated.View style={{ paddingBottom: 100 }} entering={SlideInDown.springify().damping(20).delay(200)}>
+              <Animated.View style={{ paddingBottom: 100 }} entering={SlideInDown.springify().damping(20).delay(200)} >
                 <Owned
                   // userCardId={perks?.userBonuses?.[0]?.userCardId}
                   // followingPerk={perks?.followingBonus?.name}

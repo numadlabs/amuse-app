@@ -53,7 +53,8 @@ const NotOwnedPerk: React.FC = () => {
             key={i}
             style={[styles.indicator, { backgroundColor: Color.Gray.gray500 }]}
           >
-           <PerkGradientSm/>
+           {/* <PerkGradientSm/> */}
+           <Tick size={20} color={Color.base.White} />
           </View>
         );
       }
@@ -80,7 +81,7 @@ const NotOwnedPerk: React.FC = () => {
             <View style={{ flexDirection: "column", gap: 12, alignItems: "center" }}>
               <Text style={styles.perkTitle}>Priority seating on Fridays</Text>
               <Text style={styles.perkDescription}>
-                Enjoy a free drink on the house, every 5 visits.
+                Enjoy a free drink on the house, every {targetCount} visits.
               </Text>
             </View>
           </View>

@@ -137,34 +137,39 @@ const Page = () => {
               fontSize: 14,
               fontWeight: "600",
               color: Color.Gray.gray100,
+              paddingHorizontal:16
             }}
           >
             Featured
           </Text>
 
           {restaurantsArray?.length > 0 && (
-            <View style={{ alignItems: "center", gap: 8 }}>
+            <View style={{ alignItems: "center", gap: 8, width:width }}>
               <Animated.ScrollView
+                snapToAlignment="center"
                 entering={SlideInLeft}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
+                snapToInterval={width - 16} // 16 for the gap between cards
+                decelerationRate="fast"
+      
               >
                 <Animated.View
                   entering={SlideInLeft.springify().damping(15)}
-                  style={{ flexDirection: "row", gap: 8 }}
+                  style={{ flexDirection: "row", gap: 8, left:16, paddingRight:32 }}
                 >
                   {user?.email &&
-                  user?.dateOfBirth &&
-                  user?.nickname &&
-                  user?.location
-                     ? // <QuickInfo onPress={() => setIsQuickInfoVisible(false)} user={user} />
-                       ""
+                    user?.dateOfBirth &&
+                    user?.nickname &&
+                    user?.location
+                    ? // <QuickInfo onPress={() => setIsQuickInfoVisible(false)} user={user} />
+                    ""
                     : isQuickInfoVisible && (
-                        <QuickInfo
-                          onPress={() => setIsQuickInfoVisible(false)}
-                          user={user}
-                        />
-                      )}
+                      <QuickInfo
+                        onPress={() => setIsQuickInfoVisible(false)}
+                        user={user}
+                      />
+                    )}
                   <TouchableOpacity
                     onPress={() =>
                       handleNavigation(filteredRestaurantsArray[0])
@@ -219,6 +224,7 @@ const Page = () => {
             marginTop: 32,
             marginBottom: 12,
             justifyContent: "space-between",
+            paddingHorizontal:16
           }}
         >
           <Text
@@ -226,6 +232,7 @@ const Page = () => {
               fontSize: 14,
               fontWeight: "600",
               color: Color.Gray.gray100,
+            
             }}
           >
             Memberships
@@ -447,7 +454,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
-    paddingHorizontal: 16,
+ 
   },
   modal: {
     position: "absolute",

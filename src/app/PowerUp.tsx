@@ -31,6 +31,9 @@ const PowerUp = () => {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient()
   console.log(restaurantId)
+
+
+
   const {
     data,
     error,
@@ -43,7 +46,7 @@ const PowerUp = () => {
     onSuccess: (data, variables) => {
       try {
         const resp = createRedeemBonusMutation(data.data.data);
-       
+      
       } catch (error) {
         console.error("Bonus mutation failed:", error);
       }
@@ -58,23 +61,27 @@ const PowerUp = () => {
     },
     onSuccess: (data, variables) => {
       console.log("🚀 ~ Bonus ~ data:", data.data.data);
-    
+
     },
   });
 
   const handleUseBonus = async (bonusId: string) => {
     try {
       const data = await createBonusMutation(bonusId);
-      queryClient.invalidateQueries({ queryKey: restaurantKeys.perks(restaurantId as string), });
+      
       setPopupVisible(!isPopupVisible);
     } catch (error) {
       console.log("Bonus mutation failed:", error);
     }
-    
+
   };
 
   const handleNavigation = () => {
+    queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
+    queryClient.invalidateQueries({ queryKey: userKeys.cards });
+    queryClient.invalidateQueries({ queryKey: userKeys.info });
     router.back()
+
   }
   return (
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
