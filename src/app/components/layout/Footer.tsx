@@ -22,7 +22,7 @@ const Footer = ({ navigation }) => {
 
       <TouchableOpacity
         style={[styles.button1, styles.qrButton]}
-        onPress={() => router.navigate("/(modals)/QrModal")}
+        onPress={() => router.navigate("/(modals)/MyQrModal")}
       >
         <View style={styles.qr}>
           <ScanBarcode size={32} color={Color.base.White} />

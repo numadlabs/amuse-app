@@ -44,6 +44,10 @@ export default function Layout() {
             name="(modals)/QrModal"
             options={{ presentation: "modal" }}
           />
+          <Stack.Screen
+            name="(modals)/MyQrModal"
+            options={{ presentation: "modal" }}
+          />
           <Stack.Screen name="SuccessScreen" />
           <Stack.Screen name="MyAcards" />
           <Stack.Screen name="TermsAndCondo" />

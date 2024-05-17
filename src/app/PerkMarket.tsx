@@ -109,7 +109,7 @@ const PerkMarket = () => {
                     justifyContent: "center",
                   }}
                 >
-                  <Text style={styles.perkPrice}>{`Buy ${item.price}`}</Text>
+                  <Text style={styles.perkPrice}>{`Redeem`}</Text>
                 </View>
               </TouchableOpacity>
             </LinearGradient>
