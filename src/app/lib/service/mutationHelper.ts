@@ -62,13 +62,13 @@ export function getAcard({
 
 export function purchasePerk({
   bonusId,
-  userCardId,
+  restaurantId,
 }: {
   bonusId: string;
-  userCardId: string;
+  restaurantId: string;
 }) {
   return axiosClient
-    .post("/userBonus/buy", { bonusId, userCardId })
+    .post("/userBonus/buy", { bonusId, restaurantId })
     .then((response) => {
       return response;
     });

@@ -223,7 +223,7 @@ const Email = () => {
                 }}
               >
                 <DateTimePicker
-                  value={date}
+                  value={birthdate ? new Date(birthdate) : new Date()}
                   mode="date"
                   display="spinner"
                   onChange={onChange}
