@@ -42,18 +42,6 @@ const Restaurant = () => {
     enabled: !!currentLocation && !!id,
   });
 
-  // const { data: userCardId = [] } = useQuery({
-  //   queryKey: userKeys.perks,
-  //   queryFn: () => getPerksByRestaurant(id),
-  //   enabled: !!currentLocation,
-  // });
-
-  // const { data: perks = [] } = useQuery({
-  //   queryKey: userKeys.perks,
-  //   queryFn: () => getUserPowerUps(userCardId),
-  //   enabled: !!currentLocation,
-  // });
-
   const toggleBottomSheet = () => {
     setBottomSheet(!bottomSheet);
   };

@@ -12,7 +12,7 @@ import Animated from "react-native-reanimated";
 import { RestaurantType } from "@/app/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { getPerksByRestaurant, getUserPowerUps } from "@/app/lib/service/queryHelper";
-import { userKeys } from "@/app/lib/service/keysHelper";
+import { restaurantKeys, userKeys } from "@/app/lib/service/keysHelper";
 import useLocationStore from "@/app/lib/store/userLocation";
 
 interface OwnedProps {
@@ -30,25 +30,17 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
   const [showPerks, setShowPerks] = useState(true);
   const currentLocation = useLocationStore()
 
-  const { data: cardId = [] } = useQuery({
-    queryKey: userKeys.perks,
+  const { data: perks = [] } = useQuery({
+    queryKey: restaurantKeys.perks(data?.id as string),
     queryFn: () => getPerksByRestaurant(data.id),
     enabled: !!currentLocation,
   });
-
-  const { data: perks = [] } = useQuery({
-    queryKey: userKeys.perks,
-    queryFn: () => getUserPowerUps(data?.id),
-    enabled: !!currentLocation,
-  });
-
 
   const handleNavigation = () => {
     router.push({
       pathname: '/PerkMarket',
       params: {
         id: data.id,
-        userCardId: perks?.userBonuses?.[0]?.userCardId
       }
     });
   };
@@ -78,7 +70,7 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
             <PowerUpCard
               key={index}
               title={item.name}
-              onPress={() => router.push({ pathname: `/PowerUp`, params: { name: item.name, id: item.id } })}
+              onPress={() => router.push({ pathname: `/PowerUp`, params: { name: item.name, id: item.id, restaurantId: data?.id } })}
             />
           ))}
           <TouchableOpacity style={styles.container} onPress={notOwnedNavigation}>
@@ -98,14 +90,22 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
           </TouchableOpacity>
         </>
       ) : (
-        <LinearGradient colors={[Color.Brand.card.start, Color.Brand.card.end]} style={styles.gradientContainer}>
-          <View style={styles.noPerksContainer}>
-            <View style={styles.noPerksIcon}>
-              <PerkGradient />
+        <>
+          <LinearGradient colors={[Color.Brand.card.start, Color.Brand.card.end]} style={styles.gradientContainer}>
+            <View style={styles.noPerksContainer}>
+              <View style={styles.noPerksIcon}>
+                <PerkGradient />
+              </View>
+              <Text style={styles.noPerksText}>You don't have any perks yet. Check-in to unlock new perks.</Text>
             </View>
-            <Text style={styles.noPerksText}>You don't have any perks yet. Check-in to unlock new perks.</Text>
-          </View>
-        </LinearGradient>
+          </LinearGradient>
+          <TouchableOpacity onPress={handleNavigation}>
+            <View style={styles.addPerkButton}>
+              <Add color={Color.base.White} size={24} />
+              <Text style={styles.addPerkText}>Add Perk</Text>
+            </View>
+          </TouchableOpacity>
+        </>
       )}
     </View>
   );

@@ -26,11 +26,11 @@ const PowerUp = () => {
       })
     }, 800)
   }
-  const { id, name } = useLocalSearchParams();
+  const { id, name, restaurantId } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient()
-
+  console.log(restaurantId)
   const {
     data,
     error,
@@ -43,7 +43,7 @@ const PowerUp = () => {
     onSuccess: (data, variables) => {
       try {
         const resp = createRedeemBonusMutation(data.data.data);
-        
+       
       } catch (error) {
         console.error("Bonus mutation failed:", error);
       }
@@ -65,7 +65,7 @@ const PowerUp = () => {
   const handleUseBonus = async (bonusId: string) => {
     try {
       const data = await createBonusMutation(bonusId);
-      queryClient.invalidateQueries({ queryKey: userKeys.perks });
+      queryClient.invalidateQueries({ queryKey: restaurantKeys.perks(restaurantId as string), });
       setPopupVisible(!isPopupVisible);
     } catch (error) {
       console.log("Bonus mutation failed:", error);

@@ -12,7 +12,7 @@ import { restaurantKeys, userKeys } from "./lib/service/keysHelper";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 const PerkBuy = () => {
-  const { name, id, price, userCardId } = useLocalSearchParams();
+  const { name, id, price, userCardId, restaurantId } = useLocalSearchParams();
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const [balance, setBalance] = useState("");
   const { authState } = useAuth();
@@ -28,7 +28,8 @@ const PerkBuy = () => {
     },
     onSuccess: (data, variables) => {
       console.log("🚀 ~ PerkBuy ~ data:", data.data.data);
-      queryClient.invalidateQueries({ queryKey: userKeys.perks });
+      queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
+      queryClient.invalidateQueries({ queryKey: userKeys.cards });
     },
   });
   const AnimatedText = Animated.createAnimatedComponent(Text);
@@ -39,13 +40,12 @@ const PerkBuy = () => {
     if (authState.userId) {
       const data = await purchasePerkMutation({
         bonusId: id,
-        userCardId: userCardId as string,
+        restaurantId: restaurantId as string,
       });
-
       if (data.data.success) {
         setIsClaimLoading(false);
         console.log("🚀 ~ Purchase successful", data.data.data);
-        
+        queryClient.invalidateQueries({ queryKey: userKeys.cards });
         queryClient.invalidateQueries({ queryKey: userKeys.info });
         router.back();
       } else if (data.data.success === false) {
