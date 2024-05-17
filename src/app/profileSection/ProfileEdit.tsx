@@ -8,6 +8,8 @@ import {
   TextInput,
   View,
   Text,
+  Platform,
+  TouchableOpacity
 } from "react-native";
 import Header from "../components/layout/Header";
 import Color from "../constants/Color";
@@ -81,7 +83,7 @@ const ProfileEdit = () => {
   const onDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
     if (selectedDate) {
-      setDateOfBirth(selectedDate.toISOString());
+      setDateOfBirth(selectedDate.toISOString().split('T')[0]);
       setInitialDate(selectedDate);
     }
   };
@@ -113,7 +115,13 @@ const ProfileEdit = () => {
     const newProgress = filledFields / totalFields;
     setProgress(newProgress);
   }, [nickname, email, location, dateOfBirth]);
-
+  const [show, setShow] = useState(false);
+  const confirmDate = () => {
+    setShow(false);
+  };
+  const showDatepicker = () => {
+    setShow(true);
+  };
 
   return (
     <>
@@ -258,16 +266,9 @@ const ProfileEdit = () => {
                   >
                     <View style={[styles.input]}>
                       <Cake color={Color.Gray.gray50} />
-                     
-                        <DateTimePicker
-                         value={initialDate}
-                          mode="date"
-                          display="default"
-                          onChange={onDateChange}
-                          maximumDate={new Date(Date.now())}
-                          style={{ backgroundColor: Color.Gray.gray600 }}
-                        />
-
+                      <TouchableOpacity onPress={showDatepicker}>
+                      <Text style={{ color: Color.base.White }}>{dateOfBirth || "Select Date"}</Text>
+                      </TouchableOpacity>
                     </View>
                   </LinearGradient>
                 </View>
@@ -304,6 +305,36 @@ const ProfileEdit = () => {
           </Button>
 
         </View>
+        {show && (
+              <View
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  right: 0,
+                  width: "100%",
+                  backgroundColor: Color.Gray.gray500,
+                  padding: 16,
+                }}
+              >
+                <DateTimePicker
+                  value={initialDate}
+                  mode="date"
+                  display="spinner"
+                  onChange={onDateChange}
+                />
+                <Button variant="tertiary" onPress={confirmDate}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontWeight: "600",
+                      color: Color.base.White,
+                    }}
+                  >
+                    Confirm date
+                  </Text>
+                </Button>
+              </View>
+            )}
       </SafeAreaView>
     </>
   );
