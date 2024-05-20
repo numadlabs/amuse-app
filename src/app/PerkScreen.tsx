@@ -72,18 +72,19 @@ const PerkScreen = () => {
 
       {!isLoading && card && (
         <>
-          <APassCard
-            name={card.name}
-            image={card.logo}
-            nftImage={card.nftImageUrl}
-            onPress={() => ""}
-            category={card.category}
-            hasBonus={card.hasBonus}
-            visitCount={card.visitCount}
-          />
-
+          <View style={{marginBottom:300, marginTop:20}}>
+            <APassCard
+              name={card.name}
+              image={card.logo}
+              nftImage={card.nftImageUrl}
+              onPress={() => ""}
+              category={card.category}
+              hasBonus={card.hasBonus}
+              visitCount={card.visitCount}
+            />
+          </View>
           <Animated.View
-            style={{ marginBottom: 10, flexDirection: "column" }}
+            style={{ marginBottom: 80, gap: 16 }}
             entering={SlideInDown.springify().damping(20).delay(200)}
           >
             <LinearGradient
@@ -93,13 +94,13 @@ const PerkScreen = () => {
               style={{
                 borderRadius: 16,
                 justifyContent: "center",
-                height: height / 6,
+                height: height / 6.5,
                 gap: 12,
                 alignContent: "center",
                 alignItems: "center",
                 borderWidth: 1,
                 borderColor: Color.Gray.gray400,
-                marginBottom: 16,
+
               }}
             >
               <Text
@@ -143,10 +144,11 @@ const PerkScreen = () => {
             textStyle="primary"
             onPress={handleNavigation}
             style={{
-              bottom: 40,
-              position: "absolute",
+              bottom: 20,
               width: "100%",
-              marginHorizontal: "5%",
+              position:'absolute',
+              marginHorizontal:'5%'
+
             }}
           >
             <Text>Confirm</Text>
@@ -161,7 +163,7 @@ export default PerkScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: height / 6.5,
+    marginTop: 70,
     backgroundColor: Color.Gray.gray600,
     paddingHorizontal: 16,
     flex: 1,

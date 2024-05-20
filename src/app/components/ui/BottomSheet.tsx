@@ -21,11 +21,11 @@ const BottomSheet = () => {
               <View>
                 <View style={styles.attribute}>
                   <Tick size={8} color={Color.Gray.gray600}/>
-                  <Text style={styles.attributeText}>Earn BTC for every check-in</Text>
+                  <Text style={styles.attributeText}>Earn Bitcoin for every check-in</Text>
                 </View>
                 <View style={styles.attribute}>
                 <Tick size={8} color={Color.Gray.gray600}/>
-                  <Text style={styles.attributeText}>Earn BTC for every check-in</Text>
+                  <Text style={styles.attributeText}>Earn Bitcoin for every check-in</Text>
                 </View>
               </View>
             </View>

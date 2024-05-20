@@ -6,33 +6,27 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
-  TextInput,
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Steps from "../components/atom/Steps";
 import Color from "../constants/Color";
-import PrimaryButton from "../components/atom/button/PrimaryButton";
 import Button from "../components/ui/Button";
-import { router, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useAuth } from "../context/AuthContext";
 import useBoostInfoStore from "../lib/store/boostInfoStore";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useMutation } from "@tanstack/react-query";
-import BoostSuccess from "../components/(feedback)/BoostSuccess";
 import { updateUserInfo } from "../lib/service/mutationHelper";
 import { LinearGradient } from "expo-linear-gradient";
 
 const Email = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const router = useRouter();
-  const { email, area, birthdate, setBirthdate } = useBoostInfoStore(); // Destructure the birthdate and setBirthdate from the Zustand hook
-
+  const { email, area, birthdate, setBirthdate } = useBoostInfoStore();
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [isPopupVisible, setPopupVisible] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
-
   const { authState } = useAuth();
 
   useEffect(() => {
@@ -51,24 +45,11 @@ const Email = () => {
     };
   }, []);
 
-  const openDatePicker = () => {
-    setShowDatePicker(true);
-  };
-
   const onDateChange = (event, selectedDate) => {
     if (selectedDate) {
-      const currentDate = selectedDate;
-      // setDate(currentDate.toISOString().split("T")[0]);
       setBirthdate(selectedDate.toISOString());
     }
-    // setShowDatePicker(false);
   };
-
-  useEffect(() => {
-    if (birthdate) {
-      setShowDatePicker(true);
-    }
-  }, [birthdate]);
 
   const {
     data,
@@ -84,8 +65,6 @@ const Email = () => {
       console.log("🚀 ~ QrModal ~ data:", data);
       try {
         console.log(" successful:", data);
-        // setEncryptedTap(data.data.data);
-        // togglePopup();
       } catch (error) {
         console.error(" mutation failed:", error);
       }
@@ -106,31 +85,12 @@ const Email = () => {
       });
       if (data.success) {
         router.push("(boost)/Success");
-        setLoading(false);
       }
     } catch (error) {
       console.log(error);
+    } finally {
       setLoading(false);
     }
-  };
-
-  const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
-
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === "ios");
-    setDate(currentDate);
-  };
-
-  const showDatepicker = () => {
-    setShow(true);
-  };
-
-  const confirmDate = () => {
-    setShow(false);
-    // Here you can handle the confirmed date, such as saving it to a database or state
-    console.log("Selected Date:", date);
   };
 
   return (
@@ -159,27 +119,10 @@ const Email = () => {
                       Rewarding the wise, the reckless, and everyone in between.
                     </Text>
                   </View>
-                  {/* <TextInput onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} placeholder='Birthday' style={isFocused ? { borderColor: Color.Gray.gray600, height: 48, borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, } : { height: 48, borderWidth: 1, borderColor: Color.Gray.gray100, borderRadius: 16, paddingHorizontal: 16, marginTop: 10, }} /> */}
-                  {/* <Button
-                  onPress={openDatePicker}
-                  variant="secondary"
-                  textStyle="secondary"
-                  size="default"
-                >
-                  Select Birthdate
-                </Button>
-                {showDatePicker && (
-                  <DateTimePicker
-                    value={birthdate ? new Date(birthdate) : new Date()}
-                    mode="date"
-                    display="default"
-                    onChange={onDateChange}
-                  />
-                )} */}
-                  <TouchableOpacity onPress={showDatepicker}>
-                    <View style={{ width: '100%', borderWidth: 1, borderColor: Color.Gray.gray300, height: 48, borderRadius: 16, justifyContent: 'center', paddingHorizontal: 16 }}>
-                      <Text style={{ color: Color.base.White }}>
-                        {date.toDateString()}
+                  <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                    <View style={styles.datePickerContainer}>
+                      <Text style={styles.datePickerText}>
+                        {birthdate ? new Date(birthdate).toLocaleDateString() : "Select Birthdate"}
                       </Text>
                     </View>
                   </TouchableOpacity>
@@ -203,32 +146,24 @@ const Email = () => {
                 {loading ? (
                   <ActivityIndicator size="small" color="white" />
                 ) : (
-                  <Text
-                    style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
-                  >
+                  <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
                     Finish
                   </Text>
                 )}
               </Button>
             </View>
-            {show && (
-              <View
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  right: 0,
-                  width: "100%",
-                  backgroundColor: Color.Gray.gray500,
-                  padding: 16,
-                }}
-              >
+            {showDatePicker && (
+              <View style={styles.dateTimePickerOverlay}>
                 <DateTimePicker
                   value={birthdate ? new Date(birthdate) : new Date()}
                   mode="date"
                   display="spinner"
-                  onChange={onChange}
+                  onChange={onDateChange}
                 />
-                <Button variant="tertiary" onPress={confirmDate}>
+                <Button
+                  variant="tertiary"
+                  onPress={() => setShowDatePicker(false)}
+                >
                   <Text
                     style={{
                       fontSize: 15,
@@ -236,7 +171,7 @@ const Email = () => {
                       color: Color.base.White,
                     }}
                   >
-                    Confirm date
+                    Done
                   </Text>
                 </Button>
               </View>
@@ -287,24 +222,24 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: "center",
   },
-  // This only works on iOS
-  datePicker: {
-    // width: 320,
-    // backgroundColor: "white",
-    // height: 260,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "flex-start",
+  datePickerContainer: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: Color.Gray.gray300,
+    height: 48,
+    borderRadius: 16,
+    justifyContent: 'center',
+    paddingHorizontal: 16,
   },
-  confirmButton: {
-    marginTop: 20,
-    backgroundColor: "#2196F3",
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
+  datePickerText: {
+    color: Color.base.White,
   },
-  confirmButtonText: {
-    color: "white",
-    fontSize: 16,
+  dateTimePickerOverlay: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    width: "100%",
+    backgroundColor: Color.Gray.gray500,
+    padding: 16,
   },
 });

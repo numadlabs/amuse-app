@@ -6,6 +6,7 @@ import { BlurView } from "expo-blur";
 import Animated, { FadeIn } from "react-native-reanimated";
 import APassStripes from "../icons/APassStripes";
 import { InfoCircle } from "iconsax-react-native";
+import { width } from "@/app/lib/utils";
 
 interface BalanceProps {
   amount?: number;
@@ -15,15 +16,17 @@ interface BalanceProps {
 const Balance: React.FC<BalanceProps> = ({ amount, handleToggle }) => {
   const truncatedAmount =
     amount !== 0 ? amount?.toString().substring(0, 9) : "0.0000";
-  let coinAmount = parseFloat(truncatedAmount) * 70193;
+  let coinAmount = parseFloat(truncatedAmount) * 247268.44;
 
   const AnimatedText = Animated.createAnimatedComponent(Text);
 
   return (
     <View style={styles.container}>
-      <BlurView style={styles.blurContainer} intensity={100}>
+      {/* <BlurView style={styles.blurContainer} intensity={100}> */}
         <LinearGradient
           colors={[Color.Brand.card.start, Color.Brand.card.end]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
           style={{
             borderRadius: 20,
             borderWidth: 1,
@@ -31,7 +34,7 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle }) => {
           }}
         >
           <View
-            style={{ position: "absolute", top: 0, right: -20, width: "50%" }}
+            style={styles.balanceStripesContainer}
           >
             <APassStripes />
           </View>
@@ -86,6 +89,8 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle }) => {
                     color: Color.Gray.gray50,
                     fontSize: 12,
                     lineHeight: 16,
+                    fontWeight:'400',
+
                   }}
                 >
                   ≈
@@ -98,7 +103,7 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle }) => {
                   style={{
                     fontSize: 12,
                     color: Color.Gray.gray50,
-                    lineHeight: 12,
+                    lineHeight: 16,
                   }}
                 >
                   {truncatedAmount} Bitcoin
@@ -110,7 +115,7 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle }) => {
             </View>
           </View>
         </LinearGradient>
-      </BlurView>
+      {/* </BlurView> */}
     </View>
   );
 };
@@ -119,6 +124,7 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 20,
     marginTop: 32,
+    paddingHorizontal:16
   },
   container1: {
     flexDirection: "column",
@@ -144,9 +150,10 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   balanceStripesContainer: {
-    position: "absolute",
-    right: 0,
-    overflow: "hidden",
+    position:'absolute',
+    top:-60, 
+    right:-72, 
+    transform: [{ rotate: '270deg' }]
   },
   blurContainer: {
     borderRadius: 20,

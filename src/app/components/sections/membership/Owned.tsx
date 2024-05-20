@@ -8,7 +8,7 @@ import PowerUpCard from "../../atom/cards/PowerUpCard";
 import DetailsSheet from "../DetailsSheet";
 import { Add, InfoCircle, TicketStar } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Animated from "react-native-reanimated";
+import Animated, { SlideInDown } from "react-native-reanimated";
 import { RestaurantType } from "@/app/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { getPerksByRestaurant, getUserPowerUps } from "@/app/lib/service/queryHelper";
@@ -90,7 +90,7 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
           </TouchableOpacity>
         </>
       ) : (
-        <>
+        <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>
           <LinearGradient colors={[Color.Brand.card.start, Color.Brand.card.end]} style={styles.gradientContainer}>
             <View style={styles.noPerksContainer}>
               <View style={styles.noPerksIcon}>
@@ -105,7 +105,7 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
               <Text style={styles.addPerkText}>Add Perk</Text>
             </View>
           </TouchableOpacity>
-        </>
+        </Animated.View>
       )}
     </View>
   );
@@ -223,6 +223,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     justifyContent: 'center',
+    marginTop:20,
     backgroundColor: Color.Gray.gray400,
     height: 48,
     borderRadius: 48,

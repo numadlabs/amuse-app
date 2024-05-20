@@ -98,7 +98,7 @@ const Restaurant = () => {
         ) : (
           <>
             {restaurantsData?.isOwned ? (
-              <Animated.View style={{ paddingBottom: 100 }} entering={SlideInDown.springify().damping(20).delay(200)}>
+              <Animated.View style={{ paddingBottom: 100 }} entering={SlideInDown.springify().damping(20).delay(200)} >
                 <Owned
                   // userCardId={perks?.userBonuses?.[0]?.userCardId}
                   // followingPerk={perks?.followingBonus?.name}
@@ -181,8 +181,13 @@ const Restaurant = () => {
                 animatedStyles,
               ]}
             >
-              <View style={{ paddingVertical: 8, justifyContent: "center", alignItems: "center" }}>
+              <View style={{ paddingVertical: 8, justifyContent: "center", alignItems: "center", flexDirection:'row' }}>
                 <Text style={{ fontSize: 20, lineHeight: 24, color: Color.base.White, fontWeight: "bold" }}>Perk</Text>
+                <TouchableOpacity onPress={toggleBottomSheet}>
+                  <View style={{backgroundColor:Color.Gray.gray400, borderRadius:48, padding:8, width:32, alignContent:'center', alignItems:'center',justifyContent:'center', aspectRatio:1, position:"absolute", left:115, top:-18}}>
+                    <Close/>
+                  </View>
+                </TouchableOpacity>
               </View>
               <View style={{ alignItems: "center", gap: 16 }}>
                 <Image source={require("@/public/images/perk.png")} style={{ width: width / 1.2, height: 58 }} resizeMode="contain" />
