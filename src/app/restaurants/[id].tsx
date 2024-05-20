@@ -131,8 +131,8 @@ const Restaurant = () => {
               setLoading(false);
             }}
             size="small"
-            variant="primary"
-            style={{ alignItems: "center", justifyContent: "center" }}
+            variant="tertiary"
+            style={{ alignItems: "center", justifyContent: "center", height: 48 }}
           >
             <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 12, top: 2 }}>
               <WalletAdd color={Color.base.White} />

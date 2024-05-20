@@ -5,12 +5,16 @@ import Color from "./constants/Color";
 import NotificationCard from "./components/atom/cards/NotificationCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function formatDate(dateString) {
+function formatDate(dateString, showTime = false) {
   const date = new Date(dateString);
-  const options = { year: "numeric", month: "long", day: "numeric" };
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    ...(showTime && { hour: "numeric", minute: "numeric" }),
+  };
   return date.toLocaleDateString("en-US", options);
 }
-
 const Notification = () => {
   const [notifications, setNotifications] = useState([]);
 
@@ -26,7 +30,6 @@ const Notification = () => {
         console.log("Error retrieving notifications:", error);
       }
     };
-
     retrieveNotifications();
   }, []);
 
@@ -42,7 +45,7 @@ const Notification = () => {
           <NotificationCard
             title={item.name}
             description={`You received $1 of bitcoin from ${item.name}`}
-            time={formatDate(item.date)}
+            time={formatDate(item.date, true)}
           />
         )}
       />
