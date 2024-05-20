@@ -36,6 +36,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { height, width } from "../lib/utils";
 import Button from "../components/ui/Button";
+import Close from "../components/icons/Close";
 
 const Page = () => {
   const router = useRouter();
@@ -322,6 +323,7 @@ const Page = () => {
                   justifyContent: "center",
                   alignContent: "center",
                   alignItems: "center",
+                  flexDirection:'row'
                 }}
               >
                 <Text
@@ -332,8 +334,13 @@ const Page = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  Balance
+                  About your Balance
                 </Text>
+                <TouchableOpacity onPress={toggleBalanceBottomSheet}>
+                  <View style={{backgroundColor:Color.Gray.gray400, borderRadius:48, padding:8, width:32, alignContent:'center', alignItems:'center',justifyContent:'center', aspectRatio:1, position:"absolute", left:55, top:-18}}>
+                    <Close/>
+                  </View>
+                </TouchableOpacity>
               </View>
               <Image
                 source={require("../../public/images/balanceInfo.png")}
@@ -401,6 +408,7 @@ const Page = () => {
                   justifyContent: "center",
                   alignContent: "center",
                   alignItems: "center",
+                  flexDirection:'row'
                 }}
               >
                 <Text
@@ -413,6 +421,11 @@ const Page = () => {
                 >
                   Membership
                 </Text>
+                <TouchableOpacity onPress={toggleBottomSheet}>
+                  <View style={{backgroundColor:Color.Gray.gray400, borderRadius:48, padding:8, width:32, alignContent:'center', alignItems:'center',justifyContent:'center', aspectRatio:1, position:"absolute", left:85, top:-18}}>
+                    <Close/>
+                  </View>
+                </TouchableOpacity>
               </View>
               <View style={{ alignItems: "center", gap: 16 }}>
                 <Image

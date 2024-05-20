@@ -223,6 +223,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     justifyContent: 'center',
+    marginTop:20,
     backgroundColor: Color.Gray.gray400,
     height: 48,
     borderRadius: 48,

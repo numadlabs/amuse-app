@@ -261,7 +261,7 @@ const QrModal = () => {
       {isModalVisible && (
         <View style={{ flex: 1 }}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
-            {/* <CameraView
+            <CameraView
               onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
               barcodeScannerSettings={{
                 barcodeTypes: ["qr", "pdf417"],
@@ -269,7 +269,7 @@ const QrModal = () => {
               style={StyleSheet.absoluteFillObject}
               flash={flashMode == true ? "on" : "off"}
             // flash="on"
-            /> */}
+            />
             {/* Overlay for guiding user to place QR code within scan area */}
             <View
               style={[
