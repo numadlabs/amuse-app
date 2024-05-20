@@ -7,40 +7,72 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useQueryClient } from "@tanstack/react-query";
 import { userKeys } from "../lib/service/keysHelper";
 import TickCircle from "../components/icons/TickCircle";
+import TickGradient from "../components/icons/TickGradient";
 
 const Success = () => {
-  const queryClient = useQueryClient()
-
-
-
+  const queryClient = useQueryClient();
 
   const handleNavigation = () => {
-    queryClient.invalidateQueries({ queryKey: userKeys.info })
-    router.navigate("/(tabs)")
-  }
+    queryClient.invalidateQueries({ queryKey: userKeys.info });
+    router.navigate("/(tabs)");
+  };
   return (
     <View style={styles.body}>
+      <View style={{ position: "absolute", top: 48 }}>
+        <LinearGradient
+          colors={[Color.Brand.main.start, Color.Brand.main.end]}
+          start={[0, 1]}
+          end={[1, 0]}
+          style={{ padding: 1, borderRadius: 24 }}
+        >
+          <View
+            style={{
+              backgroundColor: Color.Gray.gray500,
+              paddingHorizontal: 20,
+              paddingVertical: 14,
+              borderRadius: 24,
+              flexDirection: "row",
+              gap: 8,
+              alignItems: 'center',
+              height: 48
+            }}
+          >
+            <TickGradient />
+            <Text
+              style={{
+                color: Color.base.White,
+                fontSize: 16,
+                lineHeight: 20,
+                fontWeight: "600",
+              }}
+            >
+              Changes saved
+            </Text>
+          </View>
+        </LinearGradient>
+      </View>
       <LinearGradient
         colors={[Color.Brand.card.start, Color.Brand.card.end]}
         start={{ x: 1, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={styles.container}>
+        style={styles.container}
+      >
         <View style={styles.svgContainer}>
           <TickCircle />
           <Text style={styles.topText}>Congratulations!</Text>
           <Text style={styles.bottomText}>
-            You will earn 1.2x more rewards every time you use your Memberships.
+            You will earn extra rewards every time you use an Membership.
           </Text>
         </View>
       </LinearGradient>
       <View style={styles.buttonContainer}>
         <Button
-          variant="primary"
+          variant="tertiary"
           textStyle="primary"
           size="default"
           onPress={handleNavigation}
         >
-          Continue
+          Confirm
         </Button>
       </View>
     </View>
@@ -56,6 +88,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 16,
+    flex: 1,
   },
   container: {
     width: "100%",

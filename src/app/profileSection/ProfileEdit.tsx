@@ -1,4 +1,11 @@
-import { Cake, Camera, Location, Sms, User, UserEdit } from "iconsax-react-native";
+import {
+  Cake,
+  Camera,
+  Location,
+  Sms,
+  User,
+  UserEdit,
+} from "iconsax-react-native";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -9,7 +16,7 @@ import {
   View,
   Text,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import Header from "../components/layout/Header";
 import Color from "../constants/Color";
@@ -43,7 +50,9 @@ const ProfileEdit = () => {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [dataChanged, setDataChanged] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [focusedInput, setFocusedInput] = useState<'Nickname' | 'Email' | 'Area' | 'Birthday' | null>(null);
+  const [focusedInput, setFocusedInput] = useState<
+    "Nickname" | "Email" | "Area" | "Birthday" | null
+  >(null);
   const showToast = () => {
     setTimeout(function () {
       Toast.show({
@@ -63,7 +72,6 @@ const ProfileEdit = () => {
   }, [user]);
 
   useEffect(() => {
-
     if (
       user.nickname !== nickname ||
       user.email !== email ||
@@ -83,11 +91,11 @@ const ProfileEdit = () => {
   const onDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
     if (selectedDate) {
-      setDateOfBirth(selectedDate.toISOString().split('T')[0]);
+      setDateOfBirth(selectedDate.toISOString().split("T")[0]);
       setInitialDate(selectedDate);
     }
   };
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const triggerUpdateUser = async () => {
     setLoading(true);
     const userData = { nickname, email, location, dateOfBirth };
@@ -97,9 +105,8 @@ const ProfileEdit = () => {
       setLoading(false);
       setDataChanged(false);
       // showToast();
-      queryClient.invalidateQueries({ queryKey: userKeys.info })
-      router.navigate('/Success')
-
+      queryClient.invalidateQueries({ queryKey: userKeys.info });
+      router.navigate("/Success");
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -107,10 +114,9 @@ const ProfileEdit = () => {
   };
 
   useEffect(() => {
-
     const totalFields = 4;
     const filledFields = [nickname, email, location, dateOfBirth].filter(
-      field => field !== ""
+      (field) => field !== ""
     ).length;
     const newProgress = filledFields / totalFields;
     setProgress(newProgress);
@@ -122,7 +128,19 @@ const ProfileEdit = () => {
   const showDatepicker = () => {
     setShow(true);
   };
-
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    };
+    const formattedDate = date.toLocaleDateString(
+      Platform.OS === "ios" ? "en-US" : "en-GB",
+      options
+    );
+    return formattedDate;
+  };
   return (
     <>
       <Header title="Account" />
@@ -134,23 +152,39 @@ const ProfileEdit = () => {
                 paddingBottom: 16,
                 paddingTop: 24,
                 paddingHorizontal: 16,
-                borderRadius: 24
+                borderRadius: 24,
               }}
               colors={[Color.Brand.card.start, Color.Brand.card.end]}
               start={{ x: 1, y: 0 }}
-              end={{ x: 1, y: 1 }}>
+              end={{ x: 1, y: 1 }}
+            >
               <View style={styles.container}>
                 <View style={styles.profileContainer}>
                   <View style={styles.profilePic}>
                     <User size={48} color={Color.Gray.gray50} />
                   </View>
-                  <View style={{ position: 'absolute', bottom: 20, right: width / 3.5, backgroundColor: Color.Gray.gray400, padding: 8, borderRadius: 48 }}>
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 20,
+                      right: width / 3.5,
+                      backgroundColor: Color.Gray.gray400,
+                      padding: 8,
+                      borderRadius: 48,
+                    }}
+                  >
                     <Camera size={16} color={Color.Gray.gray50} />
                   </View>
-
                 </View>
                 <View style={{ gap: 8 }}>
-                  <Text style={{ color: Color.base.White, fontSize: 14, lineHeight: 18, fontWeight: '600' }}>
+                  <Text
+                    style={{
+                      color: Color.base.White,
+                      fontSize: 14,
+                      lineHeight: 18,
+                      fontWeight: "600",
+                    }}
+                  >
                     Nickname
                   </Text>
                   <LinearGradient
@@ -164,26 +198,37 @@ const ProfileEdit = () => {
                     style={{
                       borderRadius: 16,
                       padding: 1,
-                      marginBottom: 12
+                      marginBottom: 12,
                     }}
                   >
-                    <View
-                      style={styles.input}>
+                    <View style={styles.input}>
                       <User color={Color.Gray.gray50} />
                       <TextInput
                         placeholder="Nickname"
                         placeholderTextColor={Color.Gray.gray200}
                         value={nickname}
                         onChangeText={setNickname}
-                        onFocus={() => setFocusedInput('Nickname')}
+                        onFocus={() => setFocusedInput("Nickname")}
                         onBlur={() => setFocusedInput(null)}
-                        style={{ fontSize: 20, color: Color.base.White, width: '100%', height: 48 }}
+                        style={{
+                          fontSize: 20,
+                          color: Color.base.White,
+                          width: "100%",
+                          height: 48,
+                        }}
                       />
                     </View>
                   </LinearGradient>
                 </View>
                 <View style={{ gap: 8 }}>
-                  <Text style={{ color: Color.base.White, fontSize: 14, lineHeight: 18, fontWeight: '600' }}>
+                  <Text
+                    style={{
+                      color: Color.base.White,
+                      fontSize: 14,
+                      lineHeight: 18,
+                      fontWeight: "600",
+                    }}
+                  >
                     Email
                   </Text>
                   <LinearGradient
@@ -197,7 +242,7 @@ const ProfileEdit = () => {
                     style={{
                       borderRadius: 16,
                       padding: 1,
-                      marginBottom: 12
+                      marginBottom: 12,
                     }}
                   >
                     <View style={styles.input}>
@@ -207,15 +252,27 @@ const ProfileEdit = () => {
                         placeholder="Email"
                         value={email}
                         onChangeText={setEmail}
-                        onFocus={() => setFocusedInput('Email')}
+                        onFocus={() => setFocusedInput("Email")}
                         onBlur={() => setFocusedInput(null)}
-                        style={{ fontSize: 20, color: Color.base.White, width: '100%', height: 48 }}
+                        style={{
+                          fontSize: 20,
+                          color: Color.base.White,
+                          width: "100%",
+                          height: 48,
+                        }}
                       />
                     </View>
                   </LinearGradient>
                 </View>
                 <View style={{ gap: 8 }}>
-                  <Text style={{ color: Color.base.White, fontSize: 14, lineHeight: 18, fontWeight: '600' }}>
+                  <Text
+                    style={{
+                      color: Color.base.White,
+                      fontSize: 14,
+                      lineHeight: 18,
+                      fontWeight: "600",
+                    }}
+                  >
                     Area
                   </Text>
                   <LinearGradient
@@ -229,7 +286,7 @@ const ProfileEdit = () => {
                     style={{
                       borderRadius: 16,
                       padding: 1,
-                      marginBottom: 12
+                      marginBottom: 12,
                     }}
                   >
                     <View style={styles.input}>
@@ -239,15 +296,27 @@ const ProfileEdit = () => {
                         placeholder="Location"
                         value={location}
                         onChangeText={setLocation}
-                        onFocus={() => setFocusedInput('Area')}
+                        onFocus={() => setFocusedInput("Area")}
                         onBlur={() => setFocusedInput(null)}
-                        style={{ fontSize: 20, color: Color.base.White, width: '100%', height: 48 }}
+                        style={{
+                          fontSize: 20,
+                          color: Color.base.White,
+                          width: "100%",
+                          height: 48,
+                        }}
                       />
                     </View>
                   </LinearGradient>
                 </View>
                 <View style={{ gap: 8 }}>
-                  <Text style={{ color: Color.base.White, fontSize: 14, lineHeight: 18, fontWeight: '600' }}>
+                  <Text
+                    style={{
+                      color: Color.base.White,
+                      fontSize: 14,
+                      lineHeight: 18,
+                      fontWeight: "600",
+                    }}
+                  >
                     Birthday
                   </Text>
                   <LinearGradient
@@ -261,13 +330,23 @@ const ProfileEdit = () => {
                     style={{
                       borderRadius: 16,
                       padding: 1,
-                      marginBottom: 12
+                      marginBottom: 12,
                     }}
                   >
                     <View style={[styles.input]}>
                       <Cake color={Color.Gray.gray50} />
                       <TouchableOpacity onPress={showDatepicker}>
-                      <Text style={{ color: Color.base.White }}>{dateOfBirth || "Select Date"}</Text>
+                        <Text
+                          style={{
+                            fontSize: 20,
+                            color: Color.base.White,
+                            width: "100%",
+                          }}
+                        >
+                          {dateOfBirth
+                            ? formatDate(dateOfBirth)
+                            : "Select Date"}
+                        </Text>
                       </TouchableOpacity>
                     </View>
                   </LinearGradient>
@@ -286,7 +365,6 @@ const ProfileEdit = () => {
           </View>
         </ScrollView>
         <View style={{ paddingHorizontal: 16, marginBottom: 30 }}>
-
           <Button
             variant={dataChanged ? "primary" : "disabled"}
             textStyle={dataChanged ? "primary" : "disabled"}
@@ -296,45 +374,42 @@ const ProfileEdit = () => {
             {loading ? (
               <ActivityIndicator size="small" color="white" />
             ) : (
-              <Text
-                style={{ fontSize: 16, fontWeight: "bold" }}
-              >
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                 Save changes
               </Text>
             )}
           </Button>
-
         </View>
         {show && (
-              <View
+          <View
+            style={{
+              position: "absolute",
+              bottom: 0,
+              right: 0,
+              width: "100%",
+              backgroundColor: Color.Gray.gray500,
+              padding: 16,
+            }}
+          >
+            <DateTimePicker
+              value={initialDate}
+              mode="date"
+              display="spinner"
+              onChange={onDateChange}
+            />
+            <Button variant="tertiary" onPress={confirmDate}>
+              <Text
                 style={{
-                  position: "absolute",
-                  bottom: 0,
-                  right: 0,
-                  width: "100%",
-                  backgroundColor: Color.Gray.gray500,
-                  padding: 16,
+                  fontSize: 15,
+                  fontWeight: "600",
+                  color: Color.base.White,
                 }}
               >
-                <DateTimePicker
-                  value={initialDate}
-                  mode="date"
-                  display="spinner"
-                  onChange={onDateChange}
-                />
-                <Button variant="tertiary" onPress={confirmDate}>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      fontWeight: "600",
-                      color: Color.base.White,
-                    }}
-                  >
-                    Confirm date
-                  </Text>
-                </Button>
-              </View>
-            )}
+                Confirm date
+              </Text>
+            </Button>
+          </View>
+        )}
       </SafeAreaView>
     </>
   );
@@ -346,11 +421,11 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
-    overflow: 'hidden',
+    overflow: "hidden",
     borderColor: Color.Gray.gray300,
     borderWidth: 1,
 
-    borderRadius: 24
+    borderRadius: 24,
   },
   container: {
     width: "100%",
