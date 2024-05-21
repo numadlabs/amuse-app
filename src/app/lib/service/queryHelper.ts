@@ -109,7 +109,7 @@ export async function getUserTaps() {
 export async function getUserById(userID: string) {
   return axiosClient.get(`/users/${userID}`).then((response) => {
     if (response.data.success) {
-      return response?.data.data.user;
+      return response?.data.data;
     } else {
       throw new Error(response.data.error);
     }

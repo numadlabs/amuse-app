@@ -56,6 +56,7 @@ const Page = () => {
     },
     enabled: !!authState.userId,
   });
+  
 
   const closeBoost = () => {
     setIsQuickInfoVisible(false);
@@ -126,7 +127,8 @@ const Page = () => {
         <Animated.View entering={SlideOutDown}>
           {user && (
             <Balance
-              amount={user.balance}
+              amount={user?.user?.balance}
+              aed={user?.balanceInAed}
               handleToggle={() => toggleBalanceBottomSheet()}
             />
           )}
@@ -159,16 +161,16 @@ const Page = () => {
                   entering={SlideInLeft.springify().damping(15)}
                   style={{ flexDirection: "row", gap: 8, left:16, paddingRight:32 }}
                 >
-                  {user?.email &&
-                    user?.dateOfBirth &&
-                    user?.nickname &&
-                    user?.location
+                  {user?.user?.email &&
+                    user?.user?.dateOfBirth &&
+                    user?.user?.nickname &&
+                    user?.user?.location
                     ? // <QuickInfo onPress={() => setIsQuickInfoVisible(false)} user={user} />
                      ""
                     : isQuickInfoVisible && (
                       <QuickInfo
                         onPress={() => setIsQuickInfoVisible(false)}
-                        user={user}
+                        user={user?.user}
                       />
                     )}
                   <TouchableOpacity
