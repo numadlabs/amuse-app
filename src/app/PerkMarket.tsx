@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import Color from "./constants/Color";
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { restaurantKeys } from './lib/service/keysHelper';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { purchaseablePerkKeys, restaurantKeys } from "./lib/service/keysHelper";
 import { getPurchaseablePerks } from "./lib/service/queryHelper";
 import useLocationStore from "./lib/store/userLocation";
 import { useLocalSearchParams } from "expo-router";
@@ -14,20 +14,24 @@ import {
 import Close from "./components/icons/Close";
 import { router } from "expo-router";
 import PerkGradientSm from "./components/icons/PerkGradientSm";
-import PerkGradient from './components/icons/PerkGradient';
-import { purchasePerk } from './lib/service/mutationHelper';
-import { useAuth } from './context/AuthContext';
+import PerkGradient from "./components/icons/PerkGradient";
+import { purchasePerk } from "./lib/service/mutationHelper";
+import { useAuth } from "./context/AuthContext";
 
 const PerkMarket = () => {
   const { id, userCardId } = useLocalSearchParams();
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const { currentLocation } = useLocationStore();
-  const [balance, setBalance] = useState("")
+  const [balance, setBalance] = useState("");
   const queryClient = useQueryClient();
-  const {authState} = useAuth()
+  const { authState } = useAuth();
 
-  const { data: perks = [], isLoading, isError } = useQuery({
-    queryKey: restaurantKeys.all,
+  const {
+    data: perks = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: purchaseablePerkKeys.all,
     queryFn: () => {
       return getPurchaseablePerks(id);
     },
@@ -36,17 +40,15 @@ const PerkMarket = () => {
 
   const handleNavigation = (perkId, perkName, perkPrice) => {
     router.push({
-      pathname: '/PerkBuy',
+      pathname: "/PerkBuy",
       params: {
         name: perkName,
         id: perkId,
         price: perkPrice,
-        restaurantId: id
-      }
-    })
-  }
- 
-
+        restaurantId: id,
+      },
+    });
+  };
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -145,7 +147,7 @@ const styles = StyleSheet.create({
   perkItem: {
     borderRadius: 10,
     padding: 20,
-    width: "48%", 
+    width: "48%",
     alignItems: "center",
   },
   perkName: {

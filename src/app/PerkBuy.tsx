@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import Color from "./constants/Color";
 import Close from "./components/icons/Close";
 import { router, useLocalSearchParams } from "expo-router";
@@ -18,19 +24,15 @@ const PerkBuy = () => {
   const { authState } = useAuth();
   const queryClient = useQueryClient();
 
-
   const { mutateAsync: purchasePerkMutation } = useMutation({
     mutationFn: purchasePerk,
-    onError: (error) => {
-      setBalance("Insufficient Bitcoin balance");
-      setIsClaimLoading(false);
-      console.log(error);
-    },
-    onSuccess: (data, variables) => {
-      console.log("🚀 ~ PerkBuy ~ data:", data.data.data);
-      queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
-      queryClient.invalidateQueries({ queryKey: userKeys.cards });
-    },
+    // onError: (error) => {
+    //   // console.log(error);
+    // },
+    // onSuccess: (data, variables) => {
+    //   console.log("🚀 ~ PerkBuy ~ data:", data.data.data);
+
+    // },
   });
   const AnimatedText = Animated.createAnimatedComponent(Text);
   const handleGetAPerk = async (id: string) => {
@@ -38,25 +40,38 @@ const PerkBuy = () => {
     setIsClaimLoading(true);
     setBalance("");
     if (authState.userId) {
-      const data = await purchasePerkMutation({
-        bonusId: id,
-        restaurantId: restaurantId as string,
-      });
-      if (data.data.success) {
+      try {
+        const data = await purchasePerkMutation({
+          bonusId: id,
+          restaurantId: restaurantId as string,
+        });
+        if (data.data.success) {
+          setIsClaimLoading(false);
+          console.log("🚀 ~ Purchase successful", data.data.data);
+          queryClient.invalidateQueries({ queryKey: userKeys.cards });
+          queryClient.invalidateQueries({ queryKey: userKeys.info });
+          router.back();
+        } else if (data.data.success === false) {
+          console.log("🚀 ~ Purchase failed");
+          setIsClaimLoading(false);
+        }
+      } catch (error) {
+        setBalance("Insufficient Bitcoin balance");
         setIsClaimLoading(false);
-        console.log("🚀 ~ Purchase successful", data.data.data);
-        queryClient.invalidateQueries({ queryKey: userKeys.cards });
-        queryClient.invalidateQueries({ queryKey: userKeys.info });
-        router.back();
-      } else if (data.data.success === false) {
-        console.log("🚀 ~ Purchase failed");
-        setIsClaimLoading(false);
+        console.log(error);
       }
     }
   };
 
   return (
-    <View style={{ backgroundColor: Color.Gray.gray600, flex: 1, paddingHorizontal: 16 }} key={id as string}>
+    <View
+      style={{
+        backgroundColor: Color.Gray.gray600,
+        flex: 1,
+        paddingHorizontal: 16,
+      }}
+      key={id as string}
+    >
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity
           style={[styles.button, styles.closeButton]}
@@ -73,7 +88,7 @@ const PerkBuy = () => {
           justifyContent: "center",
           alignItems: "center",
           height: "80%",
-          gap: 24
+          gap: 24,
         }}
       >
         <View
@@ -89,20 +104,52 @@ const PerkBuy = () => {
         >
           <PerkGradient />
         </View>
-        <View style={{ flexDirection: 'column', gap: 12, justifyContent: 'center' }}>
-          <Text style={{ textAlign: 'center', color: Color.base.White, fontWeight: 'bold', fontSize: 20 }}>{name}</Text>
-          <Text style={{ color: Color.Gray.gray100, fontSize: 14, lineHeight: 18, textAlign: 'center' }}>Redeem with Bitcoin and use it {"\n"} on your next visit</Text>
-          {balance && <AnimatedText entering={FadeIn} exiting={FadeOut} style={{ color: Color.System.systemError, textAlign: 'center' }}>{balance}</AnimatedText>}
+        <View
+          style={{ flexDirection: "column", gap: 12, justifyContent: "center" }}
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              color: Color.base.White,
+              fontWeight: "bold",
+              fontSize: 20,
+            }}
+          >
+            {name}
+          </Text>
+          <Text
+            style={{
+              color: Color.Gray.gray100,
+              fontSize: 14,
+              lineHeight: 18,
+              textAlign: "center",
+            }}
+          >
+            Redeem with Bitcoin and use it {"\n"} on your next visit
+          </Text>
+          {balance && (
+            <AnimatedText
+              entering={FadeIn}
+              exiting={FadeOut}
+              style={{ color: Color.System.systemError, textAlign: "center" }}
+            >
+              {balance}
+            </AnimatedText>
+          )}
         </View>
       </View>
-      <Button variant="primary" size="large" onPress={() => handleGetAPerk(id as string)}>
-        {
-          isClaimLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <Text style={{ fontSize: 15, fontWeight: '600', color: Color.base.White }}>{`Reedem for ${price} Bitcoin`}</Text>
-          )
-        }
+      <Button
+        variant="primary"
+        size="large"
+        onPress={() => handleGetAPerk(id as string)}
+      >
+        {isClaimLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <Text
+            style={{ fontSize: 15, fontWeight: "600", color: Color.base.White }}
+          >{`Redeem for ${price} Bitcoin`}</Text>
+        )}
       </Button>
     </View>
   );
