@@ -144,8 +144,7 @@ const PowerUp = () => {
                 lineHeight: 18,
               }}
             >
-              Show this to your waiter to redeem.{"\n"} Don't worry, they are
-              pros.
+             Show this to your waiter to redeem.{"\n"} Do not worry, they are pros.
 
             </Text>
           </View>

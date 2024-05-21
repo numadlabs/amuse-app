@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 10,
-    paddingHorizontal: 20,
+  
     marginBottom: 20,
   },
   bottomPosition: {
