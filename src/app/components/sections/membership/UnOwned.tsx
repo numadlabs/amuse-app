@@ -105,7 +105,7 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant, isClaimLoading, onPress }) 
                 color: Color.base.White,
               }}
             >
-              How to earn
+              How it works
             </Text>
             <View>
               <Text style={styles.attributeText}>

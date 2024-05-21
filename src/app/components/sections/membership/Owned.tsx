@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import Color from "@/app/constants/Color";
 import { LinearGradient } from "expo-linear-gradient";
 import PerkGradient from "../../icons/PerkGradient";
@@ -11,7 +17,10 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, { SlideInDown } from "react-native-reanimated";
 import { RestaurantType } from "@/app/lib/types";
 import { useQuery } from "@tanstack/react-query";
-import { getPerksByRestaurant, getUserPowerUps } from "@/app/lib/service/queryHelper";
+import {
+  getPerksByRestaurant,
+  getUserPowerUps,
+} from "@/app/lib/service/queryHelper";
 import { restaurantKeys, userKeys } from "@/app/lib/service/keysHelper";
 import useLocationStore from "@/app/lib/store/userLocation";
 
@@ -28,7 +37,7 @@ interface OwnedProps {
 
 const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
   const [showPerks, setShowPerks] = useState(true);
-  const currentLocation = useLocationStore()
+  const currentLocation = useLocationStore();
 
   const { data: perks = [] } = useQuery({
     queryKey: restaurantKeys.perks(data?.id as string),
@@ -38,17 +47,17 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
 
   const handleNavigation = () => {
     router.push({
-      pathname: '/PerkMarket',
+      pathname: "/PerkMarket",
       params: {
         id: data.id,
-      }
+      },
     });
   };
 
   const notOwnedNavigation = () => {
     router.push({
-      pathname: '/NotOwnedPerk',
-      params: { visitCount: data.visitCount }
+      pathname: "/NotOwnedPerk",
+      params: { visitCount: data.visitCount },
     });
   };
 
@@ -70,16 +79,30 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
             <PowerUpCard
               key={index}
               title={item.name}
-              onPress={() => router.push({ pathname: `/PowerUp`, params: { name: item.name, id: item.id, restaurantId: data?.id } })}
+              onPress={() =>
+                router.push({
+                  pathname: `/PowerUp`,
+                  params: {
+                    name: item.name,
+                    id: item.id,
+                    restaurantId: data?.id,
+                  },
+                })
+              }
             />
           ))}
-          <TouchableOpacity style={styles.container} onPress={notOwnedNavigation}>
+          <TouchableOpacity
+            style={styles.container}
+            onPress={notOwnedNavigation}
+          >
             <View style={styles.perkDetails}>
               <TicketStar size={28} color={Color.base.White} />
               <Text style={styles.perkText}>{perks?.followingBonus.name}</Text>
             </View>
             <View>
-              <Text style={styles.perkCount}>{(data.visitCount % 3) + 1}/3</Text>
+              <Text style={styles.perkCount}>
+                {(data.visitCount % 3) + 1}/3
+              </Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNavigation}>
@@ -90,13 +113,22 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
           </TouchableOpacity>
         </>
       ) : (
-        <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>
-          <LinearGradient colors={[Color.Brand.card.start, Color.Brand.card.end]} style={styles.gradientContainer}>
+        <Animated.View
+          entering={SlideInDown.springify().damping(20).delay(200)}
+        >
+          <LinearGradient
+            colors={[Color.Brand.card.start, Color.Brand.card.end]}
+            style={styles.gradientContainer}
+          >
             <View style={styles.noPerksContainer}>
               <View style={styles.noPerksIcon}>
                 <PerkGradient />
               </View>
-              <Text style={styles.noPerksText}>You don't have any perks yet. Check-in to unlock new perks.</Text>
+              <Text style={styles.noPerksText}>
+                You do not have any perks yet. {"\n"}
+                Check-in to unlock some, or redeem others with {"\n"} 
+                your Bitcoin balance.
+              </Text>
             </View>
           </LinearGradient>
           <TouchableOpacity onPress={handleNavigation}>
@@ -120,18 +152,32 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
     <GestureHandlerRootView style={styles.attrContainer}>
       <View>
         <Animated.View style={styles.buttonContainer}>
-          <TouchableOpacity style={[styles.toggleButton, showPerks && styles.activeButton]} onPress={() => toggleView(true)}>
-            <Text style={[styles.buttonText, !showPerks && styles.activeText]}>Perks</Text>
+          <TouchableOpacity
+            style={[styles.toggleButton, showPerks && styles.activeButton]}
+            onPress={() => toggleView(true)}
+          >
+            <Text style={[styles.buttonText, !showPerks && styles.activeText]}>
+              Perks
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.toggleButton, !showPerks && styles.activeButton]} onPress={() => toggleView(false)}>
-            <Text style={[styles.buttonText, showPerks && styles.activeText]}>Details</Text>
+          <TouchableOpacity
+            style={[styles.toggleButton, !showPerks && styles.activeButton]}
+            onPress={() => toggleView(false)}
+          >
+            <Text style={[styles.buttonText, showPerks && styles.activeText]}>
+              Details
+            </Text>
           </TouchableOpacity>
         </Animated.View>
       </View>
       <View style={styles.contentContainer}>
         {isLoading ? (
           <ActivityIndicator color={Color.Gray.gray600} />
-        ) : showPerks ? renderPerks() : renderDetails()}
+        ) : showPerks ? (
+          renderPerks()
+        ) : (
+          renderDetails()
+        )}
       </View>
     </GestureHandlerRootView>
   );
@@ -189,26 +235,26 @@ const styles = StyleSheet.create({
     color: Color.base.White,
   },
   container: {
-    flexDirection: 'row',
-    alignContent: 'center',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignContent: "center",
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingVertical: 23,
     paddingRight: 30,
     paddingLeft: 16,
     borderWidth: 1,
-    borderStyle: 'dashed',
+    borderStyle: "dashed",
     borderColor: Color.Gray.gray400,
     borderRadius: 16,
   },
   perkDetails: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
   },
   perkText: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 14,
     color: Color.base.White,
   },
@@ -216,21 +262,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 18,
     color: Color.base.White,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   addPerkButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
-    justifyContent: 'center',
-    marginTop:20,
+    justifyContent: "center",
+    marginTop: 20,
     backgroundColor: Color.Gray.gray400,
     height: 48,
     borderRadius: 48,
   },
   addPerkText: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: "600",
     lineHeight: 24,
     color: Color.base.White,
   },

@@ -100,13 +100,15 @@ function ForgotPassword() {
   };
 
   const handleNavigation = () => {
-    router.push({
-      pathname: "/forgotPassword/VerificationCode",
-      params: {
-        prefix: prefix,
-        phoneNumber: phoneNumber,
-      },
-    });
+    if (phoneNumber) {
+      router.push({
+        pathname: "/forgotPassword/VerificationCode",
+        params: {
+          prefix: prefix,
+          phoneNumber: phoneNumber,
+        },
+      });
+    }
   };
 
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -355,8 +357,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   bottomText: {
-    color: Color.base.White,
+    color: Color.Gray.gray100,
     fontSize: 12,
+    lineHeight: 16,
     textAlign: "center",
   },
 });

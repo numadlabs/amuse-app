@@ -16,7 +16,7 @@ interface BalanceProps {
 const Balance: React.FC<BalanceProps> = ({ amount, handleToggle }) => {
   const truncatedAmount =
     amount !== 0 ? amount?.toString().substring(0, 9) : "0.0000";
-  let coinAmount = parseFloat(truncatedAmount) * 247268.44;
+  let coinAmount = parseFloat(truncatedAmount) * 261135.80;
 
   const AnimatedText = Animated.createAnimatedComponent(Text);
 

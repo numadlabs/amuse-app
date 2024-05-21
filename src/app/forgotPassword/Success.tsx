@@ -13,7 +13,7 @@ const Success = () => {
         <View style={styles.svgContainer}>
           <TickCircle />
           <Text style={styles.topText}>
-            Success
+            Password changed
           </Text>
           <Text style={styles.bottomText}>
           Your password has been changed. 
@@ -21,7 +21,7 @@ const Success = () => {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <Button variant='primary' textStyle='primary' size='default' onPress={() => router.navigate('/Home')}>Cotinue</Button>
+        <Button variant='primary' textStyle='primary' size='default' onPress={() => router.navigate('/Home')}>Go to Log in</Button>
       </View>
     </View>
   )

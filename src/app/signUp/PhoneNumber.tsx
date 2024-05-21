@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import { ArrowDown2 } from "iconsax-react-native";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -31,6 +32,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const PhoneNumber = () => {
   const { prefix, setPrefix, phoneNumber, setPhoneNumber } = useSignUpStore();
+  const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const [isFocused, setIsFocused] = useState(false);
@@ -111,22 +113,24 @@ const PhoneNumber = () => {
   }, []);
 
   const handleNavigation = () => {
-    router.push({
-      pathname: "/signUp/Password",
-      params: {
-        prefix: prefix,
-        phoneNumber: phoneNumber,
-      },
-    });
+    if (phoneNumber) {
+      setLoading(true);
+      router.push({
+        pathname: "/signUp/Password",
+        params: {
+          prefix: prefix,
+          phoneNumber: phoneNumber,
+        },
+      });
+    }
 
     console.log(prefix, phoneNumber);
   };
 
-
   const dismissKeyboard = () => {
     Keyboard.dismiss();
-    if(isOpen){
-      togglePrefix()
+    if (isOpen) {
+      togglePrefix();
     }
   };
   return (
@@ -238,7 +242,11 @@ const PhoneNumber = () => {
                   size="default"
                   onPress={handleNavigation}
                 >
-                  Continue
+                  {loading ? (
+                    <ActivityIndicator size="small" color="white" />
+                  ) : (
+                    <Text>Confirm</Text>
+                  )}
                 </Button>
               </View>
             </KeyboardAvoidingView>
@@ -391,7 +399,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "normal",
     color: Color.base.White,
-    width: '100%',
-    height: 48
+    width: "100%",
+    height: 48,
   },
 });

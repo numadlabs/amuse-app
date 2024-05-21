@@ -132,7 +132,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    aspectRatio:1,
     width: "100%",
     paddingHorizontal: 12,
     paddingTop: 20,
@@ -151,7 +150,7 @@ const styles = StyleSheet.create({
   },
   perkName: {
     fontSize: 12,
-    height:30,
+    height: 32,
     lineHeight: 16,
     fontWeight: "bold",
     textAlign: "center",

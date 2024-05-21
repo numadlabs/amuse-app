@@ -23,7 +23,7 @@ const buttonVariants = {
 const textStyles = {
   primary: { fontSize: 16, fontWeight: "bold", color: Color.base.White },
   secondary: { fontSize: 16, fontWeight: "bold", color: "black" },
-  disabled: { fontSize: 11, lineHeight: 16, fontWeight: "bold", color: Color.Gray.gray200 },
+  disabled: { fontSize: 16, fontWeight: "bold", color: Color.Gray.gray200 },
   tertiary: { fontSize: 18, color: "white" },
   text: { fontSize: 16, fontWeight: "bold", color: "black" },
 };

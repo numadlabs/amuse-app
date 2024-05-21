@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Dimensions
 } from "react-native";
 import Color from "./constants/Color";
 import Close from "./components/icons/Close";
@@ -15,8 +16,12 @@ import PerkGradient from "./components/icons/PerkGradient";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { redeemBonus, useBonus } from "./lib/service/mutationHelper";
 import { restaurantKeys, userKeys } from "./lib/service/keysHelper";
+import { LinearGradient } from "expo-linear-gradient";
+
+const { width, height } = Dimensions.get("window");
 
 const PowerUp = () => {
+
 
   const showToast = () => {
     setTimeout(() => {
@@ -97,10 +102,15 @@ const PowerUp = () => {
       </View>
       <View style={styles.container} key={id as string}>
         <TouchableOpacity onPress={() => handleUseBonus(id as string)}>
+        <LinearGradient
+                  colors={[Color.Brand.card.start, Color.Brand.card.end]}
+                  style={[styles.qrContainer]}
+                >
           <Image
-            style={{ width: 247, height: 247 }}
+            style={{ width: width - 128, height: width - 128 }}
             source={require("@/public/images/pqr.png")}
           />
+          </LinearGradient>
         </TouchableOpacity>
 
         <Popup
@@ -109,7 +119,7 @@ const PowerUp = () => {
           onClose={handleNavigation}
         />
         <View
-          style={{ justifyContent: "center", alignItems: "center", gap: 32 }}
+          style={{ justifyContent: "center", alignItems: "center", gap: 24 }}
         >
           <View style={{ padding: 12, backgroundColor: Color.Gray.gray400, borderRadius: 12, width: 52, height: 52 }}>
             <PerkGradient />
@@ -118,8 +128,9 @@ const PowerUp = () => {
           <View style={{ gap: 12, alignItems: 'center' }}>
             <Text
               style={{
-                fontSize: 24,
-                fontWeight: "bold",
+                fontSize: 20,
+                fontWeight: "700",
+                lineHeight: 24,
                 color: Color.base.White,
               }}
             >
@@ -127,10 +138,10 @@ const PowerUp = () => {
             </Text>
             <Text
               style={{
-                color: Color.Gray.gray50,
-                fontSize: 16,
+                color: Color.Gray.gray100,
+                fontSize: 14,
                 textAlign: "center",
-                lineHeight: 20,
+                lineHeight: 18,
               }}
             >
               Show this to your waiter to redeem.{"\n"} Don't worry, they are
@@ -169,8 +180,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   container: {
-    gap: 80,
-    marginBottom: 40,
+    gap: 32,
+    marginBottom:50,
     paddingHorizontal: 16,
     flex: 1,
     justifyContent: "center",
@@ -251,4 +262,14 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 16,
   },
+  qrContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 32,
+    borderRadius: 32,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
+    width: width - 64,
+    aspectRatio: 1,
+  }
 });

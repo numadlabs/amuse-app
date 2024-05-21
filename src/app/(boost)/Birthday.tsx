@@ -27,7 +27,9 @@ const Email = () => {
   const { email, area, birthdate, setBirthdate } = useBoostInfoStore();
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [initialDate, setInitialDate] = useState(new Date());
   const { authState } = useAuth();
+  
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -46,8 +48,10 @@ const Email = () => {
   }, []);
 
   const onDateChange = (event, selectedDate) => {
+    setShowDatePicker(false);
     if (selectedDate) {
-      setBirthdate(selectedDate.toISOString());
+      setBirthdate(selectedDate.toISOString().split("T")[0]);
+      setInitialDate(selectedDate);
     }
   };
 
@@ -71,6 +75,8 @@ const Email = () => {
     },
   });
 
+  
+
   const triggerUpdateUser = async () => {
     setLoading(true);
     const userData = {
@@ -91,6 +97,20 @@ const Email = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    };
+    const formattedDate = date.toLocaleDateString(
+      Platform.OS === "ios" ? "en-US" : "en-GB",
+      options
+    );
+    return formattedDate;
   };
 
   return (
@@ -122,7 +142,9 @@ const Email = () => {
                   <TouchableOpacity onPress={() => setShowDatePicker(true)}>
                     <View style={styles.datePickerContainer}>
                       <Text style={styles.datePickerText}>
-                        {birthdate ? new Date(birthdate).toLocaleDateString() : "Select Birthdate"}
+                      {birthdate
+                            ? formatDate(birthdate)
+                            : "Select Date"}
                       </Text>
                     </View>
                   </TouchableOpacity>
@@ -155,7 +177,7 @@ const Email = () => {
             {showDatePicker && (
               <View style={styles.dateTimePickerOverlay}>
                 <DateTimePicker
-                  value={birthdate ? new Date(birthdate) : new Date()}
+                  value={initialDate}
                   mode="date"
                   display="spinner"
                   onChange={onDateChange}

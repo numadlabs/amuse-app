@@ -91,7 +91,7 @@ const PerkBuy = () => {
         </View>
         <View style={{ flexDirection: 'column', gap: 12, justifyContent: 'center' }}>
           <Text style={{ textAlign: 'center', color: Color.base.White, fontWeight: 'bold', fontSize: 20 }}>{name}</Text>
-          <Text style={{ color: Color.Gray.gray100, fontSize: 14, lineHeight: 18, textAlign: 'center' }}>Purchase perk, use it on next visit.</Text>
+          <Text style={{ color: Color.Gray.gray100, fontSize: 14, lineHeight: 18, textAlign: 'center' }}>Redeem with Bitcoin and use it {"\n"} on your next visit</Text>
           {balance && <AnimatedText entering={FadeIn} exiting={FadeOut} style={{ color: Color.System.systemError, textAlign: 'center' }}>{balance}</AnimatedText>}
         </View>
       </View>
@@ -100,7 +100,7 @@ const PerkBuy = () => {
           isClaimLoading ? (
             <ActivityIndicator />
           ) : (
-            <Text style={{ fontSize: 15, fontWeight: '600', color: Color.base.White }}>{`Buy ${price} Bitcoin`}</Text>
+            <Text style={{ fontSize: 15, fontWeight: '600', color: Color.base.White }}>{`Reedem for ${price} Bitcoin`}</Text>
           )
         }
       </Button>
