@@ -88,7 +88,7 @@ const StackedCard = () => {
           </View>
         </LinearGradient>
       ) : (
-        <Animated.View style={{ flex: 1, paddingBottom: 240, paddingHorizontal:16 }}>
+        <Animated.View style={{ flex: 1, paddingBottom: 240 }}>
           {latestCards?.map((card, index) => (
             <Animated.View
               key={index}

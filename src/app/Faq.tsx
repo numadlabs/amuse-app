@@ -16,7 +16,7 @@ const Faq = () => {
     },
     {
       title: "How do I earn rewards with Amuse Bouche?",
-      text: "You earn bitcoin and extra perks by scanning a QR code and thereby checking into restaurants on the Check-in page. The more you visit, the more you'll be rewarded.",
+      text: "You earn bitcoin and extra perks by scanning a QR code and thereby checking into restaurants on the check-in page. The more you visit, the more you'll be rewarded.",
     },
     {
       title: "Do I need to deal with crypto wallets?",

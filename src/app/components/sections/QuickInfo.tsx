@@ -31,6 +31,7 @@ const QuickInfo = ({ user, onPress }) => {
       <LinearGradient
         colors={[Color.Brand.card.start, Color.Brand.card.end]}
         style={{
+          width: width-32,
           paddingHorizontal: 16,
           paddingBottom: 16,
           paddingTop: 24,
@@ -47,8 +48,8 @@ const QuickInfo = ({ user, onPress }) => {
           </View>
         </View>
         <View style={styles.container2}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
-            <ProgressBar progress={progress} width={"85%"} height={8} />
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 12, width:'100%' }}>
+            <ProgressBar progress={progress} width={"97%"} height={8} />
             <Text
               style={{
                 color: Color.base.White,

@@ -244,7 +244,7 @@ const Page = () => {
             <InfoCircle size={18} color={Color.Gray.gray100} />
           </TouchableOpacity>
         </View>
-        <View style={{}}>
+        <View style={{paddingHorizontal:16}}>
           <StackedCard key={refreshPage.toString()} />
         </View>
         {cards?.data?.cards.length === 0 ? (

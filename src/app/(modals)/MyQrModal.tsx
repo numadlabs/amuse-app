@@ -227,7 +227,7 @@ const MyQrModal = () => {
                 </LinearGradient>
               </TouchableOpacity>
               <View style={{ marginHorizontal: 32 }}>
-                <Text style={{ textAlign: 'center', fontSize: 14, lineHeight: 18, color: Color.Gray.gray100 }}>Show this to your waiter to check-In.{"\n"} Do not worry, they are pros.</Text>
+                <Text style={{ textAlign: 'center', fontSize: 14, lineHeight: 18, color: Color.Gray.gray100 }}>Show this to your waiter to check-in.{"\n"} Do not worry, they are pros.</Text>
               </View>
             </View>
           )
