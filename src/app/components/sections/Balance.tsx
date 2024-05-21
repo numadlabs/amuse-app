@@ -14,17 +14,12 @@ import { useAuth } from "@/app/context/AuthContext";
 
 interface BalanceProps {
   amount?: number;
+  aed: number;
   handleToggle: () => void;
 }
 
-const Balance: React.FC<BalanceProps> = ({ amount, handleToggle }) => {
+const Balance: React.FC<BalanceProps> = ({ amount, handleToggle, aed }) => {
   const { authState } = useAuth()
-  const { data: data, isLoading, isError } = useQuery({
-    queryKey: userKeys.info,
-    queryFn: () => getUserByIdBalance(authState.userId),
-  });
-
-  console.log(data)
 
   const truncatedAmount =
     amount !== 0 ? amount?.toString().substring(0, 9) : "0.0000";
@@ -72,7 +67,7 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle }) => {
                     lineHeight: 36,
                   }}
                 >
-                  {data?.balanceInAed?.toFixed(2)}
+                  {aed?.toFixed(2)}
                 </Text>
                 <Text
                   style={{
@@ -118,7 +113,7 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle }) => {
                     lineHeight: 16,
                   }}
                 >
-                  {data?.user?.balance} Bitcoin
+                  {amount} Bitcoin
                 </Text>
               </View>
               <TouchableOpacity onPress={handleToggle}>
