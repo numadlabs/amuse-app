@@ -21,7 +21,7 @@ import { WalletAdd1 } from "iconsax-react-native";
 const { width } = Dimensions.get("window");
 
 const CARD_HEIGHT = 150;
-const CARD_WIDTH = width - 32;
+const CARD_WIDTH = width * 0.83;
 
 // Define the props for the FloatingRestaurantCard component
 interface FloatingRestaurantCardProps {
@@ -170,9 +170,13 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
 const styles = StyleSheet.create({
   card: {
     justifyContent: "space-between",
+    marginRight: 10,
     width: CARD_WIDTH,
     overflow: "hidden",
-    borderRadius: 16,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
     borderWidth: 1,
     backgroundColor: "transparent",
     borderColor: Color.Gray.gray400,
