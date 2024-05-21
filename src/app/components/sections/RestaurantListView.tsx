@@ -150,11 +150,21 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
                 borderRadius: 12,
               }}
             >
-              <ArrowLeft2 color={currentStep === 1 ? Color.Gray.gray200 : Color.Gray.gray50} size={20} />
+              <ArrowLeft2
+                color={
+                  currentStep === 1 ? Color.Gray.gray200 : Color.Gray.gray50
+                }
+                size={20}
+              />
             </TouchableOpacity>
             {Array.from({ length: numSteppers }, (_, i) => i + 1).map(
               (step) => (
-                <Stepper key={step} step={step} currentStep={currentStep} />
+                <Stepper
+                  key={step}
+                  step={step}
+                  currentStep={currentStep}
+                  handleNavigation={(step) => setCurrentStep(step)}
+                />
               )
             )}
             <TouchableOpacity
