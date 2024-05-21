@@ -6,9 +6,10 @@ import { useStateStep } from "@/app/lib/store/stepStore";
 interface StepperProps {
   step: number;
   currentStep: number;
+  handleNavigation: (step: number) => void;
 }
 
-const Stepper: React.FC<StepperProps> = ({ step, currentStep }) => {
+const Stepper: React.FC<StepperProps> = ({ step, currentStep, handleNavigation }) => {
   return (
     <TouchableOpacity
       style={{
@@ -20,6 +21,7 @@ const Stepper: React.FC<StepperProps> = ({ step, currentStep }) => {
         backgroundColor:
           step === currentStep ? Color.Gray.gray50 : Color.Gray.gray500,
       }}
+      onPress={() => handleNavigation(step)}
     >
       <Text
         style={{
