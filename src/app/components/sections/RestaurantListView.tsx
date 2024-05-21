@@ -106,7 +106,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
     return chunks;
   };
 
-  const numSteppers = Math.ceil(restaurantsData.data.restaurants.length / 5);
+  const numSteppers = Math.ceil(restaurantsData?.data?.restaurants.length / 5);
 
   return (
     <View style={{ paddingHorizontal: 16 }}>
