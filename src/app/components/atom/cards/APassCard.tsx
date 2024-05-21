@@ -3,6 +3,8 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+
+  
 } from "react-native";
 
 import { Image } from 'expo-image'
@@ -109,7 +111,7 @@ const APassCard: React.FC<ApassProp> = ({ name, category, image, onPress, hasBon
                     </View> : null}
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20, gap: 16, paddingHorizontal: 20, }}>
-                  <Image cachePolicy='memory' contentFit='fill' style={{ minWidth: width / 2.1, aspectRatio: 1, borderRadius: 12, }} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${nftImage}` }} />
+                  <Image style={{ minWidth: width / 2.1, aspectRatio: 1, borderRadius: 12, }} source={{ uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${nftImage}` }} />
                   <View style={{ borderWidth: 1, backgroundColor: Color.Gray.gray500, borderColor: Color.Gray.gray400, borderRadius: 12, overflow: 'hidden', }}>
                     {/* <LinearGradient
                       colors={[Color.Brand.main.start, Color.Brand.main.end]}

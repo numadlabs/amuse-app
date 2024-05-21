@@ -289,7 +289,7 @@ function Login() {
                         fontSize: 16,
                         fontWeight: "400",
                         lineHeight: 20,
-                        paddingLeft: 10,
+                      paddingLeft: 10,
                         color: Color.base.White,
                         width: '100%'
                       }}

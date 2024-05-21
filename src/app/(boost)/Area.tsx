@@ -117,6 +117,11 @@ const Area = () => {
                 </View>
               </LinearGradient>
             </View>
+            <KeyboardAvoidingView
+              style={{ flex: 1 }}
+              keyboardVerticalOffset={110}
+              behavior={Platform.OS === "ios" ? "height" : "padding"}
+            >
             <View
               style={[
                 styles.buttonContainer,
@@ -126,14 +131,15 @@ const Area = () => {
               ]}
             >
               <Button
-                variant="primary"
-                textStyle="primary"
+                variant={area ? "primary" : "disabled"}
+                textStyle={area ? "primary" : "disabled"}
                 size="default"
                 onPress={() => router.push("(boost)/Birthday")}
               >
                 Continue
               </Button>
             </View>
+            </KeyboardAvoidingView>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>

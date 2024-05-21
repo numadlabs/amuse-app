@@ -68,13 +68,15 @@ const SplitOTP = () => {
   };
 
   const handleNavigation = () => {
-    router.navigate({
-      pathname: "/forgotPassword/NewPassword",
-      params: {
-        phoneNumber: phoneNumber,
-        prefix: prefix,
-      },
-    });
+    if(text){
+      router.navigate({
+        pathname: "/forgotPassword/NewPassword",
+        params: {
+          phoneNumber: phoneNumber,
+          prefix: prefix,
+        },
+      });
+    }
   };
 
   const otpContent = useMemo(
@@ -186,12 +188,12 @@ const SplitOTP = () => {
                 ]}
               >
                 <Button
-                  variant="primary"
-                  textStyle="primary"
+                  variant={text ? "primary" : 'disabled'}
+                  textStyle={text ? "primary" : 'disabled'}
                   size="default"
                   onPress={handleNavigation}
                 >
-                  Skip for demo
+                  Continue
                 </Button>
               </View>
             </KeyboardAvoidingView>

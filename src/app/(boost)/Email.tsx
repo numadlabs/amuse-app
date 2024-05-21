@@ -65,8 +65,7 @@ const Email = () => {
                   <View style={{ gap: 8 }}>
                     <Text style={styles.topText}>Email</Text>
                     <Text style={styles.bottomText}>
-                      Restaurants will use this to get in touch for things like
-                      priority reservations. Spam is so 20th century.
+                    Restaurants will use this to get in touch for things like priority reservations. Spam is so 20th century.
                     </Text>
                   </View>
                   <LinearGradient
@@ -117,6 +116,11 @@ const Email = () => {
                 </View>
               </LinearGradient>
             </View>
+            <KeyboardAvoidingView
+              style={{ flex: 1 }}
+              keyboardVerticalOffset={110}
+              behavior={Platform.OS === "ios" ? "height" : "padding"}
+            >
             <View
               style={[
                 styles.buttonContainer,
@@ -125,15 +129,17 @@ const Email = () => {
                   : styles.topPosition,
               ]}
             >
+
               <Button
-                variant="primary"
-                textStyle="primary"
+                variant={email ? "primary" : "disabled"}
+                textStyle={email ? "primary" : "disabled"}
                 size="default"
                 onPress={() => router.push("(boost)/Area")}
               >
                 Continue
               </Button>
             </View>
+            </KeyboardAvoidingView>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>

@@ -223,11 +223,11 @@ const MyQrModal = () => {
                   colors={[Color.Brand.card.start, Color.Brand.card.end]}
                   style={[styles.button]}
                 >
-                  <Image source={require('../../public/images/pqr.png')} style={{}} />
+                  <Image source={require('../../public/images/pqr.png')} style={{ width: width - 128, height: width - 128 }} />
                 </LinearGradient>
               </TouchableOpacity>
               <View style={{ marginHorizontal: 32 }}>
-                <Text style={{ textAlign: 'center', fontSize: 14, lineHeight: 18, color: Color.Gray.gray100 }}>Show this to your waiter to Check-In.{"\n"} Do not worry, they are pros.</Text>
+                <Text style={{ textAlign: 'center', fontSize: 14, lineHeight: 18, color: Color.Gray.gray100 }}>Show this to your waiter to check-In.{"\n"} Do not worry, they are pros.</Text>
               </View>
             </View>
           )
@@ -276,7 +276,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: "50%",
     top: "50%",
-
     marginLeft: -halfMarkerSize,
     marginTop: -halfMarkerSize,
     height: markerSize,
@@ -293,7 +292,6 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray400,
     width: width - 64,
     aspectRatio: 1,
-
   },
   closeButton: {
     position: "absolute",

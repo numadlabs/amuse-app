@@ -18,7 +18,7 @@ const Success = () => {
   };
   return (
     <View style={styles.body}>
-      <View style={{ position: "absolute", top: 48 }}>
+      {/* <View style={{ position: "absolute", top: 48 }}>
         <LinearGradient
           colors={[Color.Brand.main.start, Color.Brand.main.end]}
           start={[0, 1]}
@@ -50,7 +50,7 @@ const Success = () => {
             </Text>
           </View>
         </LinearGradient>
-      </View>
+      </View> */}
       <LinearGradient
         colors={[Color.Brand.card.start, Color.Brand.card.end]}
         start={{ x: 1, y: 0 }}
@@ -61,7 +61,7 @@ const Success = () => {
           <TickCircle />
           <Text style={styles.topText}>Congratulations!</Text>
           <Text style={styles.bottomText}>
-            You will earn extra rewards every time you use an Membership.
+            You will earn 1.2x more rewards every time you use your Memberships.
           </Text>
         </View>
       </LinearGradient>

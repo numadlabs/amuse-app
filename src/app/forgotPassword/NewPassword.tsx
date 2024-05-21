@@ -289,8 +289,8 @@ const Password = () => {
                 ]}
               >
                 <Button
-                  variant="primary"
-                  textStyle="primary"
+                  variant={isPasswordValid && doPasswordsMatch ? "primary" : 'disabled'}
+                  textStyle={isPasswordValid && doPasswordsMatch ? "primary" : 'disabled'}
                   size="default"
                   onPress={handleNavigation}
                 >
