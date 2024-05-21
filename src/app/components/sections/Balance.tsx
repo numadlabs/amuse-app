@@ -7,6 +7,10 @@ import Animated, { FadeIn } from "react-native-reanimated";
 import APassStripes from "../icons/APassStripes";
 import { InfoCircle } from "iconsax-react-native";
 import { width } from "@/app/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { getUserByIdBalance } from "@/app/lib/service/queryHelper";
+import { userKeys } from "@/app/lib/service/keysHelper";
+import { useAuth } from "@/app/context/AuthContext";
 
 interface BalanceProps {
   amount?: number;
@@ -14,6 +18,14 @@ interface BalanceProps {
 }
 
 const Balance: React.FC<BalanceProps> = ({ amount, handleToggle }) => {
+  const { authState } = useAuth()
+  const { data: data, isLoading, isError } = useQuery({
+    queryKey: userKeys.info,
+    queryFn: () => getUserByIdBalance(authState.userId),
+  });
+
+  console.log(data)
+
   const truncatedAmount =
     amount !== 0 ? amount?.toString().substring(0, 9) : "0.0000";
   let coinAmount = parseFloat(truncatedAmount) * 261135.80;
@@ -60,7 +72,7 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle }) => {
                     lineHeight: 36,
                   }}
                 >
-                  {coinAmount.toFixed(2)}
+                  {data?.balanceInAed?.toFixed(2)}
                 </Text>
                 <Text
                   style={{
@@ -106,7 +118,7 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle }) => {
                     lineHeight: 16,
                   }}
                 >
-                  {truncatedAmount} Bitcoin
+                  {data?.user?.balance} Bitcoin
                 </Text>
               </View>
               <TouchableOpacity onPress={handleToggle}>
