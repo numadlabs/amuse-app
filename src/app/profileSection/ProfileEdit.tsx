@@ -41,6 +41,7 @@ const ProfileEdit = () => {
     queryFn: () => getUserById(authState.userId),
   });
 
+
   const [loading, setLoading] = useState(false);
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
