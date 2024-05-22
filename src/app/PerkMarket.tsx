@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import Color from "./constants/Color";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { purchaseablePerkKeys, restaurantKeys } from "./lib/service/keysHelper";
@@ -63,7 +63,7 @@ const PerkMarket = () => {
         </TouchableOpacity>
       </View>
       {isLoading ? (
-        <Text>Loading...</Text>
+        <ActivityIndicator/>
       ) : isError ? (
         <Text>Error fetching data</Text>
       ) : (

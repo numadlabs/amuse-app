@@ -8,7 +8,6 @@ import APassStripes from "../icons/APassStripes";
 import { InfoCircle } from "iconsax-react-native";
 import { width } from "@/app/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { getUserByIdBalance } from "@/app/lib/service/queryHelper";
 import { userKeys } from "@/app/lib/service/keysHelper";
 import { useAuth } from "@/app/context/AuthContext";
 

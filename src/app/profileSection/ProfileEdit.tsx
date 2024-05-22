@@ -65,19 +65,19 @@ const ProfileEdit = () => {
 
   useEffect(() => {
     if (user) {
-      setNickname(user.nickname || "");
-      setEmail(user.email || "");
-      setLocation(user.location || "");
-      setDateOfBirth(user.dateOfBirth || "");
+      setNickname(user.user.nickname || "");
+      setEmail(user.user.email || "");
+      setLocation(user.user.location || "");
+      setDateOfBirth(user.user.dateOfBirth || "");
     }
   }, [user]);
 
   useEffect(() => {
     if (
-      user.nickname !== nickname ||
-      user.email !== email ||
-      user.location !== location ||
-      user.dateOfBirth !== dateOfBirth
+      user.user.nickname !== nickname ||
+      user.user.email !== email ||
+      user.user.location !== location ||
+      user.user.dateOfBirth !== dateOfBirth
     ) {
       setDataChanged(true);
     } else {

@@ -75,40 +75,39 @@ const Profile = () => {
                   paddingTop: 24,
                   borderRadius: 16,
                   gap: 24,
-                }}>
-
-
+                }}
+              >
                 <View style={styles.profileContainer}>
                   <View style={styles.profilePic}>
                     <User size={36} color={Color.Gray.gray50} />
                   </View>
-                  <Text style={styles.profileName}>{user.nickname}</Text>
+                  <Text style={styles.profileName}>{user.user.nickname}</Text>
                 </View>
                 <View style={styles.profileStatsContainer}>
                   <View style={styles.profileStats}>
-                      <View
+                    <View
+                      style={{
+                        justifyContent: "center",
+                        gap: 8,
+                        alignItems: "center",
+                        paddingHorizontal: 10,
+                      }}
+                    >
+                      <Text style={{ color: Color.Gray.gray100, fontSize: 16 }}>
+                        Check-ins
+                      </Text>
+                      <Text
                         style={{
-                          justifyContent: "center",
-                          gap: 8,
-                          alignItems: "center",
-                          paddingHorizontal: 10,
+                          color: Color.Gray.gray50,
+                          fontSize: 24,
+                          fontWeight: "bold",
                         }}
                       >
-                        <Text style={{ color: Color.Gray.gray100, fontSize: 16 }}>
-                          Check-ins
-                        </Text>
-                        <Text
-                          style={{
-                            color: Color.Gray.gray50,
-                            fontSize: 24,
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {taps?.data?.taps.length === 0
-                            ? "00"
-                            : taps?.data?.taps.length}
-                        </Text>
-                      </View>
+                        {taps?.data?.taps.length === 0
+                          ? "00"
+                          : taps?.data?.taps.length}
+                      </Text>
+                    </View>
                   </View>
                   <View
                     style={{ width: 1, backgroundColor: Color.Gray.gray300 }}
@@ -149,91 +148,103 @@ const Profile = () => {
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
                 start={{ x: 1, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={{borderRadius: 16,}}>
-
-             
-              <TouchableOpacity
-                style={styles.configContainer}
-                onPress={() => router.push("profileSection/ProfileEdit")}
+                style={{ borderRadius: 16 }}
               >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 12,
-                    alignItems: "center",
-                  }}
+                <TouchableOpacity
+                  style={styles.configContainer}
+                  onPress={() => router.push("profileSection/ProfileEdit")}
                 >
-                  <User size={24} color={Color.Gray.gray100} />
-                  <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>Account</Text>
-                </View>
-                <ArrowRight2 color={Color.Gray.gray100} />
-              </TouchableOpacity>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 12,
+                      alignItems: "center",
+                    }}
+                  >
+                    <User size={24} color={Color.Gray.gray100} />
+                    <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>
+                      Account
+                    </Text>
+                  </View>
+                  <ArrowRight2 color={Color.Gray.gray100} />
+                </TouchableOpacity>
               </LinearGradient>
               <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
                 start={{ x: 1, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={{borderRadius: 16,}}>
-              <TouchableOpacity
-                style={styles.configContainer}
-                onPress={() => Linking.openURL("mailto:itnumadlabs@gmail.com")}
+                style={{ borderRadius: 16 }}
               >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 12,
-                    alignItems: "center",
-                  }}
+                <TouchableOpacity
+                  style={styles.configContainer}
+                  onPress={() =>
+                    Linking.openURL("mailto:itnumadlabs@gmail.com")
+                  }
                 >
-                  <Sms size={24} color={Color.Gray.gray100} />
-                  <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>Contact</Text>
-                </View>
-                <ArrowRight2 color={Color.Gray.gray100} />
-              </TouchableOpacity>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 12,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Sms size={24} color={Color.Gray.gray100} />
+                    <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>
+                      Contact
+                    </Text>
+                  </View>
+                  <ArrowRight2 color={Color.Gray.gray100} />
+                </TouchableOpacity>
               </LinearGradient>
               <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
                 start={{ x: 1, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={{borderRadius: 16,}}>
-              <TouchableOpacity
-                style={styles.configContainer}
-                onPress={() => router.navigate("/Faq")}
+                style={{ borderRadius: 16 }}
               >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 12,
-                    alignItems: "center",
-                  }}
+                <TouchableOpacity
+                  style={styles.configContainer}
+                  onPress={() => router.navigate("/Faq")}
                 >
-                  <MessageQuestion size={24} color={Color.Gray.gray100} />
-                  <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>FAQ</Text>
-                </View>
-                <ArrowRight2 color={Color.Gray.gray100} />
-              </TouchableOpacity>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 12,
+                      alignItems: "center",
+                    }}
+                  >
+                    <MessageQuestion size={24} color={Color.Gray.gray100} />
+                    <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>
+                      FAQ
+                    </Text>
+                  </View>
+                  <ArrowRight2 color={Color.Gray.gray100} />
+                </TouchableOpacity>
               </LinearGradient>
               <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
                 start={{ x: 1, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={{borderRadius: 16,}}>
-              <TouchableOpacity
-                style={styles.configContainer}
-                onPress={() => router.navigate("/TermsAndCondo")}
+                style={{ borderRadius: 16 }}
               >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 12,
-                    alignItems: "center",
-                  }}
+                <TouchableOpacity
+                  style={styles.configContainer}
+                  onPress={() => router.navigate("/TermsAndCondo")}
                 >
-                  <NoteText size={24} color={Color.Gray.gray100} />
-                  <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>Terms and Conditions</Text>
-                </View>
-                <ArrowRight2 color={Color.Gray.gray100} />
-              </TouchableOpacity>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 12,
+                      alignItems: "center",
+                    }}
+                  >
+                    <NoteText size={24} color={Color.Gray.gray100} />
+                    <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>
+                      Terms and Conditions
+                    </Text>
+                  </View>
+                  <ArrowRight2 color={Color.Gray.gray100} />
+                </TouchableOpacity>
               </LinearGradient>
 
               <TouchableOpacity onPress={onLogout}>
@@ -270,7 +281,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 16,
 
-
     borderRadius: 16,
 
     borderWidth: 1,
@@ -295,7 +305,7 @@ const styles = StyleSheet.create({
   },
   profilePic: {
     alignItems: "center",
-    justifyContent: 'center',
+    justifyContent: "center",
     width: 72,
     height: 72,
     padding: 10,
@@ -306,7 +316,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginTop: 16,
-    color: Color.base.White
+    color: Color.base.White,
   },
   profileContainer: {
     alignItems: "center",
@@ -326,7 +336,6 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   configContainer: {
- 
     borderWidth: 1,
     borderColor: Color.Gray.gray300,
     // shadowColor: "#000",

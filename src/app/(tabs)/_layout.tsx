@@ -78,7 +78,7 @@ const Layout = ({ navigation }) => {
                       style={{ width: 8, height: 8, borderRadius: 8 }}
                     />
                   ) : (
-                    ""
+                    null
                   )}
 
                 </View>

@@ -355,7 +355,7 @@ const Page = () => {
                 wallets coming soon.
               </Text>
               <Button
-                variant="tertiary"
+                variant="primary"
                 textStyle="primary"
                 onPress={toggleBalanceBottomSheet}
                 style={{ width: "100%" }}

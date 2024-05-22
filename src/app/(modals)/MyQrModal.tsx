@@ -88,11 +88,11 @@ const MyQrModal = () => {
 
   const router = useRouter();
   useEffect(() => {
-    const getCameraPermissions = async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === "granted");
-    };
-    getCameraPermissions();
+    // const getCameraPermissions = async () => {
+    //   const { status } = await Camera.requestCameraPermissionsAsync();
+    //   setHasPermission(status === "granted");
+    // };
+    // getCameraPermissions();
     setRestaurantId("7c0489fc-94fd-4c3d-95a0-8ede22f6ea28");
     setCardId("fd97915d-72a3-49e5-85dd-b9fed5c599a8")
     setVisitCount(1)
@@ -184,12 +184,12 @@ const MyQrModal = () => {
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
+  // if (hasPermission === null) {
+  //   return <Text>Requesting for camera permission</Text>;
+  // }
+  // if (hasPermission === false) {
+  //   return <Text>No access to camera</Text>;
+  // }
 
   return (
     <>
