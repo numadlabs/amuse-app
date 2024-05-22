@@ -5,23 +5,15 @@ import Color from "./constants/Color";
 import NotificationCard from "./components/atom/cards/NotificationCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function formatDate(dateString, showTime = false) {
-  const date = new Date(dateString);
-  const options = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    ...(showTime && { hour: "numeric", minute: "numeric" }),
-  };
-  return date.toLocaleDateString("en-US", options);
-}
 const Notification = () => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     const retrieveNotifications = async () => {
       try {
-        const storedNotifications = await AsyncStorage.getItem("restaurantCard");
+        const storedNotifications = await AsyncStorage.getItem(
+          "restaurantCard"
+        );
         if (storedNotifications !== null) {
           const parsedNotifications = JSON.parse(storedNotifications);
           setNotifications(parsedNotifications);
@@ -33,19 +25,40 @@ const Notification = () => {
     retrieveNotifications();
   }, []);
 
+  const getRelativeTime = (date) => {
+    const now = new Date();
+    const targetDate = new Date(date);
+    const diffInSeconds = Math.floor(
+      (now.getTime() - targetDate.getTime()) / 1000
+    );
+
+    if (diffInSeconds < 60) {
+      return "now";
+    } else if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `${minutes}m`;
+    } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `${hours}h`;
+    } else {
+      const days = Math.floor(diffInSeconds / 86400);
+      return `${days}d`;
+    }
+  };
+
   return (
     <View style={styles.body}>
       <Header title="Notifications" />
       <FlatList
-      style={styles.container}
-      ItemSeparatorComponent={() => <View style={{height: 20}} />}
+        style={styles.container}
+        ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
         data={notifications}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <NotificationCard
             title={item.name}
             description={`You received $1 of bitcoin from ${item.name}`}
-            time={formatDate(item.date, true)}
+            time={getRelativeTime(item.date)}
           />
         )}
       />
@@ -59,10 +72,9 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
-  
   },
   container: {
-    gap:16
+    gap: 16,
   },
   emptyContainer: {
     flex: 1,

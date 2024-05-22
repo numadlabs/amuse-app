@@ -168,7 +168,7 @@ const Restaurant = () => {
               style={[
                 {
                   backgroundColor: Color.Gray.gray600,
-                  height: height / 2.4,
+                  height: height / 2.8,
                   bottom: 0,
                   width: width,
                   zIndex: 99,

@@ -48,7 +48,7 @@ const PerkScreen = () => {
       await AsyncStorage.setItem("restaurantCard", JSON.stringify(updatedNotifications));
       console.log("Card information stored successfully.");
     } catch (error) {
-      console.log("Error storing card information:", error);
+    console.log("Error storing card information:", error);
     }
   };
 
@@ -111,7 +111,7 @@ const PerkScreen = () => {
                   color: Color.base.White,
                 }}
               >
-                +$1 AED of Bitcoin
+                +1 AED of Bitcoin
               </Text>
               <Text
                 style={{

@@ -116,16 +116,6 @@ export async function getUserById(userID: string) {
   });
 }
 
-export async function getUserByIdBalance(userID: string) {
-  return axiosClient.get(`/users/${userID}`).then((response) => {
-    if (response.data.success) {
-      return response?.data.data;
-    } else {
-      throw new Error(response.data.error);
-    }
-  });
-}
-
 export async function getCardById(id){
   return axiosClient.get(`/cards/${id}`).then((response) => {
     if (response.data.success) {

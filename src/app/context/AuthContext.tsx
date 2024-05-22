@@ -20,7 +20,7 @@ interface AuthProps {
   };
   onRegister?: (
     nickname: string,
-    preFix: string,
+    preFix: string, 
     telNumber: string,
     password: string
   ) => Promise<any>;
