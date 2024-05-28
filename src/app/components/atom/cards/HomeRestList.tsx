@@ -15,6 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Button from "../../ui/Button";
 import { WalletAdd1 } from "iconsax-react-native";
 import { width } from "@/app/lib/utils";
+import { SERVER_SETTING } from "@/app/constants/serverSettings";
 
 interface ResListCardProp {
   marker: RestaurantType;
@@ -40,7 +41,7 @@ const HomeRestList: React.FC<ResListCardProp> = ({
     <LinearGradient
       colors={[Color.Brand.card.start, Color.Brand.card.end]}
       style={{
-        width: width-32,
+        width: width - 32,
         overflow: "hidden",
         borderRadius: 20,
         borderWidth: 1,
@@ -51,7 +52,7 @@ const HomeRestList: React.FC<ResListCardProp> = ({
       <View style={styles.container}>
         <Image
           source={{
-            uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker?.logo}` as string,
+            uri: `${SERVER_SETTING.CDN_LINK}${marker?.logo}` as string,
           }}
           style={styles.image}
         />

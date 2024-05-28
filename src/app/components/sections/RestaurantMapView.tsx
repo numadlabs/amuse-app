@@ -19,7 +19,7 @@ import FloatingRestaurantCard from "../atom/cards/FloatingRestCard";
 import useLocationStore from "@/app/lib/store/userLocation";
 import SvgMarker from "../atom/svgMarker";
 import Color from "@/app/constants/Color";
-import { mapStyle } from "@/app/constants/serverSettings";
+import { mapStyle, SERVER_SETTING } from "@/app/constants/serverSettings";
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
@@ -322,7 +322,7 @@ export default function RestaurantMapView() {
                 <SvgMarker
                   key={restaurant.id as string}
                   imageUrl={
-                    `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${restaurant.logo}` as string
+                    `${SERVER_SETTING.CDN_LINK}${restaurant.logo}` as string
                   }
                 />
               ) : (

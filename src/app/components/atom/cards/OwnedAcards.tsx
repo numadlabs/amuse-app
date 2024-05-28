@@ -4,6 +4,7 @@ import { Reserve } from "iconsax-react-native";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { SERVER_SETTING } from "@/app/constants/serverSettings";
 // Restaurant desc endpoint deeree nemeh
 
 interface OwnedAcardsProp {
@@ -35,11 +36,11 @@ const OwnedAcards: React.FC<OwnedAcardsProp> = ({ marker, onPress }) => {
           >
             <Image
               source={{
-                uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker.logo}` as string,
+                uri: `${SERVER_SETTING.CDN_LINK}${marker.logo}` as string,
               }}
               style={styles.image}
             />
-            <View style={{ height: 92, justifyContent: 'space-between' }}>
+            <View style={{ height: 92, justifyContent: "space-between" }}>
               <View style={{ gap: 4 }}>
                 <View style={{ width: "80%" }}>
                   <Text style={styles.title}>{marker.name}</Text>

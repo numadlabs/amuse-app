@@ -17,6 +17,7 @@ import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import Button from "../../ui/Button";
 import { WalletAdd1 } from "iconsax-react-native";
+import { SERVER_SETTING } from "@/app/constants/serverSettings";
 
 const { width } = Dimensions.get("window");
 
@@ -73,10 +74,10 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
         >
           <Image
             source={{
-              uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker.logo}` as string,
+              uri: `${SERVER_SETTING.CDN_LINK}${marker.logo}` as string,
             }}
             style={styles.cardImage}
-          // resizeMode="cover"
+            // resizeMode="cover"
           />
           <View style={styles.textContent}>
             <View>

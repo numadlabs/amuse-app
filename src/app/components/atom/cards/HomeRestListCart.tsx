@@ -5,7 +5,7 @@ import {
   Image,
   StyleSheet,
   ActivityIndicator,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { RestaurantType } from "@/app/lib/types";
@@ -15,6 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Button from "../../ui/Button";
 import { WalletAdd1 } from "iconsax-react-native";
 import { width } from "@/app/lib/utils";
+import { SERVER_SETTING } from "@/app/constants/serverSettings";
 
 interface ResListCardProp {
   marker: RestaurantType;
@@ -45,13 +46,19 @@ const HomeResListCard: React.FC<ResListCardProp> = ({
         <View style={styles.container}>
           <Image
             source={{
-              uri: `https://numadlabs-amuse.s3.eu-central-1.amazonaws.com/${marker.logo}` as string,
+              uri: `${SERVER_SETTING.CDN_LINK}${marker.logo}` as string,
             }}
             style={styles.image}
           />
-          <View style={{ width: '100%', height: 92, justifyContent: 'space-between' }}>
-            <View style={{ gap: 4, width: '100%' }}>
-              <View style={{ width: "80%", flex: 1, overflow: 'hidden' }}>
+          <View
+            style={{
+              width: "100%",
+              height: 92,
+              justifyContent: "space-between",
+            }}
+          >
+            <View style={{ gap: 4, width: "100%" }}>
+              <View style={{ width: "80%", flex: 1, overflow: "hidden" }}>
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="tail"
@@ -86,13 +93,17 @@ const HomeResListCard: React.FC<ResListCardProp> = ({
                   {isOpen ? "Closed" : "Open"}
                 </Text>
               </View>
-              {marker.isOwned ? <View
-                style={{
-                  width: 1,
-                  height: 14,
-                  backgroundColor: Color.Gray.gray50,
-                }}
-              /> : ''}
+              {marker.isOwned ? (
+                <View
+                  style={{
+                    width: 1,
+                    height: 14,
+                    backgroundColor: Color.Gray.gray50,
+                  }}
+                />
+              ) : (
+                ""
+              )}
               {marker.isOwned ? (
                 <View
                   style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
@@ -116,7 +127,7 @@ const HomeResListCard: React.FC<ResListCardProp> = ({
                     borderWidth: 1,
                     borderRadius: 16,
                     marginLeft: 90,
-                    borderColor: Color.base.White
+                    borderColor: Color.base.White,
                   }}
                 >
                   {loading ? (

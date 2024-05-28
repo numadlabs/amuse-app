@@ -3,6 +3,7 @@ export const SERVER_SETTING = {
   REFRESH_TOKEN_KEY: "REFRESH_TOKEN_KEY",
   USER_ID: "USER_ID",
   PERK_FREQUENCY: 3,
+  CDN_LINK: "https://d2fovtzya8mbko.cloudfront.net/",
 };
 
 export const mapStyle = [
