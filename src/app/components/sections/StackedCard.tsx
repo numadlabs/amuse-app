@@ -15,7 +15,9 @@ import SearchGradient from "../icons/SearchGradient";
 
 const StackedCard = () => {
   const cardPositions = useSharedValue(-400);
+  const originY = useSharedValue(0);
   const { currentLocation } = useLocationStore();
+
   const router = useRouter();
   const { data: cards = [], isLoading } = useQuery({
     queryKey: userKeys.cards,
@@ -40,10 +42,10 @@ const StackedCard = () => {
       {
         translateY: withSpring(cardPositions.value, {
           damping: 15,
-
         }),
       },
     ],
+    originY: 0,
     zIndex: 999,
     top: cardPositions.value,
     marginBottom: -220
@@ -59,8 +61,6 @@ const StackedCard = () => {
       pathname: `/restaurants/${restaurant.restaurantId}`
     });
   };
-
-
 
   return (
     <>

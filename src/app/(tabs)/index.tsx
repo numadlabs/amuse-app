@@ -7,13 +7,13 @@ import {
   View,
   Image,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Color from "../constants/Color";
 import Balance from "../components/sections/Balance";
 import QuickInfo from "../components/sections/QuickInfo";
 import StackedCard from "../components/sections/StackedCard";
 import { useAuth } from "../context/AuthContext";
-import { useNavigation, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { getUserById, getUserCard } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
@@ -45,7 +45,6 @@ const Page = () => {
   const [isOpenBalance, setIsOpenBalance] = useState<boolean>(false);
   const [isQuickInfoVisible, setIsQuickInfoVisible] = useState(true);
   const pressed = useSharedValue(false);
-  const [featured, setIsFeatured] = useState([]);
   const { authState } = useAuth();
 
   const { currentLocation } = useLocationStore();
@@ -56,11 +55,7 @@ const Page = () => {
     },
     enabled: !!authState.userId,
   });
-  
 
-  const closeBoost = () => {
-    setIsQuickInfoVisible(false);
-  };
 
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
@@ -99,13 +94,6 @@ const Page = () => {
     enabled: !!currentLocation,
   });
 
-  const bottomSheetAnimation = useSharedValue(0);
-
-  const bottomSheetAnimatedStyle = useAnimatedStyle(() => {
-    const translateY = bottomSheetAnimation.value * 500;
-    return { transform: [{ translateY }] };
-  });
-
   const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
       pathname: `/restaurants/${restaurant.id}`,
@@ -116,7 +104,6 @@ const Page = () => {
   };
 
   const restaurantsArray = restaurantsData?.data?.restaurants || [];
-
   const filteredRestaurantsArray = restaurantsArray.filter(
     (restaurant) => !restaurant.isOwned
   );
@@ -134,39 +121,37 @@ const Page = () => {
           )}
         </Animated.View>
 
-        <View style={{ marginTop: 24, gap: 12 }}>
+        <View style={{ marginTop: 16, gap: 12 }}>
           <Text
             style={{
               fontSize: 14,
               fontWeight: "600",
               color: Color.Gray.gray100,
-              paddingHorizontal:16
+              paddingHorizontal: 16
             }}
           >
             Featured
           </Text>
-
           {restaurantsArray?.length > 0 && (
-            <View style={{ alignItems: "center", gap: 8, width:width }}>
+            <View style={{ alignItems: "center", gap: 8, width: width }}>
               <Animated.ScrollView
                 snapToAlignment="center"
                 entering={SlideInLeft}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
-                snapToInterval={width - 16} // 16 for the gap between cards
+                snapToInterval={width - 16}
                 decelerationRate="fast"
-      
               >
                 <Animated.View
                   entering={SlideInLeft.springify().damping(15)}
-                  style={{ flexDirection: "row", gap: 8, left:16, paddingRight:32 }}
+                  style={{ flexDirection: "row", gap: 8, left: 16, paddingRight: 32 }}
                 >
                   {user?.user?.email &&
                     user?.user?.dateOfBirth &&
                     user?.user?.nickname &&
                     user?.user?.location
-                    ? // <QuickInfo onPress={() => setIsQuickInfoVisible(false)} user={user} />
-                     ""
+                    ?
+                    null
                     : isQuickInfoVisible && (
                       <QuickInfo
                         onPress={() => setIsQuickInfoVisible(false)}
@@ -203,7 +188,7 @@ const Page = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() =>
-                      handleNavigation(filteredRestaurantsArray[2])
+                        handleNavigation(filteredRestaurantsArray[2])
                     }
                   >
                     <HomeRestList
@@ -224,10 +209,10 @@ const Page = () => {
           style={{
             flexDirection: "row",
             alignItems: "center",
-            marginTop: 32,
+            marginTop: 24,
             marginBottom: 12,
             justifyContent: "space-between",
-            paddingHorizontal:16
+            paddingHorizontal: 16
           }}
         >
           <Text
@@ -235,7 +220,7 @@ const Page = () => {
               fontSize: 14,
               fontWeight: "600",
               color: Color.Gray.gray100,
-            
+
             }}
           >
             Memberships
@@ -244,7 +229,7 @@ const Page = () => {
             <InfoCircle size={18} color={Color.Gray.gray100} />
           </TouchableOpacity>
         </View>
-        <View style={{paddingHorizontal:16}}>
+        <View style={{ paddingHorizontal: 16 }}>
           <StackedCard key={refreshPage.toString()} />
         </View>
         {cards?.data?.cards.length === 0 ? (
@@ -325,7 +310,7 @@ const Page = () => {
                   justifyContent: "center",
                   alignContent: "center",
                   alignItems: "center",
-                  flexDirection:'row'
+                  flexDirection: 'row'
                 }}
               >
                 <Text
@@ -339,8 +324,8 @@ const Page = () => {
                   About your Balance
                 </Text>
                 <TouchableOpacity onPress={toggleBalanceBottomSheet}>
-                  <View style={{backgroundColor:Color.Gray.gray400, borderRadius:48, padding:8, width:32, alignContent:'center', alignItems:'center',justifyContent:'center', aspectRatio:1, position:"absolute", left:55, top:-18}}>
-                    <Close/>
+                  <View style={{ backgroundColor: Color.Gray.gray400, borderRadius: 48, padding: 8, width: 32, alignContent: 'center', alignItems: 'center', justifyContent: 'center', aspectRatio: 1, position: "absolute", left: 55, top: -18 }}>
+                    <Close />
                   </View>
                 </TouchableOpacity>
               </View>
@@ -410,7 +395,7 @@ const Page = () => {
                   justifyContent: "center",
                   alignContent: "center",
                   alignItems: "center",
-                  flexDirection:'row'
+                  flexDirection: 'row'
                 }}
               >
                 <Text
@@ -424,8 +409,8 @@ const Page = () => {
                   Membership
                 </Text>
                 <TouchableOpacity onPress={toggleBottomSheet}>
-                  <View style={{backgroundColor:Color.Gray.gray400, borderRadius:48, padding:8, width:32, alignContent:'center', alignItems:'center',justifyContent:'center', aspectRatio:1, position:"absolute", left:85, top:-18}}>
-                    <Close/>
+                  <View style={{ backgroundColor: Color.Gray.gray400, borderRadius: 48, padding: 8, width: 32, alignContent: 'center', alignItems: 'center', justifyContent: 'center', aspectRatio: 1, position: "absolute", left: 85, top: -18 }}>
+                    <Close />
                   </View>
                 </TouchableOpacity>
               </View>
@@ -447,7 +432,6 @@ const Page = () => {
                   cards when you visit your favorite restaurants.
                 </Text>
               </View>
-
               <Button
                 variant="primary"
                 textStyle="primary"
@@ -469,7 +453,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
- 
+
   },
   modal: {
     position: "absolute",

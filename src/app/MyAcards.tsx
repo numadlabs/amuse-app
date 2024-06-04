@@ -29,18 +29,7 @@ const MyAcards = () => {
   const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
       pathname: `/restaurants/${restaurant.restaurantId}`,
-      params: {
-        name: restaurant.name,
-        location: restaurant.location,
-        about: restaurant.description,
-        category: restaurant.category,
-        isOwned: restaurant.isOwned,
-        logo: restaurant.logo,
-        taps: restaurant.visitCount,
-        artistInfo: restaurant.artistInfo,
-        benefits: restaurant.benefits,
-        membership: restaurant.expiryInfo,
-      },
+     
     });
   };
   return (

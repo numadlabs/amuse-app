@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { ActivityIndicator, Image, Pressable } from "react-native";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Keyboard,
   Platform,
@@ -30,49 +30,9 @@ import {
 } from "react-native-gesture-handler";
 import { ArrowDown2 } from "iconsax-react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import data from 'prefix.json'
 
-function Login() {
-
-
-  const data = [
-    {
-      name: "UAE",
-      prefix: "971",
-    },
-    {
-      name: "Mongolia",
-      prefix: "976",
-    },
-    {
-      name: "United States",
-      prefix: "1",
-    },
-    {
-      name: "United Kingdom",
-      prefix: "44",
-    },
-    {
-      name: "Canada",
-      prefix: "1",
-    },
-    {
-      name: "Australia",
-      prefix: "61",
-    },
-    {
-      name: "Germany",
-      prefix: "49",
-    },
-    {
-      name: "France",
-      prefix: "33",
-    },
-    {
-      name: "Japan",
-      prefix: "81",
-    },
-  ];
-
+function Login() {  
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [prefix, setPrefix] = useState<string>(data[0].prefix);
@@ -121,21 +81,7 @@ function Login() {
     }
   };
 
-  const onFocusPhone = () => {
-    setPhonePlaceholder("");
-  };
-
-  const onBlurPhone = () => {
-    setPhonePlaceholder("Phone number");
-  };
-
-  const onFocusPassword = () => {
-    setPasswordPlaceholder("");
-  };
-
-  const onBlurPassword = () => {
-    setPasswordPlaceholder("Password");
-  };
+ 
   const offset = useSharedValue(300);
   const togglePrefix = () => {
     setIsOpen(!isOpen);
@@ -289,7 +235,6 @@ function Login() {
                         fontSize: 16,
                         fontWeight: "400",
                         lineHeight: 20,
-                      paddingLeft: 10,
                         color: Color.base.White,
                         width: '100%'
                       }}
@@ -442,7 +387,7 @@ function Login() {
                     },
                   ]}
                 >
-                  <ScrollView style={{}}>
+                  <ScrollView>
                     {data.map((prefix, index) => (
                       <TouchableOpacity
                         key={index}

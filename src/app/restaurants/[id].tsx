@@ -42,6 +42,14 @@ const Restaurant = () => {
     enabled: !!currentLocation && !!id,
   });
 
+  const {data: perks} = useQuery({
+    queryKey: restaurantKeys.perks(id as string),
+    queryFn: () => getPerksByRestaurant(id),
+    enabled:!!currentLocation &&!!id,
+  })
+
+  console.log(perks)
+
   const toggleBottomSheet = () => {
     setBottomSheet(!bottomSheet);
   };

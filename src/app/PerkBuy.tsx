@@ -50,6 +50,9 @@ const PerkBuy = () => {
           console.log("🚀 ~ Purchase successful", data.data.data);
           queryClient.invalidateQueries({ queryKey: userKeys.cards });
           queryClient.invalidateQueries({ queryKey: userKeys.info });
+          queryClient.invalidateQueries({
+            queryKey: restaurantKeys.all,
+          });
           router.back();
         } else if (data.data.success === false) {
           console.log("🚀 ~ Purchase failed");
