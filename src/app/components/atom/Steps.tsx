@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
   step: {
     width: 64,
     height: 8,
-    marginRight: 4 // Add margin between steps if needed
   },
   stepActive: {
     borderRadius: 10,

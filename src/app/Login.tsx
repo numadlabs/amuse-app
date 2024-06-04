@@ -514,7 +514,7 @@ function Login() {
               marginBottom: 0,
             }}
           >
-            By continuing, I agree with Amuse-Bouche's {"\n"}
+            By continuing, I agree with Amuse-Bouche's
           </Text>
           <TouchableOpacity onPress={() => router.navigate("/TermsAndCondo")}>
             <Text
