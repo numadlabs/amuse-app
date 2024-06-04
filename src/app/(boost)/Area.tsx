@@ -99,7 +99,7 @@ const Area = () => {
                       }}
                     >
                       <TextInput
-                        value={area} // Set the value of the input to the area from the Zustand store
+                        value={area}
                         onChangeText={handleAreaChange}
                         onFocus={() => setIsFocused(true)}
                         onBlur={() => setIsFocused(false)}

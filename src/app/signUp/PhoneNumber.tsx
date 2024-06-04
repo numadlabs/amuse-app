@@ -29,6 +29,7 @@ import { useAuth } from "../context/AuthContext";
 import { useSignUpStore } from "../lib/store/signUpStore";
 import { height } from "../lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
+import data from 'prefix.json'
 
 const PhoneNumber = () => {
   const { prefix, setPrefix, phoneNumber, setPhoneNumber } = useSignUpStore();
@@ -39,45 +40,6 @@ const PhoneNumber = () => {
   const router = useRouter();
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
   const { onRegister } = useAuth();
-
-  const data = [
-    {
-      name: "UAE",
-      prefix: "971",
-    },
-    {
-      name: "Mongolia",
-      prefix: "976",
-    },
-    {
-      name: "United States",
-      prefix: "1",
-    },
-    {
-      name: "United Kingdom",
-      prefix: "44",
-    },
-    {
-      name: "Canada",
-      prefix: "1",
-    },
-    {
-      name: "Australia",
-      prefix: "61",
-    },
-    {
-      name: "Germany",
-      prefix: "49",
-    },
-    {
-      name: "France",
-      prefix: "33",
-    },
-    {
-      name: "Japan",
-      prefix: "81",
-    },
-  ];
 
   const offset = useSharedValue(300);
   const togglePrefix = () => {

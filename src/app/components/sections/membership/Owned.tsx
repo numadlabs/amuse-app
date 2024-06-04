@@ -56,8 +56,12 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
 
   const notOwnedNavigation = () => {
     router.push({
-      pathname: "/NotOwnedPerk",
-      params: { visitCount: data.visitCount },
+      pathname: "/FollowingPerk",
+      params: { 
+        current: perks?.followingBonus?.current,
+        target: perks?.followingBonus?.target,
+        name: perks?.followingBonus?.name
+       },
     });
   };
 
@@ -101,7 +105,7 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
             </View>
             <View>
               <Text style={styles.perkCount}>
-                {(data.visitCount % 3) + 1}/3
+                {perks?.followingBonus?.current}/{perks?.followingBonus?.target}
               </Text>
             </View>
           </TouchableOpacity>

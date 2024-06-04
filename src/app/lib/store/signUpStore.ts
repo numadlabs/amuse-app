@@ -1,44 +1,5 @@
 import { create } from "zustand";
-
-
-const data = [
-  {
-    name: "UAE",
-    prefix: "971",
-  },
-  {
-    name: "Mongolia",
-    prefix: "976",
-  },
-  {
-    name: "United States",
-    prefix: "1",
-  },
-  {
-    name: "United Kingdom",
-    prefix: "44",
-  },
-  {
-    name: "Canada",
-    prefix: "1",
-  },
-  {
-    name: "Australia",
-    prefix: "61",
-  },
-  {
-    name: "Germany",
-    prefix: "49",
-  },
-  {
-    name: "France",
-    prefix: "33",
-  },
-  {
-    name: "Japan",
-    prefix: "81",
-  },
-];
+import data from 'prefix.json'
 
 
 export interface SignUpStore {

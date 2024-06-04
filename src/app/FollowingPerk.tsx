@@ -5,17 +5,21 @@ import Color from "./constants/Color";
 import Close from "./components/icons/Close";
 import Toast from "react-native-toast-message";
 import PerkGradient from "./components/icons/PerkGradient";
-import PerkGradientSm from "./components/icons/PerkGradientSm";
 import Tick from "./components/icons/Tick";
 
-interface VisitCountIndicatorProps {
+interface FollowingPerkParams {
   visitCount: number;
 }
+type ParamType = {
+  name: string
+  current: string;
+  target: string;
+}
 
-const NotOwnedPerk: React.FC = () => {
-  const { visitCount } = useLocalSearchParams();
-  const visitCountNumber = visitCount ? parseInt(visitCount.toString(), 10) : 0;
-  const targetCount = 3; // Define the target visit count for the next perk
+const NotOwnedPerk: React.FC<FollowingPerkParams> = () => {
+  const { current, target, name } = useLocalSearchParams<ParamType>();
+  const visitCountNumber = current ? parseInt(current.toString(), 10) : 0;
+  const targetCount = parseInt(target); // Define the target visit count for the next perk
 
   const showToast = () => {
     setTimeout(() => {
@@ -27,34 +31,37 @@ const NotOwnedPerk: React.FC = () => {
   };
 
   const renderIndicators = () => {
-    let indicators = [];
-    for (let i = 1; i <= targetCount; i++) {
-      if (i <= visitCountNumber % targetCount) {
+    const indicators = [];
+    if (visitCountNumber === 0) {
+      for (let i = 1; i <= targetCount; i++) {
         indicators.push(
           <View
             key={i}
-            style={[styles.indicator, { backgroundColor: Color.System.systemSuccess }]}
+            style={[
+              styles.indicator,
+              { backgroundColor: Color.Gray.gray500 },
+            ]}
           >
             <Tick size={20} color={Color.base.White} />
           </View>
         );
-      } else if (i === (visitCountNumber % targetCount) + 1) {
+      }
+    } else {
+      for (let i = 1; i <= targetCount; i++) {
+        const isCompleted = i <= visitCountNumber % targetCount;
         indicators.push(
           <View
             key={i}
-            style={[styles.indicator, { backgroundColor: Color.System.systemSuccess }]}
+            style={[
+              styles.indicator,
+              {
+                backgroundColor: isCompleted
+                  ? Color.System.systemSuccess
+                  : Color.Gray.gray500,
+              },
+            ]}
           >
             <Tick size={20} color={Color.base.White} />
-          </View>
-        );
-      } else {
-        indicators.push(
-          <View
-            key={i}
-            style={[styles.indicator, { backgroundColor: Color.Gray.gray500 }]}
-          >
-           {/* <PerkGradientSm/> */}
-           <Tick size={20} color={Color.base.White} />
           </View>
         );
       }
@@ -79,7 +86,7 @@ const NotOwnedPerk: React.FC = () => {
               <PerkGradient />
             </View>
             <View style={{ flexDirection: "column", gap: 12, alignItems: "center" }}>
-              <Text style={styles.perkTitle}>Priority seating on Fridays</Text>
+              <Text style={styles.perkTitle}>{name}</Text>
               <Text style={styles.perkDescription}>
                 Enjoy a free drink on the house, every {targetCount} visits.
               </Text>
@@ -91,7 +98,7 @@ const NotOwnedPerk: React.FC = () => {
             {renderIndicators()}
           </View>
           <Text style={styles.checkinText}>
-            {targetCount - (visitCountNumber % targetCount)} Check-ins until next perk
+            {target} Check-ins until next perk
           </Text>
         </View>
       </View>
@@ -154,15 +161,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  currentIndicator: {
-    padding: 12,
-    backgroundColor: Color.Gray.gray400,
-    borderRadius: 12,
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
   },
   checkinText: {
     fontSize: 14,

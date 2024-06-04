@@ -229,7 +229,7 @@ const Profile = () => {
               >
                 <TouchableOpacity
                   style={styles.configContainer}
-                  onPress={() => router.navigate("/TermsAndCondo")}
+                  onPress={() => router.navigate("/Test")}
                 >
                   <View
                     style={{

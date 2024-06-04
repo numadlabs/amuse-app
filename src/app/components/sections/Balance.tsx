@@ -22,7 +22,6 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle, aed }) => {
 
   const truncatedAmount =
     amount !== 0 ? amount?.toString().substring(0, 9) : "0.0000";
-  let coinAmount = parseFloat(truncatedAmount) * 261135.80;
 
   const AnimatedText = Animated.createAnimatedComponent(Text);
 
@@ -112,7 +111,7 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle, aed }) => {
                     lineHeight: 16,
                   }}
                 >
-                  {amount} Bitcoin
+                  {amount?.toFixed(8)} Bitcoin
                 </Text>
               </View>
               <TouchableOpacity onPress={handleToggle}>

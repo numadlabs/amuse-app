@@ -18,39 +18,6 @@ const Success = () => {
   };
   return (
     <View style={styles.body}>
-      {/* <View style={{ position: "absolute", top: 48 }}>
-        <LinearGradient
-          colors={[Color.Brand.main.start, Color.Brand.main.end]}
-          start={[0, 1]}
-          end={[1, 0]}
-          style={{ padding: 1, borderRadius: 24 }}
-        >
-          <View
-            style={{
-              backgroundColor: Color.Gray.gray500,
-              paddingHorizontal: 20,
-              paddingVertical: 14,
-              borderRadius: 24,
-              flexDirection: "row",
-              gap: 8,
-              alignItems: 'center',
-              height: 48
-            }}
-          >
-            <TickGradient />
-            <Text
-              style={{
-                color: Color.base.White,
-                fontSize: 16,
-                lineHeight: 20,
-                fontWeight: "600",
-              }}
-            >
-              Changes saved
-            </Text>
-          </View>
-        </LinearGradient>
-      </View> */}
       <LinearGradient
         colors={[Color.Brand.card.start, Color.Brand.card.end]}
         start={{ x: 1, y: 0 }}
@@ -59,11 +26,12 @@ const Success = () => {
       >
         <View style={styles.svgContainer}>
           <TickCircle />
+          </View>
           <Text style={styles.topText}>Congratulations!</Text>
           <Text style={styles.bottomText}>
-            You will earn 1.2x more rewards every time you use your Memberships.
+            You will earn 1.2X rewards for every {"\n"}check-in.
           </Text>
-        </View>
+        
       </LinearGradient>
       <View style={styles.buttonContainer}>
         <Button
@@ -112,6 +80,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 24,
     marginTop: 8,
+    textAlign: "center",
   },
   bottomText: {
     marginTop: 12,
