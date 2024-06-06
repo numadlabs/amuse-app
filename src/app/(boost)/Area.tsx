@@ -6,17 +6,16 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
-  TextInput,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Steps from "../components/atom/Steps";
 import Color from "../constants/Color";
-import PrimaryButton from "../components/atom/button/PrimaryButton";
 import Button from "../components/ui/Button";
-import { router, useRouter } from "expo-router";
-import { useAuth } from "../context/AuthContext";
+import { useRouter } from "expo-router";
 import useBoostInfoStore from "../lib/store/boostInfoStore";
 import { LinearGradient } from "expo-linear-gradient";
+import { height, width } from "../lib/utils";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 const Area = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
@@ -40,10 +39,6 @@ const Area = () => {
     };
   }, []);
 
-  const handleAreaChange = (text: string) => {
-    setArea(text);
-  };
-
   return (
     <>
       <Steps activeStep={2} />
@@ -52,19 +47,14 @@ const Area = () => {
         style={{ flex: 1 }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+          <View style={styles.container}>
             <View style={styles.body}>
               <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                style={{
-                  marginTop: 20,
-                  borderWidth: 1,
-                  borderColor: Color.Gray.gray400,
-                  borderRadius: 32,
-                }}
-              >
+                style={styles.gradient}
+              > 
                 <View style={styles.textContainer}>
-                  <View style={{ gap: 8 }}>
+                  <View style={styles.textWrapper}>
                     <Text style={styles.topText}>Area</Text>
                     <Text style={styles.bottomText}>
                       Restaurants love locals. Get rewarded extra for {"\n"}{" "}
@@ -79,38 +69,33 @@ const Area = () => {
                     }
                     start={[0, 1]}
                     end={[1, 0]}
-                    style={{
-                      marginTop: 10,
-                      borderRadius: 16,
-                      padding: 1,
-                    }}
+                    style={styles.inputGradient}
                   >
-                    <View
-                      style={{
-                        alignItems: "center",
-                        gap: 12,
-                        alignContent: "center",
-                        flexDirection: "row",
-                        height: 48,
-                        paddingHorizontal: 16,
-                        width: "100%",
-                        backgroundColor: Color.Gray.gray500,
-                        borderRadius: 16,
-                      }}
-                    >
-                      <TextInput
-                        value={area}
-                        onChangeText={handleAreaChange}
-                        onFocus={() => setIsFocused(true)}
-                        onBlur={() => setIsFocused(false)}
+                    <View style={styles.inputWrapper}>
+                      <GooglePlacesAutocomplete
                         placeholder="Area (ex. Dubai Marina)"
-                        style={{
-                          flex: 1,
-                          fontSize: 16,
-                          fontWeight: "400",
-                          lineHeight: 20,
-                          color: Color.base.White,
+                        onPress={(data, details = null) => {
+                          setArea(data.description);
                         }}
+                        query={{
+                          key: 'AIzaSyD6P0kwuwr_7RTb5_2UZLNteryotRLItCM',
+                          language: 'en',
+                          components: "country:ae",
+                        }}
+                        fetchDetails={true}
+                        onFail={(error) => console.error(error)}
+                        styles={{
+                          separator: styles.separator,
+                          textInput: styles.textInput,
+                          listView: styles.listView,
+                          row: styles.row,
+                          poweredContainer: styles.poweredContainer,
+                        }}
+                        renderRow={(rowData) => (
+                          <Text style={styles.suggestion}>{rowData.description}</Text>
+                        )}
+                        listViewDisplayed="auto"
+                        renderDescription={(rowData) => rowData.description}
                       />
                     </View>
                   </LinearGradient>
@@ -122,23 +107,23 @@ const Area = () => {
               keyboardVerticalOffset={110}
               behavior={Platform.OS === "ios" ? "height" : "padding"}
             >
-            <View
-              style={[
-                styles.buttonContainer,
-                buttonPosition === "bottom"
-                  ? styles.bottomPosition
-                  : styles.topPosition,
-              ]}
-            >
-              <Button
-                variant={area ? "primary" : "disabled"}
-                textStyle={area ? "primary" : "disabled"}
-                size="default"
-                onPress={() => router.push("(boost)/Birthday")}
+              <View
+                style={[
+                  styles.buttonContainer,
+                  buttonPosition === "bottom"
+                    ? styles.bottomPosition
+                    : styles.topPosition,
+                ]}
               >
-                Continue
-              </Button>
-            </View>
+                <Button
+                  variant={area ? "primary" : "disabled"}
+                  textStyle={area ? "primary" : "disabled"}
+                  size="default"
+                  onPress={() => router.push("(boost)/Birthday")}
+                >
+                  Continue
+                </Button>
+              </View>
             </KeyboardAvoidingView>
           </View>
         </TouchableWithoutFeedback>
@@ -150,8 +135,18 @@ const Area = () => {
 export default Area;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Color.Gray.gray600,
+  },
   body: {
     paddingHorizontal: 16,
+  },
+  gradient: {
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
+    borderRadius: 32,
   },
   textContainer: {
     paddingHorizontal: 16,
@@ -159,6 +154,63 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     gap: 24,
     borderRadius: 32,
+  },
+  textWrapper: {
+    gap: 8,
+  },
+  topText: {
+    color: Color.base.White,
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  bottomText: {
+    color: Color.Gray.gray100,
+    fontSize: 12,
+    textAlign: "center",
+  },
+  inputGradient: {
+    marginTop: 10,
+    borderRadius: 16,
+    padding: 1,
+    zIndex:9
+  },
+  inputWrapper: {
+    alignItems: "center",
+    gap: 12,
+    alignContent: "center",
+    flexDirection: "row",
+    backgroundColor: Color.Gray.gray500,
+    borderRadius: 16,
+  },
+  separator: {
+    backgroundColor: Color.Gray.gray300,
+  },
+  textInput: {
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 16,
+    color: Color.Gray.gray100,
+    fontSize: 16,
+    lineHeight: 20,
+    backgroundColor: Color.Gray.gray500,
+  },
+  listView: {
+    maxHeight: height / 3,
+    overflow: 'hidden',
+  },
+  row: {
+    backgroundColor: Color.Gray.gray400,
+    width: width,
+  },
+  poweredContainer: {
+    display: 'none',
+  },
+  suggestion: {
+    fontSize: 16,
+    lineHeight: 20,
+    paddingVertical: 8,
+    color: Color.Gray.gray100,
   },
   buttonContainer: {
     position: "absolute",
@@ -174,16 +226,5 @@ const styles = StyleSheet.create({
   topPosition: {
     justifyContent: "flex-start",
     marginTop: "auto",
-  },
-  topText: {
-    color: Color.base.White,
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  bottomText: {
-    color: Color.Gray.gray100,
-    fontSize: 12,
-    textAlign: "center",
   },
 });

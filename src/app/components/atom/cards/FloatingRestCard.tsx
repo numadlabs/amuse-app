@@ -24,15 +24,15 @@ const { width } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
 const CARD_WIDTH = width * 0.83;
 
-// Define the props for the FloatingRestaurantCard component
+
 interface FloatingRestaurantCardProps {
-  marker: RestaurantType; // Use the Restaurant interface defined earlier
+  marker: RestaurantType; 
   // key: string;
-  onPress: () => void; // A function to handle the button press
+  onPress: () => void; 
   isClaimLoading: boolean;
 }
 
-// Define the FloatingRestaurantCard component
+
 const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
   marker,
   // key,
@@ -107,10 +107,10 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                 <View
                   style={[
                     styles.dot,
-                    { backgroundColor: isOpen ? "green" : "red" },
+                    { backgroundColor: isOpen ? Color.System.systemSuccess : Color.System.systemError },
                   ]}
                 />
-                <Text style={{ color: isOpen ? "green" : "red" }}>
+                <Text style={{ color: isOpen ? Color.System.systemSuccess : Color.System.systemError }}>
                   {isOpen ? "Open" : "Closed"}
                 </Text>
               </View>
