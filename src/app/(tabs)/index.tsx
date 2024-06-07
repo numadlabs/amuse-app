@@ -137,7 +137,10 @@ const Page = () => {
 
   return (
     <ScrollView style={styles.container}>
-      {user && <Balance amount={user.balance} />}
+      {user &&   <Balance
+              amount={user?.user?.balance}
+              aed={user?.balanceInAed}
+            />}
       <View style={{ marginTop: 24, gap: 12 }}>
         {user?.email && user?.dateOfBirth ? (
           <Text
@@ -173,7 +176,7 @@ const Page = () => {
               <ResListCard
                 isClaimLoading={true}
                 marker={restaurantsArray[1]}
-                key={restaurantsArray[1].id as string}
+                key={restaurantsArray[1]?.id as string}
                 onPress={() => handleNavigation(restaurantsArray[1])}
               />
               <ResListCard

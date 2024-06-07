@@ -11,7 +11,7 @@ export async function getRestaurantById(id: string) {
   return axiosClient.get(`/restaurants/${id}`).then((response) => {
     console.log("🚀 ~ returnaxiosClient.get ~ response:", response.data);
     if (response.data.success) {
-      return response?.data;
+      return response?.data.restaurant;
     } else {
       throw new Error(response.data.error);
     }
@@ -76,6 +76,26 @@ export async function getUserPowerUps(id) {
   });
 }
 
+export async function getPerksByRestaurant(id) {
+  return axiosClient.get(`/userBonus/${id}/restaurant`).then((response) => {
+    if (response.data.success) {
+      return response?.data.data;
+    } else {
+      throw new Error(response.data.error);
+    }
+  });
+}
+
+export async function getPurchaseablePerks(id) {
+  return axiosClient.get(`/bonus/${id}/restaurant`).then((response) => {
+    if (response.data.success) {
+      return response?.data.data;
+    } else {
+      throw new Error(response.data.error);
+    }
+  });
+}
+
 export async function getUserTaps() {
   return axiosClient.get(`/users/taps`).then((response) => {
     if (response.data.success) {
@@ -89,7 +109,17 @@ export async function getUserTaps() {
 export async function getUserById(userID: string) {
   return axiosClient.get(`/users/${userID}`).then((response) => {
     if (response.data.success) {
-      return response?.data.data.user;
+      return response?.data.data;
+    } else {
+      throw new Error(response.data.error);
+    }
+  });
+}
+
+export async function getCardById(id){
+  return axiosClient.get(`/cards/${id}`).then((response) => {
+    if (response.data.success) {
+      return response?.data.data;
     } else {
       throw new Error(response.data.error);
     }
@@ -104,16 +134,4 @@ export async function getRestaurantId(id) {
       throw new Error(response.data.error);
     }
   });
-}
-
-export async function getPrefixAndCountry() {
-  return axiosClient
-    .get("https://restcountries.com/v2/all?fields=name,callingCodes")
-    .then((response) => {
-      if (response.status === 200) {
-        return response.data;
-      } else {
-        throw new Error(response.data.error);
-      }
-    });
 }
