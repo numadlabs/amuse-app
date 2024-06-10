@@ -97,6 +97,7 @@ const Restaurant = () => {
           category={restaurantsData?.category}
           hasBonus={false}
           visitCount={restaurantsData?.visitCount || 0}
+          target={perks?.followingBonus?.target}
         />
 
         {isLoading ? (

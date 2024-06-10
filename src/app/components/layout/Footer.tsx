@@ -10,11 +10,21 @@ import { height } from "@/app/lib/utils";
 const Footer = ({ navigation }) => {
   const [isActive, setIsActive] = useState("/");
   const handleTabPress = (route) => {
-    router.navigate(route.name);
+    if (route.name === "/") {
+      scrollToTop();
+    }
+    router.push(route.name);
     setIsActive(route.name);
   };
   const isTabActive = (route) => {
     return isActive === route;
+  };
+  let scrollViewRef = null;
+
+  const scrollToTop = () => {
+    if (scrollViewRef) {
+      scrollViewRef.scrollTo({ x: 0, y: 0, animated: true });
+    }
   };
 
   return (
@@ -33,8 +43,8 @@ const Footer = ({ navigation }) => {
       </TouchableOpacity>
       <View style={[styles.container]}>
 
-     
-      {/* <LinearGradient
+
+        {/* <LinearGradient
         colors={[Color.Brand.navbar.start, Color.Brand.navbar.end]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
@@ -67,7 +77,7 @@ const Footer = ({ navigation }) => {
             <Text style={{ fontSize: 13, fontWeight: "bold", color: Color.Gray.gray50 }}>Discover</Text>
           </TouchableOpacity>
         </BlurView>
-        </View>
+      </View>
       {/* </LinearGradient> */}
     </>
   );
@@ -78,7 +88,7 @@ export default Footer;
 const styles = StyleSheet.create({
   qrButton: {
     position: 'absolute',
-    bottom: height/34,
+    bottom: height / 34,
     alignSelf: 'center',
   },
   container: {
@@ -88,7 +98,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "space-between",
-    height: height/10.15,
+    height: height / 10.15,
     position: "absolute",
     bottom: 0,
     left: 0,
@@ -100,7 +110,7 @@ const styles = StyleSheet.create({
     bottom: 10,
     gap: 4,
     zIndex: 10,
-    padding:12
+    padding: 12
   },
   button1: {
     alignItems: "center",

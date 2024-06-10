@@ -32,7 +32,7 @@ import { userKeys } from "../lib/service/keysHelper";
 import ProgressBar from "../components/sections/ProgressBar";
 import { width } from "../lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
-import Animated from "react-native-reanimated";
+import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
 
 const ProfileEdit = () => {
   const { authState } = useAuth();
@@ -40,7 +40,6 @@ const ProfileEdit = () => {
     queryKey: userKeys.info,
     queryFn: () => getUserById(authState.userId),
   });
-
 
   const [loading, setLoading] = useState(false);
   const [nickname, setNickname] = useState("");
@@ -54,13 +53,11 @@ const ProfileEdit = () => {
   const [focusedInput, setFocusedInput] = useState<
     "Nickname" | "Email" | "Area" | "Birthday" | null
   >(null);
-  const showToast = () => {
-    setTimeout(function () {
-      Toast.show({
-        type: "perkToast",
-        text1: "Account changes saved.",
-      });
-    }, 300);
+
+  const containsEmojisOrSymbols = (text) => {
+    // Regular expression to check for emojis and symbols
+    const regex = /[\u{1F600}-\u{1F64F}|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F004}|\u{1F0CF}|[\u{1F170}-\u{1F251}]|[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F004}|\u{1F0CF}|[\u{1F170}-\u{1F251}]|[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F004}|\u{1F0CF}|[\u{1F170}-\u{1F251}]]/;
+    return regex.test(text);
   };
 
   useEffect(() => {
@@ -142,6 +139,21 @@ const ProfileEdit = () => {
     );
     return formattedDate;
   };
+
+  const handleNicknameChange = (text) => {
+    // Check for emojis and symbols
+    if (!containsEmojisOrSymbols(text)) {
+      setNickname(text);
+    }
+  };
+
+  const handleEmailChange = (text) => {
+    // Check for emojis and symbols
+    if (!containsEmojisOrSymbols(text)) {
+      setEmail(text);
+    }
+  };
+
   return (
     <>
       <Header title="Account" />
@@ -382,7 +394,9 @@ const ProfileEdit = () => {
           </Button>
         </View>
         {show && (
-          <View
+          <Animated.View
+          entering={SlideInDown.springify().damping(20)}
+          exiting={SlideOutDown.springify().damping(10)}
             style={{
               position: "absolute",
               bottom: 0,
@@ -390,6 +404,7 @@ const ProfileEdit = () => {
               width: "100%",
               backgroundColor: Color.Gray.gray500,
               padding: 16,
+              zIndex:99
             }}
           >
             <DateTimePicker
@@ -398,7 +413,7 @@ const ProfileEdit = () => {
               display="spinner"
               onChange={onDateChange}
             />
-            <Button variant="tertiary" onPress={confirmDate}>
+            <Button variant="tertiary" onPress={confirmDate} style={{bottom:15}}>
               <Text
                 style={{
                   fontSize: 15,
@@ -406,10 +421,10 @@ const ProfileEdit = () => {
                   color: Color.base.White,
                 }}
               >
-                Confirm date
+                Done
               </Text>
             </Button>
-          </View>
+          </Animated.View>
         )}
       </SafeAreaView>
     </>

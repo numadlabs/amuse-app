@@ -20,17 +20,18 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useMutation } from "@tanstack/react-query";
 import { updateUserInfo } from "../lib/service/mutationHelper";
 import { LinearGradient } from "expo-linear-gradient";
+import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
 
-const Email = () => {
+const Birthday = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const router = useRouter();
   const { email, area, birthdate, setBirthdate } = useBoostInfoStore();
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [initialDate, setInitialDate] = useState(new Date());
+  const [temporaryDate, setTemporaryDate] = useState(new Date());
   const { authState } = useAuth();
   
-
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -48,11 +49,15 @@ const Email = () => {
   }, []);
 
   const onDateChange = (event, selectedDate) => {
-    setShowDatePicker(false);
     if (selectedDate) {
-      setBirthdate(selectedDate.toISOString().split("T")[0]);
+      setTemporaryDate(selectedDate);
       setInitialDate(selectedDate);
     }
+  };
+
+  const handleDatePickerDone = () => {
+    setBirthdate(temporaryDate.toISOString().split("T")[0]);
+    setShowDatePicker(false);
   };
 
   const {
@@ -74,8 +79,6 @@ const Email = () => {
       }
     },
   });
-
-  
 
   const triggerUpdateUser = async () => {
     setLoading(true);
@@ -142,9 +145,7 @@ const Email = () => {
                   <TouchableOpacity onPress={() => setShowDatePicker(true)}>
                     <View style={styles.datePickerContainer}>
                       <Text style={styles.datePickerText}>
-                      {birthdate
-                            ? formatDate(birthdate)
-                            : "Select Date"}
+                        {birthdate ? formatDate(birthdate) : "Select Date"}
                       </Text>
                     </View>
                   </TouchableOpacity>
@@ -175,7 +176,10 @@ const Email = () => {
               </Button>
             </View>
             {showDatePicker && (
-              <View style={styles.dateTimePickerOverlay}>
+              <Animated.View style={styles.dateTimePickerOverlay}
+              entering={SlideInDown.springify().damping(20)}
+              exiting={SlideOutDown.springify().damping(10)}>
+               
                 <DateTimePicker
                   value={initialDate}
                   mode="date"
@@ -184,7 +188,8 @@ const Email = () => {
                 />
                 <Button
                   variant="tertiary"
-                  onPress={() => setShowDatePicker(false)}
+                  onPress={handleDatePickerDone}
+                  style={{bottom:15}}
                 >
                   <Text
                     style={{
@@ -196,7 +201,7 @@ const Email = () => {
                     Done
                   </Text>
                 </Button>
-              </View>
+              </Animated.View>
             )}
           </View>
         </TouchableWithoutFeedback>
@@ -205,7 +210,7 @@ const Email = () => {
   );
 };
 
-export default Email;
+export default Birthday;
 
 const styles = StyleSheet.create({
   body: {
@@ -260,6 +265,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     right: 0,
+    zIndex:99,
     width: "100%",
     backgroundColor: Color.Gray.gray500,
     padding: 16,

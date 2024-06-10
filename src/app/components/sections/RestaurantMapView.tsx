@@ -282,6 +282,7 @@ export default function RestaurantMapView() {
           longitudeDelta: 0.1,
         }} // Pass the initialRegion prop here
         customMapStyle={mapStyle}
+        cacheEnabled={true}
         onPress={toggleLocation} // Add this onPress handler
       >
         {/* <View style={styles.locationToggleContainer}>
@@ -322,7 +323,7 @@ export default function RestaurantMapView() {
                 <SvgMarker
                   key={restaurant.id as string}
                   imageUrl={
-                    `${SERVER_SETTING.CDN_LINK}${restaurant.logo}` as string
+                    `${SERVER_SETTING.CDN_LINK}${restaurant?.logo}` as string
                   }
                 />
               ) : (

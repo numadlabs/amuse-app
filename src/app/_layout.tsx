@@ -53,8 +53,7 @@ export default function Layout() {
           <Stack.Screen name="TermsAndCondo" />
           <Stack.Screen name="Faq" />
           <Stack.Screen name="SplashScreen" />
-          <Stack.Screen name="Test" />
-
+          <Stack.Screen name="Tier" />
           <Stack.Screen name="PerkScreen" />
           <Stack.Screen name="PerkMarket" options={{presentation: 'modal'}}/>
           <Stack.Screen name="PowerUp" options={{ presentation: "modal" }} />

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "version": "0.3.3",
-    "runtimeVersion": "0.3.3",
+    "version": "0.3.5",
+    "runtimeVersion": "0.3.5",
     "scheme": "acme",
     "owner": "numad-labs",
     "splash": {
@@ -23,7 +23,16 @@
         }
       ],
       "expo-secure-store",
-      "expo-font",
+      ["expo-font",
+        {
+          "fonts": ["./src/public/fonts/Sora-Medium.ttf"
+        ,"./src/public/fonts/Sora-Bold.ttf","./src/public/fonts/Sora-ExtraBold.ttf",
+      "./src/public/fonts/Sora-ExtraLight.ttf",
+    "./src/public/fonts/Sora-Light.ttf",
+  "./src/public/fonts/Sora-Regular.ttf",
+"./src/public/fonts/Sora-SemiBold.ttf",
+"./src/public/fonts/Sora-Thin.ttf"]
+        }],
       "expo-build-properties"
     ],
     "icon": "./src/public/images/icon.png",
@@ -33,14 +42,14 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.numadLabs.amuseApp",
       "config": {
-        "googleMapsApiKey": "AIzaSyDLFwoZfCSJErsQQwNwFiqRDmLVICrnjdg"
+        "googleMapsApiKey": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
       }
     },
     "android": {
       "package": "com.numadLabs.amuseApp",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyDLFwoZfCSJErsQQwNwFiqRDmLVICrnjdg"
+          "apiKey": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
         }
       }
     },
