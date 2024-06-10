@@ -5,10 +5,9 @@ import {
   View,
   ScrollView,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import HomeRestList from "../atom/cards/HomeRestList";
-import { RestaurantType } from "@/app/lib/types";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/app/context/AuthContext";
 import { getAcard } from "@/app/lib/service/mutationHelper";
@@ -19,26 +18,19 @@ import { ArrowRight2, ArrowLeft2 } from "iconsax-react-native";
 import Stepper from "../atom/Stepper";
 import { restaurantKeys, userKeys } from "@/app/lib/service/keysHelper";
 import { getRestaurants } from "@/app/lib/service/queryHelper";
-import { GetRestaurantsResponseType } from "@/app/lib/types/apiResponseType";
+import { GetRestaurantsResponseType, RestaurantType } from "@/app/lib/types";
 
 interface RestaurantListViewProps {}
 
 const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-
-  // const [restaurants, setRestaurants] = useState<RestaurantType[]>([]);
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const [cardLoadingStates, setCardLoadingStates] = useState<boolean[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const { authState } = useAuth();
 
-  const {
-    data: restaurantsData,
-    isLoading,
-    isError,
-    isSuccess,
-  } = useQuery<GetRestaurantsResponseType>({
+  const { data: restaurantsData, isLoading, isError } = useQuery<GetRestaurantsResponseType>({
     queryKey: restaurantKeys.all,
     queryFn: () =>
       getRestaurants({
@@ -53,40 +45,41 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
   const { mutateAsync: createGetAcardMutation } = useMutation({
     mutationFn: getAcard,
     onError: (error) => {
-      console.log(error);
+      console.error(error);
     },
-    onSuccess: (data, variables) => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
+      queryClient.invalidateQueries({ queryKey: userKeys.cards });
+    },
   });
 
   const handleGetAcard = async (index: number, acardId: string) => {
-    console.log("🚀 ~ RestaurantMapView ~ aCardId:", acardId);
-    const newCardLoadingStates = [...cardLoadingStates];
-    newCardLoadingStates[index] = true;
-    setCardLoadingStates(newCardLoadingStates);
+    setCardLoadingStates((prev) => {
+      const newStates = [...prev];
+      newStates[index] = true;
+      return newStates;
+    });
 
     if (authState.userId) {
-      const data = await createGetAcardMutation({
+      await createGetAcardMutation({
         userId: authState.userId,
         cardId: acardId,
       });
 
-      if (data.data.success) {
-        newCardLoadingStates[index] = false;
-        setCardLoadingStates(newCardLoadingStates);
-        queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
-        queryClient.invalidateQueries({
-          queryKey: userKeys.cards,
-        });
-      }
+      setCardLoadingStates((prev) => {
+        const newStates = [...prev];
+        newStates[index] = false;
+        return newStates;
+      });
     }
   };
 
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return <ActivityIndicator size="large" color={Color.Primary} />;
   }
 
   if (isError) {
-    return <Text>Error fetching data</Text>;
+    return <Text style={styles.errorText}>Error fetching data</Text>;
   }
 
   const handleNavigation = (restaurant: RestaurantType) => {
@@ -98,7 +91,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
     });
   };
 
-  const chunkArray = (arr, chunkSize) => {
+  const chunkArray = (arr: any[], chunkSize: number) => {
     const chunks = [];
     for (let i = 0; i < arr.length; i += chunkSize) {
       chunks.push(arr.slice(i, i + chunkSize));
@@ -107,79 +100,53 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
   };
 
   const numSteppers = Math.ceil(restaurantsData?.data?.restaurants.length / 5);
+  const restaurantChunks = chunkArray(restaurantsData?.data?.restaurants || [], 5);
 
   return (
-    <View style={{ paddingHorizontal: 16 }}>
+    <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ paddingBottom: 250 }}>
-          {restaurantsData?.data?.restaurants &&
-            chunkArray(restaurantsData.data.restaurants, 5)[
-              currentStep - 1
-            ].map((item, index) => (
-              <>
-                <TouchableOpacity
-                  key={`card-${item.id}`}
-                  onPress={() => handleNavigation(item)}
-                >
-                  <RestListCard
-                    key={`card-${item.id}`}
-                    marker={item}
-                    onPress={() => handleNavigation(item)}
-                    isClaimLoading={isClaimLoading}
-                  />
-                </TouchableOpacity>
-              </>
-            ))}
-          <View
-            style={{
-              flexDirection: "row",
-              gap: 12,
-              justifyContent: "center",
-              marginTop: 32,
-            }}
-          >
+        <View style={styles.scrollContent}>
+          {restaurantChunks[currentStep - 1]?.map((item, index) => (
+            <TouchableOpacity
+              key={`card-touch-${item.id}`}
+              onPress={() => handleNavigation(item)}
+            >
+              <RestListCard
+                key={`card-${item.id}`}
+                marker={item}
+                onPress={() => handleNavigation(item)}
+                isClaimLoading={isClaimLoading}
+              />
+            </TouchableOpacity>
+          ))}
+          <View style={styles.navigationContainer}>
             <TouchableOpacity
               disabled={currentStep === 1}
               onPress={() => setCurrentStep((prev) => prev - 1)}
-              style={{
-                backgroundColor: Color.Gray.gray500,
-                width: 40,
-                height: 40,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 12,
-              }}
+              style={[
+                styles.navButton,
+                { backgroundColor: currentStep === 1 ? Color.Gray.gray200 : Color.Gray.gray500 },
+              ]}
             >
-              <ArrowLeft2
-                color={
-                  currentStep === 1 ? Color.Gray.gray200 : Color.Gray.gray50
-                }
-                size={20}
-              />
+              <ArrowLeft2 color={currentStep === 1 ? Color.Gray.gray200 : Color.Gray.gray50} size={20} />
             </TouchableOpacity>
-            {Array.from({ length: numSteppers }, (_, i) => i + 1).map(
-              (step) => (
-                <Stepper
-                  key={step}
-                  step={step}
-                  currentStep={currentStep}
-                  handleNavigation={(step) => setCurrentStep(step)}
-                />
-              )
-            )}
+            {Array.from({ length: numSteppers }, (_, i) => i + 1).map((step) => (
+              <Stepper
+                key={step}
+                step={step}
+                currentStep={currentStep}
+                handleNavigation={(step) => setCurrentStep(step)}
+              />
+            ))}
             <TouchableOpacity
               disabled={currentStep === numSteppers}
               onPress={() => setCurrentStep((prev) => prev + 1)}
-              style={{
-                backgroundColor: Color.Gray.gray500,
-                width: 40,
-                height: 40,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 12,
-              }}
+              style={[
+                styles.navButton,
+                { backgroundColor: currentStep === numSteppers ? Color.Gray.gray200 : Color.Gray.gray500 },
+              ]}
             >
-              <ArrowRight2 color={Color.Gray.gray50} size={20} />
+              <ArrowRight2 color={currentStep === numSteppers ? Color.Gray.gray200 : Color.Gray.gray50} size={20} />
             </TouchableOpacity>
           </View>
         </View>
@@ -187,5 +154,31 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 16,
+  },
+  scrollContent: {
+    paddingBottom: 250,
+  },
+  navigationContainer: {
+    flexDirection: "row",
+    gap: 12,
+    justifyContent: "center",
+    marginTop: 32,
+  },
+  navButton: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 12,
+  },
+  errorText: {
+    color: "red",
+    textAlign: "center",
+  },
+});
 
 export default RestaurantListView;

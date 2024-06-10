@@ -36,6 +36,7 @@ interface ApassProp {
   category: string;
   hasBonus: boolean;
   visitCount: number;
+  target: number;
 }
 const APassCard: React.FC<ApassProp> = ({
   name,
@@ -45,6 +46,7 @@ const APassCard: React.FC<ApassProp> = ({
   hasBonus,
   visitCount,
   nftImage,
+  target
 }) => {
   const animatedValue = useSharedValue(visitCount);
   const pressed = useSharedValue(false);
@@ -122,7 +124,7 @@ const APassCard: React.FC<ApassProp> = ({
                         {name}
                       </Text>
                       <Text style={[styles.buttonText, { bottom: 5 }]}>
-                        {category}
+                        {category?.replace(/_/g, ' ')}
                       </Text>
                     </View>
                   </View>
@@ -249,7 +251,7 @@ const APassCard: React.FC<ApassProp> = ({
                             animatedStyles,
                           ]}
                         >
-                          {3 - (visitCount % 3)}
+                          {target}
                         </AnimatedText>
 
                         <Text

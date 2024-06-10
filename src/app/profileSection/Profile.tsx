@@ -64,85 +64,97 @@ const Profile = () => {
       <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
         <ScrollView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
           <View style={styles.body}>
-            <View style={styles.container}>
-              <LinearGradient
-                colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                start={{ x: 1, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{
-                  paddingHorizontal: 16,
-                  paddingBottom: 16,
-                  paddingTop: 24,
-                  borderRadius: 16,
-                  gap: 24,
-                }}
-              >
-                <View style={styles.profileContainer}>
+            <View style={{ borderWidth: 1, borderColor: Color.Gray.gray300, borderRadius: 16, }}>
+              <TouchableOpacity onPress={() => router.push('/Tier')}>
+                <LinearGradient
+                  colors={[Color.Brand.card.start, Color.Brand.card.end]}
+                  start={{ x: 1, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={{
+                    padding: 16,
+                    borderRadius: 16,
+                    alignItems: 'center',
+                    alignContent: 'center',
+                    flexDirection: 'row',
+                    gap: 20,
+                    borderWidth: 1,
+                    borderColor: Color.Gray.gray300,
+                  }}
+                >
                   <View style={styles.profilePic}>
                     <User size={36} color={Color.Gray.gray50} />
                   </View>
-                  <Text style={styles.profileName}>{user.user.nickname}</Text>
-                </View>
-                <View style={styles.profileStatsContainer}>
-                  <View style={styles.profileStats}>
-                    <View
-                      style={{
-                        justifyContent: "center",
-                        gap: 8,
-                        alignItems: "center",
-                        paddingHorizontal: 10,
-                      }}
-                    >
-                      <Text style={{ color: Color.Gray.gray100, fontSize: 16 }}>
-                        Check-ins
-                      </Text>
-                      <Text
-                        style={{
-                          color: Color.Gray.gray50,
-                          fontSize: 24,
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {taps?.data?.taps.length === 0
-                          ? "00"
-                          : taps?.data?.taps.length}
-                      </Text>
+                  <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
+                    <View style={{ alignContent: 'center', justifyContent: 'center', gap:8 }}>
+                      <Text numberOfLines={1} ellipsizeMode="tail" style={styles.profileName}>{user?.user?.nickname}</Text>
+                      <Text style={{ fontSize: 14, lineHeight: 18, color: Color.Gray.gray100 }}>Tier: Bronze</Text>
+                    </View>
+                    <View>
+                      <ArrowRight2 color={Color.Gray.gray100} />
                     </View>
                   </View>
+                </LinearGradient>
+              </TouchableOpacity>
+              <View style={styles.profileStatsContainer}>
+                <View style={styles.profileStats}>
                   <View
-                    style={{ width: 1, backgroundColor: Color.Gray.gray300 }}
-                  />
-                  <TouchableOpacity
-                    style={styles.profileStats}
-                    onPress={() => router.push("/MyAcards")}
+                    style={{
+                      justifyContent: "center",
+                      gap: 8,
+                      alignItems: "center",
+                      paddingHorizontal: 10,
+                    }}
                   >
-                    <View
+                    <Text style={{ color: Color.Gray.gray100, fontSize: 16 }}>
+                      Check-ins
+                    </Text>
+                    <Text
                       style={{
-                        justifyContent: "center",
-                        gap: 8,
-                        alignItems: "center",
-                        paddingHorizontal: 10,
+                        color: Color.Gray.gray50,
+                        fontSize: 24,
+                        fontWeight: "bold",
                       }}
                     >
-                      <Text style={{ color: Color.Gray.gray100, fontSize: 16 }}>
-                        Memberships
-                      </Text>
-                      <Text
-                        style={{
-                          color: Color.Gray.gray50,
-                          fontSize: 24,
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {cards?.data?.cards.length === 0
-                          ? "00"
-                          : cards?.data?.cards.length}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
+                      {taps?.data?.taps.length === 0
+                        ? "00"
+                        : taps?.data?.taps.length}
+                    </Text>
+                  </View>
                 </View>
-              </LinearGradient>
+                <View
+                  style={{ width: 1, backgroundColor: Color.Gray.gray300 }}
+                />
+                <TouchableOpacity
+                  style={styles.profileStats}
+                  onPress={() => router.push("/MyAcards")}
+                >
+                  <View
+                    style={{
+                      justifyContent: "center",
+                      gap: 8,
+                      alignItems: "center",
+                      paddingHorizontal: 10,
+                    }}
+                  >
+                    <Text style={{ color: Color.Gray.gray100, fontSize: 16 }}>
+                      Memberships
+                    </Text>
+                    <Text
+                      style={{
+                        color: Color.Gray.gray50,
+                        fontSize: 24,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {cards?.data?.cards.length === 0
+                        ? "00"
+                        : cards?.data?.cards.length}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
+
             <View style={styles.profileConfig}>
               <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
@@ -313,9 +325,9 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray300,
   },
   profileName: {
-    fontSize: 24,
+    fontSize: 20,
+    lineHeight: 24,
     fontWeight: "bold",
-    marginTop: 16,
     color: Color.base.White,
   },
   profileContainer: {
@@ -323,6 +335,7 @@ const styles = StyleSheet.create({
   },
   profileStatsContainer: {
     flexDirection: "row",
+    paddingVertical: 18,
     justifyContent: "center",
   },
   profileStats: {
