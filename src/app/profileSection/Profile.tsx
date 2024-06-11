@@ -7,7 +7,7 @@ import {
   Sms,
   User,
 } from "iconsax-react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Linking,
   SafeAreaView,
@@ -18,6 +18,7 @@ import {
   View,
 } from "react-native";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from "../components/layout/Header";
 import Color from "../constants/Color";
 import { useAuth } from "../context/AuthContext";
@@ -58,6 +59,34 @@ const Profile = () => {
       return getUserById(authState.userId);
     },
   });
+
+  const [internalVisitCount, setInternalVisitCount] = useState(0);
+  const [userTier, setUserTier] = useState('Bronze');
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const savedInternalVisitCount = await AsyncStorage.getItem('internalVisitCount');
+        const savedTier = await AsyncStorage.getItem('userTier');
+
+        if (savedInternalVisitCount !== null) {
+          const visitCountParsed = parseInt(savedInternalVisitCount, 10);
+          console.log(`Loaded internal visit count: ${visitCountParsed}`);
+          setInternalVisitCount(visitCountParsed);
+        }
+
+        if (savedTier !== null) {
+          console.log(`Loaded user tier: ${savedTier}`);
+          setUserTier(savedTier);
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      }
+    };
+
+    loadUserData();
+  }, []);
+
   return (
     <>
       <Header title="Profile" />
@@ -87,7 +116,7 @@ const Profile = () => {
                   <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
                     <View style={{ alignContent: 'center', justifyContent: 'center', gap:8 }}>
                       <Text numberOfLines={1} ellipsizeMode="tail" style={styles.profileName}>{user?.user?.nickname}</Text>
-                      <Text style={{ fontSize: 14, lineHeight: 18, color: Color.Gray.gray100 }}>Tier: Bronze</Text>
+                      <Text style={{ fontSize: 14, lineHeight: 18, color: Color.Gray.gray100 }}>Tier: {userTier}</Text>
                     </View>
                     <View>
                       <ArrowRight2 color={Color.Gray.gray100} />
@@ -351,13 +380,6 @@ const styles = StyleSheet.create({
   configContainer: {
     borderWidth: 1,
     borderColor: Color.Gray.gray300,
-    // shadowColor: "#000",
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 2,
-    // },
-    // shadowOpacity: 0.23,
-    // shadowRadius: 2.62,
     justifyContent: "space-between",
     flexDirection: "row",
     padding: 16,

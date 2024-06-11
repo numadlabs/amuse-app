@@ -23,6 +23,15 @@ const PerkScreen = () => {
   const { restaurantId, btcAmount, powerUp } = useLocalSearchParams();
   const queryClient = useQueryClient();
   const [showPowerUp, setShowPowerUp] = useState(false);
+  const [visitCount, setVisitCount] = useState(0);
+  const [userTier, setUserTier] = useState("Bronze");
+  
+
+  const tiers = {
+    Bronze: 0,
+    Silver: 3,
+    Gold: 10,
+  };
 
   const { data: card = [], isLoading } = useQuery({
     queryKey: [restaurantKeys.detail],
@@ -30,13 +39,49 @@ const PerkScreen = () => {
       return getRestaurantById(restaurantId as string);
     },
   });
-
-  const [visitCount, setVisitCount] = useState(card.visitCount);
+  const [cardVisitCount, setCardVisitCount] = useState(card.visitCount);
 
   useEffect(() => {
-    setVisitCount(card.visitCount);
-    setShowPowerUp(card.visitCount % 4 === 3);
+    loadUserData();
+  }, []);
+
+  useEffect(() => {
+    if (card.visitCount !== undefined) {
+      setVisitCount(visitCount);
+      updateTier(visitCount);
+    }
   }, [card.visitCount]);
+
+  const loadUserData = async () => {
+    try {
+      const savedVisitCount = await AsyncStorage.getItem("visitCount");
+      const savedTier = await AsyncStorage.getItem("userTier");
+      if (savedVisitCount !== null) setVisitCount(parseInt(savedVisitCount));
+      if (savedTier !== null) setUserTier(savedTier);
+    } catch (error) {
+      console.error("Error loading user data:", error);
+    }
+  };
+
+  const saveUserData = async () => {
+    try {
+      await AsyncStorage.setItem("visitCount", visitCount.toString());
+      await AsyncStorage.setItem("userTier", userTier);
+    } catch (error) {
+      console.error("Error saving user data:", error);
+    }
+  };
+
+  const updateTier = (visits) => {
+    let newTier = "Bronze";
+    if (visits >= tiers.Gold) {
+      newTier = "Gold";
+    } else if (visits >= tiers.Silver) {
+      newTier = "Silver";
+    }
+    setUserTier(newTier);
+    saveUserData();
+  };
 
   const handleNavigation = async () => {
     router.back();
@@ -47,8 +92,13 @@ const PerkScreen = () => {
       const updatedNotifications = [...parsedNotifications, { ...card, date: new Date() }];
       await AsyncStorage.setItem("restaurantCard", JSON.stringify(updatedNotifications));
       console.log("Card information stored successfully.");
+
+      const newVisitCount = visitCount + 1;
+      setVisitCount(newVisitCount);
+      updateTier(newVisitCount);
+      await AsyncStorage.setItem("visitCount", newVisitCount.toString());
     } catch (error) {
-    console.log("Error storing card information:", error);
+      console.log("Error storing card information:", error);
     }
   };
 
@@ -72,7 +122,7 @@ const PerkScreen = () => {
 
       {!isLoading && card && (
         <>
-          <View style={{marginBottom:300, marginTop:20}}>
+          <View style={{ marginBottom: 300, marginTop: 20 }}>
             <APassCard
               name={card.name}
               image={card.logo}
@@ -100,7 +150,6 @@ const PerkScreen = () => {
                 alignItems: "center",
                 borderWidth: 1,
                 borderColor: Color.Gray.gray400,
-
               }}
             >
               <Text
@@ -146,9 +195,8 @@ const PerkScreen = () => {
             style={{
               bottom: 20,
               width: "100%",
-              position:'absolute',
-              marginHorizontal:'5%'
-
+              position: "absolute",
+              marginHorizontal: "5%",
             }}
           >
             <Text>Confirm</Text>
