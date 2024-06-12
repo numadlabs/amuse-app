@@ -88,7 +88,7 @@ const NotOwnedPerk: React.FC<FollowingPerkParams> = () => {
             <View style={{ flexDirection: "column", gap: 12, alignItems: "center" }}>
               <Text style={styles.perkTitle}>{name}</Text>
               <Text style={styles.perkDescription}>
-                Enjoy a free drink on the house, every {targetCount} visits.
+                Enjoy a free perk on the house, every {targetCount} visits.
               </Text>
             </View>
           </View>
