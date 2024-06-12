@@ -87,13 +87,6 @@ const Tier = () => {
           current={silverProgress.current}
           target={silverProgress.target}
         />
-        <TierCard
-          isActive={userTier === 'Gold'}
-          title='Gold'
-          perks={["30% more Bitcoin for every check-in", "Complimentary bites along the way"]}
-          current={goldProgress.current}
-          target={goldProgress.target}
-        />
       </View>
     </>
   );
