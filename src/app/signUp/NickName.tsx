@@ -17,7 +17,7 @@ import Color from "../constants/Color";
 import { useAuth } from "../context/AuthContext";
 import { useSignUpStore } from "../lib/store/signUpStore";
 import { LinearGradient } from "expo-linear-gradient";
-import Animated, { FadeIn, SlideInDown } from "react-native-reanimated";
+import Animated, { FadeIn } from "react-native-reanimated";
 const NickName = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const { password, phoneNumber, prefix } = useLocalSearchParams();

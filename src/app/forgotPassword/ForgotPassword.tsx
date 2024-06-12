@@ -15,7 +15,6 @@ import {
 import Button from "../components/ui/Button";
 import Color from "../constants/Color";
 import { router, useNavigation } from "expo-router";
-import FpLayout from "./_layout";
 import Steps from "@/app/components/atom/Steps";
 import { ArrowDown2 } from "iconsax-react-native";
 import Animated, {
@@ -28,45 +27,7 @@ import Animated, {
 import { height } from "../lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
 import { usePasswordStore } from "../lib/store/passwordStore";
-
-const data = [
-  {
-    name: "UAE",
-    prefix: "971",
-  },
-  {
-    name: "Mongolia",
-    prefix: "976",
-  },
-  {
-    name: "United States",
-    prefix: "1",
-  },
-  {
-    name: "United Kingdom",
-    prefix: "44",
-  },
-  {
-    name: "Canada",
-    prefix: "1",
-  },
-  {
-    name: "Australia",
-    prefix: "61",
-  },
-  {
-    name: "Germany",
-    prefix: "49",
-  },
-  {
-    name: "France",
-    prefix: "33",
-  },
-  {
-    name: "Japan",
-    prefix: "81",
-  },
-];
+import data from 'prefix.json'
 
 function ForgotPassword() {
   const { phoneNumber, setPhoneNumber } = usePasswordStore();

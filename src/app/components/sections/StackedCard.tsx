@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Color from "../../constants/Color";
 import { useRouter } from "expo-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -7,7 +7,7 @@ import { getUserCard } from "@/app/lib/service/queryHelper";
 import useLocationStore from "@/app/lib/store/userLocation";
 import { RestaurantType } from "@/app/lib/types";
 import APassCard from "../atom/cards/APassCard";
-import Animated, { useSharedValue, useAnimatedStyle, withTiming, SlideInDown, withSpring } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { userKeys } from "@/app/lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -15,11 +15,10 @@ import SearchGradient from "../icons/SearchGradient";
 
 const StackedCard = () => {
   const cardPositions = useSharedValue(-400);
-  const originY = useSharedValue(0);
   const { currentLocation } = useLocationStore();
 
   const router = useRouter();
-  const { data: cards = [], isLoading } = useQuery({
+  const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
     queryFn: () => {
       return getUserCard({
@@ -115,6 +114,7 @@ const StackedCard = () => {
                 category={card.category}
                 hasBonus={card.hasBonus}
                 visitCount={card.visitCount}
+                target={3}
               />
             </Animated.View>
           ))}

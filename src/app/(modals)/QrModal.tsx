@@ -13,7 +13,7 @@ import Color from "../constants/Color";
 import { useRouter } from "expo-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { generateTap, redeemTap } from "../lib/service/mutationHelper";
-import Popup from "../components/(feedback)/Popup";
+import PreFixPopup from "../components/(feedback)/PreFixPopup";
 import PowerUp from "../components/(feedback)/PowerUp";
 import { getUserCard } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
@@ -357,7 +357,7 @@ const QrModal = () => {
               onClose={closeModal}
             />
           ) : null}
-          <Popup
+          <PreFixPopup
             isVisible={isBtcPopupVisible}
             onClose={closeBtcModal}
             title={btcAmount}

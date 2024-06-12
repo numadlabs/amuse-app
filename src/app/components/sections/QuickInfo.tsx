@@ -2,7 +2,6 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from "react-nati
 import React, { useEffect, useState } from "react";
 import Color from "../../constants/Color";
 import { router } from "expo-router";
-import Button from "../ui/Button";
 import ProgressBar from "./ProgressBar";
 import { width } from "@/app/lib/utils";
 import { LinearGradient } from "expo-linear-gradient";

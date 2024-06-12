@@ -3,7 +3,6 @@ import {
   Text,
   ActivityIndicator,
   StyleSheet,
-  Pressable,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
@@ -12,17 +11,16 @@ import { getRestaurantById } from "./lib/service/queryHelper";
 import APassCard from "./components/atom/cards/APassCard";
 import Button from "./components/ui/Button";
 import { restaurantKeys, userKeys } from "./lib/service/keysHelper";
-import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
-import { height, width } from "./lib/utils";
+import Animated, { SlideInDown } from "react-native-reanimated";
+import { height } from "./lib/utils";
 import PowerUpCard from "./components/atom/cards/PowerUpCard";
 import { LinearGradient } from "expo-linear-gradient";
 import Color from "./constants/Color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PerkScreen = () => {
-  const { restaurantId, btcAmount, powerUp } = useLocalSearchParams();
+  const { restaurantId, powerUp } = useLocalSearchParams();
   const queryClient = useQueryClient();
-  const [showPowerUp, setShowPowerUp] = useState(false);
   const [visitCount, setVisitCount] = useState(0);
   const [userTier, setUserTier] = useState("Bronze");
   
@@ -39,7 +37,6 @@ const PerkScreen = () => {
       return getRestaurantById(restaurantId as string);
     },
   });
-  const [cardVisitCount, setCardVisitCount] = useState(card.visitCount);
 
   useEffect(() => {
     loadUserData();

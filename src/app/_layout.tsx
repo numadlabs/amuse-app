@@ -5,8 +5,7 @@ import "../global.css";
 import { AuthProvider } from "./context/AuthContext";
 import { StatusBar } from "expo-status-bar";
 import Toast from "react-native-toast-message";
-import { toastConfig } from "./components/(feedback)/ToasterConfig";
-import Color from "./constants/Color";
+import { toastConfig } from "./constants/ToasterConfig";
 
 const queryClient = new QueryClient();
 
@@ -48,11 +47,9 @@ export default function Layout() {
             name="(modals)/MyQrModal"
             options={{ presentation: "modal" }}
           />
-          <Stack.Screen name="SuccessScreen" />
           <Stack.Screen name="MyAcards" />
           <Stack.Screen name="TermsAndCondo" />
           <Stack.Screen name="Faq" />
-          <Stack.Screen name="SplashScreen" />
           <Stack.Screen name="Tier" />
           <Stack.Screen name="PerkScreen" />
           <Stack.Screen name="PerkMarket" options={{presentation: 'modal'}}/>

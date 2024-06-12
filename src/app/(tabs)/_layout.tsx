@@ -37,8 +37,6 @@ const Layout = ({ navigation }) => {
         await AsyncStorage.removeItem("restaurantCard");
       }
     };
-
-    // Call the function to check for the notification
     checkNotification();
 
   }, [currentLocation, authState.loading]);

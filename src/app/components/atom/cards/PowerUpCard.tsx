@@ -1,15 +1,10 @@
 import {
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
-  Platform,
 } from "react-native";
 import React from "react";
-import { RestaurantType } from "@/app/lib/types";
-import PowerUpLogo from "../../icons/PowerUpLogo";
 import Color from "@/app/constants/Color";
-import PowerUpStripes from "../../icons/PowerUpStripes";
 import PerkGradient from "../../icons/PerkGradient";
 import Button from "../../ui/Button";
 import { LinearGradient } from "expo-linear-gradient";

@@ -17,7 +17,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from "../components/layout/Header";
 import Color from "../constants/Color";
@@ -32,6 +32,9 @@ import { userKeys } from "../lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
 
 const Profile = () => {
+  const [internalVisitCount, setInternalVisitCount] = useState(0);
+  const [userTier, setUserTier] = useState('Bronze');
+
   const { currentLocation } = useLocationStore();
   const router = useRouter();
   const { data: taps = [] } = useQuery({
@@ -41,7 +44,7 @@ const Profile = () => {
     },
   });
 
-  const { data: cards = [], isLoading } = useQuery({
+  const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
     queryFn: () => {
       return getUserCard({
@@ -60,8 +63,6 @@ const Profile = () => {
     },
   });
 
-  const [internalVisitCount, setInternalVisitCount] = useState(0);
-  const [userTier, setUserTier] = useState('Bronze');
 
   useEffect(() => {
     const loadUserData = async () => {

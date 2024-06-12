@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import Color from "./constants/Color";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { purchaseablePerkKeys, restaurantKeys } from "./lib/service/keysHelper";
+import {  useQuery, useQueryClient } from "@tanstack/react-query";
+import { purchaseablePerkKeys } from "./lib/service/keysHelper";
 import { getPurchaseablePerks } from "./lib/service/queryHelper";
 import useLocationStore from "./lib/store/userLocation";
 import { useLocalSearchParams } from "expo-router";
@@ -14,17 +14,11 @@ import {
 import Close from "./components/icons/Close";
 import { router } from "expo-router";
 import PerkGradientSm from "./components/icons/PerkGradientSm";
-import PerkGradient from "./components/icons/PerkGradient";
-import { purchasePerk } from "./lib/service/mutationHelper";
 import { useAuth } from "./context/AuthContext";
 
 const PerkMarket = () => {
-  const { id, userCardId } = useLocalSearchParams();
-  const [isClaimLoading, setIsClaimLoading] = useState(false);
+  const { id } = useLocalSearchParams();
   const { currentLocation } = useLocationStore();
-  const [balance, setBalance] = useState("");
-  const queryClient = useQueryClient();
-  const { authState } = useAuth();
 
   const {
     data: perks = [],
