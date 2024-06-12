@@ -18,7 +18,7 @@ import { restaurantKeys, userKeys } from "./lib/service/keysHelper";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 const PerkBuy = () => {
-  const { name, id, price, userCardId, restaurantId } = useLocalSearchParams();
+  const { name, id, price, restaurantId } = useLocalSearchParams();
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const [balance, setBalance] = useState("");
   const { authState } = useAuth();

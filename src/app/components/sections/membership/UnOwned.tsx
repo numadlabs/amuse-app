@@ -4,7 +4,7 @@ import Color from "@/app/constants/Color";
 import Tick from "../../icons/Tick";
 import { Location, WalletAdd } from "iconsax-react-native";
 import Button from "../../ui/Button";
-import Popup from "../../(feedback)/Popup";
+import PreFixPopup from "../../(feedback)/PreFixPopup";
 import { router } from "expo-router";
 import * as Linking from 'expo-linking';
 import { RestaurantType } from "@/app/lib/types";

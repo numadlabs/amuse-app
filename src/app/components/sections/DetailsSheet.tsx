@@ -1,32 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
-  Modal,
   StyleSheet,
-  TouchableWithoutFeedback,
-  ScrollView,
-  Image,
 } from "react-native";
 import Animated, {
-  useSharedValue,
-  withSpring,
-  runOnJS,
-  ReduceMotion,
   FadeIn,
 } from "react-native-reanimated";
 import {
-  TickCircle,
   Location,
-  TicketExpired,
-  User,
   ArrowDown2,
   ArrowUp2,
 } from "iconsax-react-native";
 import Color from "@/app/constants/Color";
 import Tick from "../icons/Tick";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { height } from "@/app/lib/utils";
 import * as Linking from "expo-linking";
 import { RestaurantType } from "@/app/lib/types";

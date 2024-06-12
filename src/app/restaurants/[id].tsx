@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { WalletAdd } from "iconsax-react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   ActivityIndicator,
   Modal,
@@ -18,7 +18,7 @@ import { useAuth } from "../context/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAcard } from "../lib/service/mutationHelper";
 import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
-import { getPerksByRestaurant, getRestaurantId, getUserPowerUps } from "../lib/service/queryHelper";
+import { getPerksByRestaurant, getRestaurantId } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
 import APassCard from "../components/atom/cards/APassCard";
 import Owned from "../components/sections/membership/Owned";
@@ -47,8 +47,6 @@ const Restaurant = () => {
     queryFn: () => getPerksByRestaurant(id),
     enabled:!!currentLocation &&!!id,
   })
-
-  console.log(perks)
 
   const toggleBottomSheet = () => {
     setBottomSheet(!bottomSheet);

@@ -1,38 +1,31 @@
 import {
   View,
   Text,
-  TouchableOpacity,
   Image,
   StyleSheet,
-  ActivityIndicator,
   Dimensions,
 } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { RestaurantType } from "@/app/lib/types";
 import Color from "@/app/constants/Color";
-import { Reserve, Wallet } from "iconsax-react-native";
+import { Reserve } from "iconsax-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Button from "../../ui/Button";
-import { WalletAdd1 } from "iconsax-react-native";
-import { width } from "@/app/lib/utils";
 import { SERVER_SETTING } from "@/app/constants/serverSettings";
 
 interface ResListCardProp {
   marker: RestaurantType;
   onPress: () => void;
-  isClaimLoading: boolean;
 }
 const RestListCard: React.FC<ResListCardProp> = ({
   marker,
   onPress,
-  isClaimLoading,
 }) => {
-  const [loading, setLoading] = useState<boolean>(false);
+
   const opensAt = new Date(marker.opensAt);
   const closesAt = new Date(marker.closesAt);
   const currentTime = new Date();
-  const { width } = Dimensions.get("window");
-  const CARD_WIDTH = width * 0.88;
+
 
   const isOpen =
     currentTime.getTime() >= opensAt.getTime() &&
@@ -118,7 +111,6 @@ const RestListCard: React.FC<ResListCardProp> = ({
               <Button
                 variant="text"
                 onPress={onPress}
-                disabled={loading}
                 size="small"
                 style={{
                   alignItems: "center",
@@ -129,25 +121,21 @@ const RestListCard: React.FC<ResListCardProp> = ({
                   borderColor: Color.base.White,
                 }}
               >
-                {loading ? (
-                  <ActivityIndicator size="small" color="white" />
-                ) : (
-                  <>
-                    <View
-                      style={{
-                        height: "100%",
-                        width: "100%",
-                        marginLeft: 8,
-                        alignItems: "center",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      <Text style={{ fontSize: 11, color: Color.base.White }}>
-                        Add
-                      </Text>
-                    </View>
-                  </>
-                )}
+
+                <View
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    marginLeft: 8,
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <Text style={{ fontSize: 11, color: Color.base.White }}>
+                    Add
+                  </Text>
+                </View>
+
               </Button>
             )}
           </View>

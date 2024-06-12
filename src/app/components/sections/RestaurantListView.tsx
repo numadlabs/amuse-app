@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Text,
   TouchableOpacity,
@@ -7,30 +7,22 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { useAuth } from "@/app/context/AuthContext";
-import { getAcard } from "@/app/lib/service/mutationHelper";
-import { width } from "@/app/lib/utils";
-import RestListCard from "../atom/cards/RestListCard";
+import RestListCard from "@/atom/cards/RestListCard";
 import Color from "@/app/constants/Color";
 import { ArrowRight2, ArrowLeft2 } from "iconsax-react-native";
-import Stepper from "../atom/Stepper";
-import { restaurantKeys, userKeys } from "@/app/lib/service/keysHelper";
+import Pagination from "@/atom/Pagination";
+import { restaurantKeys } from "@/app/lib/service/keysHelper";
 import { getRestaurants } from "@/app/lib/service/queryHelper";
-import { GetRestaurantsResponseType, RestaurantType } from "@/app/lib/types";
+import {  RestaurantType } from "@/app/lib/types";
 
-interface RestaurantListViewProps {}
 
-const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
+const RestaurantListView = () => {
   const router = useRouter();
-  const queryClient = useQueryClient();
-  const [isClaimLoading, setIsClaimLoading] = useState(false);
-  const [cardLoadingStates, setCardLoadingStates] = useState<boolean[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
-  const { authState } = useAuth();
 
-  const { data: restaurantsData, isLoading, isError } = useQuery<GetRestaurantsResponseType>({
+  const { data: restaurantsData, isLoading, isError } = useQuery({
     queryKey: restaurantKeys.all,
     queryFn: () =>
       getRestaurants({
@@ -42,40 +34,11 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
       }),
   });
 
-  const { mutateAsync: createGetAcardMutation } = useMutation({
-    mutationFn: getAcard,
-    onError: (error) => {
-      console.error(error);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
-      queryClient.invalidateQueries({ queryKey: userKeys.cards });
-    },
-  });
-
-  const handleGetAcard = async (index: number, acardId: string) => {
-    setCardLoadingStates((prev) => {
-      const newStates = [...prev];
-      newStates[index] = true;
-      return newStates;
-    });
-
-    if (authState.userId) {
-      await createGetAcardMutation({
-        userId: authState.userId,
-        cardId: acardId,
-      });
-
-      setCardLoadingStates((prev) => {
-        const newStates = [...prev];
-        newStates[index] = false;
-        return newStates;
-      });
-    }
-  };
+ 
+ 
 
   if (isLoading) {
-    return <ActivityIndicator size="large" color={Color.Primary} />;
+    return <ActivityIndicator size="large" color={Color.Gray.gray100} />;
   }
 
   if (isError) {
@@ -106,7 +69,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.scrollContent}>
-          {restaurantChunks[currentStep - 1]?.map((item, index) => (
+          {restaurantChunks[currentStep - 1]?.map((item) => (
             <TouchableOpacity
               key={`card-touch-${item.id}`}
               onPress={() => handleNavigation(item)}
@@ -115,7 +78,6 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
                 key={`card-${item.id}`}
                 marker={item}
                 onPress={() => handleNavigation(item)}
-                isClaimLoading={isClaimLoading}
               />
             </TouchableOpacity>
           ))}
@@ -131,7 +93,7 @@ const RestaurantListView: React.FC<RestaurantListViewProps> = () => {
               <ArrowLeft2 color={currentStep === 1 ? Color.Gray.gray200 : Color.Gray.gray50} size={20} />
             </TouchableOpacity>
             {Array.from({ length: numSteppers }, (_, i) => i + 1).map((step) => (
-              <Stepper
+              <Pagination
                 key={step}
                 step={step}
                 currentStep={currentStep}

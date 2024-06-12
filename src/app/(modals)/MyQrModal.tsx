@@ -8,55 +8,48 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { CameraView, Camera } from "expo-camera";
 import Color from "../constants/Color";
 import { useRouter } from "expo-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { generateTap, redeemTap } from "../lib/service/mutationHelper";
-import Popup from "../components/(feedback)/Popup";
+import PreFixPopup from "../components/(feedback)/PreFixPopup";
 import PowerUp from "../components/(feedback)/PowerUp";
 import { getUserCard } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
-import { Flash } from "iconsax-react-native";
 import Toast from "react-native-toast-message";
 import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
 import { SERVER_SETTING } from "../constants/serverSettings";
 import { LinearGradient } from "expo-linear-gradient";
 import Close from "../components/icons/Close";
+import Popup from "../components/(feedback)/Popup";
 const { width, height } = Dimensions.get("window");
 const markerSize = 250;
 const halfMarkerSize = markerSize / 2;
 
-const overlayAdjusting = 5;
 
 const MyQrModal = () => {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [isBtcPopupVisible, setBtcPopupVisible] = useState(false);
-  const [isModalVisible, setModalVisible] = useState(true);
-  const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [restaurantId, setRestaurantId] = useState("")
   const [loading, setLoading] = useState(false);
   const [cardId, setCardId] = useState("")
   const [visitCount, setVisitCount] = useState(0)
-  const [flashMode, setFlashMode] = useState(false);
   const [powerUp, setPowerUp] = useState("");
-  const [emptyError, setEmptyError] = useState("");
   const [btcAmount, setBTCAmount] = useState("");
-  const [isButtonPressed, setIsButtonPressed] = useState(false);
 
   const togglePopup = () => {
     setPopupVisible(!isPopupVisible);
   };
-
-  const showToast = () => {
-    setTimeout(function () {
-      Toast.show({
-        type: "perkToast",
-        text1: "1$ of bitcoin added to your wallet",
-      });
-    }, 1500);
-  };
+// Toast
+  // const showToast = () => {
+  //   setTimeout(function () {
+  //     Toast.show({
+  //       type: "perkToast",
+  //       text1: "1$ of bitcoin added to your wallet",
+  //     });
+  //   }, 1500);
+  // };
 
   const toggleBtcPopup = () => {
     setBtcPopupVisible(!isBtcPopupVisible);
@@ -88,11 +81,6 @@ const MyQrModal = () => {
 
   const router = useRouter();
   useEffect(() => {
-    // const getCameraPermissions = async () => {
-    //   const { status } = await Camera.requestCameraPermissionsAsync();
-    //   setHasPermission(status === "granted");
-    // };
-    // getCameraPermissions();
     setRestaurantId("1e7c4243-9c14-4b88-ac67-ed3167c255f0");
     setCardId("675bb6ad-197e-4ed1-b2e0-898b541abaf7")
     setVisitCount(1)
@@ -100,15 +88,10 @@ const MyQrModal = () => {
 
 
   const {
-    data,
-    error,
-    status,
     mutateAsync: createTapMutation,
   } = useMutation({
     mutationFn: generateTap,
-    onError: (error) => {
-    },
-    onSuccess: (data, variables) => {
+    onSuccess: (data) => {
       try {
         const resp = createRedeemMutation(data.data.data);
       } catch (error) {
@@ -124,7 +107,7 @@ const MyQrModal = () => {
     onError: (error) => {
       console.log(error);
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (data) => {
       console.log("🚀 ~ QrModal ~ data:", data.data.data);
       if (visitCount >= SERVER_SETTING.PERK_FREQUENCY) {
         setPowerUp(data.data.data.bonus?.name);
@@ -161,8 +144,9 @@ const MyQrModal = () => {
       }
     },
   });
-  const userCard = cards?.data?.cards.find((card) => card.restaurantId === restaurantId);
+
   const handleScanButtonPress = async () => {
+    const userCard = cards?.data?.cards.find((card) => card.restaurantId === restaurantId);
     try {
       setLoading(true);
 
@@ -179,36 +163,16 @@ const MyQrModal = () => {
       console.log("Map mutation failed:", error);
     }
   };
-  const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-  };
-
-  // if (hasPermission === null) {
-  //   return <Text>Requesting for camera permission</Text>;
-  // }
-  // if (hasPermission === false) {
-  //   return <Text>No access to camera</Text>;
-  // }
+  // const handleBarCodeScanned = ({ type, data }) => {
+  //   setScanned(true);
+  //   alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+  // };
 
   return (
     <>
 
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1, backgroundColor: Color.Gray.gray600, alignItems: 'center' }}>
-          {/* <CameraView
-                onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-                barcodeScannerSettings={{
-                  barcodeTypes: ["qr", "pdf417"],
-                }}
-                style={StyleSheet.absoluteFillObject}
-                flash={flashMode == true ? "on" : "off"}
-              // flash="on"
-              /> */}
-          {/* Overlay for guiding user to place QR code within scan area */}
-
-
-          {/* Button for toggling flashlight */}
           {loading ? (
             <View style={{ flex: 1, justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
               <ActivityIndicator />
@@ -232,8 +196,6 @@ const MyQrModal = () => {
             </View>
           )
           }
-
-          {/* Button for closing the modal */}
           <TouchableOpacity
             style={[styles.closeButton, { backgroundColor: Color.Gray.gray400, width: 48, height: 48, justifyContent: 'center', alignItems: 'center', borderRadius: 100 }]}
             onPress={() => {
@@ -255,7 +217,7 @@ const MyQrModal = () => {
         <Popup
           isVisible={isBtcPopupVisible}
           onClose={closeBtcModal}
-          title={btcAmount}
+
         />
       </View>
     </>

@@ -16,7 +16,6 @@ import Steps from "../components/atom/Steps";
 import Tick from "../components/icons/Tick";
 import Button from "../components/ui/Button";
 import Color from "../constants/Color";
-import { useSignUpStore } from "../lib/store/signUpStore";
 import { LinearGradient } from "expo-linear-gradient";
 import { usePasswordStore } from "../lib/store/passwordStore";
 

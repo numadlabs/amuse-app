@@ -9,7 +9,7 @@ interface PopupProps {
   onSelect: (selectedPrefix: string) => void;
 }
 
-const Popup: React.FC<PopupProps> = ({ isVisible, cards, onClose, onSelect }) => {
+const PreFixPopup: React.FC<PopupProps> = ({ isVisible, cards, onClose, onSelect }) => {
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(-400); // Initial position, off the screen
 
@@ -20,54 +20,12 @@ const Popup: React.FC<PopupProps> = ({ isVisible, cards, onClose, onSelect }) =>
     };
   });
 
-  React.useEffect(() => {
-    if (isVisible) {
-      opacity.value = withSpring(1, {
-        mass: 1,
-        damping: 15,
-        stiffness: 117,
-        overshootClamping: false,
-        restDisplacementThreshold: 0.01,
-        restSpeedThreshold: 10.86,
-        reduceMotion: ReduceMotion.System,
-      });
-      translateY.value = withSpring(0, {
-        mass: 1,
-      damping: 15,
-      stiffness: 117,
-      overshootClamping: false,
-      restDisplacementThreshold: 0.01,
-      restSpeedThreshold: 10.86,
-      reduceMotion: ReduceMotion.System,
-      });
-    } else {
-      opacity.value = withSpring(-200, {
-        mass: 1,
-      damping: 15,
-      stiffness: 117,
-      overshootClamping: false,
-      restDisplacementThreshold: 0.01,
-      restSpeedThreshold: 10.86,
-      reduceMotion: ReduceMotion.System,
-      });
-      translateY.value = withSpring(-400, {
-        mass: 1,
-        damping: 15,
-        stiffness: 117,
-        overshootClamping: false,
-        restDisplacementThreshold: 0.01,
-        restSpeedThreshold: 10.86,
-        reduceMotion: ReduceMotion.System,
-      });
-    }
-  }, [isVisible]);
-
   return (
     <Animated.View style={[styles.modalContainer, animatedStyle]}>
       <View style={styles.popupContainer}>
         <FlatList
           data={cards}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item) => item.prefix}
           renderItem={({ item }) => (
             <TouchableOpacity style={styles.itemContainer} onPress={() => onSelect(item.prefix)}>
               <Text>{item.prefix}</Text>
@@ -116,4 +74,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Popup;
+export default PreFixPopup;

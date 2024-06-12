@@ -10,7 +10,6 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import Header from "../components/layout/Header";
 import Steps from "../components/atom/Steps";
 import Color from "../constants/Color";
 import Button from "../components/ui/Button";

@@ -4,27 +4,22 @@ import { Image } from "expo-image";
 import React, { useEffect, useState } from "react";
 import { BlurView } from "expo-blur";
 import Color from "@/app/constants/Color";
-import { height, scaleHeight, width } from "@/app/lib/utils";
-import { Flash, TicketStar } from "iconsax-react-native";
+import { width } from "@/app/lib/utils";
+import { TicketStar } from "iconsax-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import APassStripes from "../../icons/APassStripes";
 import Animated, {
-  Easing,
   FadeIn,
   FadeOut,
-  SlideInDown,
-  SlideOutDown,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-// highlight-start
 import {
   Gesture,
   GestureDetector,
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
-import BalanceStripes from "../../icons/BalanceStripes";
 import { SERVER_SETTING } from "@/app/constants/serverSettings";
 
 // In the APassCard component
@@ -48,9 +43,7 @@ const APassCard: React.FC<ApassProp> = ({
   nftImage,
   target
 }) => {
-  const animatedValue = useSharedValue(visitCount);
   const pressed = useSharedValue(false);
-  const [loading, setIsLoading] = useState<boolean>();
 
   const AnimatedText = Animated.createAnimatedComponent(Text);
 
@@ -77,8 +70,6 @@ const APassCard: React.FC<ApassProp> = ({
               colors={[Color.Brand.card.start, Color.Brand.card.end]}
               style={[styles.aCardContainer]}
             >
-              {/* in case old design returns : Turn below view into blurview and intensity was 24
-              also remove background color */}
               <View style={styles.blurContainer}>
                 <View
                   style={{

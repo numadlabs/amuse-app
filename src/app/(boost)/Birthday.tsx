@@ -61,9 +61,6 @@ const Birthday = () => {
   };
 
   const {
-    data,
-    error,
-    status,
     mutateAsync: handleUpdateUser,
   } = useMutation({
     mutationFn: updateUserInfo,

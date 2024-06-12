@@ -46,7 +46,6 @@ const PowerUp: React.FC<PopupProps> = ({
             <PowerUpCard
               title={powerUpTitle}
               onPress={() => console.log("pressed")}
-              date="2024/03/10"
             />
 
             <View style={styles.textContainer}>

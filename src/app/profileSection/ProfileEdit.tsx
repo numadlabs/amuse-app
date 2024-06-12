@@ -20,7 +20,7 @@ import {
 } from "react-native";
 import Header from "../components/layout/Header";
 import Color from "../constants/Color";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {  useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserById } from "../lib/service/queryHelper";
 import { useAuth } from "../context/AuthContext";
 import { updateUserInfo } from "../lib/service/mutationHelper";
@@ -36,7 +36,7 @@ import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
 
 const ProfileEdit = () => {
   const { authState } = useAuth();
-  const { data: user = [], refetch } = useQuery({
+  const { data: user = [] } = useQuery({
     queryKey: userKeys.info,
     queryFn: () => getUserById(authState.userId),
   });
@@ -82,10 +82,6 @@ const ProfileEdit = () => {
       setDataChanged(false);
     }
   }, [user, nickname, email, location, dateOfBirth]);
-
-  const openDatePicker = () => {
-    setShowDatePicker(true);
-  };
 
   const onDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
@@ -145,19 +141,6 @@ const ProfileEdit = () => {
     return formattedDate;
   };
 
-  const handleNicknameChange = (text) => {
-    // Check for emojis and symbols
-    if (!containsEmojisOrSymbols(text)) {
-      setNickname(text);
-    }
-  };
-
-  const handleEmailChange = (text) => {
-    // Check for emojis and symbols
-    if (!containsEmojisOrSymbols(text)) {
-      setEmail(text);
-    }
-  };
 
   return (
     <>

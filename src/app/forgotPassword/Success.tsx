@@ -6,7 +6,6 @@ import Button from '@/app/components/ui/Button'
 import { router, useNavigation } from 'expo-router'
 
 const Success = () => {
-  const navigation = useNavigation()
   return (
     <View style={styles.body}>
       <View style={styles.container}>

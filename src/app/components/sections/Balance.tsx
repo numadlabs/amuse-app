@@ -2,13 +2,9 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import Color from "../../constants/Color";
 import { LinearGradient } from "expo-linear-gradient";
-import { BlurView } from "expo-blur";
-import Animated, { FadeIn } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import APassStripes from "../icons/APassStripes";
 import { InfoCircle } from "iconsax-react-native";
-import { width } from "@/app/lib/utils";
-import { useQuery } from "@tanstack/react-query";
-import { userKeys } from "@/app/lib/service/keysHelper";
 import { useAuth } from "@/app/context/AuthContext";
 
 interface BalanceProps {
@@ -18,16 +14,9 @@ interface BalanceProps {
 }
 
 const Balance: React.FC<BalanceProps> = ({ amount, handleToggle, aed }) => {
-  const { authState } = useAuth()
-
-  const truncatedAmount =
-    amount !== 0 ? amount?.toString().substring(0, 9) : "0.0000";
-
-  const AnimatedText = Animated.createAnimatedComponent(Text);
 
   return (
     <View style={styles.container}>
-      {/* <BlurView style={styles.blurContainer} intensity={100}> */}
         <LinearGradient
           colors={[Color.Brand.card.start, Color.Brand.card.end]}
           start={{ x: 0, y: 0 }}
@@ -120,7 +109,6 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle, aed }) => {
             </View>
           </View>
         </LinearGradient>
-      {/* </BlurView> */}
     </View>
   );
 };

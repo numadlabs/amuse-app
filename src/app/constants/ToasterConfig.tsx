@@ -1,6 +1,6 @@
 import { ToastConfig, ToastConfigParams } from "react-native-toast-message/lib/src/types";
 import { StyleSheet, View, Text, Platform } from "react-native";
-import Tick from "../icons/Tick";
+import Tick from "../components/icons/Tick";
 import Color from "@/app/constants/Color";
 import { width } from "@/app/lib/utils";
 import { LinearGradient } from "expo-linear-gradient";

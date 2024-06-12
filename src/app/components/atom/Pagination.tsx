@@ -9,7 +9,7 @@ interface StepperProps {
   handleNavigation: (step: number) => void;
 }
 
-const Stepper: React.FC<StepperProps> = ({ step, currentStep, handleNavigation }) => {
+const Pagination: React.FC<StepperProps> = ({ step, currentStep, handleNavigation }) => {
   return (
     <TouchableOpacity
       style={{
@@ -36,4 +36,4 @@ const Stepper: React.FC<StepperProps> = ({ step, currentStep, handleNavigation }
   );
 };
 
-export default Stepper;
+export default Pagination;

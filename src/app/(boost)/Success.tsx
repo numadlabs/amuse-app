@@ -7,7 +7,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useQueryClient } from "@tanstack/react-query";
 import { userKeys } from "../lib/service/keysHelper";
 import TickCircle from "../components/icons/TickCircle";
-import TickGradient from "../components/icons/TickGradient";
 
 const Success = () => {
   const queryClient = useQueryClient();
