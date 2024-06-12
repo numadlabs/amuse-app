@@ -316,7 +316,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexGrow: 1,
     marginBottom: 450,
-    paddingHorizontal: 8,
   },
 });
 
