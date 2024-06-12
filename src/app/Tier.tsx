@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Header from './components/layout/Header';
 import TierCard from './components/atom/cards/TierCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Color from './constants/Color';
 
 const Tier = () => {
   const [visitCount, setVisitCount] = useState(0);
@@ -71,7 +72,7 @@ const Tier = () => {
   return (
     <>
       <Header title="Tier" />
-      <View style={{ padding: 16, gap: 16, flex: 1 }}>
+      <View style={{ padding: 16, gap: 16, flex: 1, backgroundColor: Color.Gray.gray600 }}>
         <TierCard
           isActive={userTier === 'Bronze'}
           title='Bronze'

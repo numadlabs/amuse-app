@@ -46,13 +46,11 @@ const PerkBuy = () => {
           restaurantId: restaurantId as string,
         });
         if (data.data.success) {
-          setIsClaimLoading(false);
           console.log("🚀 ~ Purchase successful", data.data.data);
           queryClient.invalidateQueries({ queryKey: userKeys.cards });
           queryClient.invalidateQueries({ queryKey: userKeys.info });
-          queryClient.invalidateQueries({
-            queryKey: restaurantKeys.all,
-          });
+          queryClient.invalidateQueries({queryKey: restaurantKeys.all,});
+          setIsClaimLoading(false);
           router.back();
         } else if (data.data.success === false) {
           console.log("🚀 ~ Purchase failed");
@@ -142,9 +140,9 @@ const PerkBuy = () => {
         </View>
       </View>
       <Button
-        variant="primary"
+        variant={isClaimLoading ? "disabled" : "primary"}
         size="large"
-        onPress={() => handleGetAPerk(id as string)}
+        onPress={isClaimLoading ? null : () => handleGetAPerk(id as string)}
       >
         {isClaimLoading ? (
           <ActivityIndicator />

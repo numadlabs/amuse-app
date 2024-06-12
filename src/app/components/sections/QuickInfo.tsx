@@ -49,7 +49,7 @@ const QuickInfo = ({ user, onPress }) => {
         </View>
         <View style={styles.container2}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 12, width:'100%' }}>
-            <ProgressBar progress={progress} width={"97%"} height={8} />
+            <ProgressBar isActive={true} progress={progress} width={"97%"} height={8} />
             <Text
               style={{
                 color: Color.base.White,
