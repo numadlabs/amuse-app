@@ -12,7 +12,6 @@ import Color from "../constants/Color";
 import { useRouter } from "expo-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { generateTap, redeemTap } from "../lib/service/mutationHelper";
-import PreFixPopup from "../components/(feedback)/PreFixPopup";
 import PowerUp from "../components/(feedback)/PowerUp";
 import { getUserCard } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
@@ -21,7 +20,6 @@ import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
 import { SERVER_SETTING } from "../constants/serverSettings";
 import { LinearGradient } from "expo-linear-gradient";
 import Close from "../components/icons/Close";
-import Popup from "../components/(feedback)/Popup";
 const { width, height } = Dimensions.get("window");
 const markerSize = 250;
 const halfMarkerSize = markerSize / 2;
@@ -63,9 +61,6 @@ const MyQrModal = () => {
   };
 
   const queryClient = useQueryClient();
-  const closeBtcModal = () => {
-    router.back();
-  };
   const { currentLocation } = useLocationStore();
 
   const { data: cards = [] } = useQuery({
@@ -214,11 +209,6 @@ const MyQrModal = () => {
             onClose={closeModal}
           />
         ) : null}
-        <Popup
-          isVisible={isBtcPopupVisible}
-          onClose={closeBtcModal}
-
-        />
       </View>
     </>
   );

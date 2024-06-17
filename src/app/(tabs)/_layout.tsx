@@ -1,52 +1,76 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Tabs, router } from "expo-router";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import Footer from "../components/layout/Footer";
 import { Notification, User } from "iconsax-react-native";
 import Logo from "../components/icons/Logo";
 import Color from "../constants/Color";
 import { useAuth } from "../context/AuthContext";
-import * as SplashScreen from "expo-splash-screen";
 import useLocationStore from "../lib/store/userLocation";
 import { LinearGradient } from "expo-linear-gradient";
+import * as Updates from "expo-updates";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SplashScreenWithLoadingBar from "../SplashScreenAnimated";
 
 const Layout = ({ navigation }) => {
   const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState(false);
+  console.log("appisReady?",appIsReady)
   const { getLocation, currentLocation } = useLocationStore();
-  const [notification, setNotification] = useState("")
+  const [notification, setNotification] = useState("");
 
   useEffect(() => {
-    async function prepareApp() {
-      SplashScreen.preventAutoHideAsync();
-      if (currentLocation == null) {
-        getLocation();
-      } else if (!authState.loading) {
-        await SplashScreen.hideAsync();
-        setAppIsReady(true);
-      }
-    }
-    prepareApp();
+    const prepareApp = async () => {
+      try {
+        // Check for updates, fetch if available
+        console.log("checking update")
+        const updateAvailable = await Updates.checkForUpdateAsync();
+        if (updateAvailable.isAvailable) {
+          await Updates.fetchUpdateAsync();
+          await Updates.reloadAsync();
+        } else {
+          console.log("No update available");
+        }
 
-    const checkNotification = async () => {
-      const storedCard = await AsyncStorage.getItem("restaurantCard");
-      if (storedCard) {
-        setNotification(storedCard);
-       
-        await AsyncStorage.removeItem("restaurantCard");
+        // Get current location
+        if (currentLocation == null) {
+          await getLocation();
+        }
+
+        // Check for and handle stored notification
+        const storedCard = await AsyncStorage.getItem("restaurantCard");
+        if (storedCard) {
+          setNotification(storedCard);
+          await AsyncStorage.removeItem("restaurantCard");
+        }
+      } catch (error) {
+        console.error("Error preparing app:", error);
+        // Handle specific errors here, possibly retrying or providing fallbacks
+      } finally {
+        console.log("before condition")
+        // Ensure app readiness state is set when conditions are met
+        if (!authState.loading && currentLocation !== null) {
+          console.log("main trigger")
+          setAppIsReady(true);
+        }
       }
     };
-    checkNotification();
 
+    // Call prepareApp function on component mount
+    prepareApp();
   }, [currentLocation, authState.loading]);
+
+  // Show loading screen if app is not ready
   if (!appIsReady) {
-    return null;
+    return <SplashScreenWithLoadingBar />;
   }
 
+  // Redirect to login if user is not authenticated
   if (authState.authenticated === false) {
     return <Redirect href={"/Login"} />;
   }
+
+  // Render main app content with Tabs
   return (
     <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
       <Tabs.Screen
@@ -57,9 +81,7 @@ const Layout = ({ navigation }) => {
             backgroundColor: Color.Gray.gray600,
           },
           headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => router.push("/profileSection/Profile")}
-            >
+            <TouchableOpacity onPress={() => router.push("/profileSection/Profile")}>
               <View style={{ paddingHorizontal: 20 }}>
                 <User color={Color.base.White} />
               </View>
@@ -75,10 +97,7 @@ const Layout = ({ navigation }) => {
                       colors={[Color.Brand.main.start, Color.Brand.main.end]}
                       style={{ width: 8, height: 8, borderRadius: 8 }}
                     />
-                  ) : (
-                    null
-                  )}
-
+                  ) : null}
                 </View>
               </View>
             </TouchableOpacity>

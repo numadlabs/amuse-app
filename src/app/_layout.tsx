@@ -39,17 +39,20 @@ export default function Layout() {
             options={{ presentation: "modal" }}
           />
 
-          <Stack.Screen
+          {/* <Stack.Screen
             name="(modals)/QrModal"
             options={{ presentation: "modal" }}
-          />
+          /> */}
           <Stack.Screen
             name="(modals)/MyQrModal"
             options={{ presentation: "modal" }}
           />
+
           <Stack.Screen name="MyAcards" />
           <Stack.Screen name="TermsAndCondo" />
+          <Stack.Screen name="SplashScreenAnimated" />
           <Stack.Screen name="Faq" />
+          <Stack.Screen name="Test" />
           <Stack.Screen name="Tier" />
           <Stack.Screen name="PerkScreen" />
           <Stack.Screen name="PerkMarket" options={{presentation: 'modal'}}/>
