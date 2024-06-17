@@ -5,11 +5,6 @@ import { UserBoostData, UserBoostRequestData } from "../types";
 import { createBoostFormData } from "./formHelper";
 import { AxiosRequestConfig } from "axios";
 
-export function login(data: z.infer<typeof LoginSchema>) {
-  return axiosClient.post("/api/login", { ...data }).then((response) => {
-    return response;
-  });
-}
 
 export function generateTap(id: string) {
   console.log("🚀 ~ generateTap ~ id:", { restaurantId: id });

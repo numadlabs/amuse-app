@@ -4,11 +4,11 @@
     "runtimeVersion": "0.4.0",
     "scheme": "acme",
     "owner": "numad-labs",
-    "splash": {
-      "image": "./src/public/images/splash.png",
-      "backgroundColor": "#1B2328",
-      "resizeMode": "contain"
-    },
+    // "splash": {
+    //   "image": "./src/public/images/splash.png",
+    //   "backgroundColor": "#1B2328",
+    //   "resizeMode": "contain"
+    // },
     "userInterfaceStyle": "dark",
     "orientation": "portrait",
     "web": {
@@ -23,16 +23,21 @@
         }
       ],
       "expo-secure-store",
-      ["expo-font",
+      [
+        "expo-font",
         {
-          "fonts": ["./src/public/fonts/Sora-Medium.ttf"
-        ,"./src/public/fonts/Sora-Bold.ttf","./src/public/fonts/Sora-ExtraBold.ttf",
-      "./src/public/fonts/Sora-ExtraLight.ttf",
-    "./src/public/fonts/Sora-Light.ttf",
-  "./src/public/fonts/Sora-Regular.ttf",
-"./src/public/fonts/Sora-SemiBold.ttf",
-"./src/public/fonts/Sora-Thin.ttf"]
-        }],
+          "fonts": [
+            "./src/public/fonts/Sora-Medium.ttf",
+            "./src/public/fonts/Sora-Bold.ttf",
+            "./src/public/fonts/Sora-ExtraBold.ttf",
+            "./src/public/fonts/Sora-ExtraLight.ttf",
+            "./src/public/fonts/Sora-Light.ttf",
+            "./src/public/fonts/Sora-Regular.ttf",
+            "./src/public/fonts/Sora-SemiBold.ttf",
+            "./src/public/fonts/Sora-Thin.ttf"
+          ]
+        }
+      ],
       "expo-build-properties"
     ],
     "icon": "./src/public/images/icon.png",
@@ -54,7 +59,9 @@
       }
     },
     "backgroundColor": "#1B2328",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "extra": {
       "router": {
         "origin": "https://n"
@@ -63,12 +70,25 @@
         "projectId": "648167f4-9c73-40b4-8123-d4b1eeea1c63"
       },
       "fonts": {
-        "YourFont-Regular": ["./public/fonts/Sora-Regular.ttf"],
-        "YourFont-Bold": ["./public/fonts/Sora-Bold.ttf"]
-      }
+        "YourFont-Regular": [
+          "./public/fonts/Sora-Regular.ttf"
+        ],
+        "YourFont-Bold": [
+          "./public/fonts/Sora-Bold.ttf"
+        ]
+      },
     },
     "updates": {
-      "url": "https://u.expo.dev/648167f4-9c73-40b4-8123-d4b1eeea1c63"
+      "url": "https://u.expo.dev/648167f4-9c73-40b4-8123-d4b1eeea1c63",
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_ERROR_RECOVERY",
+      "enabled": true,
+      "requestHeaders": {
+        "expo-channel-name": "main",
+        "expo-runtime-version": "0.4.0",
+        "expo-platform": "ios",
+        "channel-name":"main",
+      }
     }
   }
 }
