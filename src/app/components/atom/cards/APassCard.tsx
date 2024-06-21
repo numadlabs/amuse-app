@@ -33,6 +33,7 @@ interface ApassProp {
   visitCount: number;
   target: number;
 }
+
 const APassCard: React.FC<ApassProp> = ({
   name,
   category,

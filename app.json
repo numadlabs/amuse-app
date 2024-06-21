@@ -81,8 +81,9 @@
     "updates": {
       "url": "https://u.expo.dev/648167f4-9c73-40b4-8123-d4b1eeea1c63",
       "fallbackToCacheTimeout": 0,
-      "checkAutomatically": "ON_ERROR_RECOVERY",
+      "checkAutomatically": "ON_LOAD",
       "enabled": true,
+      
       "requestHeaders": {
         "expo-channel-name": "main",
         "expo-runtime-version": "0.4.0",

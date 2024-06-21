@@ -11,26 +11,38 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as Updates from "expo-updates";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SplashScreenWithLoadingBar from "../SplashScreenAnimated";
+import * as Manifests from 'expo-manifests';
 
 const Layout = ({ navigation }) => {
   const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState(false);
-  console.log("appisReady?",appIsReady)
   const { getLocation, currentLocation } = useLocationStore();
   const [notification, setNotification] = useState("");
+
 
   useEffect(() => {
     const prepareApp = async () => {
       try {
-        // Check for updates, fetch if available
         console.log("checking update")
-        const updateAvailable = await Updates.checkForUpdateAsync();
-        if (updateAvailable.isAvailable) {
-          await Updates.fetchUpdateAsync();
-          await Updates.reloadAsync();
+        if (!__DEV__) { // Only check for updates in production mode
+          const updateAvailable = await Updates.checkForUpdateAsync();
+          if (updateAvailable.isAvailable) {
+            await Updates.fetchUpdateAsync();
+            await Updates.reloadAsync();
+          } else {
+            console.log("No update available");
+          }
         } else {
-          console.log("No update available");
+          console.log("Running in development mode");
         }
+
+        // const updateAvailable = await Updates.checkForUpdateAsync();
+        // if (updateAvailable.isAvailable) {
+        //   await Updates.fetchUpdateAsync();
+        //   await Updates.reloadAsync();
+        // } else {
+        //   console.log("No update available");
+        // }
 
         // Get current location
         if (currentLocation == null) {
