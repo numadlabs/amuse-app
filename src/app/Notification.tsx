@@ -57,7 +57,7 @@ const Notification = () => {
         renderItem={({ item }) => (
           <NotificationCard
             title={item.name}
-            description={`You received $1 of bitcoin from ${item.name}`}
+            description={`You received 1 AED of Bitcoin from ${item.name}`}
             time={getRelativeTime(item.date)}
           />
         )}
