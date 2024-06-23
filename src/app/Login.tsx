@@ -161,7 +161,7 @@ function Login() {
               <Text
                 style={{
                   fontSize: 24,
-                  color: Color.base.White,
+                  color: Color.base.White, 
                   fontWeight: "bold",
                   textAlign: "center",
                   marginBottom: 24,
