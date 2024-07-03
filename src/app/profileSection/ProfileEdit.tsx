@@ -53,13 +53,9 @@ const ProfileEdit = () => {
   const [focusedInput, setFocusedInput] = useState<
     "Nickname" | "Email" | "Area" | "Birthday" | null
   >(null);
+  const [error, setError] = useState({})
 
   const isProfilePrefilled =  user?.user?.email && user?.user?.location && user?.user?.dateOfBirth;
-
-  const containsEmojisOrSymbols = (text) => {
-    const regex = /[\u{1F600}-\u{1F64F}|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F004}|\u{1F0CF}|[\u{1F170}-\u{1F251}]|[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F004}|\u{1F0CF}|[\u{1F170}-\u{1F251}]|[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F004}|\u{1F0CF}|[\u{1F170}-\u{1F251}]]/;
-    return regex.test(text);
-  };
 
   useEffect(() => {
     if (user) {
@@ -95,6 +91,7 @@ const ProfileEdit = () => {
     setLoading(true);
     const userData = { nickname, email, location, dateOfBirth };
     try {
+
       await updateUserInfo({ userId: authState.userId, data: userData });
 
       setLoading(false);

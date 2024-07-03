@@ -17,41 +17,55 @@ import useBoostInfoStore from "../lib/store/boostInfoStore";
 import { LinearGradient } from "expo-linear-gradient";
 
 const Email = () => {
+  // State for managing the button position
   const [buttonPosition, setButtonPosition] = useState("bottom");
+  // State for managing the focus state of the TextInput
   const [isFocused, setIsFocused] = useState(false);
+  // Hook to navigate using the router
   const router = useRouter();
+  // Custom hook to manage email state
   const { email, setEmail } = useBoostInfoStore();
 
+  // Effect to manage keyboard events
   useEffect(() => {
+    // Listener for keyboard show event
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       () => setButtonPosition("top")
     );
 
+    // Listener for keyboard hide event
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
       () => setButtonPosition("bottom")
     );
+
+    // Cleanup listeners on component unmount
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
   }, []);
 
-  const handleEmailChange = (text: string) => {
+  // Handler for email input change
+  const handleEmailChange = (text) => {
     setEmail(text);
   };
 
   return (
     <>
+      {/* Step indicator component */}
       <Steps activeStep={1} />
+      {/* Keyboard avoiding view to handle keyboard presence */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
+        {/* TouchableWithoutFeedback to dismiss the keyboard on touch */}
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
+              {/* Linear gradient for styling the email input container */}
               <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
                 style={{
@@ -65,9 +79,10 @@ const Email = () => {
                   <View style={{ gap: 8 }}>
                     <Text style={styles.topText}>Email</Text>
                     <Text style={styles.bottomText}>
-                    Restaurants will use this to get in touch for things like priority reservations. Spam is so 20th century.
+                      Restaurants will use this to get in touch for things like priority reservations. Spam is so 20th century.
                     </Text>
                   </View>
+                  {/* Linear gradient for styling the email input */}
                   <LinearGradient
                     colors={
                       isFocused
@@ -95,6 +110,7 @@ const Email = () => {
                         borderRadius: 16,
                       }}
                     >
+                      {/* TextInput for email */}
                       <TextInput
                         onFocus={() => setIsFocused(true)}
                         onBlur={() => setIsFocused(false)}
@@ -116,29 +132,30 @@ const Email = () => {
                 </View>
               </LinearGradient>
             </View>
+            {/* KeyboardAvoidingView to handle button positioning */}
             <KeyboardAvoidingView
               style={{ flex: 1 }}
               keyboardVerticalOffset={110}
               behavior={Platform.OS === "ios" ? "height" : "padding"}
             >
-            <View
-              style={[
-                styles.buttonContainer,
-                buttonPosition === "bottom"
-                  ? styles.bottomPosition
-                  : styles.topPosition,
-              ]}
-            >
-
-              <Button
-                variant={email ? "primary" : "disabled"}
-                textStyle={email ? "primary" : "disabled"}
-                size="default"
-                onPress={() => router.push("(boost)/Area")}
+              <View
+                style={[
+                  styles.buttonContainer,
+                  buttonPosition === "bottom"
+                    ? styles.bottomPosition
+                    : styles.topPosition,
+                ]}
               >
-                Continue
-              </Button>
-            </View>
+                {/* Button to navigate to the next screen */}
+                <Button
+                  variant={email ? "primary" : "disabled"}
+                  textStyle={email ? "primary" : "disabled"}
+                  size="default"
+                  onPress={() => router.push("(boost)/Area")}
+                >
+                  Continue
+                </Button>
+              </View>
             </KeyboardAvoidingView>
           </View>
         </TouchableWithoutFeedback>
@@ -149,6 +166,7 @@ const Email = () => {
 
 export default Email;
 
+// Styles for the component
 const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 16,

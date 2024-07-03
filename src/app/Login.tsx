@@ -23,7 +23,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { height } from "./lib/utils";
+import { height, width } from "./lib/utils";
 import {
   GestureHandlerRootView,
   ScrollView,
@@ -83,6 +83,7 @@ function Login() {
 
  
   const offset = useSharedValue(300);
+  
   const togglePrefix = () => {
     setIsOpen(!isOpen);
     offset.value = withSpring(isOpen ? height / 3 : height / 3 + 10, {
@@ -371,19 +372,23 @@ function Login() {
                   </Text>
                 </Button>
               </View>
-              {isOpen && (
+              
+            </View>
+          </LinearGradient>
+        </View>
+        {isOpen && (
                 <Animated.View
                   style={[
                     translateY,
                     {
                       position: "absolute",
                       zIndex: 100,
-                      top: -196,
-                      width: "80%",
+                      top:height/140,
+                      width: "65%",
                       backgroundColor: Color.Gray.gray400,
                       borderRadius: 16,
                       overflow: "hidden",
-                      left: 0,
+                      left: width/11,
                     },
                   ]}
                 >
@@ -436,9 +441,6 @@ function Login() {
                   </ScrollView>
                 </Animated.View>
               )}
-            </View>
-          </LinearGradient>
-        </View>
         <View
           style={{
             alignContent: "center",

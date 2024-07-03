@@ -9,29 +9,38 @@ import { userKeys } from "../lib/service/keysHelper";
 import TickCircle from "../components/icons/TickCircle";
 
 const Success = () => {
+  // Initialize the query client
   const queryClient = useQueryClient();
 
+  // Handler for navigation
   const handleNavigation = () => {
+    // Invalidate queries related to user info
     queryClient.invalidateQueries({ queryKey: userKeys.info });
+    // Navigate to the main tabs
     router.navigate("/(tabs)");
   };
+
   return (
     <View style={styles.body}>
+      {/* Linear gradient for styling the success message container */}
       <LinearGradient
         colors={[Color.Brand.card.start, Color.Brand.card.end]}
         start={{ x: 1, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.container}
       >
+        {/* Container for the success icon */}
         <View style={styles.svgContainer}>
           <TickCircle />
-          </View>
-          <Text style={styles.topText}>Congratulations!</Text>
-          <Text style={styles.bottomText}>
-            You will earn 1.2X rewards for every {"\n"}check-in.
-          </Text>
-        
+        </View>
+        {/* Congratulations message */}
+        <Text style={styles.topText}>Congratulations!</Text>
+        {/* Reward message */}
+        <Text style={styles.bottomText}>
+          You will earn 1.2X rewards for every {"\n"}check-in.
+        </Text>
       </LinearGradient>
+      {/* Container for the confirm button */}
       <View style={styles.buttonContainer}>
         <Button
           variant="tertiary"
@@ -48,6 +57,7 @@ const Success = () => {
 
 export default Success;
 
+// Styles for the component
 const styles = StyleSheet.create({
   body: {
     backgroundColor: Color.Gray.gray600,
@@ -63,7 +73,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: Color.Gray.gray400,
-
     paddingTop: 24,
     paddingBottom: 32,
     marginTop: 16,

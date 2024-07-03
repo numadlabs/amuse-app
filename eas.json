@@ -28,6 +28,11 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "chillingrayxxx@gmail.com",
+        "ascAppId": "6479389566"
+      }
+    }
   }
 }
