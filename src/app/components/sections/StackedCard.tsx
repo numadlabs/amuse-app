@@ -96,13 +96,15 @@ const StackedCard = () => {
                 {
                   zIndex: latestCards.length - index,
                   shadowColor: Color.Gray.gray600,
+                  overflow: "hidden",
+                  borderRadius: 32,
                   shadowOpacity: 1,
                   shadowOffset: {
                     width: 0,
                     height: 0,
                   },
                   shadowRadius: 32,
-                  elevation: 12
+                  elevation: 12,
                 },
               ]}
             >
@@ -128,7 +130,7 @@ export default StackedCard;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Color.Gray.gray50,
+    backgroundColor: Color.Gray.gray600,
     borderTopRightRadius: 32,
     borderTopLeftRadius: 32,
     minHeight: 380,
@@ -184,7 +186,7 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 20,
     paddingVertical: 12,
-    backgroundColor: Color.Gray.gray400,
+    backgroundColor: Color.Gray.gray600,
     borderRadius: 48,
     marginTop: 24,
   },

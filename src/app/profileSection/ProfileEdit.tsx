@@ -9,7 +9,6 @@ import {
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -33,6 +32,7 @@ import ProgressBar from "../components/sections/ProgressBar";
 import { width } from "../lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const ProfileEdit = () => {
   const { authState } = useAuth();
@@ -144,8 +144,8 @@ const ProfileEdit = () => {
 
   return (
     <>
-      <Header title="Account" />
       <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+      <Header title="Account" />
         <ScrollView style={{ flex: 1, paddingHorizontal: 16 }}>
           <View style={styles.body}>
             <LinearGradient

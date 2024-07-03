@@ -25,6 +25,7 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle, aed }) => {
             borderRadius: 20,
             borderWidth: 1,
             borderColor: Color.Gray.gray400,
+            overflow: "hidden",
           }}
         >
           <View

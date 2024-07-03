@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import React from "react";
-import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import OwnedAcards from "./components/atom/cards/OwnedAcards";
 import Header from "./components/layout/Header";
@@ -9,6 +9,7 @@ import { getUserCard } from "./lib/service/queryHelper";
 import useLocationStore from "./lib/store/userLocation";
 import { RestaurantType } from "./lib/types";
 import { userKeys } from "./lib/service/keysHelper";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const MyAcards = () => {
   const { currentLocation } = useLocationStore();

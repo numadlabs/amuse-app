@@ -25,6 +25,7 @@ import Owned from "../components/sections/membership/Owned";
 import UnOwned from "../components/sections/membership/UnOwned";
 import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { height, width } from "../lib/utils";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Restaurant = () => {
   const { cardId, id } = useLocalSearchParams();
@@ -80,7 +81,7 @@ const Restaurant = () => {
   };
 
   return (
-    <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity style={[styles.button, styles.closeButton]} onPress={() => router.back()}>
           <Close />
@@ -209,7 +210,7 @@ const Restaurant = () => {
           </TouchableOpacity>
         </Modal>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -227,7 +228,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   closeButton: {
-    marginTop: 12,
+    marginTop: 4,
   },
   closeButtonContainer: {
     width: "100%",

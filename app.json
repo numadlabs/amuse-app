@@ -4,11 +4,6 @@
     "runtimeVersion": "0.4.0",
     "scheme": "acme",
     "owner": "numad-labs",
-    // "splash": {
-    //   "image": "./src/public/images/splash.png",
-    //   "backgroundColor": "#1B2328",
-    //   "resizeMode": "contain"
-    // },
     "userInterfaceStyle": "dark",
     "orientation": "portrait",
     "web": {
@@ -76,7 +71,7 @@
         "YourFont-Bold": [
           "./public/fonts/Sora-Bold.ttf"
         ]
-      },
+      }
     },
     "updates": {
       "url": "https://u.expo.dev/648167f4-9c73-40b4-8123-d4b1eeea1c63",
@@ -88,7 +83,7 @@
         "expo-channel-name": "main",
         "expo-runtime-version": "0.4.0",
         "expo-platform": "ios",
-        "channel-name":"main",
+        "channel-name":"main"
       }
     }
   }

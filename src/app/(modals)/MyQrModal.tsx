@@ -20,6 +20,7 @@ import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
 import { SERVER_SETTING } from "../constants/serverSettings";
 import { LinearGradient } from "expo-linear-gradient";
 import Close from "../components/icons/Close";
+import { SafeAreaView } from "react-native-safe-area-context";
 const { width, height } = Dimensions.get("window");
 const markerSize = 250;
 const halfMarkerSize = markerSize / 2;
@@ -165,7 +166,8 @@ const MyQrModal = () => {
 
   return (
     <>
-
+      
+      <SafeAreaView style={{ flex: 1}}>
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1, backgroundColor: Color.Gray.gray600, alignItems: 'center' }}>
           {loading ? (
@@ -210,6 +212,7 @@ const MyQrModal = () => {
           />
         ) : null}
       </View>
+      </SafeAreaView>
     </>
   );
 };

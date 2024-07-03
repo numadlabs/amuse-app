@@ -4,6 +4,7 @@ import Header from './components/layout/Header';
 import TierCard from './components/atom/cards/TierCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Color from './constants/Color';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Tier = () => {
   const [visitCount, setVisitCount] = useState(0);
@@ -71,6 +72,7 @@ const Tier = () => {
 
   return (
     <>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <Header title="Tier" />
       <View style={{ padding: 16, gap: 16, flex: 1, backgroundColor: Color.Gray.gray600 }}>
         <TierCard
@@ -88,6 +90,7 @@ const Tier = () => {
           target={silverProgress.target}
         />
       </View>
+      </SafeAreaView>
     </>
   );
 };

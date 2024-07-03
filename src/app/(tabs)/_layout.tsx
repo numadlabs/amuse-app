@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Tabs, router } from "expo-router";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Platform } from "react-native";
 import Footer from "../components/layout/Footer";
 import { Notification, User } from "iconsax-react-native";
 import Logo from "../components/icons/Logo";
@@ -11,14 +11,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as Updates from "expo-updates";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SplashScreenWithLoadingBar from "../SplashScreenAnimated";
-import * as Manifests from 'expo-manifests';
 
 const Layout = ({ navigation }) => {
   const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState(false);
   const { getLocation, currentLocation } = useLocationStore();
   const [notification, setNotification] = useState("");
-
 
   useEffect(() => {
     const prepareApp = async () => {
@@ -35,14 +33,6 @@ const Layout = ({ navigation }) => {
         } else {
           console.log("Running in development mode");
         }
-
-        // const updateAvailable = await Updates.checkForUpdateAsync();
-        // if (updateAvailable.isAvailable) {
-        //   await Updates.fetchUpdateAsync();
-        //   await Updates.reloadAsync();
-        // } else {
-        //   console.log("No update available");
-        // }
 
         // Get current location
         if (currentLocation == null) {
@@ -89,15 +79,23 @@ const Layout = ({ navigation }) => {
         name="index"
         options={{
           headerStyle: {
+            display: "none",
+            justifyContent: "space-around",
             shadowOpacity: 0,
             backgroundColor: Color.Gray.gray600,
           },
           headerLeft: () => (
             <TouchableOpacity onPress={() => router.push("/profileSection/Profile")}>
-              <View style={{ paddingHorizontal: 20 }}>
+              <View style={{ paddingHorizontal: 20}}>
                 <User color={Color.base.White} />
               </View>
             </TouchableOpacity>
+          ),
+          
+          headerTitle: () => (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <Logo />
+            </View>
           ),
           headerRight: () => (
             <TouchableOpacity onPress={() => router.push("/Notification")}>
@@ -114,7 +112,7 @@ const Layout = ({ navigation }) => {
               </View>
             </TouchableOpacity>
           ),
-          headerTitle: () => <Logo />,
+          headerTitleAlign: 'center',
         }}
       />
       <Tabs.Screen name="Acards" options={{ headerShown: false }} />
