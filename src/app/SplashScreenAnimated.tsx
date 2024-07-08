@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Platform } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import ProgressBar from './components/sections/ProgressBar';
 import * as Updates from 'expo-updates';
@@ -9,6 +9,7 @@ import { height, width } from './lib/utils';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import AmuseBoucheLogo from './components/icons/A';
+
 
 const INITIAL_TRANSLATE_X = -63;
 const INITIAL_TRANSLATE_Y = 20;
@@ -115,9 +116,18 @@ const SplashScreenWithLoadingBar = () => {
               style={styles.gradientBall}
             />
           </Animated.View>
-          <BlurView intensity={64} style={styles.blurView}>
+          {/* <BlurView intensity={64} style={styles.blurView}>
             <AmuseBoucheLogo />
-          </BlurView>
+          </BlurView> */}
+          {Platform.OS === 'ios' ? (
+            <BlurView intensity={70} style={styles.blurView}>
+              <AmuseBoucheLogo />
+            </BlurView>
+          ) : (
+            <View style={[styles.blurView, { backgroundColor: 'rgba(27, 35, 40, 0.5)' }]}>
+              <AmuseBoucheLogo />
+            </View>
+          )}
         </View>
       </View>
 
@@ -140,6 +150,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 32,
     backgroundColor: Color.Gray.gray500,
+    
   },
   animatedView: {
     width: 160,
@@ -161,6 +172,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 32,
     alignItems: 'center',
+    
   },
   topPosition: {
     top: -60,

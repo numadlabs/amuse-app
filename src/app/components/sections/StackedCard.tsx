@@ -97,7 +97,6 @@ const StackedCard = () => {
                   zIndex: latestCards.length - index,
                   shadowColor: Color.Gray.gray600,
                   overflow: "hidden",
-                  borderRadius: 32,
                   shadowOpacity: 1,
                   shadowOffset: {
                     width: 0,

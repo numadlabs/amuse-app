@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Platform,
 } from "react-native";
 import Button from "../components/ui/Button";
 import Color from "../constants/Color";
@@ -176,7 +177,7 @@ const Restaurant = () => {
               style={[
                 {
                   backgroundColor: Color.Gray.gray600,
-                  height: height / 2.8,
+                  height: height / 2.4, //to do 2.8 prev version(original height)
                   bottom: 0,
                   width: width,
                   zIndex: 99,
@@ -197,7 +198,7 @@ const Restaurant = () => {
                   </View>
                 </TouchableOpacity>
               </View>
-              <View style={{ alignItems: "center", gap: 16 }}>
+              <View style={{ alignItems: "center", gap: 16}}>
                 <Image source={require("@/public/images/perk.png")} style={{ width: width / 1.2, height: 58 }} resizeMode="contain" />
                 <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray50, textAlign: "center" }}>
                   Earn perks after every 3 check-ins. Keep visiting your favorite spots and multiply your rewards!

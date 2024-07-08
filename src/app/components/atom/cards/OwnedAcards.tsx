@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   dot: {
     width: 10,
     height: 10,
-    borderRadius: 5, // To make it a circle
-    marginRight: 5, // Adjust the margin as needed
+    borderRadius: 5,
+    marginRight: 5,
   },
 });

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, Platform } from "react-native";
 import Color from "./constants/Color";
 import {  useQuery, useQueryClient } from "@tanstack/react-query";
 import { purchaseablePerkKeys } from "./lib/service/keysHelper";
@@ -15,6 +15,7 @@ import Close from "./components/icons/Close";
 import { router } from "expo-router";
 import PerkGradientSm from "./components/icons/PerkGradientSm";
 import { useAuth } from "./context/AuthContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const PerkMarket = () => {
   const { id } = useLocalSearchParams();
@@ -45,6 +46,7 @@ const PerkMarket = () => {
   };
 
   return (
+    <SafeAreaView style={{ flex: 1 }}>
     <GestureHandlerRootView style={styles.container}>
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity
@@ -114,6 +116,7 @@ const PerkMarket = () => {
         />
       )}
     </GestureHandlerRootView>
+    </SafeAreaView>
   );
 };
 
@@ -125,6 +128,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 16,
+    marginTop: Platform.OS === 'ios' ? -10 : 0
   },
   content: {
     flex: 1,

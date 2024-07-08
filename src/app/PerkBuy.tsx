@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  Platform,
 } from "react-native";
 import Color from "./constants/Color";
 import Close from "./components/icons/Close";
@@ -16,6 +17,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "./context/AuthContext";
 import { restaurantKeys, userKeys } from "./lib/service/keysHelper";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const PerkBuy = () => {
   const { name, id, price, restaurantId } = useLocalSearchParams();
@@ -65,11 +67,13 @@ const PerkBuy = () => {
   };
 
   return (
+    <SafeAreaView style={{ flex: 1 }}>
     <View
       style={{
         backgroundColor: Color.Gray.gray600,
         flex: 1,
         paddingHorizontal: 16,
+        marginTop: Platform.OS === 'ios' ? -10 : 0
       }}
       key={id as string}
     >
@@ -153,6 +157,7 @@ const PerkBuy = () => {
         )}
       </Button>
     </View>
+    </SafeAreaView>
   );
 };
 
