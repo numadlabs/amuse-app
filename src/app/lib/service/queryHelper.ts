@@ -101,6 +101,16 @@ export async function getUserById(userID: string) {
   });
 }
 
+export async function getTimeTable(id) {
+  return axiosClient.get(`/timetables/${id}`).then((response) => {
+    if (response.data.success) {
+      return response.data.data
+    } else {
+      throw new Error(response.data.error)
+    }
+  })
+}
+
 
 export async function getRestaurantId(id) {
   return axiosClient.get(`/restaurants/${id}`).then((response) => {

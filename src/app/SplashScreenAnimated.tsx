@@ -14,24 +14,20 @@ const INITIAL_TRANSLATE_X = -63;
 const INITIAL_TRANSLATE_Y = 20;
 const INITIAL_TRANSLATE_X2 = 120;
 const INITIAL_TRANSLATE_Y2 = 40;
-const ANIMATION_DURATION =600;
-
+const ANIMATION_DURATION = 600;
 
 const SplashScreenWithLoadingBar = () => {
-  
-
   const translateX = useSharedValue(INITIAL_TRANSLATE_X);
   const translateY = useSharedValue(INITIAL_TRANSLATE_Y);
   const translateX2 = useSharedValue(INITIAL_TRANSLATE_X2);
   const translateY2 = useSharedValue(INITIAL_TRANSLATE_Y2);
-  
 
   const animated = () => {
     translateX.value = INITIAL_TRANSLATE_X;
     translateY.value = INITIAL_TRANSLATE_Y;
     translateX2.value = INITIAL_TRANSLATE_X2;
     translateY2.value = INITIAL_TRANSLATE_Y2;
-    
+
     translateX.value = withRepeat(
       withSequence(
         withTiming(width / 3, { duration: ANIMATION_DURATION })
@@ -57,9 +53,7 @@ const SplashScreenWithLoadingBar = () => {
   };
 
   const play = () => {
-
-      animated();
- 
+    animated();
   };
 
   const animatedStyle1 = useAnimatedStyle(() => ({
@@ -88,15 +82,14 @@ const SplashScreenWithLoadingBar = () => {
       }
     }
 
-    prepareApp();
+    prepareApp().then(() => SplashScreen.hideAsync());
   }, []);
-
 
   const runTypeMessage = Updates.isEmbeddedLaunch
     ? 'This app is running from built-in code'
     : 'This app is running an update';
   return (
-   <View style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.animationContainer}>
         <View style={styles.animatedViewWrapper}>
           <Animated.View style={[styles.animatedView, styles.topPosition, animatedStyle1]}>
@@ -120,7 +113,6 @@ const SplashScreenWithLoadingBar = () => {
           </BlurView>
         </View>
       </View>
-
     </View>
   );
 };
@@ -130,6 +122,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: Color.Gray.gray600
   },
   animationContainer: {
     flex: 1,

@@ -37,6 +37,7 @@ import Animated, {
 import { height, width } from "../lib/utils";
 import Button from "../components/ui/Button";
 import Close from "../components/icons/Close";
+import { usePushNotifications } from "../hooks/usePushNotification";
 
 const Page = () => {
   const router = useRouter();
@@ -46,6 +47,18 @@ const Page = () => {
   const [isQuickInfoVisible, setIsQuickInfoVisible] = useState(true);
   const pressed = useSharedValue(false);
   const { authState } = useAuth();
+
+  // Notification setup
+  const {expoPushToken, notification} = usePushNotifications()
+
+  console.log(expoPushToken)
+  const data = JSON.stringify(notification, undefined, 2)
+
+
+  console.log("Token: ", expoPushToken?.data);
+  
+
+
 
   const { currentLocation } = useLocationStore();
   const { data: user, isSuccess } = useQuery({

@@ -23,9 +23,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
 
 const Birthday = () => {
+  // State for managing button position based on keyboard visibility
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const router = useRouter();
+  // Custom hook to manage user information
   const { email, area, birthdate, setBirthdate } = useBoostInfoStore();
+  // States for date picker functionality
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [initialDate, setInitialDate] = useState(new Date());
@@ -33,6 +36,7 @@ const Birthday = () => {
   const { authState } = useAuth();
   
   useEffect(() => {
+    // Add keyboard listeners to adjust button position
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       () => setButtonPosition("top")
@@ -42,12 +46,15 @@ const Birthday = () => {
       "keyboardDidHide",
       () => setButtonPosition("bottom")
     );
+    
+    // Clean up listeners on component unmount
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
   }, []);
 
+  // Handler for date change in the picker
   const onDateChange = (event, selectedDate) => {
     if (selectedDate) {
       setTemporaryDate(selectedDate);
@@ -55,11 +62,13 @@ const Birthday = () => {
     }
   };
 
+  // Handler for confirming date selection
   const handleDatePickerDone = () => {
     setBirthdate(temporaryDate.toISOString().split("T")[0]);
     setShowDatePicker(false);
   };
 
+  // Mutation hook for updating user information
   const {
     mutateAsync: handleUpdateUser,
   } = useMutation({
@@ -77,6 +86,7 @@ const Birthday = () => {
     },
   });
 
+  // Function to trigger user update
   const triggerUpdateUser = async () => {
     setLoading(true);
     const userData = {
@@ -99,6 +109,7 @@ const Birthday = () => {
     }
   };
 
+  // Helper function to format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {
@@ -123,6 +134,7 @@ const Birthday = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
+              {/* Gradient background for the main content area */}
               <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
                 style={{
@@ -139,6 +151,7 @@ const Birthday = () => {
                       Rewarding the wise, the reckless, and everyone in between.
                     </Text>
                   </View>
+                  {/* TouchableOpacity to open date picker */}
                   <TouchableOpacity onPress={() => setShowDatePicker(true)}>
                     <View style={styles.datePickerContainer}>
                       <Text style={styles.datePickerText}>
@@ -149,6 +162,7 @@ const Birthday = () => {
                 </View>
               </LinearGradient>
             </View>
+            {/* Button container with dynamic positioning */}
             <View
               style={[
                 styles.buttonContainer,
@@ -172,6 +186,7 @@ const Birthday = () => {
                 )}
               </Button>
             </View>
+            {/* Animated date picker overlay */}
             {showDatePicker && (
               <Animated.View style={styles.dateTimePickerOverlay}
               entering={SlideInDown.springify().damping(20)}
@@ -209,6 +224,7 @@ const Birthday = () => {
 
 export default Birthday;
 
+// StyleSheet for component styles
 const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 16,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Tabs, router } from "expo-router";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import Footer from "../components/layout/Footer";
 import { Notification, User } from "iconsax-react-native";
 import Logo from "../components/icons/Logo";
@@ -14,10 +14,12 @@ import SplashScreenWithLoadingBar from "../SplashScreenAnimated";
 import * as Manifests from 'expo-manifests';
 
 const Layout = ({ navigation }) => {
+
   const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState(false);
   const { getLocation, currentLocation } = useLocationStore();
   const [notification, setNotification] = useState("");
+
 
 
   useEffect(() => {
