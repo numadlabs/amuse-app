@@ -50,6 +50,8 @@ const Page = () => {
 
   // Notification setup
   const {expoPushToken, notification} = usePushNotifications()
+
+  console.log(expoPushToken)
   const data = JSON.stringify(notification, undefined, 2)
 
 
