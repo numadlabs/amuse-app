@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -19,12 +19,14 @@ import { height } from "@/app/lib/utils";
 import * as Linking from "expo-linking";
 import { RestaurantType } from "@/app/lib/types";
 import TimeAccordion from "../ui/TimeAccordion";
+import { useQuery } from "@tanstack/react-query";
+import { getTimeTable } from "@/app/lib/service/queryHelper";
 
 interface BottomSheetProps {
   data: RestaurantType;
 }
 
-const DetailsSheet: React.FC<BottomSheetProps> = ({data}) => {
+const DetailsSheet: React.FC<BottomSheetProps> = ({ data }) => {
   const handleLocationPress = () => {
     if (data.latitude && data.longitude) {
       const mapURL = `https://maps.google.com/?q=${data.latitude},${data.longitude}`;
@@ -33,48 +35,24 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({data}) => {
       console.warn("Latitude and longitude are not available");
     }
   };
+
+
+  const { data: timeTable } = useQuery({
+    queryKey: ["RestaurantTimeTable"],
+    queryFn: () => getTimeTable(data.id)
+  })
+
+  const getDayName = (dayNo) => {
+    const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    return daysOfWeek[dayNo - 1]; // dayNo is 1-based
+  };
+
   const [open, setOpen] = useState(false);
 
   const handlePress = () => {
     setOpen(!open);
   };
   const currentTime = new Date();
-  const opensAt = new Date(data?.opensAt);
-  const closesAt = new Date(data?.closesAt);
-  const isOpen =
-    currentTime.getTime() >= opensAt?.getTime() &&
-    currentTime.getTime() <= closesAt?.getTime();
-
-  const operatingHours = [
-    {
-      title: "Monday",
-      text: "12:00 - 23:00",
-    },
-    {
-      title: "Tuesday",
-      text: "12:00 - 23:00",
-    },
-    {
-      title: "Wednesday",
-      text: "12:00 - 23:00",
-    },
-    {
-      title: "Thursday",
-      text: "12:00 - 23:00",
-    },
-    {
-      title: "Friday",
-      text: "12:00 - 23:00",
-    },
-    {
-      title: "Saturday",
-      text: "12:00 - 23:00",
-    },
-    {
-      title: "Sunday",
-      text: "Closed",
-    },
-  ];
 
   return (
     <View style={[styles.bottomSheet]}>
@@ -160,20 +138,20 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({data}) => {
                         style={[
                           styles.dot,
                           {
-                            backgroundColor: isOpen
-                              ? `${Color.System.systemError}`
-                              : `${Color.System.systemSuccess}`,
+                            backgroundColor: data?.isOpen
+                              ? `${Color.System.systemSuccess}`
+                              : `${Color.System.systemError}`,
                           },
                         ]}
                       />
                       <Text
                         style={{
-                          color: isOpen
-                            ? `${Color.System.systemError}`
-                            : `${Color.System.systemSuccess}`,
+                          color: data?.isOpen
+                            ? `${Color.System.systemSuccess}`
+                            : `${Color.System.systemError}`,
                         }}
                       >
-                        {isOpen ? "Closed" : "Open"}
+                        {data?.isOpen ? "Open" : "Closed"}
                       </Text>
                     </View>
                     {open ? (
@@ -188,10 +166,12 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({data}) => {
                 {open && (
                   <Animated.View>
                     <View style={{ flexDirection: 'column', gap: 16 }}>
-                      {operatingHours.map((item, index) => (
+                      {timeTable?.map((item, index) => (
                         <TimeAccordion
-                          time={item.text}
-                          title={item.title}
+                          opensAt={item.opensAt}
+                          closesAt={item.closesAt}
+                          isOffDay={item.isOffDay}
+                          title={getDayName(item.dayNoOfTheWeek)}
                           key={index}
                         />
                       ))}

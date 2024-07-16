@@ -20,6 +20,7 @@ import useLocationStore from "@/app/lib/store/userLocation";
 import SvgMarker from "../atom/svgMarker";
 import Color from "@/app/constants/Color";
 import { mapStyle, SERVER_SETTING } from "@/app/constants/serverSettings";
+import moment from "moment";
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
@@ -57,7 +58,7 @@ export default function RestaurantMapView() {
   const [initialRegion, setInitialRegion] = useState(null);
   const [scrollViewHidden, setScrollViewHidden] = useState(true);
   const [isClaimLoading, setIsClaimLoading] = useState(false);
-
+  const currentTime = moment().format('HH:mm');
   const [cardIndexToScroll, setCardIndexToScroll] = useState<number | null>(
     null
   );
@@ -127,9 +128,8 @@ export default function RestaurantMapView() {
       return getRestaurants({
         page: 1,
         limit: 10,
-        distance: 10000,
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
+        time: currentTime,
+        dayNoOfTheWeek: 7,
       });
     },
     // onError(error):{

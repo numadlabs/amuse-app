@@ -107,11 +107,11 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                 <View
                   style={[
                     styles.dot,
-                    { backgroundColor: isOpen ? Color.System.systemSuccess : Color.System.systemError },
+                    { backgroundColor: marker.isOpen ? Color.System.systemSuccess : Color.System.systemError },
                   ]}
                 />
-                <Text style={{ color: isOpen ? Color.System.systemSuccess : Color.System.systemError }}>
-                  {isOpen ? "Open" : "Closed"}
+                <Text style={{ color: marker.isOpen ? Color.System.systemSuccess : Color.System.systemError }}>
+                  {marker.isOpen ? "Open" : "Closed"}
                 </Text>
               </View>
               {marker.isOwned ? (
@@ -131,7 +131,7 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                 >
                   <Reserve color={Color.Gray.gray100} size={16} />
                   <Text style={{ color: Color.Gray.gray50 }}>
-                    {marker.visitCount} Check-ins
+                    {marker.visitCount === null ? 0 : marker.visitCount} Check-ins
                   </Text>
                 </View>
               ) : (

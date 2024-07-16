@@ -14,7 +14,7 @@ const isRunningInExpoGo = Constants.appOwnership === "expo";
 //       .concat(`:3001/api`)}`
 //   : `https://amuse-backend-feb14ba0a8da.herokuapp.com/api`;
 
-const uri = "https://amuse-backend-feb14ba0a8da.herokuapp.com/api";
+const uri = "http://localhost:3001/api";
 
 export const baseUrl = uri;
 
