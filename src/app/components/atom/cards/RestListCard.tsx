@@ -22,14 +22,7 @@ const RestListCard: React.FC<ResListCardProp> = ({
   onPress,
 }) => {
 
-  const opensAt = new Date(marker.opensAt);
-  const closesAt = new Date(marker.closesAt);
-  const currentTime = new Date();
 
-
-  const isOpen =
-    currentTime.getTime() >= opensAt.getTime() &&
-    currentTime.getTime() <= closesAt.getTime();
   return (
     <LinearGradient
       colors={[Color.Brand.card.start, Color.Brand.card.end]}
@@ -71,20 +64,20 @@ const RestListCard: React.FC<ResListCardProp> = ({
                 style={[
                   styles.dot,
                   {
-                    backgroundColor: isOpen
-                      ? `${Color.System.systemError}`
-                      : `${Color.System.systemSuccess}`,
+                    backgroundColor: marker.isOpen
+                      ? `${Color.System.systemSuccess}`
+                      : `${Color.System.systemError}`,
                   },
                 ]}
               />
               <Text
                 style={{
-                  color: isOpen
-                    ? `${Color.System.systemError}`
-                    : `${Color.System.systemSuccess}`,
+                  color: marker.isOpen
+                    ? `${Color.System.systemSuccess}`
+                    : `${Color.System.systemError}`,
                 }}
               >
-                {isOpen ? "Closed" : "Open"}
+                {marker.isOpen ? "Open" : "Closed"}
               </Text>
             </View>
             {marker.isOwned ? (

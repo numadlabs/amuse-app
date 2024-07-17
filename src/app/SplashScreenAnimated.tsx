@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
-import ProgressBar from './components/sections/ProgressBar';
 import * as Updates from 'expo-updates';
 import Color from './constants/Color';
 import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
@@ -81,7 +80,6 @@ const SplashScreenWithLoadingBar = () => {
         console.warn(e);
       }
     }
-
     prepareApp().then(() => SplashScreen.hideAsync());
   }, []);
 

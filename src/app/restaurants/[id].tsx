@@ -25,6 +25,7 @@ import { getAcard } from "../lib/service/mutationHelper";
 import { getPerksByRestaurant, getRestaurantId } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
 import { height, width } from "../lib/utils";
+import moment from "moment";
 
 const Restaurant = () => {
   const { cardId, id } = useLocalSearchParams();
@@ -35,10 +36,12 @@ const Restaurant = () => {
   const { currentLocation } = useLocationStore();
   const [perkId, setPerkId] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const currentTime = moment().format('HH:mm');
+
 
   const { data: restaurantsData, isLoading } = useQuery({
     queryKey: restaurantKeys.detail(id as string),
-    queryFn: () => getRestaurantId(id),
+    queryFn: () => getRestaurantId(id, currentTime),
     enabled: !!currentLocation && !!id,
   });
 
@@ -51,6 +54,8 @@ const Restaurant = () => {
   const toggleBottomSheet = () => {
     setBottomSheet(!bottomSheet);
   };
+
+  
 
   const pressed = useSharedValue(false);
   const animatedStyles = useAnimatedStyle(() => ({

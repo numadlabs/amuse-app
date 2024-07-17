@@ -69,8 +69,8 @@ const MyQrModal = () => {
 
   // Set default values when component mounts
   useEffect(() => {
-    setRestaurantId("1e7c4243-9c14-4b88-ac67-ed3167c255f0");
-    setCardId("675bb6ad-197e-4ed1-b2e0-898b541abaf7");
+    setRestaurantId("6c94ec0b-0331-4514-afed-ad388c71d6ba");
+    setCardId("d5092082-0df3-468d-b913-e650c250e7c9");
     setVisitCount(1);
   }, []);
 

@@ -25,7 +25,6 @@ const Layout = ({ navigation }) => {
   useEffect(() => {
     const prepareApp = async () => {
       try {
-        console.log("checking update")
         if (!__DEV__) { // Only check for updates in production mode
           const updateAvailable = await Updates.checkForUpdateAsync();
           if (updateAvailable.isAvailable) {
@@ -37,14 +36,6 @@ const Layout = ({ navigation }) => {
         } else {
           console.log("Running in development mode");
         }
-
-        // const updateAvailable = await Updates.checkForUpdateAsync();
-        // if (updateAvailable.isAvailable) {
-        //   await Updates.fetchUpdateAsync();
-        //   await Updates.reloadAsync();
-        // } else {
-        //   console.log("No update available");
-        // }
 
         // Get current location
         if (currentLocation == null) {
@@ -59,12 +50,8 @@ const Layout = ({ navigation }) => {
         }
       } catch (error) {
         console.error("Error preparing app:", error);
-        // Handle specific errors here, possibly retrying or providing fallbacks
       } finally {
-        console.log("before condition")
-        // Ensure app readiness state is set when conditions are met
         if (!authState.loading && currentLocation !== null) {
-          console.log("main trigger")
           setAppIsReady(true);
         }
       }
@@ -75,9 +62,6 @@ const Layout = ({ navigation }) => {
   }, [currentLocation, authState.loading]);
 
   // Show loading screen if app is not ready
-  if (!appIsReady) {
-    return <SplashScreenWithLoadingBar />;
-  }
 
   // Redirect to login if user is not authenticated
   if (authState.authenticated === false) {

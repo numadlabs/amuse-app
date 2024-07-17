@@ -52,7 +52,7 @@ function Login() {
       setLoading(true);
       const response = await onLogin(prefix, phoneNumber, password);
       if (response.success) {
-        router.push("/(tabs)");
+        router.replace("/(tabs)");
 
       } else {
         console.log("Login failed:", response.data);
@@ -319,7 +319,7 @@ function Login() {
                     {error}
                   </Text>
                 )}
-                <Button>
+                <Button variant="primary" style={{marginTop:12}} onPress={handleLogin}>
                   {loading ? (
                     <ActivityIndicator size="small" color="white" />
                   ) : (

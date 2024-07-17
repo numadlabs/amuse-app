@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  FlatList,
 } from "react-native";
 import React, { useState } from "react";
 import Color from "../constants/Color";
@@ -38,6 +39,7 @@ import { height, width } from "../lib/utils";
 import Button from "../components/ui/Button";
 import Close from "../components/icons/Close";
 import { usePushNotifications } from "../hooks/usePushNotification";
+import moment from "moment";
 
 const Page = () => {
   const router = useRouter();
@@ -49,18 +51,19 @@ const Page = () => {
   const { authState } = useAuth();
 
   // Notification setup
-  const {expoPushToken, notification} = usePushNotifications()
+  const { expoPushToken, notification } = usePushNotifications()
 
   console.log(expoPushToken)
   const data = JSON.stringify(notification, undefined, 2)
 
 
   console.log("Token: ", expoPushToken?.data);
-  
+
 
 
 
   const { currentLocation } = useLocationStore();
+  const currentTime = moment().format('HH:mm');
   const { data: user, isSuccess } = useQuery({
     queryKey: userKeys.info,
     queryFn: () => {
@@ -99,9 +102,8 @@ const Page = () => {
       return getRestaurants({
         page: 1,
         limit: 10,
-        distance: 10000,
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
+        time: currentTime,
+        dayNoOfTheWeek: 7,
       });
     },
     enabled: !!currentLocation,
@@ -146,75 +148,50 @@ const Page = () => {
             Featured
           </Text>
           {restaurantsArray?.length > 0 && (
-            <View style={{ alignItems: "center", gap: 8, width: width }}>
-              <Animated.ScrollView
-                snapToAlignment="center"
-                entering={SlideInLeft}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                snapToInterval={width - 16}
-                decelerationRate="fast"
-              >
-                <Animated.View
-                  entering={SlideInLeft.springify().damping(15)}
-                  style={{ flexDirection: "row", gap: 8, left: 16, paddingRight: 32 }}
+            <View style={{ alignItems: 'center', gap: 8, width }}>
+              {restaurantsArray?.length > 0 && (
+                <Animated.ScrollView
+                  snapToAlignment="center"
+                  entering={SlideInLeft}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  snapToInterval={width - 16}
+                  decelerationRate="fast"
                 >
-                  {user?.user?.email &&
-                    user?.user?.dateOfBirth &&
-                    user?.user?.nickname &&
-                    user?.user?.location
-                    ?
-                    null
-                    : isQuickInfoVisible && (
-                      <QuickInfo
-                        onPress={() => setIsQuickInfoVisible(false)}
-                        user={user?.user}
-                      />
-                    )}
-                  <TouchableOpacity
-                    onPress={() =>
-                      handleNavigation(filteredRestaurantsArray[0])
-                    }
+                  <Animated.View
+                    entering={SlideInLeft.springify().damping(15)}
+                    style={{ flexDirection: 'row', gap: 8, left: 16, paddingRight: 32 }}
                   >
-                    <HomeRestList
-                      isClaimLoading={true}
-                      marker={filteredRestaurantsArray[0]}
-                      key={filteredRestaurantsArray[0]?.id as string}
-                      onPress={() =>
-                        handleNavigation(filteredRestaurantsArray[0])
-                      }
+                    {user?.user?.email &&
+                      user?.user?.dateOfBirth &&
+                      user?.user?.nickname &&
+                      user?.user?.location
+                      ? null
+                      : isQuickInfoVisible && (
+                        <QuickInfo
+                          onPress={() => setIsQuickInfoVisible(false)}
+                          user={user?.user}
+                        />
+                      )}
+
+                    <FlatList
+                      style={{ gap: 10, flex: 1 }}
+                      ItemSeparatorComponent={() => <View style={{ width: 8, }} />}
+                      data={filteredRestaurantsArray}
+                      horizontal
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={({ item }) => (
+                        <HomeRestList
+                          isClaimLoading={true}
+                          marker={item}
+                          key={item.id as string}
+                          onPress={() => handleNavigation(item)}
+                        />
+                      )}
                     />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() =>
-                      handleNavigation(filteredRestaurantsArray[1])
-                    }
-                  >
-                    <HomeRestList
-                      isClaimLoading={true}
-                      marker={filteredRestaurantsArray[1]}
-                      key={filteredRestaurantsArray[1]?.id as string}
-                      onPress={() =>
-                        handleNavigation(filteredRestaurantsArray[1])
-                      }
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() =>
-                        handleNavigation(filteredRestaurantsArray[2])
-                    }
-                  >
-                    <HomeRestList
-                      isClaimLoading={true}
-                      marker={filteredRestaurantsArray[2]}
-                      key={filteredRestaurantsArray[2]?.id as string}
-                      onPress={() =>
-                        handleNavigation(filteredRestaurantsArray[2])
-                      }
-                    />
-                  </TouchableOpacity>
-                </Animated.View>
-              </Animated.ScrollView>
+                  </Animated.View>
+                </Animated.ScrollView>
+              )}
             </View>
           )}
         </View>

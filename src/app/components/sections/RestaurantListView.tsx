@@ -16,11 +16,15 @@ import Pagination from "@/atom/Pagination";
 import { restaurantKeys } from "@/app/lib/service/keysHelper";
 import { getRestaurants } from "@/app/lib/service/queryHelper";
 import {  RestaurantType } from "@/app/lib/types";
+import moment from "moment";
 
 
 const RestaurantListView = () => {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
+
+  const currentTime = moment().format('HH:mm');
+  
 
   const { data: restaurantsData, isLoading, isError } = useQuery({
     queryKey: restaurantKeys.all,
@@ -28,9 +32,8 @@ const RestaurantListView = () => {
       getRestaurants({
         page: 1,
         limit: 10,
-        distance: 10000,
-        latitude: 0,
-        longitude: 0,
+        time: currentTime,
+        dayNoOfTheWeek: 7
       }),
   });
 
