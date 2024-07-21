@@ -12,6 +12,12 @@ import * as Updates from "expo-updates";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SplashScreenWithLoadingBar from "../SplashScreenAnimated";
 import * as Manifests from 'expo-manifests';
+import { io } from "socket.io-client";
+import { SERVER_SETTING } from "../constants/serverSettings";
+import { useFonts } from "expo-font";
+import { usePushNotifications } from "../hooks/usePushNotification";
+import { useMutation } from "@tanstack/react-query";
+import { registerDeviceNotification } from "../lib/service/mutationHelper";
 
 const Layout = ({ navigation }) => {
 
@@ -19,14 +25,22 @@ const Layout = ({ navigation }) => {
   const [appIsReady, setAppIsReady] = useState(false);
   const { getLocation, currentLocation } = useLocationStore();
   const [notification, setNotification] = useState("");
+  const [fontsLoaded] = useFonts({
+    "Sora-Regular": require("@/public/fonts/Sora-Regular.ttf"),
+    "Sora-Bold": require("@/public/fonts/Sora-Regular.ttf"),
+  });
+  const { expoPushToken, notification: pushNotification } = usePushNotifications();
 
-
+  const { mutateAsync: sendPushToken } = useMutation({
+    mutationFn: registerDeviceNotification
+  })
 
   useEffect(() => {
     const prepareApp = async () => {
       try {
         if (!__DEV__) { // Only check for updates in production mode
           const updateAvailable = await Updates.checkForUpdateAsync();
+
           if (updateAvailable.isAvailable) {
             await Updates.fetchUpdateAsync();
             await Updates.reloadAsync();
@@ -36,6 +50,21 @@ const Layout = ({ navigation }) => {
         } else {
           console.log("Running in development mode");
         }
+
+
+
+
+        // Get notification data
+        const data = JSON.stringify(pushNotification, undefined, 2)
+
+        if (expoPushToken?.data) {
+          console.log("Sending push token");
+          
+          sendPushToken({
+            pushToken: expoPushToken?.data
+          })
+        }
+
 
         // Get current location
         if (currentLocation == null) {
@@ -51,7 +80,7 @@ const Layout = ({ navigation }) => {
       } catch (error) {
         console.error("Error preparing app:", error);
       } finally {
-        if (!authState.loading && currentLocation !== null) {
+        if (!authState.loading && currentLocation !== null && fontsLoaded) {
           setAppIsReady(true);
         }
       }
@@ -59,9 +88,12 @@ const Layout = ({ navigation }) => {
 
     // Call prepareApp function on component mount
     prepareApp();
-  }, [currentLocation, authState.loading]);
+  }, [currentLocation, authState.loading, fontsLoaded]);
 
   // Show loading screen if app is not ready
+  if (!appIsReady) {
+    return <SplashScreenWithLoadingBar />;
+  }
 
   // Redirect to login if user is not authenticated
   if (authState.authenticated === false) {

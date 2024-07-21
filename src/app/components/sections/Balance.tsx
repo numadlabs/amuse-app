@@ -63,7 +63,7 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle, aed }) => {
                     lineHeight: 20,
                   }}
                 >
-                  AED
+                  CZK
                 </Text>
               </View>
             </View>

@@ -1,16 +1,17 @@
 import { create } from "zustand";
-import data from 'prefix.json'
-
+import data from "prefix.json";
 
 export interface SignUpStore {
   prefix: string;
   phoneNumber: string;
   password: string;
   nickname: string;
+  verificationCode: number;
   setPrefix: (prefix: string) => void;
   setPhoneNumber: (phoneNumber: string) => void;
   setPassword: (password: string) => void;
   setNickname: (nickname: string) => void;
+  setVerificationCode: (verificationCode: number) => void;
 }
 
 export const useSignUpStore = create<SignUpStore>((set) => ({
@@ -18,8 +19,10 @@ export const useSignUpStore = create<SignUpStore>((set) => ({
   phoneNumber: "",
   password: "",
   nickname: "",
-  setPrefix: (prefix) => set({ prefix }),
-  setPhoneNumber: (phoneNumber) => set({ phoneNumber }),
-  setPassword: (password) => set({ password }),
-  setNickname: (nickname) => set({ nickname }),
+  verificationCode: 0,
+  setPrefix: (prefix: string) => set({ prefix }),
+  setPhoneNumber: (phoneNumber: string) => set({ phoneNumber }),
+  setPassword: (password: string) => set({ password }),
+  setNickname: (nickname: string) => set({ nickname }),
+  setVerificationCode: (verificationCode: number) => set({ verificationCode }),
 }));

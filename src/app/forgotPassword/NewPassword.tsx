@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -18,6 +19,9 @@ import Button from "../components/ui/Button";
 import Color from "../constants/Color";
 import { LinearGradient } from "expo-linear-gradient";
 import { usePasswordStore } from "../lib/store/passwordStore";
+import Header from "../components/layout/Header";
+import { useMutation } from "@tanstack/react-query";
+import { forgotPassword } from "../lib/service/mutationHelper";
 
 const validatePassword = (password: string): boolean => {
   if (password.length < 8) {
@@ -39,11 +43,10 @@ const validatePassword = (password: string): boolean => {
 const Password = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { prefix, phoneNumber } = useLocalSearchParams(); 
-  console.log(prefix, phoneNumber)
-  const { password, setPassword } = usePasswordStore();
+  const { prefix, phoneNumber, verificationCode, password, setPassword } = usePasswordStore()
   const [focusedInput, setFocusedInput] = useState<'password' | 'confirmPassword' | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false)
   const [passwordPlaceholder, setPasswordPlaceholder] =
     useState<string>("Password");
 
@@ -79,24 +82,46 @@ const Password = () => {
   const onBlurPassword = () => {
     setPasswordPlaceholder("Password");
   };
-  const handleNavigation = () => {
-    if (isPasswordValid && doPasswordsMatch) {
-      console.log(phoneNumber, prefix, password);
-      router.push({
-        pathname: "/signUp/NickName",
-        params: {
-          phoneNumber: phoneNumber,
+
+  const { mutateAsync: forgotPasswordMutation } = useMutation({
+    mutationFn: forgotPassword,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (data, variables) => {
+      console.log(data);
+    },
+  });
+
+  const handleNavigation = async () => {
+    try {
+      if (isPasswordValid && doPasswordsMatch) {
+        setLoading(true)
+        console.log(phoneNumber, prefix, password, verificationCode);
+
+        await forgotPasswordMutation({
           prefix: prefix,
+          telNumber: phoneNumber,
+          telVerificationCode: verificationCode,
           password: password,
-        },
-      });
-    } else {
-      console.log("Password does not meet the validation rules or passwords do not match.");
+        })
+
+        router.replace({
+          pathname: "/forgotPassword/Success",
+        });
+        setLoading(false)
+      } else {
+        console.log("Password does not meet the validation rules or passwords do not match.");
+      }
+
+    } catch (error) {
+
     }
   };
 
   return (
     <>
+      <Header title='Forgot password?' />
       <Steps activeStep={3} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -118,7 +143,7 @@ const Password = () => {
                   <Text style={styles.topText}>Create password</Text>
                 </View>
                 <View style={styles.inputContainer}>
-                <LinearGradient
+                  <LinearGradient
                     colors={
                       focusedInput === 'password'
                         ? [Color.Brand.main.start, Color.Brand.main.end]
@@ -132,9 +157,9 @@ const Password = () => {
                       padding: 1,
                     }}
                   >
-                  <View
-                    style={{
-                      alignItems: "center",
+                    <View
+                      style={{
+                        alignItems: "center",
                         gap: 12,
                         alignContent: "center",
                         flexDirection: "row",
@@ -143,32 +168,32 @@ const Password = () => {
                         width: "100%",
                         backgroundColor: Color.Gray.gray500,
                         borderRadius: 16,
-                    }}
-                  >
-                    <TextInput
-                      secureTextEntry={!showPassword}
-                      placeholder={passwordPlaceholder}
-                      placeholderTextColor={Color.Gray.gray100}
-                      onFocus={() => setFocusedInput('password')}
-                      onBlur={() => setFocusedInput(null)}
-                      style={{
-                        flex: 1,
-                        fontSize: 16,
-                        fontWeight: "400",
-                        lineHeight: 20,
-                        color: Color.base.White,
                       }}
-                      value={password}
-                      onChangeText={setPassword}
-                    />
-                    <TouchableOpacity onPress={toggleShowPassword}>
-                      <Ionicons
-                        name={showPassword ? "eye-outline" : "eye-off-outline"}
-                        size={24}
-                        color={Color.Gray.gray50}
+                    >
+                      <TextInput
+                        secureTextEntry={!showPassword}
+                        placeholder={passwordPlaceholder}
+                        placeholderTextColor={Color.Gray.gray100}
+                        onFocus={() => setFocusedInput('password')}
+                        onBlur={() => setFocusedInput(null)}
+                        style={{
+                          flex: 1,
+                          fontSize: 16,
+                          fontWeight: "400",
+                          lineHeight: 20,
+                          color: Color.base.White,
+                        }}
+                        value={password}
+                        onChangeText={setPassword}
                       />
-                    </TouchableOpacity>
-                  </View>
+                      <TouchableOpacity onPress={toggleShowPassword}>
+                        <Ionicons
+                          name={showPassword ? "eye-outline" : "eye-off-outline"}
+                          size={24}
+                          color={Color.Gray.gray50}
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </LinearGradient>
                   <LinearGradient
                     colors={
@@ -184,9 +209,9 @@ const Password = () => {
                       padding: 1,
                     }}
                   >
-                  <View
-                    style={{
-                      alignItems: "center",
+                    <View
+                      style={{
+                        alignItems: "center",
                         gap: 12,
                         alignContent: "center",
                         flexDirection: "row",
@@ -195,32 +220,32 @@ const Password = () => {
                         width: "100%",
                         backgroundColor: Color.Gray.gray500,
                         borderRadius: 16,
-                    }}
-                  >
-                    <TextInput
-                      secureTextEntry={!showPassword}
-                      placeholder={passwordPlaceholder}
-                      placeholderTextColor={Color.Gray.gray100}
-                      onFocus={() => setFocusedInput('confirmPassword')}
-                      onBlur={() => setFocusedInput(null)}
-                      style={{
-                        flex: 1,
-                        fontSize: 16,
-                        fontWeight: "400",
-                        lineHeight: 20,
-                        color: Color.base.White,
                       }}
-                      value={confirmPassword}
-                      onChangeText={setConfirmPassword}
-                    />
-                    <TouchableOpacity onPress={toggleShowPassword}>
-                      <Ionicons
-                        name={showPassword ? "eye-outline" : "eye-off-outline"}
-                        size={24}
-                        color={Color.Gray.gray50}
+                    >
+                      <TextInput
+                        secureTextEntry={!showPassword}
+                        placeholder={passwordPlaceholder}
+                        placeholderTextColor={Color.Gray.gray100}
+                        onFocus={() => setFocusedInput('confirmPassword')}
+                        onBlur={() => setFocusedInput(null)}
+                        style={{
+                          flex: 1,
+                          fontSize: 16,
+                          fontWeight: "400",
+                          lineHeight: 20,
+                          color: Color.base.White,
+                        }}
+                        value={confirmPassword}
+                        onChangeText={setConfirmPassword}
                       />
-                    </TouchableOpacity>
-                  </View>
+                      <TouchableOpacity onPress={toggleShowPassword}>
+                        <Ionicons
+                          name={showPassword ? "eye-outline" : "eye-off-outline"}
+                          size={24}
+                          color={Color.Gray.gray50}
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </LinearGradient>
                 </View>
                 {!doPasswordsMatch && (
@@ -293,7 +318,7 @@ const Password = () => {
                   size="default"
                   onPress={handleNavigation}
                 >
-                  Confirm
+                     {loading ? <ActivityIndicator/> : "Confirm"}
                 </Button>
               </View>
             </KeyboardAvoidingView>

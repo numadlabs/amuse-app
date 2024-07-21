@@ -1,80 +1,107 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import Color from '@/app/constants/Color'
-import TickCircle from '@/app/components/icons/TickCircle'
-import Button from '@/app/components/ui/Button'
-import { router, useNavigation } from 'expo-router'
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import Color from "../constants/Color";
+import Button from "../components/ui/Button";
+import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import { useQueryClient } from "@tanstack/react-query";
+import { userKeys } from "../lib/service/keysHelper";
+import TickCircle from "../components/icons/TickCircle";
 
 const Success = () => {
+  // Initialize the query client
+  const queryClient = useQueryClient();
+
+  // Handler for navigation
+  const handleNavigation = () => {
+    // Invalidate queries related to user info
+    queryClient.invalidateQueries({ queryKey: userKeys.info });
+    // Navigate to the main tabs
+    router.navigate("/(tabs)");
+  };
+
   return (
     <View style={styles.body}>
-      <View style={styles.container}>
+      {/* Linear gradient for styling the success message container */}
+      <LinearGradient
+        colors={[Color.Brand.card.start, Color.Brand.card.end]}
+        start={{ x: 1, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.container}
+      >
+        {/* Container for the success icon */}
         <View style={styles.svgContainer}>
           <TickCircle />
-          <Text style={styles.topText}>
-            Password changed
-          </Text>
-          <Text style={styles.bottomText}>
-          Your password has been changed. 
-          </Text>
         </View>
-      </View>
+        {/* Congratulations message */}
+        <Text style={styles.topText}>Password changed</Text>
+        {/* Reward message */}
+        <Text style={styles.bottomText}>
+        Your password has been changed. 
+        </Text>
+      </LinearGradient>
+      {/* Container for the confirm button */}
       <View style={styles.buttonContainer}>
-        <Button variant='primary' textStyle='primary' size='default' onPress={() => router.navigate('/Home')}>Go to Log in</Button>
+        <Button
+          variant="tertiary"
+          textStyle="primary"
+          size="default"
+          onPress={handleNavigation}
+        >
+          Confirm
+        </Button>
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default Success
+export default Success;
 
+// Styles for the component
 const styles = StyleSheet.create({
   body: {
-    backgroundColor: Color.base.White,
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 16
+    backgroundColor: Color.Gray.gray600,
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    flex: 1,
   },
   container: {
-    width: '100%',
+    width: "100%",
     height: 212,
-    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
     paddingTop: 24,
     paddingBottom: 32,
-    backgroundColor: Color.base.White,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
+    marginTop: 16,
     elevation: 4,
-    borderRadius: 32
+    borderRadius: 32,
   },
   svgContainer: {
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   topText: {
-    color: Color.Gray.gray500,
-    fontWeight: 'bold',
+    color: Color.base.White,
+    fontWeight: "bold",
     fontSize: 24,
-    marginTop: 8
+    marginTop: 8,
+    textAlign: "center",
   },
   bottomText: {
     marginTop: 12,
-    color: Color.Gray.gray400,
+    color: Color.Gray.gray100,
     fontSize: 16,
-    textAlign: 'center'
+    textAlign: "center",
   },
   buttonContainer: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     bottom: 10,
     paddingHorizontal: 20,
-    marginBottom: 20
+    marginBottom: 20,
   },
-})
+});

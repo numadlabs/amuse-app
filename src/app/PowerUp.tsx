@@ -1,12 +1,13 @@
 import { router, useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Dimensions
+  Dimensions,
+  ActivityIndicator
 } from "react-native";
 import Color from "./constants/Color";
 import Close from "./components/icons/Close";
@@ -14,14 +15,24 @@ import Popup from "./components/(feedback)/Popup";
 import Toast from "react-native-toast-message";
 import PerkGradient from "./components/icons/PerkGradient";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { redeemBonus, useBonus } from "./lib/service/mutationHelper";
+import { generatePerkQr, redeemBonus, useBonus } from "./lib/service/mutationHelper";
 import { restaurantKeys, userKeys } from "./lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
+import { io } from "socket.io-client";
+import { useAuth } from "./context/AuthContext";
+import QRCode from "react-native-qrcode-svg";
+import { SERVER_SETTING } from "./constants/serverSettings";
 
 const { width, height } = Dimensions.get("window");
 
 const PowerUp = () => {
 
+
+
+  const { authState } = useAuth();
+
+  const socket = io(SERVER_SETTING.API_URL);
+  const userId = authState.userId;
 
   const showToast = () => {
     setTimeout(() => {
@@ -34,24 +45,36 @@ const PowerUp = () => {
   const { id, name, restaurantId } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [qrData, setQrdata] = useState("")
   const queryClient = useQueryClient()
-  console.log(restaurantId)
 
+  socket.on("bonus-scan", (data) => {
+    console.log("Listening on server", data);
+  });
+
+
+  useEffect(() => {
+    createBonusQrMutation({
+      id: id as string,
+    });
+  }, [])
 
 
   const {
     data,
     error,
     status,
-    mutateAsync: createBonusMutation,
+    mutateAsync: createBonusQrMutation,
   } = useMutation({
-    mutationFn: useBonus,
+    mutationFn: generatePerkQr,
     onError: (error) => {
     },
     onSuccess: (data, variables) => {
       try {
-        const resp = createRedeemBonusMutation(data.data.data);
-      
+        console.log("Successfully created");
+        const newQrdata = data?.data?.data?.encryptedData;
+        setQrdata(newQrdata);
+        
       } catch (error) {
         console.error("Bonus mutation failed:", error);
       }
@@ -59,34 +82,23 @@ const PowerUp = () => {
   });
 
 
-  const { mutateAsync: createRedeemBonusMutation } = useMutation({
-    mutationFn: redeemBonus,
-    onError: (error) => {
-      console.log(error);
-    },
-    onSuccess: (data, variables) => {
-      console.log("🚀 ~ Bonus ~ data:", data.data.data);
+  // const { mutateAsync: createRedeemBonusMutation } = useMutation({
+  //   mutationFn: redeemBonus,
+  //   onError: (error) => {
+  //     console.log(error);
+  //   },
+  //   onSuccess: (data, variables) => {
+  //     console.log("🚀 ~ Bonus ~ data:", data.data.data);
 
-    },
-  });
+  //   },
+  // });
 
-  const handleUseBonus = async (bonusId: string) => {
-    try {
-      const data = await createBonusMutation(bonusId);
-      
-      setPopupVisible(!isPopupVisible);
-    } catch (error) {
-      console.log("Bonus mutation failed:", error);
-    }
-
-  };
 
   const handleNavigation = () => {
     queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
     queryClient.invalidateQueries({ queryKey: userKeys.cards });
     queryClient.invalidateQueries({ queryKey: userKeys.info });
     router.back()
-
   }
   return (
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
@@ -101,17 +113,14 @@ const PowerUp = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.container} key={id as string}>
-        <TouchableOpacity onPress={() => handleUseBonus(id as string)}>
+
         <LinearGradient
-                  colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                  style={[styles.qrContainer]}
-                >
-          <Image
-            style={{ width: width - 128, height: width - 128 }}
-            source={require("@/public/images/pqr.png")}
-          />
-          </LinearGradient>
-        </TouchableOpacity>
+          colors={[Color.Brand.card.start, Color.Brand.card.end]}
+          style={[styles.qrContainer]}
+        >
+          {loading ? <ActivityIndicator /> : <QRCode backgroundColor="transparent" color={Color.base.White} size={width / 1.3} value={`data:image/png;base64,${qrData}`} />}
+        </LinearGradient>
+
 
         <Popup
           title="Perk consumed."
@@ -144,7 +153,7 @@ const PowerUp = () => {
                 lineHeight: 18,
               }}
             >
-             Show this to your waiter to redeem.{"\n"} Do not worry, they are pros.
+              Show this to your waiter to redeem.{"\n"} Do not worry, they are pros.
 
             </Text>
           </View>
@@ -180,7 +189,7 @@ const styles = StyleSheet.create({
   },
   container: {
     gap: 32,
-    marginBottom:50,
+    marginBottom: 50,
     paddingHorizontal: 16,
     flex: 1,
     justifyContent: "center",

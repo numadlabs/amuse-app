@@ -20,6 +20,10 @@ import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
 import { SERVER_SETTING } from "../constants/serverSettings";
 import { LinearGradient } from "expo-linear-gradient";
 import Close from "../components/icons/Close";
+import { io } from "socket.io-client";
+import { useAuth } from "../context/AuthContext";
+import QRCode from "react-native-qrcode-svg";
+
 
 const { width } = Dimensions.get("window");
 const markerSize = 250;
@@ -35,6 +39,25 @@ const MyQrModal = () => {
   const [visitCount, setVisitCount] = useState(0);
   const [powerUp, setPowerUp] = useState("");
   const [btcAmount, setBTCAmount] = useState("");
+  const { authState } = useAuth()
+  const [qrData, setQrdata] = useState("")
+
+  const socket = io(SERVER_SETTING.API_URL);
+  const userId = authState.userId;
+
+  socket.on("connect", () => {
+    console.log("Connected to server");
+    socket.emit("register", userId);
+  });
+
+  socket.on("tap-scan", (data) => {
+    console.log("Listening on server", data);
+  });
+
+  console.log("server: ", socket)
+  socket.on("connect", () => {
+    console.log("socket connected: ", socket.connected); // true
+  });
 
   const togglePopup = () => {
     setPopupVisible(!isPopupVisible);
@@ -69,17 +92,20 @@ const MyQrModal = () => {
 
   // Set default values when component mounts
   useEffect(() => {
-    setRestaurantId("6c94ec0b-0331-4514-afed-ad388c71d6ba");
-    setCardId("d5092082-0df3-468d-b913-e650c250e7c9");
-    setVisitCount(1);
+    createTapMutation();
   }, []);
 
   // Mutation for creating a tap
   const { mutateAsync: createTapMutation } = useMutation({
     mutationFn: generateTap,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       try {
-        const resp = createRedeemMutation(data.data.data);
+        const newQrdata = data?.data?.data?.encryptedData;
+        setQrdata(newQrdata);
+
+        // Log the new QR data immediately after setting it
+        console.log('QR Data from mutation:', qrData);
+
       } catch (error) {
         console.error("Redeem mutation failed:", error);
       }
@@ -128,7 +154,7 @@ const MyQrModal = () => {
           params: { cardId: cardId as any }
         });
       } else if (userCard) {
-        await createTapMutation(restaurantId);
+        await createTapMutation();
       }
     } catch (error) {
       console.log("Map mutation failed:", error);
@@ -153,7 +179,8 @@ const MyQrModal = () => {
                   colors={[Color.Brand.card.start, Color.Brand.card.end]}
                   style={[styles.button]}
                 >
-                  <Image source={require('../../public/images/pqr.png')} style={{ width: width - 128, height: width - 128 }} />
+                  {loading ? <ActivityIndicator/> :  <QRCode backgroundColor="transparent" color={Color.base.White} size={width/1.3} value={`data:image/png;base64,${qrData}`} />}
+                 
                 </LinearGradient>
               </TouchableOpacity>
               <View style={{ marginHorizontal: 32 }}>

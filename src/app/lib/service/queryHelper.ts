@@ -70,7 +70,7 @@ export async function getPerksByRestaurant(id) {
 }
 
 export async function getPurchaseablePerks(id) {
-  return axiosClient.get(`/bonus/${id}/restaurant`).then((response) => {
+  return axiosClient.get(`/bonus/${id}/restaurant?type=REDEEMABLE`).then((response) => {
     if (response.data.success) {
       return response?.data.data;
     } else {
@@ -113,9 +113,19 @@ export async function getTimeTable(id) {
 export async function getRestaurantId(id, time) {
   return axiosClient.get(`/restaurants/${id}?dayNoOfTheWeek=7&time=${time}`).then((response) => {
     if (response.data.success) {
-      return response?.data.restaurant;
+      return response?.data?.data?.restaurant;
     } else {
       throw new Error(response.data.error);
     }
   });
+}
+
+export async function getUserTiers() {
+  return axiosClient.get('/userTiers').then((response) => {
+    if (response.data.success) {
+      return response?.data.data
+    } else {
+      throw new Error(response.data.error)
+    }
+  })
 }

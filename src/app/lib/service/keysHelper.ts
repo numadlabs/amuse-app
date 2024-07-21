@@ -22,5 +22,6 @@ export const userKeys = {
   info: ["userInfo"] as const,
   perks: ["userPerks"] as const,
   cards: ["userCards"] as const,
+  tier: ["userTiers"] as const,
   taps: ["userTaps"] as const,
 };

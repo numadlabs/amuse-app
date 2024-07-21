@@ -41,6 +41,7 @@ import Close from "../components/icons/Close";
 import { usePushNotifications } from "../hooks/usePushNotification";
 import moment from "moment";
 
+
 const Page = () => {
   const router = useRouter();
   const [refreshPage, setRefreshPage] = useState<boolean>(false);
@@ -51,15 +52,6 @@ const Page = () => {
   const { authState } = useAuth();
 
   // Notification setup
-  const { expoPushToken, notification } = usePushNotifications()
-
-  console.log(expoPushToken)
-  const data = JSON.stringify(notification, undefined, 2)
-
-
-  console.log("Token: ", expoPushToken?.data);
-
-
 
 
   const { currentLocation } = useLocationStore();
@@ -71,6 +63,7 @@ const Page = () => {
     },
     enabled: !!authState.userId,
   });
+  
 
 
   const { data: cards = [] } = useQuery({
