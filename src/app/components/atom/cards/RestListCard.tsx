@@ -47,7 +47,7 @@ const RestListCard: React.FC<ResListCardProp> = ({
             <Text numberOfLines={1} ellipsizeMode="tail" style={styles.title}>
               {marker.name}
             </Text>
-            <Text style={styles.category}>{marker.category}</Text>
+            <Text style={styles.category}>{marker.categoryName}</Text>
           </View>
           <View
             style={{

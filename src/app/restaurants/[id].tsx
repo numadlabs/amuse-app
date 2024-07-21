@@ -97,7 +97,7 @@ const Restaurant = () => {
           image={restaurantsData?.logo}
           onPress={() => ""}
           nftImage={restaurantsData?.nftImageUrl}
-          category={restaurantsData?.category}
+          category={restaurantsData?.categoryName}
           hasBonus={false}
           visitCount={restaurantsData?.visitCount || 0}
           target={perks?.followingBonus?.target}

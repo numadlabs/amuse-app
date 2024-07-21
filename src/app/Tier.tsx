@@ -1,91 +1,78 @@
-import { View, Text } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { View, FlatList, Text } from 'react-native';
+import React from 'react';
 import Header from './components/layout/Header';
 import TierCard from './components/atom/cards/TierCard';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Color from './constants/Color';
 
+import { useQuery } from '@tanstack/react-query';
+import { userKeys } from './lib/service/keysHelper';
+import { getUserById, getUserTaps, getUserTiers } from './lib/service/queryHelper';
+import { useAuth } from './context/AuthContext';
+import { ActivityIndicator } from 'react-native-paper';
+
 const Tier = () => {
-  const [visitCount, setVisitCount] = useState(0);
-  const [userTier, setUserTier] = useState('Bronze');
+  const { authState } = useAuth();
 
-  useEffect(() => {
-    const loadUserData = async () => {
-      try {
-        const savedVisitCount = await AsyncStorage.getItem('visitCount');
-        const savedTier = await AsyncStorage.getItem('userTier');
+  const { data: userTier = [], isLoading: isUserTierLoading } = useQuery({
+    queryKey: userKeys.tier,
+    queryFn: getUserTiers,
+  });
 
-        if (savedVisitCount !== null) {
-          const visitCountParsed = parseInt(savedVisitCount);
-          console.log(`Loaded visit count: ${visitCountParsed}`);
-          setVisitCount(visitCountParsed);
-        }
+  const { data: user, isLoading: isUserLoading } = useQuery({
+    queryKey: userKeys.info,
+    queryFn: () => getUserById(authState.userId),
+    enabled: !!authState.userId,
+  });
 
-        if (savedTier !== null) {
-          console.log(`Loaded user tier: ${savedTier}`);
-          setUserTier(savedTier);
-        }
-      } catch (error) {
-        console.error('Error loading user data:', error);
-      }
-    };
+  const { data: taps = [] } = useQuery({
+    queryKey: userKeys.taps,
+    queryFn: () => {
+      return getUserTaps();
+    },
+  });
 
-    loadUserData();
-  }, []);
+  if (isUserTierLoading || isUserLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Color.Gray.gray600 }}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
 
-  useEffect(() => {
-    const updateUserTier = async () => {
-      let newTier = 'Bronze';
-      if (visitCount >= 10) {
-        newTier = 'Gold';
-      } else if (visitCount >= 6) {
-        newTier = 'Silver';
-      }
+  // Define the order of tiers
+  const tierOrder = ['Bronze', 'Silver', 'Gold', 'Platinum'];
 
-      if (newTier !== userTier) {
-        await AsyncStorage.setItem('userTier', newTier);
-        setUserTier(newTier);
-      }
-    };
+  // Sort userTier array to follow the predefined order
+  const orderedUserTier = [...userTier].sort((a, b) => {
+    return tierOrder.indexOf(a.name) - tierOrder.indexOf(b.name);
+  });
 
-    updateUserTier();
-  }, [visitCount]);
-
-  const calculateProgress = (tier) => {
-    const tiers = {
-      Bronze: { start: 0, target: 3 },
-      Silver: { start: 3, target: 6 },
-      Gold: { start: 6, target: 10 },
-    };
-    const { start, target } = tiers[tier];
-
-    return {
-      current: visitCount - start > 0 ? visitCount - start : 0,
-      target: target - start,
-    };
-  };
-
-  const bronzeProgress = calculateProgress('Bronze');
-  const silverProgress = calculateProgress('Silver');
-  const goldProgress = calculateProgress('Gold');
+  // Find the active tier and move it to the top
+  const activeTierIndex = orderedUserTier.findIndex(tier => tier.id === user?.user.userTierId);
+  if (activeTierIndex > -1) {
+    const [activeTier] = orderedUserTier.splice(activeTierIndex, 1);
+    orderedUserTier.unshift(activeTier);
+  }
 
   return (
     <>
       <Header title="Tier" />
       <View style={{ padding: 16, gap: 16, flex: 1, backgroundColor: Color.Gray.gray600 }}>
-        <TierCard
-          isActive={userTier === 'Bronze'}
-          title='Bronze'
-          perks={["10% more Bitcoin for every check-in", "Complimentary bites along the way"]}
-          current={bronzeProgress.current}
-          target={bronzeProgress.target}
-        />
-        <TierCard
-          isActive={userTier === 'Silver'}
-          title='Silver'
-          perks={["20% more Bitcoin for every check-in", "Complimentary bites along the way"]}
-          current={silverProgress.current}
-          target={silverProgress.target}
+        <FlatList
+          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+          data={orderedUserTier}
+          keyExtractor={(item, index) => item.id}
+          renderItem={({ item }) => (
+            <TierCard
+              isActive={user?.user.userTierId === item.id}
+              title={item?.name}
+              perks={[`${item?.rewardMultiplier}X more Bitcoin for every check-in`]}
+              current={taps?.data?.taps.length === 0
+                ? "0"
+                : taps?.data?.taps.length}
+              target={item.requiredNo}
+            />
+          )}
         />
       </View>
     </>

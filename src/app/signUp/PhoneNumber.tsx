@@ -30,6 +30,8 @@ import { useSignUpStore } from "../lib/store/signUpStore";
 import { height } from "../lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
 import data from 'prefix.json'
+import { sendRegisterOtp } from "../lib/service/mutationHelper";
+import { useMutation } from "@tanstack/react-query";
 
 const PhoneNumber = () => {
   const { prefix, setPrefix, phoneNumber, setPhoneNumber } = useSignUpStore();
@@ -77,15 +79,15 @@ const PhoneNumber = () => {
   const handleNavigation = () => {
     if (phoneNumber) {
       setLoading(true);
+      handleOtp(prefix, phoneNumber,)
       router.push({
-        pathname: "/signUp/Password",
+        pathname: "/signUp/Otp",
         params: {
           prefix: prefix,
           phoneNumber: phoneNumber,
         },
       });
     }
-
     console.log(prefix, phoneNumber);
   };
 
@@ -95,6 +97,30 @@ const PhoneNumber = () => {
       togglePrefix();
     }
   };
+
+  const {
+    mutateAsync: sendOtp,
+  } = useMutation({
+    mutationFn: sendRegisterOtp,
+    onError: (error) => {
+    },
+    onSuccess: (data, variables) => {
+      try {
+      } catch (error) {
+        console.error("Send OTP failed:", error);
+      }
+    },
+  });
+
+
+  const handleOtp = (prefix: string, phoneNumber: string) => {
+    sendOtp({
+      prefix: prefix,
+      telNumber: phoneNumber,
+    })
+  }
+
+
   return (
     <>
       <Steps activeStep={1} />

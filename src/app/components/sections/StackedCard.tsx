@@ -31,7 +31,7 @@ const StackedCard = () => {
 
 
   console.log(cards);
-  
+
 
   // const fetchPerksQueries = cards?.data?.cards.map(card => {
   //   return useQuery({
@@ -122,11 +122,11 @@ const StackedCard = () => {
                 nftImage={card.nftImageUrl}
                 image={card.logo}
                 onPress={() => handleNavigation(card)}
-                category={card.category}
+                category={card.categoryName}
                 hasBonus={card.hasBonus}
                 visitCount={card.visitCount}
                 target={3}
-                // target={perks?.followingBonus?.target}
+              // target={perks?.followingBonus?.target}
               />
             </Animated.View>
           ))}

@@ -2,8 +2,9 @@ export const SERVER_SETTING = {
   TOKEN_KEY: "JWT",
   REFRESH_TOKEN_KEY: "REFRESH_TOKEN_KEY",
   USER_ID: "USER_ID",
+  API_URL: "https://amuse-backend-feb14ba0a8da.herokuapp.com",
   PERK_FREQUENCY: 3,
-  CDN_LINK: "https://d2fovtzya8mbko.cloudfront.net/",
+  CDN_LINK: "https://d2fovtzya8mbko.cloudfront.net/restaurant/",
 };
 
 export const mapStyle = [

@@ -6,6 +6,8 @@ import { AuthProvider } from "./context/AuthContext";
 import { StatusBar } from "expo-status-bar";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "./constants/ToasterConfig";
+import { usePushNotifications } from "./hooks/usePushNotification";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient();
 
@@ -14,14 +16,7 @@ export const unstable_settings = {
 };
 
 export default function Layout() {
-  const [fontsLoaded] = useFonts({
-    "Sora-Regular": require("../public/fonts/Sora-Regular.ttf"),
-    "Sora-Bold": require("../public/fonts/Sora-Regular.ttf"),
-    // Add more fonts if needed
-  });
-  if (!fontsLoaded) {
-    return null; // or a loading indicator
-  }
+
 
   return (
     <QueryClientProvider client={queryClient}>

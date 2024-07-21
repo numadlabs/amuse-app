@@ -34,6 +34,7 @@ export type RestaurantType = {
   category: string;
   location: string;
   latitude: number;
+  categoryName: string;
   longitude: number;
   opensAt: string;
   restaurantId:string;
