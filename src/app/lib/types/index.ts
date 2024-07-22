@@ -34,6 +34,7 @@ export type RestaurantType = {
   category: string;
   location: string;
   latitude: number;
+  categoryName: string;
   longitude: number;
   opensAt: string;
   restaurantId:string;
@@ -45,6 +46,7 @@ export type RestaurantType = {
   expiryInfo: string;
   instruction: string;
   nftImageUrl: string | string[];
+  isOpen: boolean;
   isOwned: boolean;
   visitCount: number;
 };

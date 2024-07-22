@@ -2,8 +2,8 @@ import LoginSchema from "@/app/validators/LoginSchema";
 import { axiosClient } from "../axios";
 import * as z from "zod";
 
-export async function getRestaurantById(id: string) {
-  return axiosClient.get(`/restaurants/${id}`).then((response) => {
+export async function getRestaurantById(id: string, time: string) {
+  return axiosClient.get(`/restaurants/${id}?dayNoOfTheWeek=7&time=${time}`).then((response) => {
     console.log("🚀 ~ returnaxiosClient.get ~ response:", response.data);
     if (response.data.success) {
       return response?.data.restaurant;
@@ -16,19 +16,17 @@ export async function getRestaurantById(id: string) {
 export async function getRestaurants({
   page,
   limit,
-  distance,
-  latitude,
-  longitude,
+  time,
+  dayNoOfTheWeek,
 }: {
   page: number;
   limit: number;
-  distance: number;
-  latitude: number;
-  longitude: number;
+  time: string;
+  dayNoOfTheWeek: number;
 }) {
   return axiosClient
     .get(
-      `/restaurants?page=${page}&limit=${limit}&distance=${distance}&latitude=${latitude}&longitude=${longitude}`
+      `/restaurants?page=${page}&limit=${limit}&time=${time}&dayNoOfTheWeek=${dayNoOfTheWeek}`
     )
     .then((response) => {
       if (response.data.success) {
@@ -72,7 +70,7 @@ export async function getPerksByRestaurant(id) {
 }
 
 export async function getPurchaseablePerks(id) {
-  return axiosClient.get(`/bonus/${id}/restaurant`).then((response) => {
+  return axiosClient.get(`/bonus/${id}/restaurant?type=REDEEMABLE`).then((response) => {
     if (response.data.success) {
       return response?.data.data;
     } else {
@@ -101,13 +99,33 @@ export async function getUserById(userID: string) {
   });
 }
 
-
-export async function getRestaurantId(id) {
-  return axiosClient.get(`/restaurants/${id}`).then((response) => {
+export async function getTimeTable(id) {
+  return axiosClient.get(`/timetables/${id}/restaurant`).then((response) => {
     if (response.data.success) {
-      return response?.data.restaurant;
+      return response.data.data
+    } else {
+      throw new Error(response.data.error)
+    }
+  })
+}
+
+
+export async function getRestaurantId(id, time) {
+  return axiosClient.get(`/restaurants/${id}?dayNoOfTheWeek=7&time=${time}`).then((response) => {
+    if (response.data.success) {
+      return response?.data?.data?.restaurant;
     } else {
       throw new Error(response.data.error);
     }
   });
+}
+
+export async function getUserTiers() {
+  return axiosClient.get('/userTiers').then((response) => {
+    if (response.data.success) {
+      return response?.data.data
+    } else {
+      throw new Error(response.data.error)
+    }
+  })
 }

@@ -21,39 +21,52 @@ import { SERVER_SETTING } from "../constants/serverSettings";
 import { LinearGradient } from "expo-linear-gradient";
 import Close from "../components/icons/Close";
 import { SafeAreaView } from "react-native-safe-area-context";
-const { width, height } = Dimensions.get("window");
+import { io } from "socket.io-client";
+import { useAuth } from "../context/AuthContext";
+import QRCode from "react-native-qrcode-svg";
+
+
+const { width } = Dimensions.get("window");
 const markerSize = 250;
 const halfMarkerSize = markerSize / 2;
-
 
 const MyQrModal = () => {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [isBtcPopupVisible, setBtcPopupVisible] = useState(false);
   const [scanned, setScanned] = useState(false);
-  const [restaurantId, setRestaurantId] = useState("")
+  const [restaurantId, setRestaurantId] = useState("");
   const [loading, setLoading] = useState(false);
-  const [cardId, setCardId] = useState("")
-  const [visitCount, setVisitCount] = useState(0)
+  const [cardId, setCardId] = useState("");
+  const [visitCount, setVisitCount] = useState(0);
   const [powerUp, setPowerUp] = useState("");
   const [btcAmount, setBTCAmount] = useState("");
+  const { authState } = useAuth()
+  const [qrData, setQrdata] = useState("")
+
+  const socket = io(SERVER_SETTING.API_URL);
+  const userId = authState.userId;
+
+  socket.on("connect", () => {
+    console.log("Connected to server");
+    socket.emit("register", userId);
+  });
+
+  socket.on("tap-scan", (data) => {
+    console.log("Listening on server", data);
+  });
+
+  console.log("server: ", socket)
+  socket.on("connect", () => {
+    console.log("socket connected: ", socket.connected); // true
+  });
 
   const togglePopup = () => {
     setPopupVisible(!isPopupVisible);
   };
-// Toast
-  // const showToast = () => {
-  //   setTimeout(function () {
-  //     Toast.show({
-  //       type: "perkToast",
-  //       text1: "1$ of bitcoin added to your wallet",
-  //     });
-  //   }, 1500);
-  // };
 
   const toggleBtcPopup = () => {
     setBtcPopupVisible(!isBtcPopupVisible);
   };
-
 
   const closeModal = () => {
     toggleBtcPopup();
@@ -64,6 +77,7 @@ const MyQrModal = () => {
   const queryClient = useQueryClient();
   const { currentLocation } = useLocationStore();
 
+  // Fetch user cards based on current location
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
     queryFn: () => {
@@ -76,28 +90,30 @@ const MyQrModal = () => {
   });
 
   const router = useRouter();
+
+  // Set default values when component mounts
   useEffect(() => {
-    setRestaurantId("1e7c4243-9c14-4b88-ac67-ed3167c255f0");
-    setCardId("675bb6ad-197e-4ed1-b2e0-898b541abaf7")
-    setVisitCount(1)
+    createTapMutation();
   }, []);
 
-
-  const {
-    mutateAsync: createTapMutation,
-  } = useMutation({
+  // Mutation for creating a tap
+  const { mutateAsync: createTapMutation } = useMutation({
     mutationFn: generateTap,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       try {
-        const resp = createRedeemMutation(data.data.data);
+        const newQrdata = data?.data?.data?.encryptedData;
+        setQrdata(newQrdata);
+
+        // Log the new QR data immediately after setting it
+        console.log('QR Data from mutation:', qrData);
+
       } catch (error) {
         console.error("Redeem mutation failed:", error);
       }
     },
   });
 
-
-
+  // Mutation for redeeming a tap
   const { mutateAsync: createRedeemMutation } = useMutation({
     mutationFn: redeemTap,
     onError: (error) => {
@@ -110,64 +126,47 @@ const MyQrModal = () => {
         queryClient.invalidateQueries({ queryKey: userKeys.perks });
       }
       setBTCAmount(data.data?.data?.increment);
-      queryClient.invalidateQueries({
-        queryKey: restaurantKeys.all,
-      });
+      queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
       queryClient.invalidateQueries({ queryKey: userKeys.cards });
       queryClient.invalidateQueries({ queryKey: userKeys.info });
 
-      if (visitCount % SERVER_SETTING.PERK_FREQUENCY === null) {
-        router.back()
-        router.navigate({
-          pathname: '/PerkScreen',
-          params: {
-            restaurantId: restaurantId,
-            btcAmount: data.data?.data?.increment,
-            powerUp: data.data?.data?.bonus?.name,
-          }
-        });
-      }
-      else {
-        router.back()
-        router.navigate({
-          pathname: '/PerkScreen',
-          params: {
-            restaurantId: restaurantId,
-            btcAmount: data.data?.data?.increment,
-            powerUp: data.data?.data?.bonus?.name,
-          }
-        });
-      }
+      router.back();
+      router.navigate({
+        pathname: '/PerkScreen',
+        params: {
+          restaurantId: restaurantId,
+          btcAmount: data.data?.data?.increment,
+          powerUp: data.data?.data?.bonus?.name,
+        }
+      });
     },
   });
 
+  // Handle scan button press
   const handleScanButtonPress = async () => {
     const userCard = cards?.data?.cards.find((card) => card.restaurantId === restaurantId);
     try {
       setLoading(true);
 
       if (!userCard) {
-        router.back()
+        router.back();
         router.push({
           pathname: `/restaurants/${restaurantId}`,
           params: { cardId: cardId as any }
-        })
+        });
       } else if (userCard) {
-        const data = await createTapMutation(restaurantId);
+        await createTapMutation();
       }
     } catch (error) {
       console.log("Map mutation failed:", error);
+    } finally {
+      setLoading(false);
     }
   };
-  // const handleBarCodeScanned = ({ type, data }) => {
-  //   setScanned(true);
-  //   alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-  // };
 
   return (
     <>
-      
-      <SafeAreaView style={{ flex: 1}}>
+            <SafeAreaView style={{ flex: 1}}>
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1, backgroundColor: Color.Gray.gray600, alignItems: 'center' }}>
           {loading ? (
@@ -177,22 +176,22 @@ const MyQrModal = () => {
           ) : (
             <View style={{ alignItems: 'center', marginTop: 100, gap: 32 }}>
               <Text style={{ fontSize: 20, lineHeight: 24, color: Color.base.White, fontWeight: '700' }}>My QR Code</Text>
-              <TouchableOpacity
-                onPress={handleScanButtonPress}
-              >
+              <TouchableOpacity onPress={handleScanButtonPress}>
                 <LinearGradient
                   colors={[Color.Brand.card.start, Color.Brand.card.end]}
                   style={[styles.button]}
                 >
-                  <Image source={require('../../public/images/pqr.png')} style={{ width: width - 128, height: width - 128 }} />
+                  {loading ? <ActivityIndicator/> :  <QRCode backgroundColor="transparent" color={Color.base.White} size={width/1.3} value={`data:image/png;base64,${qrData}`} />}
+                 
                 </LinearGradient>
               </TouchableOpacity>
               <View style={{ marginHorizontal: 32 }}>
-                <Text style={{ textAlign: 'center', fontSize: 14, lineHeight: 18, color: Color.Gray.gray100 }}>Show this to your waiter to check-in.{"\n"} Do not worry, they are pros.</Text>
+                <Text style={{ textAlign: 'center', fontSize: 14, lineHeight: 18, color: Color.Gray.gray100 }}>
+                  Show this to your waiter to check-in.{"\n"} Do not worry, they are pros.
+                </Text>
               </View>
             </View>
-          )
-          }
+          )}
           <TouchableOpacity
             style={[styles.closeButton, { backgroundColor: Color.Gray.gray400, width: 48, height: 48, justifyContent: 'center', alignItems: 'center', borderRadius: 100 }]}
             onPress={() => {

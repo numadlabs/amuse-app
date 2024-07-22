@@ -38,6 +38,7 @@ interface OwnedProps {
 const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
   const [showPerks, setShowPerks] = useState(true);
   const currentLocation = useLocationStore();
+  
 
   const { data: perks = [] } = useQuery({
     queryKey: restaurantKeys.perks(data?.id as string),

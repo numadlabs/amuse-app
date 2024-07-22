@@ -4,7 +4,6 @@ import {
   Location,
   Sms,
   User,
-  UserEdit,
 } from "iconsax-react-native";
 import React, { useEffect, useState } from "react";
 import {
@@ -19,7 +18,7 @@ import {
 } from "react-native";
 import Header from "../components/layout/Header";
 import Color from "../constants/Color";
-import {  useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserById } from "../lib/service/queryHelper";
 import { useAuth } from "../context/AuthContext";
 import { updateUserInfo } from "../lib/service/mutationHelper";
@@ -53,13 +52,11 @@ const ProfileEdit = () => {
   const [focusedInput, setFocusedInput] = useState<
     "Nickname" | "Email" | "Area" | "Birthday" | null
   >(null);
+  const [error, setError] = useState("")
+  const [emailError, setEmailError] = useState("")
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const isProfilePrefilled =  user?.user?.email && user?.user?.location && user?.user?.dateOfBirth;
-
-  const containsEmojisOrSymbols = (text) => {
-    const regex = /[\u{1F600}-\u{1F64F}|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F004}|\u{1F0CF}|[\u{1F170}-\u{1F251}]|[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F004}|\u{1F0CF}|[\u{1F170}-\u{1F251}]|[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F004}|\u{1F0CF}|[\u{1F170}-\u{1F251}]]/;
-    return regex.test(text);
-  };
+  const isProfilePrefilled = user?.user?.email && user?.user?.location && user?.user?.dateOfBirth;
 
   useEffect(() => {
     if (user) {
@@ -91,27 +88,69 @@ const ProfileEdit = () => {
     }
   };
   const queryClient = useQueryClient();
+
+
+
   const triggerUpdateUser = async () => {
     setLoading(true);
+    
+    // Emoji blocking regex
+    const emojiRegex = /\p{Emoji}/u;
+  
+    // Date validation
+    if (!dateOfBirth) {
+      setError("Please select a valid date of birth");
+      setLoading(false);
+      return;
+    }
+  
+    // Input validations
+    if (nickname.length >= 10) {
+      setError("Nickname must be less than 10 characters");
+      setLoading(false);
+      return;
+    }
+    
+    // Check for emojis in nickname
+    if (emojiRegex.test(nickname)) {
+      setError("Nickname cannot contain emojis");
+      setLoading(false);
+      return;
+    }
+  
+    // Check for emojis in email
+    if (emojiRegex.test(email)) {
+      setEmailError("Email cannot contain emojis");
+      setLoading(false);
+      return;
+    }
+  
+    // Validate email format
+    if (!emailRegex.test(email)) {
+      setEmailError("Invalid email");
+      setLoading(false);
+      return;
+    }
+  
     const userData = { nickname, email, location, dateOfBirth };
     try {
       await updateUserInfo({ userId: authState.userId, data: userData });
-
       setLoading(false);
       setDataChanged(false);
-      // showToast();
       queryClient.invalidateQueries({ queryKey: userKeys.info });
+  
+      // Navigation based on profile prefill status
       if (!isProfilePrefilled) {
-        router.navigate("/Success"); 
+        router.navigate("/Success");
       } else {
-        router.back() 
+        router.back();
       }
     } catch (error) {
       console.log(error);
       setLoading(false);
+      // Handle error (e.g., show toast message)
     }
   };
-
   useEffect(() => {
     const totalFields = 4;
     const filledFields = [nickname, email, location, dateOfBirth].filter(
@@ -199,7 +238,7 @@ const ProfileEdit = () => {
                     style={{
                       borderRadius: 16,
                       padding: 1,
-                      marginBottom: 12,
+
                     }}
                   >
                     <View style={styles.input}>
@@ -219,7 +258,22 @@ const ProfileEdit = () => {
                         }}
                       />
                     </View>
+
                   </LinearGradient>
+                  {error &&
+                    <Text
+                      style={{
+                        color: Color.System.systemError,
+                        fontSize: 14,
+                        lineHeight: 18,
+                        fontWeight: "600",
+                        marginVertical: 12
+                      }}
+                    >
+                      {error}
+                    </Text>
+                  }
+
                 </View>
                 <View style={{ gap: 8 }}>
                   <Text
@@ -243,7 +297,6 @@ const ProfileEdit = () => {
                     style={{
                       borderRadius: 16,
                       padding: 1,
-                      marginBottom: 12,
                     }}
                   >
                     <View style={styles.input}>
@@ -264,6 +317,19 @@ const ProfileEdit = () => {
                       />
                     </View>
                   </LinearGradient>
+                  {emailError &&
+                    <Text
+                      style={{
+                        color: Color.System.systemError,
+                        fontSize: 14,
+                        lineHeight: 18,
+                        fontWeight: "600",
+                        marginVertical: 12
+                      }}
+                    >
+                      {emailError}
+                    </Text>
+                  }
                 </View>
                 <View style={{ gap: 8 }}>
                   <Text
@@ -308,6 +374,7 @@ const ProfileEdit = () => {
                       />
                     </View>
                   </LinearGradient>
+
                 </View>
                 <View style={{ gap: 8 }}>
                   <Text
@@ -383,8 +450,8 @@ const ProfileEdit = () => {
         </View>
         {show && (
           <Animated.View
-          entering={SlideInDown.springify().damping(20)}
-          exiting={SlideOutDown.springify().damping(10)}
+            entering={SlideInDown.springify().damping(20)}
+            exiting={SlideOutDown.springify().damping(10)}
             style={{
               position: "absolute",
               bottom: 0,
@@ -392,7 +459,7 @@ const ProfileEdit = () => {
               width: "100%",
               backgroundColor: Color.Gray.gray500,
               padding: 16,
-              zIndex:99
+              zIndex: 99
             }}
           >
             <DateTimePicker
@@ -401,7 +468,7 @@ const ProfileEdit = () => {
               display="spinner"
               onChange={onDateChange}
             />
-            <Button variant="tertiary" onPress={confirmDate} style={{bottom:15}}>
+            <Button variant="tertiary" onPress={confirmDate} style={{ bottom: 15 }}>
               <Text
                 style={{
                   fontSize: 15,

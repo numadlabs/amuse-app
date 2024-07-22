@@ -1,32 +1,33 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import { WalletAdd } from "iconsax-react-native";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
+  Image,
   Modal,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Image,
   Platform,
 } from "react-native";
-import Button from "../components/ui/Button";
-import Color from "../constants/Color";
-import Close from "../components/icons/Close";
-import { useAuth } from "../context/AuthContext";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getAcard } from "../lib/service/mutationHelper";
-import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
-import { getPerksByRestaurant, getRestaurantId } from "../lib/service/queryHelper";
-import useLocationStore from "../lib/store/userLocation";
+import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import APassCard from "../components/atom/cards/APassCard";
+import Close from "../components/icons/Close";
 import Owned from "../components/sections/membership/Owned";
 import UnOwned from "../components/sections/membership/UnOwned";
-import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Button from "../components/ui/Button";
+import Color from "../constants/Color";
+import { useAuth } from "../context/AuthContext";
+import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
+import { getAcard } from "../lib/service/mutationHelper";
+import { getPerksByRestaurant, getRestaurantId } from "../lib/service/queryHelper";
+import useLocationStore from "../lib/store/userLocation";
 import { height, width } from "../lib/utils";
 import { SafeAreaView } from "react-native-safe-area-context";
+import moment from "moment";
 
 const Restaurant = () => {
   const { cardId, id } = useLocalSearchParams();
@@ -37,22 +38,26 @@ const Restaurant = () => {
   const { currentLocation } = useLocationStore();
   const [perkId, setPerkId] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const currentTime = moment().format('HH:mm');
+
 
   const { data: restaurantsData, isLoading } = useQuery({
     queryKey: restaurantKeys.detail(id as string),
-    queryFn: () => getRestaurantId(id),
+    queryFn: () => getRestaurantId(id, currentTime),
     enabled: !!currentLocation && !!id,
   });
 
-  const {data: perks} = useQuery({
+  const { data: perks } = useQuery({
     queryKey: restaurantKeys.perks(id as string),
     queryFn: () => getPerksByRestaurant(id),
-    enabled:!!currentLocation &&!!id,
+    enabled: !!currentLocation && !!id,
   })
 
   const toggleBottomSheet = () => {
     setBottomSheet(!bottomSheet);
   };
+
+  
 
   const pressed = useSharedValue(false);
   const animatedStyles = useAnimatedStyle(() => ({
@@ -72,7 +77,7 @@ const Restaurant = () => {
     },
   });
 
-  
+
 
   const handleGetAcard = async (id: string) => {
     setIsClaimLoading(true);
@@ -94,7 +99,7 @@ const Restaurant = () => {
           image={restaurantsData?.logo}
           onPress={() => ""}
           nftImage={restaurantsData?.nftImageUrl}
-          category={restaurantsData?.category}
+          category={restaurantsData?.categoryName}
           hasBonus={false}
           visitCount={restaurantsData?.visitCount || 0}
           target={perks?.followingBonus?.target}
@@ -190,11 +195,11 @@ const Restaurant = () => {
                 animatedStyles,
               ]}
             >
-              <View style={{ paddingVertical: 8, justifyContent: "center", alignItems: "center", flexDirection:'row' }}>
+              <View style={{ paddingVertical: 8, justifyContent: "center", alignItems: "center", flexDirection: 'row' }}>
                 <Text style={{ fontSize: 20, lineHeight: 24, color: Color.base.White, fontWeight: "bold" }}>Perk</Text>
                 <TouchableOpacity onPress={toggleBottomSheet}>
-                  <View style={{backgroundColor:Color.Gray.gray400, borderRadius:48, padding:8, width:32, alignContent:'center', alignItems:'center',justifyContent:'center', aspectRatio:1, position:"absolute", left:115, top:-18}}>
-                    <Close/>
+                  <View style={{ backgroundColor: Color.Gray.gray400, borderRadius: 48, padding: 8, width: 32, alignContent: 'center', alignItems: 'center', justifyContent: 'center', aspectRatio: 1, position: "absolute", left: 115, top: -18 }}>
+                    <Close />
                   </View>
                 </TouchableOpacity>
               </View>

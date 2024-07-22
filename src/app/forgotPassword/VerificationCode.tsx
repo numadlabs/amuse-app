@@ -9,12 +9,18 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import Steps from "../components/atom/Steps";
 import Color from "../constants/Color";
 import Button from "../components/ui/Button";
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
+import { usePasswordStore } from "../lib/store/passwordStore";
+import { useMutation } from "@tanstack/react-query";
+import { checkPasswordOtp } from "../lib/service/mutationHelper";
+import Header from "../components/layout/Header";
+import SplitOTPInput from "../components/ui/OtpInput";
 
 export enum KeyBoardTypes {
   default = "default",
@@ -27,9 +33,16 @@ export enum KeyBoardTypes {
 }
 
 const SplitOTP = () => {
-  const { phoneNumber, prefix } = useLocalSearchParams();
+  const {
+    phoneNumber,
+    prefix,
+    verificationCode,
+    setVerificationCode
+  } = usePasswordStore()
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const [isFocused, setIsFocused] = useState(false);
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
   const [text, onChangeText] = useState("");
   let inputRef = useRef(null);
   const onPress = () => {
@@ -56,7 +69,6 @@ const SplitOTP = () => {
     };
   }, []);
 
-  const navigation = useNavigation();
 
   const onFocus = () => {
     setIsFocused(true);
@@ -66,70 +78,56 @@ const SplitOTP = () => {
     setIsFocused(false);
   };
 
-  const handleNavigation = () => {
-    if(text){
-      router.navigate({
-        pathname: "/forgotPassword/NewPassword",
-        params: {
-          phoneNumber: phoneNumber,
+
+  const { mutateAsync: checkOtpMutation } = useMutation({
+    mutationFn: checkPasswordOtp,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (data, variables) => {
+      console.log(data);
+    },
+  });
+
+  const handleNavigation = async () => {
+    try {
+      setLoading(true);
+      const code = Number(text);
+      setVerificationCode(isNaN(code) ? 0 : code);
+
+      if (text && text.length === 4) {
+        await checkOtpMutation({
           prefix: prefix,
-        },
-      });
+          telNumber: phoneNumber,
+          telVerificationCode: code,
+        });
+        setLoading(false);
+        router.navigate({
+          pathname: "/forgotPassword/NewPassword",
+        });
+      } else {
+        setError("Please enter a valid 4-digit code");
+        setLoading(false);
+      }
+    } catch (error) {
+      setError("Invalid code");
+      setLoading(false);
+      console.log("OTP check failed:", error);
     }
   };
 
-  const otpContent = useMemo(
-    () => (
-      <View style={styles.containerStyle}>
-        {Array.from({ length: 4 }).map((_, i) => (
-          <LinearGradient
-            colors={
-              isFocused
-                ? [Color.Brand.main.start, Color.Brand.main.end]
-                : [Color.Gray.gray500, Color.Gray.gray500]
-            }
-            start={[0, 1]}
-            end={[1, 0]}
-            style={{
-              marginTop: 10,
-              padding: 1,
-              borderRadius: 16,
-            }}
-          >
-            <View
-              style={{
-                width: 48,
-                height: 48,
-                backgroundColor: Color.Gray.gray500,
-                borderRadius: 16,
-              }}
-            >
-              <Text
-                key={i}
-                onPress={onPress}
-                style={[
-                  styles.textStyle,
-                  text[i] ? styles.filledStyle : {},
-                  text[i]
-                    ? { borderColor: Color.Gray.gray300 }
-                    : { borderColor: Color.Gray.gray300 },
-                ]}
-              >
-                {text[i]}
-              </Text>
-            </View>
-          </LinearGradient>
-        ))}
-      </View>
-    ),
-    [text, isFocused]
-  );
+  const handleCodeFilled = (code) => {
+    onChangeText(code);
+  };
+
+
+
 
   return (
     <>
+      <Header title='Forgot password?' />
       <Steps activeStep={2} />
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -157,25 +155,19 @@ const SplitOTP = () => {
                       We will send an SMS verification code.
                     </Text>
                   </View>
+                  <View style={{ marginTop: 12 }}>
+                    <SplitOTPInput codeLength={4} onCodeFilled={handleCodeFilled} />
+                  </View>
                 </View>
-                <SafeAreaView style={styles.safeAreaStyle}>
-                  <TextInput
-                    maxLength={4}
-                    ref={inputRef}
-                    style={styles.input}
-                    onChangeText={(text) => onChangeText(text)}
-                    value={text}
-                    keyboardType={KeyBoardTypes.number}
-                    onFocus={onFocus}
-                    onBlur={onBlur}
-                  />
-                  {otpContent}
-                </SafeAreaView>
+
+
+
+
               </LinearGradient>
             </View>
             <KeyboardAvoidingView
               style={{ flex: 1 }}
-              keyboardVerticalOffset={100}
+              keyboardVerticalOffset={90}
               behavior={Platform.OS === "ios" ? "height" : "padding"}
             >
               <View
@@ -187,12 +179,12 @@ const SplitOTP = () => {
                 ]}
               >
                 <Button
-                  variant={text ? "primary" : 'disabled'}
-                  textStyle={text ? "primary" : 'disabled'}
+                  variant={text && text.length === 4 ? "primary" : 'disabled'}
+                  textStyle={text && text.length === 4 ? "primary" : 'disabled'}
                   size="default"
                   onPress={handleNavigation}
                 >
-                  Continue
+                  {loading ? <ActivityIndicator /> : "Continue"}
                 </Button>
               </View>
             </KeyboardAvoidingView>
@@ -214,7 +206,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   input: {
-    height: 0,
+    height: 20,
     width: 0,
     color: Color.base.White,
   },
@@ -250,7 +242,7 @@ const styles = StyleSheet.create({
     marginVertical: 14,
   },
   safeAreaStyle: {
-    marginHorizontal: 20,
+    justifyContent: 'center',
     marginTop: 24,
   },
   topText: {
@@ -269,14 +261,29 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 10,
     paddingHorizontal: 20,
-    marginBottom: 20,
   },
   bottomPosition: {
     justifyContent: "flex-end",
+
+    ...Platform.select({
+      ios: {
+        marginBottom: 50,
+      },
+      android: {
+        marginBottom: 20,
+      },
+    }),
   },
   topPosition: {
     justifyContent: "flex-start",
-    marginTop: "auto",
+    ...Platform.select({
+      ios: {
+        marginBottom: 50,
+      },
+      android: {
+        marginBottom: 20,
+      },
+    }),
   },
 });
 

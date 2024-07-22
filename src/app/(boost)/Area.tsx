@@ -18,12 +18,16 @@ import { height, width } from "../lib/utils";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 const Area = () => {
+  // State to manage button position based on keyboard visibility
   const [buttonPosition, setButtonPosition] = useState("bottom");
+  // State to manage input focus
   const [isFocused, setIsFocused] = useState(false);
   const router = useRouter();
+  // Custom hook to manage area state
   const { area, setArea } = useBoostInfoStore();
 
   useEffect(() => {
+    // Add keyboard listeners to adjust button position
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       () => setButtonPosition("top")
@@ -33,6 +37,8 @@ const Area = () => {
       "keyboardDidHide",
       () => setButtonPosition("bottom")
     );
+
+    // Clean up listeners on component unmount
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
@@ -41,7 +47,9 @@ const Area = () => {
 
   return (
     <>
+      {/* Component to show current step in a multi-step process */}
       <Steps activeStep={2} />
+      {/* KeyboardAvoidingView to handle keyboard appearance */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -49,6 +57,7 @@ const Area = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.container}>
             <View style={styles.body}>
+              {/* Gradient background for the main content area */}
               <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
                 style={styles.gradient}
@@ -61,6 +70,7 @@ const Area = () => {
                       staying close to home.
                     </Text>
                   </View>
+                  {/* Gradient border for the input field */}
                   <LinearGradient
                     colors={
                       isFocused
@@ -72,6 +82,7 @@ const Area = () => {
                     style={styles.inputGradient}
                   >
                     <View style={styles.inputWrapper}>
+                      {/* Google Places Autocomplete component for area input */}
                       <GooglePlacesAutocomplete
                         placeholder="Area (ex. Dubai Marina)"
                         onPress={(data, details = null) => {
@@ -102,11 +113,13 @@ const Area = () => {
                 </View>
               </LinearGradient>
             </View>
+            {/* KeyboardAvoidingView for the button */}
             <KeyboardAvoidingView
               style={{ flex: 1 }}
               keyboardVerticalOffset={110}
               behavior={Platform.OS === "ios" ? "height" : "padding"}
             >
+              {/* Button container with dynamic positioning */}
               <View
                 style={[
                   styles.buttonContainer,
@@ -115,6 +128,7 @@ const Area = () => {
                     : styles.topPosition,
                 ]}
               >
+                {/* Continue button, enabled only when area is selected */}
                 <Button
                   variant={area ? "primary" : "disabled"}
                   textStyle={area ? "primary" : "disabled"}
@@ -134,6 +148,7 @@ const Area = () => {
 
 export default Area;
 
+// StyleSheet for component styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,

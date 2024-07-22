@@ -23,7 +23,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { height } from "./lib/utils";
+import { height, width } from "./lib/utils";
 import {
   GestureHandlerRootView,
   ScrollView,
@@ -32,7 +32,7 @@ import { ArrowDown2 } from "iconsax-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import data from 'prefix.json'
 
-function Login() {  
+function Login() {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [prefix, setPrefix] = useState<string>(data[0].prefix);
@@ -52,7 +52,7 @@ function Login() {
       setLoading(true);
       const response = await onLogin(prefix, phoneNumber, password);
       if (response.success) {
-        router.push("/(tabs)");
+        router.replace("/(tabs)");
 
       } else {
         console.log("Login failed:", response.data);
@@ -76,13 +76,14 @@ function Login() {
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
-    if(isOpen){
+    if (isOpen) {
       togglePrefix()
     }
   };
 
- 
+
   const offset = useSharedValue(300);
+
   const togglePrefix = () => {
     setIsOpen(!isOpen);
     offset.value = withSpring(isOpen ? height / 3 : height / 3 + 10, {
@@ -161,7 +162,7 @@ function Login() {
               <Text
                 style={{
                   fontSize: 24,
-                  color: Color.base.White, 
+                  color: Color.base.White,
                   fontWeight: "bold",
                   textAlign: "center",
                   marginBottom: 24,
@@ -318,13 +319,7 @@ function Login() {
                     {error}
                   </Text>
                 )}
-              </View>
-              <View style={{ marginTop: 24, gap: 12 }}>
-                <Button
-                  variant="primary"
-                  onPress={handleLogin}
-                  disabled={loading}
-                >
+                <Button variant="primary" style={{marginTop:12}} onPress={handleLogin}>
                   {loading ? (
                     <ActivityIndicator size="small" color="white" />
                   ) : (
@@ -371,74 +366,75 @@ function Login() {
                   </Text>
                 </Button>
               </View>
-              {isOpen && (
-                <Animated.View
-                  style={[
-                    translateY,
-                    {
-                      position: "absolute",
-                      zIndex: 100,
-                      top: -196,
-                      width: "80%",
-                      backgroundColor: Color.Gray.gray400,
-                      borderRadius: 16,
-                      overflow: "hidden",
-                      left: 0,
-                    },
-                  ]}
-                >
-                  <ScrollView>
-                    {data.map((prefix, index) => (
-                      <TouchableOpacity
-                        key={index}
-                        onPress={() => handlePrefixSelection(prefix.prefix)}
-                      >
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            paddingHorizontal: 16,
-                            paddingVertical: 15,
-                            backgroundColor: Color.Gray.gray400,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: 16,
-                              fontWeight: "400",
-                              lineHeight: 20,
-                              color: Color.base.White,
-                            }}
-                          >
-                            {prefix.name}
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 16,
-                              fontWeight: "400",
-                              lineHeight: 20,
-                              color: Color.Gray.gray50,
-                            }}
-                          >
-                            +{prefix.prefix}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            height: 1,
-                            width: "100%",
-                            backgroundColor: Color.Gray.gray300,
-                          }}
-                        />
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
-                </Animated.View>
-              )}
+
             </View>
           </LinearGradient>
         </View>
+        {isOpen && (
+          <Animated.View
+            style={[
+              translateY,
+              {
+                position: "absolute",
+                zIndex: 100,
+                top: height / 140,
+                width: "65%",
+                backgroundColor: Color.Gray.gray400,
+                borderRadius: 16,
+                overflow: "hidden",
+                left: width / 11,
+              },
+            ]}
+          >
+            <ScrollView>
+              {data.map((prefix, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => handlePrefixSelection(prefix.prefix)}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      paddingHorizontal: 16,
+                      paddingVertical: 15,
+                      backgroundColor: Color.Gray.gray400,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "400",
+                        lineHeight: 20,
+                        color: Color.base.White,
+                      }}
+                    >
+                      {prefix.name}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "400",
+                        lineHeight: 20,
+                        color: Color.Gray.gray50,
+                      }}
+                    >
+                      +{prefix.prefix}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      height: 1,
+                      width: "100%",
+                      backgroundColor: Color.Gray.gray300,
+                    }}
+                  />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </Animated.View>
+        )}
         <View
           style={{
             alignContent: "center",

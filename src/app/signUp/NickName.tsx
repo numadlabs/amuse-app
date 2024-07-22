@@ -20,8 +20,13 @@ import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeIn } from "react-native-reanimated";
 const NickName = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
-  const { password, phoneNumber, prefix } = useLocalSearchParams();
-  const { nickname, setNickname } = useSignUpStore();
+  const { nickname,
+    setNickname,
+    phoneNumber,
+    password,
+    verificationCode,
+    prefix,
+  } = useSignUpStore();
   const [error, setError] = useState<string>("")
   const [isFocused, setIsFocused] = useState(false);
 
@@ -35,7 +40,8 @@ const NickName = () => {
         nickname,
         prefix as string,
         phoneNumber as string,
-        password as string
+        password as string,
+        verificationCode
       );
       console.log(phoneNumber, password, nickname, prefix);
       if (response.data) {
@@ -141,8 +147,8 @@ const NickName = () => {
                     </View>
 
                   </LinearGradient>
-                  <View style={{justifyContent:'center', alignItems:'center'}}>
-                    {error ? <AnimatedText entering={FadeIn} style={{ color: Color.System.systemError, fontSize:15, textAlign:'center' }}>{error}</AnimatedText> : null}
+                  <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    {error ? <AnimatedText entering={FadeIn} style={{ color: Color.System.systemError, fontSize: 15, textAlign: 'center' }}>{error}</AnimatedText> : null}
                   </View>
 
                 </View>

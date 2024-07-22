@@ -55,7 +55,7 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle, aed }) => {
                     lineHeight: 36,
                   }}
                 >
-                  {aed?.toFixed(2)}
+                  {amount == 0 ? "0.0000" : aed?.toFixed(2)}
                 </Text>
                 <Text
                   style={{
@@ -64,7 +64,7 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle, aed }) => {
                     lineHeight: 20,
                   }}
                 >
-                  AED
+                  CZK
                 </Text>
               </View>
             </View>

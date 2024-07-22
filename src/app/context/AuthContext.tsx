@@ -20,9 +20,10 @@ interface AuthProps {
   };
   onRegister?: (
     nickname: string,
-    preFix: string, 
+    preFix: string,
     telNumber: string,
-    password: string
+    password: string,
+    verificationCode: number
   ) => Promise<any>;
   onLogin?: (
     preFix: string,
@@ -107,7 +108,8 @@ export const AuthProvider = ({ children }: any) => {
     nickname: string,
     prefix: string,
     telNumber: string,
-    password: string
+    password: string,
+    verificationCode: number
   ) => {
     try {
       const result = await axiosClient.post(`/auth/register`, {
@@ -115,6 +117,7 @@ export const AuthProvider = ({ children }: any) => {
         telNumber,
         password,
         nickname,
+        verificationCode,
       });
       console.log(result.data.data);
       if (result && result.data.data && result.data.data.auth) {
