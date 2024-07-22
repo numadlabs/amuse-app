@@ -184,14 +184,29 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 10,
     paddingHorizontal: 20,
-    marginBottom: 20,
   },
   bottomPosition: {
     justifyContent: "flex-end",
+
+    ...Platform.select({
+      ios: {
+        marginBottom: 50,
+      },
+      android: {
+        marginBottom: 20,
+      },
+    }),
   },
   topPosition: {
     justifyContent: "flex-start",
-    marginTop: "auto",
+    ...Platform.select({
+      ios: {
+        marginBottom: 50,
+      },
+      android: {
+        marginBottom: 20,
+      },
+    }),
   },
   topText: {
     color: Color.base.White,

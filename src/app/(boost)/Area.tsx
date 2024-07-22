@@ -51,7 +51,6 @@ const Area = () => {
       <Steps activeStep={2} />
       {/* KeyboardAvoidingView to handle keyboard appearance */}
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -91,7 +90,7 @@ const Area = () => {
                         query={{
                           key: 'AIzaSyD6P0kwuwr_7RTb5_2UZLNteryotRLItCM',
                           language: 'en',
-                          components: "country:ae",
+                          components: "country:cz",
                         }}
                         fetchDetails={true}
                         onFail={(error) => console.error(error)}
@@ -233,13 +232,28 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 10,
     paddingHorizontal: 20,
-    marginBottom: 20,
   },
   bottomPosition: {
     justifyContent: "flex-end",
+
+    ...Platform.select({
+      ios: {
+        marginBottom: 50,
+      },
+      android: {
+        marginBottom: 20,
+      },
+    }),
   },
   topPosition: {
     justifyContent: "flex-start",
-    marginTop: "auto",
+    ...Platform.select({
+      ios: {
+        marginBottom: 50,
+      },
+      android: {
+        marginBottom: 20,
+      },
+    }),
   },
 });

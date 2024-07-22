@@ -61,5 +61,10 @@ export type UserBoostData = {
 export type UserBoostRequestData = {
   email: string;
   location: string;
+  profilePicture?: {
+    uri: string;
+    type: string;
+    name: string;
+  };
   dateOfBirth: string;
 };
