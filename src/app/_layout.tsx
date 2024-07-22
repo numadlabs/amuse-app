@@ -32,7 +32,7 @@ export default function Layout() {
         >
           <Stack.Screen
             name="restaurants/[id]"
-            options={{ presentation: "modal" }}
+            options={{ presentation: 'modal', gestureEnabled: true}}
           />
 
           {/* <Stack.Screen

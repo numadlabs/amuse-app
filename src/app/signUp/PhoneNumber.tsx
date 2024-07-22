@@ -79,7 +79,7 @@ const PhoneNumber = () => {
   const handleNavigation = () => {
     if (phoneNumber) {
       setLoading(true);
-      handleOtp(prefix, phoneNumber,)
+      // handleOtp(prefix, phoneNumber,)
       router.push({
         pathname: "/signUp/Otp",
         params: {

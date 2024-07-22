@@ -4,6 +4,7 @@ import Header from "./components/layout/Header";
 import Color from "./constants/Color";
 import NotificationCard from "./components/atom/cards/NotificationCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Notification = () => {
   const [notifications, setNotifications] = useState([]);
@@ -47,6 +48,7 @@ const Notification = () => {
   };
 
   return (
+    <SafeAreaView style={{ flex: 1 }}>
     <View style={styles.body}>
       <Header title="Notifications" />
       <FlatList
@@ -63,6 +65,7 @@ const Notification = () => {
         )}
       />
     </View>
+    </SafeAreaView>
   );
 };
 

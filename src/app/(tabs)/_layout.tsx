@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Tabs, router } from "expo-router";
-import { View, TouchableOpacity, Text } from "react-native";
+import { View, TouchableOpacity, Platform } from "react-native";
 import Footer from "../components/layout/Footer";
 import { Notification, User } from "iconsax-react-native";
 import Logo from "../components/icons/Logo";
@@ -107,15 +107,23 @@ const Layout = ({ navigation }) => {
         name="index"
         options={{
           headerStyle: {
+            display: "none",
+            justifyContent: "space-around",
             shadowOpacity: 0,
             backgroundColor: Color.Gray.gray600,
           },
           headerLeft: () => (
             <TouchableOpacity onPress={() => router.push("/profileSection/Profile")}>
-              <View style={{ paddingHorizontal: 20 }}>
+              <View style={{ paddingHorizontal: 20}}>
                 <User color={Color.base.White} />
               </View>
             </TouchableOpacity>
+          ),
+          
+          headerTitle: () => (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <Logo />
+            </View>
           ),
           headerRight: () => (
             <TouchableOpacity onPress={() => router.push("/Notification")}>
@@ -132,7 +140,7 @@ const Layout = ({ navigation }) => {
               </View>
             </TouchableOpacity>
           ),
-          headerTitle: () => <Logo />,
+          headerTitleAlign: 'center',
         }}
       />
       <Tabs.Screen name="Acards" options={{ headerShown: false }} />

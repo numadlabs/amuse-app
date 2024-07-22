@@ -10,7 +10,6 @@ import {
 import React, { useEffect, useState } from "react";
 import {
   Linking,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -30,6 +29,7 @@ import {
 import useLocationStore from "../lib/store/userLocation";
 import { userKeys } from "../lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Profile = () => {
   const [internalVisitCount, setInternalVisitCount] = useState(0);
@@ -90,8 +90,8 @@ const Profile = () => {
 
   return (
     <>
-      <Header title="Profile" />
       <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+      <Header title="Profile" />
         <ScrollView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
           <View style={styles.body}>
             <View style={{ borderWidth: 1, borderColor: Color.Gray.gray300, borderRadius: 16, }}>

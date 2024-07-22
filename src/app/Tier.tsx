@@ -3,6 +3,7 @@ import React from 'react';
 import Header from './components/layout/Header';
 import TierCard from './components/atom/cards/TierCard';
 import Color from './constants/Color';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useQuery } from '@tanstack/react-query';
 import { userKeys } from './lib/service/keysHelper';
@@ -56,6 +57,7 @@ const Tier = () => {
 
   return (
     <>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <Header title="Tier" />
       <View style={{ padding: 16, gap: 16, flex: 1, backgroundColor: Color.Gray.gray600 }}>
         <FlatList
@@ -75,6 +77,7 @@ const Tier = () => {
           )}
         />
       </View>
+      </SafeAreaView>
     </>
   );
 };

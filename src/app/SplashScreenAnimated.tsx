@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Platform } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Updates from 'expo-updates';
 import Color from './constants/Color';
@@ -9,13 +9,15 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import AmuseBoucheLogo from './components/icons/A';
 
-const INITIAL_TRANSLATE_X = -63;
-const INITIAL_TRANSLATE_Y = 20;
-const INITIAL_TRANSLATE_X2 = 120;
-const INITIAL_TRANSLATE_Y2 = 40;
+const INITIAL_TRANSLATE_X = -width/8;
+const INITIAL_TRANSLATE_Y = height/32;
+const INITIAL_TRANSLATE_X2 = width/2.8;
+const INITIAL_TRANSLATE_Y2 = height/32;
 const ANIMATION_DURATION = 600;
 
-const SplashScreenWithLoadingBar = () => {
+const SplashScreenAnimated = () => {
+  
+
   const translateX = useSharedValue(INITIAL_TRANSLATE_X);
   const translateY = useSharedValue(INITIAL_TRANSLATE_Y);
   const translateX2 = useSharedValue(INITIAL_TRANSLATE_X2);
@@ -29,25 +31,25 @@ const SplashScreenWithLoadingBar = () => {
 
     translateX.value = withRepeat(
       withSequence(
-        withTiming(width / 3, { duration: ANIMATION_DURATION })
+        withTiming(width / 2.8, { duration: ANIMATION_DURATION })
       ),
       -1,
       true
     );
     translateX2.value = withRepeat(
       withSequence(
-        withTiming(-width / 6, { duration: ANIMATION_DURATION })
+        withTiming(-width / 8, { duration: ANIMATION_DURATION })
       ),
       -1,
       true
     );
     translateY.value = withSequence(
       withTiming(0, { duration: ANIMATION_DURATION }),
-      withTiming(168, { duration: ANIMATION_DURATION })
+      withTiming(height/4.3, { duration: ANIMATION_DURATION })
     );
     translateY2.value = withSequence(
       withTiming(40, { duration: ANIMATION_DURATION }),
-      withTiming(-120, { duration: ANIMATION_DURATION })
+      withTiming(-height/6, { duration: ANIMATION_DURATION })
     );
   };
 
@@ -106,9 +108,21 @@ const SplashScreenWithLoadingBar = () => {
               style={styles.gradientBall}
             />
           </Animated.View>
-          <BlurView intensity={64} style={styles.blurView}>
+          {/* <BlurView intensity={64} style={styles.blurView}>
             <AmuseBoucheLogo />
-          </BlurView>
+          </BlurView> */}
+          {Platform.OS === 'ios' ? (
+            <BlurView intensity={70} style={styles.blurView}>
+              <AmuseBoucheLogo />
+            </BlurView>
+          ) : (
+            <BlurView intensity={24} experimentalBlurMethod="dimezisBlurView" style={styles.blurView}>
+              <AmuseBoucheLogo />
+            </BlurView>
+            // <View style={[styles.blurView, { backgroundColor: 'rgba(27, 35, 40, 0.5)' }]}>
+            //   <AmuseBoucheLogo />
+            // </View>
+          )}
         </View>
       </View>
     </View>
@@ -131,6 +145,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 32,
     backgroundColor: Color.Gray.gray500,
+    
   },
   animatedView: {
     width: 160,
@@ -148,10 +163,11 @@ const styles = StyleSheet.create({
     height: height / 4,
     aspectRatio: 1,
     justifyContent: 'center',
-    backgroundColor: 'rgba(27, 35, 40, 0.1)',
+    backgroundColor: Platform.OS === "ios" ? ( 'rgba(27, 35, 40, 0.1)' ) : ( 'rgba(27, 35, 40, 0.1)' ),
     overflow: 'hidden',
     borderRadius: 32,
-    alignItems: 'center',
+    alignItems: 'center', 
+    
   },
   topPosition: {
     top: -60,
@@ -175,4 +191,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SplashScreenWithLoadingBar;
+export default SplashScreenAnimated

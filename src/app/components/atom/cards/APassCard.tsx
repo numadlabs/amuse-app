@@ -90,6 +90,7 @@ const APassCard: React.FC<ApassProp> = ({
                     gap: 12,
                     justifyContent: "space-between",
                     alignItems: "center",
+                    borderRadius: 16,
                   }}
                 >
                   <View
@@ -287,6 +288,8 @@ const styles = StyleSheet.create({
     width: "100%",
     flex: 1,
     padding: 20,
+    borderRadius: 28,
+    overflow: "hidden"
   },
   titleText: {
     color: Color.base.White,

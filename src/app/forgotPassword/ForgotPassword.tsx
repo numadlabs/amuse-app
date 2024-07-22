@@ -32,6 +32,7 @@ import data from 'prefix.json'
 import { useMutation } from "@tanstack/react-query";
 import { updatePassword } from "../lib/service/mutationHelper";
 import Header from "../components/layout/Header";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function ForgotPassword() {
   const { phoneNumber, setPhoneNumber, prefix, setPrefix } = usePasswordStore();
@@ -46,18 +47,28 @@ function ForgotPassword() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const offset = useSharedValue(300);
 
-  const togglePrefix = () => {
-    setIsOpen(!isOpen);
-    offset.value = withSpring(isOpen ? height / 3 : height / 3 + 10, {
-      damping: 20,
-      mass: 0.5,
-    });
-  };
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    if (isOpen && inputContainerRef.current) {
+      inputContainerRef.current.measure((x, y, width, height, pageX, pageY) => {
+        setDropdownPosition({ top: pageY + height, left: pageX });
+      });
+    }
+  }, [isOpen]);
+
+ 
+const togglePrefix = () => {
+  setIsOpen(!isOpen);
+  offset.value = withSpring(isOpen ? 220 : 230, {
+    damping: 20,
+    mass: 0.5,
+  });
+};
 
   const translateY = useAnimatedStyle(() => ({
     transform: [{ translateY: offset.value }],
   }));
-
 
   const {
     mutateAsync: sendPasswordOtp,
@@ -74,7 +85,7 @@ function ForgotPassword() {
   });
 
   const handlePrefixSelection = (selectedPrefix) => {
-  
+
     setPrefix(selectedPrefix);
     togglePrefix();
     console.log(selectedPrefix);
@@ -108,6 +119,8 @@ function ForgotPassword() {
     }
   };
 
+  const inputContainerRef = React.useRef(null);
+
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -126,11 +139,10 @@ function ForgotPassword() {
   }, []);
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <Header title='Forgot password?' />
       <Steps activeStep={1} />
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
@@ -171,6 +183,7 @@ function ForgotPassword() {
                     }}
                   >
                     <View
+                      ref={inputContainerRef}
                       style={{
                         alignItems: "center",
                         gap: 12,
@@ -250,7 +263,7 @@ function ForgotPassword() {
                   size="default"
                   onPress={handleNavigation}
                 >
-                  {loading ? <ActivityIndicator/> : "Send code"}
+                  {loading ? <ActivityIndicator /> : "Send code"}
                 </Button>
               </View>
             </KeyboardAvoidingView>
@@ -322,7 +335,7 @@ function ForgotPassword() {
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </>
+    </SafeAreaView>
   );
 }
 
@@ -339,14 +352,29 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 10,
     paddingHorizontal: 20,
-    marginBottom: 20,
   },
   bottomPosition: {
     justifyContent: "flex-end",
+
+    ...Platform.select({
+      ios: {
+        marginBottom: 50,
+      },
+      android: {
+        marginBottom: 20,
+      },
+    }),
   },
   topPosition: {
     justifyContent: "flex-start",
-    marginTop: "auto",
+    ...Platform.select({
+      ios: {
+        marginBottom: 50,
+      },
+      android: {
+        marginBottom: 20,
+      },
+    }),
   },
   topText: {
     color: Color.base.White,

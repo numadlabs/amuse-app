@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  Platform,
   ActivityIndicator
 } from "react-native";
 import Color from "./constants/Color";
@@ -18,6 +19,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { generatePerkQr, redeemBonus, useBonus } from "./lib/service/mutationHelper";
 import { restaurantKeys, userKeys } from "./lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { io } from "socket.io-client";
 import { useAuth } from "./context/AuthContext";
 import QRCode from "react-native-qrcode-svg";
@@ -101,7 +103,8 @@ const PowerUp = () => {
     router.back()
   }
   return (
-    <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ backgroundColor: Color.Gray.gray600, flex: 1, marginTop: Platform.OS === 'ios' ? -10 : 0 }}>
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity
           style={[styles.button, styles.closeButton]}
@@ -160,6 +163,7 @@ const PowerUp = () => {
         </View>
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 

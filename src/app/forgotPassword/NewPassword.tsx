@@ -6,6 +6,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
@@ -120,7 +121,7 @@ const Password = () => {
   };
 
   return (
-    <>
+    <SafeAreaView style={{flex:1, backgroundColor:Color.Gray.gray600}}>
       <Header title='Forgot password?' />
       <Steps activeStep={3} />
       <KeyboardAvoidingView
@@ -325,7 +326,7 @@ const Password = () => {
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </>
+    </SafeAreaView>
   );
 };
 

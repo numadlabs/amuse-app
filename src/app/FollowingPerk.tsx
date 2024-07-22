@@ -1,11 +1,12 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Color from "./constants/Color";
 import Close from "./components/icons/Close";
 import Toast from "react-native-toast-message";
 import PerkGradient from "./components/icons/PerkGradient";
 import Tick from "./components/icons/Tick";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface FollowingPerkParams {
   visitCount: number;
@@ -70,7 +71,8 @@ const NotOwnedPerk: React.FC<FollowingPerkParams> = () => {
   };
 
   return (
-    <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ backgroundColor: Color.Gray.gray600, flex: 1, marginTop: Platform.OS === 'ios' ? -10 : 0  }}>
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity
           style={[styles.button, styles.closeButton]}
@@ -103,6 +105,7 @@ const NotOwnedPerk: React.FC<FollowingPerkParams> = () => {
         </View>
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 

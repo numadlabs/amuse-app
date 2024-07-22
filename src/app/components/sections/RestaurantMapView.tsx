@@ -276,9 +276,9 @@ export default function RestaurantMapView() {
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         initialRegion={{
-          latitude: 25.2048,
-          longitude: 55.2708,
-          latitudeDelta: 0.1, // Adjust the delta values for desired zoom level
+          latitude: 50.0755,   // Latitude for Prague
+          longitude: 14.4378,  // Longitude for Prague
+          latitudeDelta: 0.1,  // Adjust the delta values for desired zoom level
           longitudeDelta: 0.1,
         }} // Pass the initialRegion prop here
         customMapStyle={mapStyle}
@@ -304,7 +304,7 @@ export default function RestaurantMapView() {
               latitude: currentLocation.latitude,
               longitude: currentLocation.longitude,
             }}
-            // title="Your Location"
+          // title="Your Location"
           >
             <Image source={require("@/public/images/locationPin.png")} />
           </Marker>

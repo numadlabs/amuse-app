@@ -11,6 +11,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Platform,
 } from "react-native";
 import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import APassCard from "../components/atom/cards/APassCard";
@@ -25,6 +26,7 @@ import { getAcard } from "../lib/service/mutationHelper";
 import { getPerksByRestaurant, getRestaurantId } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
 import { height, width } from "../lib/utils";
+import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment";
 
 const Restaurant = () => {
@@ -85,7 +87,7 @@ const Restaurant = () => {
   };
 
   return (
-    <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity style={[styles.button, styles.closeButton]} onPress={() => router.back()}>
           <Close />
@@ -180,7 +182,7 @@ const Restaurant = () => {
               style={[
                 {
                   backgroundColor: Color.Gray.gray600,
-                  height: height / 2.8,
+                  height: height / 2.4, //to do 2.8 prev version(original height)
                   bottom: 0,
                   width: width,
                   zIndex: 99,
@@ -201,7 +203,7 @@ const Restaurant = () => {
                   </View>
                 </TouchableOpacity>
               </View>
-              <View style={{ alignItems: "center", gap: 16 }}>
+              <View style={{ alignItems: "center", gap: 16}}>
                 <Image source={require("@/public/images/perk.png")} style={{ width: width / 1.2, height: 58 }} resizeMode="contain" />
                 <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray50, textAlign: "center" }}>
                   Earn perks after every 3 check-ins. Keep visiting your favorite spots and multiply your rewards!
@@ -214,8 +216,7 @@ const Restaurant = () => {
           </TouchableOpacity>
         </Modal>
       )}
-    </View>
-
+    </SafeAreaView>
   );
 };
 
@@ -233,7 +234,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   closeButton: {
-    marginTop: 12,
+    marginTop: 4,
   },
   closeButtonContainer: {
     width: "100%",

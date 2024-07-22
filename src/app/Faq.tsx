@@ -3,6 +3,7 @@ import React from "react";
 import Header from "./components/layout/Header";
 import Color from "./constants/Color";
 import Accordion from "./components/ui/Accordion";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Faq = () => {
   const data = [
@@ -30,12 +31,14 @@ const Faq = () => {
 
   return (
     <>
+    <SafeAreaView style={{ flex: 1}}>
       <Header title="FAQ" />
       <View style={styles.container}>
         {data.map((item, index) => (
           <Accordion key={index} title={item.title} text={item.text} />
         ))}
       </View>
+      </SafeAreaView>
     </>
   );
 };

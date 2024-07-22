@@ -17,6 +17,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useSignUpStore } from "../lib/store/signUpStore";
 import { checkSignUpOtp } from "../lib/service/mutationHelper";
 import { useMutation } from "@tanstack/react-query";
+import SplitOTPInput from "../components/ui/OtpInput";
 
 export enum KeyBoardTypes {
   default = "default",
@@ -79,9 +80,9 @@ const SplitOTP = () => {
     try {
       const code = Number(text);
       setVerificationCode(isNaN(code) ? 0 : code);
-  
+
       if (text) {
-      
+
         await checkOtpMutation({
           prefix: prefix,
           telNumber: phoneNumber,
@@ -103,52 +104,10 @@ const SplitOTP = () => {
     }
   };
 
-  const otpContent = useMemo(
-    () => (
-      <View style={styles.containerStyle}>
-        {Array.from({ length: 4 }).map((_, i) => (
-          <LinearGradient
-            key={i} // Add key prop to prevent warning
-            colors={
-              isFocused
-                ? [Color.Brand.main.start, Color.Brand.main.end]
-                : [Color.Gray.gray500, Color.Gray.gray500]
-            }
-            start={[0, 1]}
-            end={[1, 0]}
-            style={{
-              marginTop: 10,
-              padding: 1,
-              borderRadius: 16,
-            }}
-          >
-            <View
-              style={{
-                width: 48,
-                height: 48,
-                backgroundColor: Color.Gray.gray500,
-                borderRadius: 16,
-              }}
-            >
-              <Text
-                onPress={onPress}
-                style={[
-                  styles.textStyle,
-                  text[i] ? styles.filledStyle : {},
-                  text[i]
-                    ? { borderColor: Color.Gray.gray300 }
-                    : { borderColor: Color.Gray.gray300 },
-                ]}
-              >
-                {text[i]}
-              </Text>
-            </View>
-          </LinearGradient>
-        ))}
-      </View>
-    ),
-    [text, isFocused]
-  );
+  const handleCodeFilled = (code) => {
+    onChangeText(code);
+  };
+
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -176,23 +135,15 @@ const SplitOTP = () => {
                   We will send an SMS verification code.
                 </Text>
               </View>
-            </View>
-            <SafeAreaView style={styles.safeAreaStyle}>
-              <TextInput
-                maxLength={4}
-                ref={inputRef}
-                style={styles.input}
-                onChangeText={(text) => onChangeText(text)}
-                value={text}
-                keyboardType={KeyBoardTypes.number}
-                onFocus={onFocus}
-                onBlur={onBlur}
-              />
-              {otpContent}
-            </SafeAreaView>
-            <Text style={{color: Color.System.systemError}}>
+              <View style={{ marginTop: 12 }}>
+                <SplitOTPInput codeLength={4} onCodeFilled={handleCodeFilled} />
+              </View>
+              <Text style={{ color: Color.System.systemError }}>
               {error}
             </Text>
+            </View>
+
+           
           </LinearGradient>
         </View>
         <KeyboardAvoidingView
