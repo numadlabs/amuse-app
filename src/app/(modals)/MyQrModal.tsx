@@ -149,13 +149,13 @@ const MyQrModal = () => {
       setLoading(true);
 
       if (!userCard) {
-        router.back();
-        router.push({
-          pathname: `/restaurants/${restaurantId}`,
-          params: { cardId: cardId as any }
-        });
+        // router.back();
+        // router.push({
+        //   pathname: `/restaurants/${restaurantId}`,
+        //   params: { cardId: cardId as any }
+        // });
       } else if (userCard) {
-        await createTapMutation();
+        // await createTapMutation();
       }
     } catch (error) {
       console.log("Map mutation failed:", error);
