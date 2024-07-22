@@ -83,7 +83,7 @@ const Area = () => {
                     <View style={styles.inputWrapper}>
                       {/* Google Places Autocomplete component for area input */}
                       <GooglePlacesAutocomplete
-                        placeholder="Area (ex. Dubai Marina)"
+                        placeholder="Area (ex. Prague)"
                         onPress={(data, details = null) => {
                           setArea(data.description);
                         }}

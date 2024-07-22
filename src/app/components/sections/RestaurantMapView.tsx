@@ -1,5 +1,3 @@
-
-
 import { restaurantKeys, userKeys } from "@/app/lib/service/keysHelper";
 import { getRestaurants } from "@/app/lib/service/queryHelper";
 import { RestaurantType } from "@/app/lib/types";
@@ -31,6 +29,24 @@ const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
 const mapLatitudeDelta = 0.1;
 const mapLongitudeDelta = 0.1;
+
+const throttle = (func, delay) => {
+  let throttling = false;
+
+  return (...args) => {
+    console.log("throttle function called");
+    if (!throttling) {
+      console.log("Function execution allowed");
+      throttling = true;
+      func(...args);
+      setTimeout(() => {
+        throttling = false;
+      }, delay);
+    } else {
+      console.log("throttle Function execution blocked");
+    }
+  };
+};
 
 export default function RestaurantMapView() {
   const router = useRouter();
@@ -181,6 +197,21 @@ export default function RestaurantMapView() {
     }
   };
 
+  const throttledCenter = useMemo(() => {
+    return throttle((marker) => {
+      console.log("🚀 ~ returnthrottle ~ cardIndex:", marker.name);
+      if (marker !== null) {
+        const region = {
+          latitude: marker.latitude,
+          longitude: marker.longitude,
+          latitudeDelta: mapLatitudeDelta,
+          longitudeDelta: mapLongitudeDelta,
+        };
+        mapRef.current.animateToRegion(region, 150);
+      }
+    }, 250);
+  }, []);
+
   const handleScrollViewScroll = (event) => {
     const offset = event.nativeEvent.contentOffset.x;
     const positiveNumber = offset < 0 ? -offset : offset;
@@ -250,7 +281,7 @@ export default function RestaurantMapView() {
           latitudeDelta: 0.1,  // Adjust the delta values for desired zoom level
           longitudeDelta: 0.1,
         }} // Pass the initialRegion prop here
-
+        
         customMapStyle={mapStyle}
         cacheEnabled={true}
         onPress={toggleLocation} // Add this onPress handler
@@ -264,55 +295,83 @@ export default function RestaurantMapView() {
         </View>
         <View style={styles.gpsButton}>
           <TouchableOpacity >
-            <Gps size={24} color="#000000" />
+            <Gps size={24} color={Color.Gray.gray600} style={{ zIndex: 10 }} />
+          </TouchableOpacity>
+        </View> */}
 
- */}
+        {currentLocation && (
+          <Marker
+            coordinate={{
+              latitude: currentLocation.latitude,
+              longitude: currentLocation.longitude,
+            }}
+          // title="Your Location"
+          >
+            <Image source={require("@/public/images/locationPin.png")} />
+          </Marker>
+        )}
         {restaurantsData?.data?.restaurants.map((restaurant, index) => {
-          if (!restaurant.latitude || !restaurant.longitude) {
-            return null;
-          }
           return (
             <Marker
-              key={index}
+              key={`marker-${index}`}
               coordinate={{
                 latitude: restaurant.latitude,
                 longitude: restaurant.longitude,
               }}
-              title={restaurant.name}
               onPress={() => handleMarkerPress(restaurant)}
-              style={{
-                zIndex: restaurant.id === activeMarker?.id ? 1 : 0,
-              }}
             >
-              <SvgMarker
-                size={48}
-                isActive={restaurant.id === activeMarker?.id}
-                zIndex={restaurant.id === activeMarker?.id ? 1 : 0}
-              />
+              {activeMarker?.id === restaurant.id ? (
+                <SvgMarker
+                  key={restaurant.id as string}
+                  imageUrl={
+                    `${SERVER_SETTING.CDN_LINK}${restaurant?.logo}` as string
+                  }
+                />
+              ) : (
+                <View
+                  style={{
+                    width: 8,
+                    height: 8,
+                    padding: 4,
+                    backgroundColor: Color.base.White,
+                    borderRadius: 48,
+                  }}
+                />
+              )}
             </Marker>
           );
         })}
       </MapView>
-
-      {!scrollViewHidden && (
-        <Animated.ScrollView
-          ref={scrollViewRef}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          scrollEventThrottle={16}
-          snapToInterval={CARD_WIDTH + 20}
-          snapToAlignment="center"
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollViewContent}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: mapAnimation } } }],
-            { useNativeDriver: true }
-          )}
-          onScrollBeginDrag={() => setIsScrollViewDragging(true)}
-          onScrollEndDrag={() => setIsScrollViewDragging(false)}
-          onMomentumScrollEnd={handleScrollViewScroll}
-        >
-          {
+      {/* {!scrollViewHidden && ( */}
+      <Animated.ScrollView
+        ref={scrollViewRef}
+        horizontal
+        pagingEnabled
+        scrollEventThrottle={400}
+        showsHorizontalScrollIndicator={false}
+        snapToInterval={CARD_WIDTH + 20}
+        snapToAlignment="center"
+        style={styles.scrollView}
+        contentInset={{
+          top: 0,
+          left: SPACING_FOR_CARD_INSET,
+          bottom: 10,
+          right: SPACING_FOR_CARD_INSET,
+        }}
+        onMomentumScrollEnd={() => setIsScrollViewDragging(false)}
+        onScrollBeginDrag={() => setIsScrollViewDragging(true)}
+        // onScrollEndDrag={() => setIsScrollViewDragging(false)}
+        contentContainerStyle={{
+          paddingHorizontal:
+            Platform.OS === "android" ? SPACING_FOR_CARD_INSET : 0,
+        }}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: mapAnimation } } }],
+          { useNativeDriver: true, listener: handleScrollViewScroll }
+        )}
+        decelerationRate={0.1}
+      >
+        {!scrollViewHidden &&
           restaurantsData?.data?.restaurants &&
           restaurantsData.data.restaurants.map((marker, index) => (
             <TouchableOpacity
@@ -327,59 +386,142 @@ export default function RestaurantMapView() {
               />
             </TouchableOpacity>
           ))}
-        </Animated.ScrollView>
-      )}
+      </Animated.ScrollView>
+      {/* )} */}
+
+      {/* <View style={styles.absoluteBox}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.buttonText}>Confirm</Text>
+        </TouchableOpacity>
+      </View> */}
     </View>
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    backgroundColor: Color.Gray.gray600,
   },
   map: {
-    ...StyleSheet.absoluteFillObject,
+    flex: 1,
   },
-  locationToggleContainer: {
+  absoluteBox: {
     position: "absolute",
-    top: Platform.OS === "android" ? 50 : 40,
-    right: 10,
-    backgroundColor: "#fff",
-    padding: 8,
-    borderRadius: 20,
-    zIndex: 10,
+    bottom: 20,
+    width: "100%",
   },
-  locationToggle: {
-    flexDirection: "row",
+  button: {
+    backgroundColor: "#212121",
+    padding: 16,
+    margin: 16,
     alignItems: "center",
+    borderRadius: 8,
   },
-  locationToggleText: {
-    fontSize: 14,
-    color: "#000",
-    marginLeft: 5,
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  boxIcon: {
+    position: "absolute",
+    left: 15,
+    top: 18,
+    zIndex: 1,
   },
   scrollView: {
     position: "absolute",
-    bottom: 20,
+    bottom: 70,
     left: 0,
     right: 0,
     paddingVertical: 10,
+    marginBottom: 36,
   },
-  scrollViewContent: {
-    paddingHorizontal: SPACING_FOR_CARD_INSET,
+  endPadding: {
+    paddingRight: width - CARD_WIDTH,
   },
+
   card: {
-    padding: 10,
+    // padding: 10,
     elevation: 2,
     backgroundColor: "#FFF",
-    borderRadius: 10,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
     marginHorizontal: 10,
+    shadowColor: "#000",
+    shadowRadius: 5,
+    shadowOpacity: 0.3,
+    // shadowOffset: { x: 2, y: -2 },
     height: CARD_HEIGHT,
     width: CARD_WIDTH,
     overflow: "hidden",
   },
-})
+  cardImage: {
+    flex: 3,
+    width: "100%",
+    height: "100%",
+    alignSelf: "center",
+  },
+  textContent: {
+    flex: 2,
+    padding: 10,
+  },
+  cardtitle: {
+    fontSize: 12,
+    // marginTop: 5,
+    fontWeight: "bold",
+  },
+  cardDescription: {
+    fontSize: 12,
+    color: "#444",
+  },
+  signIn: {
+    width: "100%",
+    padding: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 3,
+  },
+  textSign: {
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  gpsButton: {
+    backgroundColor: Color.base.White,
+    padding: 12,
+    borderRadius: 48,
+    zIndex: 10,
+    width: 48,
+    height: 48,
+    alignSelf: "flex-end",
+    margin: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: Color.Gray.gray500,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 12,
+      },
+      android: {
+        elevation: 12,
+      },
+    }),
+  },
+  locationToggleContainer: {
+    position: "absolute",
+    top: 20,
+    right: 20,
+  },
+  locationToggle: {
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+  },
+  locationToggleText: {
+    color: "#333",
+  },
+});

@@ -77,7 +77,8 @@ const ProfileEdit = () => {
       user.user.nickname !== nickname ||
       user.user.email !== email ||
       user.user.location !== location ||
-      user.user.dateOfBirth !== dateOfBirth
+      user.user.dateOfBirth !== dateOfBirth ||
+      user.user.profilePicture !== profilePicture
     ) {
       setDataChanged(true);
     } else {
@@ -144,7 +145,7 @@ const ProfileEdit = () => {
       dateOfBirth,
       profilePicture: profilePicture ? {
         uri: profilePicture.uri,
-        type: 'image/jpeg', // or the appropriate MIME type
+        type: 'image/jpeg', 
         name: 'profile_picture.jpg'
       } : undefined
     };
@@ -174,7 +175,7 @@ const ProfileEdit = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 1,
+      quality: 0,
     });
 
     if (!result.canceled) {
