@@ -17,6 +17,12 @@
           "origin": "https://n"
         }
       ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
       "expo-secure-store",
       [
         "expo-font",
@@ -40,13 +46,13 @@
     "slug": "amuse-app",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.numadLabs.amuseApp",
+      "bundleIdentifier": "com.numadLabs.amuse",
       "config": {
         "googleMapsApiKey": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
       }
     },
     "android": {
-      "package": "com.numadLabs.amuseApp",
+      "package": "com.numadLabs.amuse",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyAR4YHRGnBXdSSm70G9GskzKntYCQkh69I"
@@ -78,12 +84,11 @@
       "fallbackToCacheTimeout": 0,
       "checkAutomatically": "ON_LOAD",
       "enabled": true,
-      
       "requestHeaders": {
         "expo-channel-name": "main",
         "expo-runtime-version": "0.4.4",
         "expo-platform": "ios",
-        "channel-name":"main"
+        "channel-name": "main"
       }
     }
   }

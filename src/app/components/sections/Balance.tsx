@@ -9,11 +9,12 @@ import { useAuth } from "@/app/context/AuthContext";
 
 interface BalanceProps {
   amount?: number;
-  aed: number;
+  convertedAmount: number;
+  currencyName: string;
   handleToggle: () => void;
 }
 
-const Balance: React.FC<BalanceProps> = ({ amount, handleToggle, aed }) => {
+const Balance: React.FC<BalanceProps> = ({ amount, handleToggle, convertedAmount , currencyName}) => {
 
   return (
     <View style={styles.container}>
@@ -55,7 +56,7 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle, aed }) => {
                     lineHeight: 36,
                   }}
                 >
-                  {amount == 0 ? "0.0000" : aed?.toFixed(2)}
+                  {amount == 0 ? "0.0000" : convertedAmount?.toFixed(2)}
                 </Text>
                 <Text
                   style={{
@@ -64,7 +65,7 @@ const Balance: React.FC<BalanceProps> = ({ amount, handleToggle, aed }) => {
                     lineHeight: 20,
                   }}
                 >
-                  CZK
+                  {currencyName}
                 </Text>
               </View>
             </View>

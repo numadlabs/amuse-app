@@ -15,6 +15,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image
 } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -30,6 +31,7 @@ import useLocationStore from "../lib/store/userLocation";
 import { userKeys } from "../lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { SERVER_SETTING } from "../constants/serverSettings";
 
 const Profile = () => {
   const [internalVisitCount, setInternalVisitCount] = useState(0);
@@ -91,7 +93,7 @@ const Profile = () => {
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
-      <Header title="Profile" />
+        <Header title="Profile" />
         <ScrollView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
           <View style={styles.body}>
             <View style={{ borderWidth: 1, borderColor: Color.Gray.gray300, borderRadius: 16, }}>
@@ -112,10 +114,17 @@ const Profile = () => {
                   }}
                 >
                   <View style={styles.profilePic}>
-                    <User size={36} color={Color.Gray.gray50} />
+                    {user?.user?.profilePicture ? (
+                      <Image
+                        source={{ uri: `${SERVER_SETTING.PROFILE_PIC_LINK}${user?.user?.profilePicture}`, }}
+                        style={{ width: 72, height: 72, borderRadius: 48 }}
+                      />
+                    ) : (
+                      <User size={48} color={Color.Gray.gray50} />
+                    )}
                   </View>
                   <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
-                    <View style={{ alignContent: 'center', justifyContent: 'center', gap:8 }}>
+                    <View style={{ alignContent: 'center', justifyContent: 'center', gap: 8 }}>
                       <Text numberOfLines={1} ellipsizeMode="tail" style={styles.profileName}>{user?.user?.nickname}</Text>
                       <Text style={{ fontSize: 14, lineHeight: 18, color: Color.Gray.gray100 }}>Tier: {userTier}</Text>
                     </View>

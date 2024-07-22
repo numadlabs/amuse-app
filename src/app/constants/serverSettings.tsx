@@ -5,6 +5,7 @@ export const SERVER_SETTING = {
   API_URL: "https://amuse-backend-feb14ba0a8da.herokuapp.com",
   PERK_FREQUENCY: 3,
   CDN_LINK: "https://d2fovtzya8mbko.cloudfront.net/restaurant/",
+  PROFILE_PIC_LINK: "https://d2fovtzya8mbko.cloudfront.net/user/"
 };
 
 export const mapStyle = [

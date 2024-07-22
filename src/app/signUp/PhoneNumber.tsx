@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -79,7 +80,7 @@ const PhoneNumber = () => {
   const handleNavigation = () => {
     if (phoneNumber) {
       setLoading(true);
-      // handleOtp(prefix, phoneNumber,)
+      handleOtp(prefix, phoneNumber,)
       router.push({
         pathname: "/signUp/Otp",
         params: {
@@ -122,7 +123,7 @@ const PhoneNumber = () => {
 
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <Steps activeStep={1} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -319,7 +320,7 @@ const PhoneNumber = () => {
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </>
+    </SafeAreaView>
   );
 };
 

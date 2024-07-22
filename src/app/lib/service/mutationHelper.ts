@@ -99,6 +99,7 @@ export async function updateUserInfo({
       "Content-Type": "multipart/form-data",
     },
     data: formData,
+    maxContentLength: 10 * 1024 * 1024,
   };
 
   const response = await axiosClient.request(config);

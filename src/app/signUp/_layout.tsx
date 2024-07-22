@@ -3,6 +3,7 @@ import Header from '../components/layout/Header'
 
 import { Stack } from 'expo-router';
 import { Modal } from 'react-native-paper';
+import { SafeAreaView } from 'react-native';
 
 export default function SuLayout() {
   return (

@@ -3,31 +3,44 @@
     "version": ">= 7.2.0"
   },
   "build": {
-    "development-simulator": {
-      "developmentClient": true,
-      "distribution": "internal",
-     
-      "ios": {
-        "simulator": true
-      },
-      "channel": "development-simulator"
-    },
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "channel": "development"
+      "android": {
+        "gradleCommand": ":app:assembleDebug"
+      },
+      "ios": {
+        "buildConfiguration": "Debug"
+      },
+      "env": {
+        "EXPO_IOS_GOOGLE_API_KEY": "AIzaSyAR4YHRGnBXdSSm70G9GskzKntYCQkh69I"
+      }
     },
     "preview": {
       "distribution": "internal",
-      "channel": "preview",
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "env": {
+          "EXPO_ANDROID_GOOGLE_API_KEY": "AIzaSyAR4YHRGnBXdSSm70G9GskzKntYCQkh69I"
+        }
       },
+      "ios": {
+        "env": {
+          "EXPO_IOS_GOOGLE_API_KEY": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
+        }
+      }
     },
     "production": {
-      "channel": "main",
-      "env": {
-        "EXPO_PUBLIC_GOOGLE_API_KEY": "AIzaSyDLFwoZfCSJErsQQwNwFiqRDmLVICrnjdg"
+      "android": {
+        "buildType": "app-bundle",
+        "env": {
+          "EXPO_ANDROID_GOOGLE_API_KEY": "AIzaSyAR4YHRGnBXdSSm70G9GskzKntYCQkh69I"
+        }
+      },
+      "ios": {
+        "env": {
+          "EXPO_IOS_GOOGLE_API_KEY": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
+        }
       }
     }
   },

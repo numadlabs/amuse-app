@@ -63,6 +63,9 @@ const Page = () => {
     },
     enabled: !!authState.userId,
   });
+
+  console.log(user);
+  
   
 
 
@@ -123,7 +126,8 @@ const Page = () => {
           {user && (
             <Balance
               amount={user?.user?.balance}
-              aed={user?.balanceInAed}
+              convertedAmount={user?.convertedBalance}
+              currencyName="CZK"
               handleToggle={() => toggleBalanceBottomSheet()}
             />
           )}
