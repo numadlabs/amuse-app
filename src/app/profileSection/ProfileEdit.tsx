@@ -19,10 +19,10 @@ import {
 } from "react-native";
 import Header from "../components/layout/Header";
 import Color from "../constants/Color";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserById } from "../lib/service/queryHelper";
 import { useAuth } from "../context/AuthContext";
-import { updateUserInfo } from "../lib/service/mutationHelper";
+import { sendEmailOtp, updateUserInfo } from "../lib/service/mutationHelper";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "../components/ui/Button";
 import Toast from "react-native-toast-message";
@@ -35,6 +35,7 @@ import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from 'expo-image-picker';
 import { SERVER_SETTING } from "../constants/serverSettings";
+import useBoostInfoStore from "../lib/store/boostInfoStore";
 
 const ProfileEdit = () => {
   const { authState } = useAuth();
@@ -45,7 +46,7 @@ const ProfileEdit = () => {
 
   const [loading, setLoading] = useState(false);
   const [nickname, setNickname] = useState("");
-  const [email, setEmail] = useState("");
+  const { email, setEmail } = useBoostInfoStore()
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [location, setLocation] = useState("");
   const [profilePicture, setProfilePicture] = useState(null);
@@ -96,6 +97,31 @@ const ProfileEdit = () => {
   const queryClient = useQueryClient();
 
 
+  const { mutateAsync: sendEmailOtpMutation } = useMutation({
+    mutationFn: sendEmailOtp,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (data, variables) => {
+      console.log(data);
+    },
+  })
+
+  const handleNavigation = async () => {
+    if (emailRegex.test(email)) {
+      setLoading(true);
+      await sendEmailOtpMutation({
+        email: email
+      })
+      setLoading(false);
+      router.push("/profileSection/Otp")
+      setError("")
+    } else {
+      setError("Please enter a valid email address");
+    }
+  }
+
+
 
   const triggerUpdateUser = async () => {
     setLoading(true);
@@ -126,6 +152,7 @@ const ProfileEdit = () => {
 
     // Check for emojis in email
     if (emojiRegex.test(email)) {
+
       setEmailError("Email cannot contain emojis");
       setLoading(false);
       return;
@@ -138,14 +165,14 @@ const ProfileEdit = () => {
       return;
     }
 
-    const userData = { 
-      nickname, 
-      email, 
-      location, 
+    const userData = {
+      nickname,
+      email,
+      location,
       dateOfBirth,
       profilePicture: profilePicture ? {
         uri: profilePicture.uri,
-        type: 'image/jpeg', 
+        type: 'image/jpeg',
         name: 'profile_picture.jpg'
       } : undefined
     };
@@ -234,13 +261,13 @@ const ProfileEdit = () => {
                   <TouchableOpacity onPress={pickImage} style={styles.profilePic}>
                     {profilePicture ? (
                       <Image
-                        source={{  uri: `${SERVER_SETTING.PROFILE_PIC_LINK}${profilePicture}`, }}
+                        source={{ uri: `${SERVER_SETTING.PROFILE_PIC_LINK}${profilePicture}`, }}
                         style={{ width: 96, height: 96, borderRadius: 48 }}
                       />
                     ) : (
                       <User size={48} color={Color.Gray.gray50} />
                     )}
-                   
+
                   </TouchableOpacity>
                   <View
                     style={{
