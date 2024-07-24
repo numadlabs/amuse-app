@@ -31,16 +31,18 @@ import { useSignUpStore } from "../lib/store/signUpStore";
 import { height } from "../lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
 import data from 'prefix.json'
-import { sendRegisterOtp } from "../lib/service/mutationHelper";
+import { sendRegisterOtp, checkTelNumber } from "../lib/service/mutationHelper";
 import { useMutation } from "@tanstack/react-query";
 
 const PhoneNumber = () => {
-  const { prefix, setPrefix, phoneNumber, setPhoneNumber } = useSignUpStore();
+  const { prefix, setPrefix, phoneNumber, setPhoneNumber, reset } = useSignUpStore();
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const [isFocused, setIsFocused] = useState(false);
   const router = useRouter();
+  const [error, setError] = useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
   const { onRegister } = useAuth();
 
@@ -78,19 +80,52 @@ const PhoneNumber = () => {
   }, []);
 
   const handleNavigation = () => {
-    if (phoneNumber) {
+    if (phoneNumber && !isButtonDisabled) {
       setLoading(true);
-      handleOtp(prefix, phoneNumber,)
-      router.push({
-        pathname: "/signUp/Otp",
-        params: {
-          prefix: prefix,
-          phoneNumber: phoneNumber,
-        },
-      });
+      setIsButtonDisabled(true);
+      checkTelNumberMutation({
+        prefix: prefix,
+        telNumber: phoneNumber,
+      })
+        .then((response) => {
+          if (response && response.data.success === false) {
+
+            setError("This phone number is already registered.");
+            throw new Error("Phone number already registered");
+           
+          } else {
+            return sendOtp({
+              prefix: prefix,
+              telNumber: phoneNumber,
+            });
+          }
+        })
+        .then((otpResponse) => {
+          if (otpResponse) {
+            // OTP sent successfully
+            router.push({
+              pathname: "/signUp/Otp",
+              params: {
+                prefix: prefix,
+                phoneNumber: phoneNumber,
+              },
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        
+            setError("This phone number is already registered.");
+            reset()
+          
+        })
+        .finally(() => {
+          setLoading(false);
+          setIsButtonDisabled(false);
+        });
     }
-    console.log(prefix, phoneNumber);
   };
+
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -99,17 +134,25 @@ const PhoneNumber = () => {
     }
   };
 
-  const {
-    mutateAsync: sendOtp,
-  } = useMutation({
+  const { mutateAsync: checkTelNumberMutation } = useMutation({
+    mutationFn: checkTelNumber,
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+
+  const { mutateAsync: sendOtp } = useMutation({
     mutationFn: sendRegisterOtp,
     onError: (error) => {
+      console.log(error);
+      setLoading(false);
+      setIsButtonDisabled(false);
+      setError("Error sending OTP. Please try again.");
     },
     onSuccess: (data, variables) => {
-      try {
-      } catch (error) {
-        console.error("Send OTP failed:", error);
-      }
+      // Navigate to OTP screen on successful OTP send
+     
     },
   });
 
@@ -209,6 +252,13 @@ const PhoneNumber = () => {
                       />
                     </View>
                   </LinearGradient>
+                  {error && (
+                    <Animated.View entering={FadeIn} style={{ justifyContent: 'center', alignItems: 'center' }}>
+                      <Text style={{ color: Color.System.systemError }}>
+                        {error}
+                      </Text>
+                    </Animated.View>
+                  )}
                 </View>
               </LinearGradient>
             </View>

@@ -7,17 +7,19 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useQueryClient } from "@tanstack/react-query";
 import { userKeys } from "../lib/service/keysHelper";
 import TickCircle from "../components/icons/TickCircle";
+import useBoostInfoStore from "../lib/store/boostInfoStore";
 
 const Success = () => {
   // Initialize the query client
   const queryClient = useQueryClient();
-
+  const {reset} = useBoostInfoStore()
   // Handler for navigation
   const handleNavigation = () => {
     // Invalidate queries related to user info
     queryClient.invalidateQueries({ queryKey: userKeys.info });
     // Navigate to the main tabs
-    router.navigate("/(tabs)");
+    router.replace("/(tabs)");
+    reset()
   };
 
   return (

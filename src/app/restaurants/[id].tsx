@@ -87,7 +87,8 @@ const Restaurant = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+    // <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+    <View style={{flex:1, backgroundColor: Color.Gray.gray600}}>
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity style={[styles.button, styles.closeButton]} onPress={() => router.back()}>
           <Close />
@@ -216,7 +217,8 @@ const Restaurant = () => {
           </TouchableOpacity>
         </Modal>
       )}
-    </SafeAreaView>
+      </View>
+    // </SafeAreaView>
   );
 };
 

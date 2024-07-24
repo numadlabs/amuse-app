@@ -11,6 +11,7 @@ export interface PasswordStore {
   setPhoneNumber: (phoneNumber: string) => void;
   setVerificationCode: (verificationCode: number) => void;
   setPassword: (password: string) => void;
+  reset: () => void;
 }
 
 export const usePasswordStore = create<PasswordStore>((set) => ({
@@ -22,4 +23,10 @@ export const usePasswordStore = create<PasswordStore>((set) => ({
   setPhoneNumber: (phoneNumber) => set({ phoneNumber }),
   setVerificationCode: (verificationCode) => set({ verificationCode }),
   setPassword: (password) => set({ password }),
+  reset: () => set({
+    prefix: data[0].prefix,
+    phoneNumber: "",
+    verificationCode: 0,
+    password: "",
+  })
 }));

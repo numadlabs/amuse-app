@@ -27,6 +27,7 @@ const _layout = () => {
         {/* Defining different screens in the stack */}
         <Stack.Screen name='Email'/>
         <Stack.Screen name='Area'/>
+        <Stack.Screen name='Otp' options={{presentation: 'modal'}}/>
         <Stack.Screen name='Birthday'/>
         {/* Success screen with header hidden */}
         <Stack.Screen options={{ headerShown: false }} name='Success'/>

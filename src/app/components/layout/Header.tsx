@@ -11,6 +11,7 @@ import { ArrowLeft } from "iconsax-react-native";
 import { StatusBar } from "expo-status-bar";
 import Color from "../../constants/Color";
 import { useRouter } from "expo-router";
+import { useSignUpStore } from "@/app/lib/store/signUpStore";
 
 interface NavbarProps {
   title: string;
@@ -18,7 +19,8 @@ interface NavbarProps {
 
 const Header: React.FC<NavbarProps> = ({ title }) => {
   const router = useRouter();
-
+ 
+ 
   return (
     <>
       <SafeAreaView style={{ backgroundColor: Color.Gray.gray600 }}>

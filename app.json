@@ -1,7 +1,7 @@
 {
   "expo": {
-    "version": "0.4.4",
-    "runtimeVersion": "0.4.4",
+    "version": "0.4.6",
+    "runtimeVersion": "0.4.6",
     "scheme": "acme",
     "owner": "numad-labs",
     "userInterfaceStyle": "dark",
@@ -15,12 +15,6 @@
         "expo-router",
         {
           "origin": "https://n"
-        }
-      ],
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ],
       "expo-secure-store",
@@ -45,17 +39,20 @@
     "name": "Amuse Bouche",
     "slug": "amuse-app",
     "ios": {
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "The app accesses your photos to let you share them with your friends."
+      },
       "supportsTablet": false,
-      "bundleIdentifier": "com.numadLabs.amuse",
+      "bundleIdentifier": "com.numadLabs.amuseApp",
       "config": {
         "googleMapsApiKey": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
       }
     },
     "android": {
-      "package": "com.numadLabs.amuse",
+      "package": "com.numadLabs.amuseApp",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyAR4YHRGnBXdSSm70G9GskzKntYCQkh69I"
+          "apiKey": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
         }
       }
     },
@@ -84,11 +81,12 @@
       "fallbackToCacheTimeout": 0,
       "checkAutomatically": "ON_LOAD",
       "enabled": true,
+      
       "requestHeaders": {
         "expo-channel-name": "main",
-        "expo-runtime-version": "0.4.4",
+        "expo-runtime-version": "0.4.6",
         "expo-platform": "ios",
-        "channel-name": "main"
+        "channel-name":"main"
       }
     }
   }

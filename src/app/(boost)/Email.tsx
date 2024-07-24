@@ -7,6 +7,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Steps from "../components/atom/Steps";
@@ -15,12 +16,18 @@ import Button from "../components/ui/Button";
 import { router, useRouter } from "expo-router";
 import useBoostInfoStore from "../lib/store/boostInfoStore";
 import { LinearGradient } from "expo-linear-gradient";
+import Animated, { FadeIn } from "react-native-reanimated";
+import { useMutation } from "@tanstack/react-query";
+import { sendEmailOtp } from "../lib/service/mutationHelper";
 
 const Email = () => {
   // State for managing the button position
   const [buttonPosition, setButtonPosition] = useState("bottom");
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const [error, setError] = useState("")
   // State for managing the focus state of the TextInput
   const [isFocused, setIsFocused] = useState(false);
+  const [loading, setLoading] = useState(false)
   // Hook to navigate using the router
   const router = useRouter();
   // Custom hook to manage email state
@@ -51,6 +58,30 @@ const Email = () => {
   const handleEmailChange = (text) => {
     setEmail(text);
   };
+
+  const { mutateAsync: sendEmailOtpMutation} = useMutation({
+    mutationFn: sendEmailOtp,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (data, variables) => {
+      console.log(data);
+    },
+  })
+
+  const handleNavigation = async() => {
+    if (emailRegex.test(email)) {
+      setLoading(true);
+      await sendEmailOtpMutation({
+        email: email
+      })
+      setLoading(false);
+      router.push("(boost)/Otp")
+      setError("")
+    } else {
+      setError("Please enter a valid email address");
+    }
+  }
 
   return (
     <>
@@ -129,6 +160,13 @@ const Email = () => {
                       />
                     </View>
                   </LinearGradient>
+                  {error && (
+                    <Animated.View entering={FadeIn} style={{ justifyContent: 'center', alignItems: 'center' }}>
+                      <Text style={{ color: Color.System.systemError }}>
+                        {error}
+                      </Text>
+                    </Animated.View>
+                  )}
                 </View>
               </LinearGradient>
             </View>
@@ -151,9 +189,11 @@ const Email = () => {
                   variant={email ? "primary" : "disabled"}
                   textStyle={email ? "primary" : "disabled"}
                   size="default"
-                  onPress={() => router.push("(boost)/Area")}
+                  onPress={handleNavigation}
                 >
-                  Continue
+                  {
+                    loading? <ActivityIndicator /> : "Continue"
+                  }
                 </Button>
               </View>
             </KeyboardAvoidingView>
