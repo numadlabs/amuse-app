@@ -157,7 +157,7 @@ const PerkScreen = () => {
                   color: Color.base.White,
                 }}
               >
-                +1 AED of Bitcoin
+                +1 CZK of Bitcoin
               </Text>
               <Text
                 style={{
