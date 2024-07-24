@@ -55,7 +55,7 @@ const HomeRestList: React.FC<ResListCardProp> = ({
             <Text numberOfLines={1} ellipsizeMode="tail" style={styles.title}>
               {marker?.name}
             </Text>
-            <Text style={styles.category}>{marker?.category}</Text>
+            <Text style={styles.category}>{marker?.categoryName}</Text>
           </View>
           <View
             style={{
@@ -122,20 +122,20 @@ const HomeRestList: React.FC<ResListCardProp> = ({
                   borderColor: Color.base.White,
                 }}
               >
-              
-                    <View
-                      style={{
-                        height: "100%",
-                        width: "100%",
-                        marginLeft: 8,
-                        alignItems: "center",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      <Text style={{ fontSize: 11, color: Color.base.White }}>
-                        Add
-                      </Text>
-                    </View>
+
+                <View
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    marginLeft: 8,
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <Text style={{ fontSize: 11, color: Color.base.White }}>
+                    Add
+                  </Text>
+                </View>
 
 
               </Button>

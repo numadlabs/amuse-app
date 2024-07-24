@@ -16,6 +16,7 @@ import { router } from "expo-router";
 import PerkGradientSm from "./components/icons/PerkGradientSm";
 import { useAuth } from "./context/AuthContext";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { width } from "./lib/utils";
 
 const PerkMarket = () => {
   const { id } = useLocalSearchParams();
@@ -102,7 +103,7 @@ const PerkMarket = () => {
                     backgroundColor: Color.Gray.gray400,
                     borderRadius: 48,
                     paddingVertical: 8,
-                    width: "100%",
+                    width: "50%",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
@@ -123,7 +124,6 @@ const PerkMarket = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: "100%",
     backgroundColor: Color.Gray.gray600,
     justifyContent: "center",
     alignItems: "center",
@@ -131,8 +131,7 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? -10 : 0
   },
   content: {
-    flex: 1,
-    width: "100%",
+    width:width/2.4,
     paddingHorizontal: 12,
     paddingTop: 20,
     paddingBottom: 12,
@@ -141,12 +140,6 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     gap: 12,
     margin: 8,
-  },
-  perkItem: {
-    borderRadius: 10,
-    padding: 20,
-    width: "48%",
-    alignItems: "center",
   },
   perkName: {
     fontSize: 12,
@@ -180,5 +173,4 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
 });
-
 export default PerkMarket;
