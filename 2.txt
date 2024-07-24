@@ -15,6 +15,7 @@ import {
   Text,
   Platform,
   TouchableOpacity,
+  Image
 } from "react-native";
 import Header from "../components/layout/Header";
 import Color from "../constants/Color";
@@ -32,6 +33,8 @@ import { width } from "../lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as ImagePicker from 'expo-image-picker';
+import { SERVER_SETTING } from "../constants/serverSettings";
 
 const ProfileEdit = () => {
   const { authState } = useAuth();
@@ -45,6 +48,7 @@ const ProfileEdit = () => {
   const [email, setEmail] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [location, setLocation] = useState("");
+  const [profilePicture, setProfilePicture] = useState(null);
   const [initialDate, setInitialDate] = useState(new Date());
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [dataChanged, setDataChanged] = useState(false);
@@ -64,6 +68,7 @@ const ProfileEdit = () => {
       setEmail(user.user.email || "");
       setLocation(user.user.location || "");
       setDateOfBirth(user.user.dateOfBirth || "");
+      setProfilePicture(user.user.profilePicture || "")
     }
   }, [user]);
 
@@ -72,7 +77,8 @@ const ProfileEdit = () => {
       user.user.nickname !== nickname ||
       user.user.email !== email ||
       user.user.location !== location ||
-      user.user.dateOfBirth !== dateOfBirth
+      user.user.dateOfBirth !== dateOfBirth ||
+      user.user.profilePicture !== profilePicture
     ) {
       setDataChanged(true);
     } else {
@@ -81,9 +87,9 @@ const ProfileEdit = () => {
   }, [user, nickname, email, location, dateOfBirth]);
 
   const onDateChange = (event, selectedDate) => {
-    setShowDatePicker(false);
+    setShow(Platform.OS === 'ios');
     if (selectedDate) {
-      setDateOfBirth(selectedDate.toISOString().split("T")[0]);
+      setDateOfBirth(selectedDate.toISOString().split('T')[0]);
       setInitialDate(selectedDate);
     }
   };
@@ -93,52 +99,62 @@ const ProfileEdit = () => {
 
   const triggerUpdateUser = async () => {
     setLoading(true);
-    
+
     // Emoji blocking regex
     const emojiRegex = /\p{Emoji}/u;
-  
+
     // Date validation
     if (!dateOfBirth) {
       setError("Please select a valid date of birth");
       setLoading(false);
       return;
     }
-  
+
     // Input validations
     if (nickname.length >= 10) {
       setError("Nickname must be less than 10 characters");
       setLoading(false);
       return;
     }
-    
+
     // Check for emojis in nickname
     if (emojiRegex.test(nickname)) {
       setError("Nickname cannot contain emojis");
       setLoading(false);
       return;
     }
-  
+
     // Check for emojis in email
     if (emojiRegex.test(email)) {
       setEmailError("Email cannot contain emojis");
       setLoading(false);
       return;
     }
-  
+
     // Validate email format
     if (!emailRegex.test(email)) {
       setEmailError("Invalid email");
       setLoading(false);
       return;
     }
-  
-    const userData = { nickname, email, location, dateOfBirth };
+
+    const userData = { 
+      nickname, 
+      email, 
+      location, 
+      dateOfBirth,
+      profilePicture: profilePicture ? {
+        uri: profilePicture.uri,
+        type: 'image/jpeg', 
+        name: 'profile_picture.jpg'
+      } : undefined
+    };
     try {
       await updateUserInfo({ userId: authState.userId, data: userData });
       setLoading(false);
       setDataChanged(false);
       queryClient.invalidateQueries({ queryKey: userKeys.info });
-  
+
       // Navigation based on profile prefill status
       if (!isProfilePrefilled) {
         router.navigate("/Success");
@@ -149,6 +165,21 @@ const ProfileEdit = () => {
       console.log(error);
       setLoading(false);
       // Handle error (e.g., show toast message)
+    }
+  };
+
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0,
+    });
+
+    if (!result.canceled) {
+      setProfilePicture(result.assets[0]);
     }
   };
   useEffect(() => {
@@ -184,7 +215,7 @@ const ProfileEdit = () => {
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
-      <Header title="Account" />
+        <Header title="Account" />
         <ScrollView style={{ flex: 1, paddingHorizontal: 16 }}>
           <View style={styles.body}>
             <LinearGradient
@@ -200,9 +231,17 @@ const ProfileEdit = () => {
             >
               <View style={styles.container}>
                 <View style={styles.profileContainer}>
-                  <View style={styles.profilePic}>
-                    <User size={48} color={Color.Gray.gray50} />
-                  </View>
+                  <TouchableOpacity onPress={pickImage} style={styles.profilePic}>
+                    {profilePicture ? (
+                      <Image
+                        source={{  uri: `${SERVER_SETTING.PROFILE_PIC_LINK}${profilePicture}`, }}
+                        style={{ width: 96, height: 96, borderRadius: 48 }}
+                      />
+                    ) : (
+                      <User size={48} color={Color.Gray.gray50} />
+                    )}
+                   
+                  </TouchableOpacity>
                   <View
                     style={{
                       position: "absolute",
@@ -468,17 +507,20 @@ const ProfileEdit = () => {
               display="spinner"
               onChange={onDateChange}
             />
-            <Button variant="tertiary" onPress={confirmDate} style={{ bottom: 15 }}>
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontWeight: "600",
-                  color: Color.base.White,
-                }}
-              >
-                Done
-              </Text>
-            </Button>
+            {Platform.OS === 'ios' && (
+              <Button variant="tertiary" onPress={confirmDate} style={{ bottom: 15 }}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "600",
+                    color: Color.base.White,
+                  }}
+                >
+                  Done
+                </Text>
+              </Button>
+            )}
+
           </Animated.View>
         )}
       </SafeAreaView>
