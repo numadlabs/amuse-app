@@ -7,6 +7,7 @@ interface BoostInfoState {
   setEmail: (email: string) => void;
   setArea: (area: string) => void;
   setBirthdate: (birthdate: string) => void;
+  reset: () => void;
 }
 
 const useBoostInfoStore = create<BoostInfoState>((set) => ({
@@ -16,6 +17,11 @@ const useBoostInfoStore = create<BoostInfoState>((set) => ({
   setEmail: (email) => set({ email }),
   setArea: (area) => set({ area }),
   setBirthdate: (birthdate) => set({ birthdate }),
+  reset: () => set({
+    email: "",
+    area: "",
+    birthdate: null,
+  })
 }));
 
 export default useBoostInfoStore;

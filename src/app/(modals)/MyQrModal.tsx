@@ -166,7 +166,7 @@ const MyQrModal = () => {
 
   return (
     <>
-            <SafeAreaView style={{ flex: 1}}>
+    {/* <SafeAreaView style={{ flex: 1}}> */}
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1, backgroundColor: Color.Gray.gray600, alignItems: 'center' }}>
           {loading ? (
@@ -211,7 +211,7 @@ const MyQrModal = () => {
           />
         ) : null}
       </View>
-      </SafeAreaView>
+      {/* </SafeAreaView> */}
     </>
   );
 };

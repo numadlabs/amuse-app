@@ -111,6 +111,7 @@ const Password = () => {
           pathname: "/forgotPassword/Success",
         });
         setLoading(false)
+      
       } else {
         console.log("Password does not meet the validation rules or passwords do not match.");
       }

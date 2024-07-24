@@ -46,7 +46,7 @@ const PerkMarket = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    // <SafeAreaView style={{ flex: 1 }}>
     <GestureHandlerRootView style={styles.container}>
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity
@@ -116,7 +116,7 @@ const PerkMarket = () => {
         />
       )}
     </GestureHandlerRootView>
-    </SafeAreaView>
+    // </SafeAreaView>
   );
 };
 

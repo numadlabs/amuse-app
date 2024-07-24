@@ -12,6 +12,7 @@ export interface SignUpStore {
   setPassword: (password: string) => void;
   setNickname: (nickname: string) => void;
   setVerificationCode: (verificationCode: number) => void;
+  reset: () => void;
 }
 
 export const useSignUpStore = create<SignUpStore>((set) => ({
@@ -25,4 +26,12 @@ export const useSignUpStore = create<SignUpStore>((set) => ({
   setPassword: (password: string) => set({ password }),
   setNickname: (nickname: string) => set({ nickname }),
   setVerificationCode: (verificationCode: number) => set({ verificationCode }),
+  reset: () =>
+    set({
+      prefix: data[0].prefix,
+      phoneNumber: "",
+      password: "",
+      nickname: "",
+      verificationCode: 0,
+    }),
 }));

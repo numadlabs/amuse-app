@@ -26,6 +26,7 @@ const NickName = () => {
     password,
     verificationCode,
     prefix,
+    reset
   } = useSignUpStore();
   const [error, setError] = useState<string>("")
   const [isFocused, setIsFocused] = useState(false);
@@ -47,6 +48,7 @@ const NickName = () => {
       if (response.data) {
         console.log("Register successful:", response.data);
         router.push("/(tabs)");
+        reset()
       } else if (response && response.error) {
         setError("Phone number is already signed up.");
         console.log(error)

@@ -13,15 +13,14 @@ export function generateTap() {
 }
 
 export function registerDeviceNotification({
-  pushToken
+  pushToken,
 }: {
   pushToken: string;
-}){
+}) {
   console.log("🚀 ~ expo token");
-  return axiosClient.post('/devices', {pushToken})
-  .then((response) => {
+  return axiosClient.post("/devices", { pushToken }).then((response) => {
     return response;
-  })
+  });
 }
 
 export function generatePerkQr({ id }: { id: string }) {
@@ -163,6 +162,9 @@ export async function checkPasswordOtp({
     });
 }
 
+
+
+
 export async function sendRegisterOtp({
   prefix,
   telNumber,
@@ -174,6 +176,30 @@ export async function sendRegisterOtp({
     .post("/auth/registerOTP", { prefix, telNumber })
     .then((response) => {
       return response;
+    });
+}
+
+export async function sendEmailOtp({ email }: { email: string }) {
+  return axiosClient.post("/auth/email", { email }).then((response) => {
+    return response;
+  });
+}
+
+export async function verifyEmailOtp({
+  email,
+  emailVerificationCode,
+}: {
+  email: string;
+  emailVerificationCode: number;
+}) {
+  return axiosClient
+    .post("/auth/verifyEmail", { email, emailVerificationCode })
+    .then((response) => {
+      if (response.data.success) {
+        return response.data.data;
+      } else {
+        throw new Error(response.data.error);
+      }
     });
 }
 
@@ -190,5 +216,20 @@ export async function checkSignUpOtp({
     .post("/auth/checkOTP", { prefix, telNumber, telVerificationCode })
     .then((response) => {
       return response;
+    });
+}
+
+
+export async function checkTelNumber({
+  prefix,
+  telNumber,
+}: {
+  prefix: string;
+  telNumber: string;
+}) {
+  return axiosClient
+    .post("/auth/checkTelNumber", { prefix, telNumber })
+    .then((response) => {
+        return response.data;
     });
 }
