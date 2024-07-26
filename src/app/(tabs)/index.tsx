@@ -64,11 +64,6 @@ const Page = () => {
     enabled: !!authState.userId,
   });
 
-  console.log(user);
-  
-  
-
-
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
     queryFn: () => {

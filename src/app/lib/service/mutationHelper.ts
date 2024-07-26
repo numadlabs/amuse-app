@@ -25,7 +25,10 @@ export function registerDeviceNotification({
 
 export function generatePerkQr({ id }: { id: string }) {
   console.log("🚀 ~ generatePerkQr");
-  return axiosClient.post(`/userBonus/${id}/generate`);
+  return axiosClient.post(`/userBonus/${id}/generate`)
+  .then((response) => {
+    return response;
+  });;
 }
 
 export function useBonus(id: string) {

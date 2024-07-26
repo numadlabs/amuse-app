@@ -15,6 +15,7 @@ import {
   Text,
   Platform,
   TouchableOpacity,
+  Image
 } from "react-native";
 import Header from "../components/layout/Header";
 import Color from "../constants/Color";
@@ -32,6 +33,8 @@ import { width } from "../lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as ImagePicker from 'expo-image-picker';
+import { SERVER_SETTING } from "../constants/serverSettings";
 
 const ProfileEdit = () => {
   const { authState } = useAuth();
@@ -45,6 +48,7 @@ const ProfileEdit = () => {
   const [email, setEmail] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [location, setLocation] = useState("");
+  const [profilePicture, setProfilePicture] = useState(null);
   const [initialDate, setInitialDate] = useState(new Date());
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [dataChanged, setDataChanged] = useState(false);
@@ -64,21 +68,25 @@ const ProfileEdit = () => {
       setEmail(user.user.email || "");
       setLocation(user.user.location || "");
       setDateOfBirth(user.user.dateOfBirth || "");
+      setProfilePicture(user.user.profilePicture || "")
     }
   }, [user]);
+
 
   useEffect(() => {
     if (
       user.user.nickname !== nickname ||
       user.user.email !== email ||
       user.user.location !== location ||
-      user.user.dateOfBirth !== dateOfBirth
+      user.user.dateOfBirth !== dateOfBirth ||
+      user.user.profilePicture !== profilePicture
     ) {
       setDataChanged(true);
     } else {
       setDataChanged(false);
     }
   }, [user, nickname, email, location, dateOfBirth]);
+
 
   const onDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
@@ -132,7 +140,17 @@ const ProfileEdit = () => {
       return;
     }
   
-    const userData = { nickname, email, location, dateOfBirth };
+    const userData = { 
+      nickname, 
+      email, 
+      location, 
+      dateOfBirth,
+      profilePicture: profilePicture ? {
+        uri: profilePicture.uri,
+        type: 'image/jpeg', 
+        name: 'profile_picture.jpg'
+      } : undefined
+    };
     try {
       await updateUserInfo({ userId: authState.userId, data: userData });
       setLoading(false);
@@ -151,6 +169,21 @@ const ProfileEdit = () => {
       // Handle error (e.g., show toast message)
     }
   };
+
+   const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0,
+    });
+
+    if (!result.canceled) {
+      setProfilePicture(result.assets[0]);
+    }
+  };
+
   useEffect(() => {
     const totalFields = 4;
     const filledFields = [nickname, email, location, dateOfBirth].filter(
