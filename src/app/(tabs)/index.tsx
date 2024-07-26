@@ -15,7 +15,7 @@ import QuickInfo from "../components/sections/QuickInfo";
 import StackedCard from "../components/sections/StackedCard";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getUserById, getUserCard } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
 import { RestaurantType } from "../lib/types";
@@ -40,6 +40,7 @@ import Button from "../components/ui/Button";
 import Close from "../components/icons/Close";
 import { usePushNotifications } from "../hooks/usePushNotification";
 import moment from "moment";
+import { registerDeviceNotification } from "../lib/service/mutationHelper";
 
 
 const Page = () => {
@@ -50,8 +51,13 @@ const Page = () => {
   const [isQuickInfoVisible, setIsQuickInfoVisible] = useState(true);
   const pressed = useSharedValue(false);
   const { authState } = useAuth();
+  const { expoPushToken, notification: pushNotification } = usePushNotifications();
 
-  // Notification setup
+  const { mutateAsync: sendPushToken } = useMutation({
+    mutationFn: registerDeviceNotification
+  })
+
+
 
 
   const { currentLocation } = useLocationStore();
@@ -74,6 +80,17 @@ const Page = () => {
     },
     enabled: !!currentLocation,
   });
+
+
+  const data = JSON.stringify(pushNotification, undefined, 2)
+
+  if (expoPushToken?.data) {
+    console.log("Sending push token");
+
+    sendPushToken({
+      pushToken: expoPushToken?.data
+    })
+  }
 
   const toggleBottomSheet = () => {
     setIsOpen(!isOpen);
