@@ -173,7 +173,7 @@ const Email = () => {
             {/* KeyboardAvoidingView to handle button positioning */}
             <KeyboardAvoidingView
               style={{ flex: 1 }}
-              keyboardVerticalOffset={110}
+              keyboardVerticalOffset={130}
               behavior={Platform.OS === "ios" ? "height" : "padding"}
             >
               <View
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
         marginBottom: 50,
       },
       android: {
-        marginBottom: 20,
+        marginBottom: 100,
       },
     }),
   },

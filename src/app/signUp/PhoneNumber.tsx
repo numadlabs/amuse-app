@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  StatusBar,
 } from "react-native";
 import Animated, {
   FadeIn,
@@ -37,7 +38,7 @@ import { useMutation } from "@tanstack/react-query";
 const PhoneNumber = () => {
   const { prefix, setPrefix, phoneNumber, setPhoneNumber, reset } = useSignUpStore();
   const [loading, setLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const [isFocused, setIsFocused] = useState(false);
   const router = useRouter();
@@ -89,10 +90,8 @@ const PhoneNumber = () => {
       })
         .then((response) => {
           if (response && response.data.success === false) {
-
             setError("This phone number is already registered.");
             throw new Error("Phone number already registered");
-           
           } else {
             return sendOtp({
               prefix: prefix,
@@ -102,7 +101,6 @@ const PhoneNumber = () => {
         })
         .then((otpResponse) => {
           if (otpResponse) {
-            // OTP sent successfully
             router.push({
               pathname: "/signUp/Otp",
               params: {
@@ -114,10 +112,8 @@ const PhoneNumber = () => {
         })
         .catch((error) => {
           console.log(error);
-        
-            setError("This phone number is already registered.");
-            reset()
-          
+          setError("This phone number is already registered.");
+          reset()
         })
         .finally(() => {
           setLoading(false);
@@ -125,7 +121,6 @@ const PhoneNumber = () => {
         });
     }
   };
-
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -141,7 +136,6 @@ const PhoneNumber = () => {
     },
   });
 
-
   const { mutateAsync: sendOtp } = useMutation({
     mutationFn: sendRegisterOtp,
     onError: (error) => {
@@ -152,10 +146,8 @@ const PhoneNumber = () => {
     },
     onSuccess: (data, variables) => {
       // Navigate to OTP screen on successful OTP send
-     
     },
   });
-
 
   const handleOtp = (prefix: string, phoneNumber: string) => {
     sendOtp({
@@ -164,213 +156,132 @@ const PhoneNumber = () => {
     })
   }
 
-
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
-      <Steps activeStep={1} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-      >
-        <TouchableWithoutFeedback onPress={dismissKeyboard}>
-          <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
-            <View style={styles.body}>
-              <LinearGradient
-                colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                style={{
-                  width: "100%",
-                  borderRadius: 32,
-                  marginTop: 16,
-                  borderWidth: 1,
-                  borderColor: Color.Gray.gray400,
-                  paddingBottom: 16,
-                  paddingTop: 24,
-                  paddingHorizontal: 16,
-                }}
-              >
-                <View style={styles.textContainer}>
-                  <View style={{ gap: 8 }}>
-                    <Text style={styles.topText}>Phone Number</Text>
-                    <Text style={styles.bottomText}>
-                      This will be kept private. No surprise DMs.
-                    </Text>
-                  </View>
+    <>
+      <StatusBar barStyle="light-content" backgroundColor={Color.Gray.gray600} />
+      <SafeAreaView style={{ flex: 0, backgroundColor: Color.Gray.gray600 }} />
+      <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+        >
+          <TouchableWithoutFeedback onPress={dismissKeyboard}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+              <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+                <Steps activeStep={1}/>
+                <View style={styles.body}>
                   <LinearGradient
-                    colors={
-                      isFocused
-                        ? [Color.Brand.main.start, Color.Brand.main.end]
-                        : [Color.Gray.gray300, Color.Gray.gray300]
-                    }
-                    start={[0, 1]}
-                    end={[1, 0]}
-                    style={{
-                      marginTop: 10,
-                      borderRadius: 16,
-                      padding: 1,
-                    }}
+                    colors={[Color.Brand.card.start, Color.Brand.card.end]}
+                    style={styles.gradientContainer}
                   >
-                    <View
-                      style={{
-                        alignItems: "center",
-                        gap: 12,
-                        alignContent: "center",
-                        flexDirection: "row",
-                        height: 48,
-                        paddingHorizontal: 16,
-                        width: "100%",
-                        backgroundColor: Color.Gray.gray500,
-                        borderRadius: 16,
-                      }}
-                    >
-                      <AnimatedPressable
-                        entering={FadeIn}
-                        exiting={FadeOut}
-                        onPress={togglePrefix}
-                      >
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 8,
-                          }}
-                        >
-                          <Text style={{ color: Color.Gray.gray50 }}>
-                            +{prefix}
-                          </Text>
-                          <ArrowDown2 color={Color.Gray.gray50} />
-                        </View>
-                      </AnimatedPressable>
-                      <TextInput
-                        onFocus={() => setIsFocused(true)}
-                        onBlur={() => setIsFocused(false)}
-                        keyboardType="phone-pad"
-                        placeholder="XXXXXXXX"
-                        placeholderTextColor={Color.Gray.gray100}
-                        value={phoneNumber}
-                        style={styles.input}
-                        onChangeText={setPhoneNumber}
-                      />
-                    </View>
-                  </LinearGradient>
-                  {error && (
-                    <Animated.View entering={FadeIn} style={{ justifyContent: 'center', alignItems: 'center' }}>
-                      <Text style={{ color: Color.System.systemError }}>
-                        {error}
-                      </Text>
-                    </Animated.View>
-                  )}
-                </View>
-              </LinearGradient>
-            </View>
-            <KeyboardAvoidingView
-              style={{ flex: 1 }}
-              keyboardVerticalOffset={100}
-              behavior={Platform.OS === "ios" ? "height" : "padding"}
-            >
-              <View
-                style={[
-                  styles.buttonContainer,
-                  buttonPosition === "bottom"
-                    ? styles.bottomPosition
-                    : styles.topPosition,
-                ]}
-              >
-                <Button
-                  variant={!phoneNumber ? "disabled" : "primary"}
-                  textStyle={!phoneNumber ? "disabled" : "primary"}
-                  size="default"
-                  onPress={handleNavigation}
-                >
-                  {loading ? (
-                    <ActivityIndicator size="small" color="white" />
-                  ) : (
-                    <Text>Confirm</Text>
-                  )}
-                </Button>
-              </View>
-            </KeyboardAvoidingView>
-
-            {isOpen && (
-              <Animated.View
-                style={[
-                  translateY,
-                  {
-                    position: "absolute",
-                    zIndex: 100,
-                    top: -196,
-                    width: "80%",
-                    backgroundColor: Color.Gray.gray400,
-                    borderRadius: 16,
-                    overflow: "hidden",
-                    left: 16,
-                    ...Platform.select({
-                      ios: {
-                        shadowColor: Color.Gray.gray500,
-                        shadowOffset: { width: 0, height: 4 },
-                        shadowOpacity: 0.1,
-                        shadowRadius: 4,
-                        elevation: 12,
-                      },
-                      android: {
-                        elevation: 12,
-                      },
-                    }),
-                  },
-                ]}
-              >
-                <ScrollView style={{}}>
-                  {data.map((prefix, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => handlePrefixSelection(prefix.prefix)}
-                    >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          paddingHorizontal: 16,
-                          paddingVertical: 15,
-                          backgroundColor: Color.Gray.gray400,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            fontWeight: "400",
-                            lineHeight: 20,
-                            color: Color.base.White,
-                          }}
-                        >
-                          {prefix.name}
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            fontWeight: "400",
-                            lineHeight: 20,
-                            color: Color.Gray.gray50,
-                          }}
-                        >
-                          +{prefix.prefix}
+                    <View style={styles.textContainer}>
+                      <View style={{ gap: 8 }}>
+                        <Text style={styles.topText}>Phone Number</Text>
+                        <Text style={styles.bottomText}>
+                          This will be kept private. No surprise DMs.
                         </Text>
                       </View>
-                      <View
-                        style={{
-                          height: 1,
-                          width: "100%",
-                          backgroundColor: Color.Gray.gray300,
-                        }}
-                      />
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              </Animated.View>
-            )}
-          </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+                      <LinearGradient
+                        colors={
+                          isFocused
+                            ? [Color.Brand.main.start, Color.Brand.main.end]
+                            : [Color.Gray.gray300, Color.Gray.gray300]
+                        }
+                        start={[0, 1]}
+                        end={[1, 0]}
+                        style={styles.inputGradient}
+                      >
+                        <View style={styles.inputContainer}>
+                          <AnimatedPressable
+                            entering={FadeIn}
+                            exiting={FadeOut}
+                            onPress={togglePrefix}
+                          >
+                            <View style={styles.prefixContainer}>
+                              <Text style={{ color: Color.Gray.gray50 }}>
+                                +{prefix}
+                              </Text>
+                              <ArrowDown2 color={Color.Gray.gray50} />
+                            </View>
+                          </AnimatedPressable>
+                          <TextInput
+                            onFocus={() => setIsFocused(true)}
+                            onBlur={() => setIsFocused(false)}
+                            keyboardType="phone-pad"
+                            placeholder="XXXXXXXX"
+                            placeholderTextColor={Color.Gray.gray100}
+                            value={phoneNumber}
+                            style={styles.input}
+                            onChangeText={setPhoneNumber}
+                          />
+                        </View>
+                      </LinearGradient>
+                      {error && (
+                        <Animated.View entering={FadeIn} style={styles.errorContainer}>
+                          <Text style={{ color: Color.System.systemError }}>
+                            {error}
+                          </Text>
+                        </Animated.View>
+                      )}
+                    </View>
+                  </LinearGradient>
+                </View>
+                <View
+                  style={[
+                    styles.buttonContainer,
+                    buttonPosition === "bottom"
+                      ? styles.bottomPosition
+                      : styles.topPosition,
+                  ]}
+                >
+                  <Button
+                    variant={!phoneNumber ? "disabled" : "primary"}
+                    textStyle={!phoneNumber ? "disabled" : "primary"}
+                    size="default"
+                    onPress={handleNavigation}
+                  >
+                    {loading ? (
+                      <ActivityIndicator size="small" color="white" />
+                    ) : (
+                      <Text>Confirm</Text>
+                    )}
+                  </Button>
+                </View>
+
+                {isOpen && (
+                  <Animated.View
+                    style={[
+                      translateY,
+                      styles.prefixListContainer
+                    ]}
+                  >
+                    <ScrollView>
+                      {data.map((prefix, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() => handlePrefixSelection(prefix.prefix)}
+                        >
+                          <View style={styles.prefixItem}>
+                            <Text style={styles.prefixName}>
+                              {prefix.name}
+                            </Text>
+                            <Text style={styles.prefixNumber}>
+                              +{prefix.prefix}
+                            </Text>
+                          </View>
+                          <View style={styles.prefixSeparator} />
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>
+                  </Animated.View>
+                )}
+              </View>
+            </ScrollView>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </>
   );
 };
 
@@ -380,48 +291,56 @@ const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 16,
   },
+  gradientContainer: {
+    width: "100%",
+    borderRadius: 32,
+    marginTop: 16,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
+    paddingBottom: 16,
+    paddingTop: 24,
+    paddingHorizontal: 16,
+  },
   textContainer: {
     gap: 24,
     flexDirection: "column",
   },
-  prefixContainer: {
-    position: "absolute",
-    zIndex: 100,
-    bottom: height / 1.3,
-    width: "80%",
-    height: height / 4.5,
-    backgroundColor: Color.base.White,
+  inputGradient: {
+    marginTop: 10,
     borderRadius: 16,
-    overflow: "hidden",
-    left: 20,
-    ...Platform.select({
-      ios: {
-        shadowColor: Color.Gray.gray500,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 12,
-      },
-      android: {
-        elevation: 12,
-      },
-    }),
+    padding: 1,
+  },
+  inputContainer: {
+    alignItems: "center",
+    gap: 12,
+    alignContent: "center",
+    flexDirection: "row",
+    height: 48,
+    paddingHorizontal: 16,
+    width: "100%",
+    backgroundColor: Color.Gray.gray500,
+    borderRadius: 16,
+  },
+  prefixContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
   buttonContainer: {
     position: "absolute",
     left: 0,
     right: 0,
-    bottom: 30,
     paddingHorizontal: 20,
     marginBottom: 20,
+    zIndex: 1000,
   },
   bottomPosition: {
+    bottom: 0,
     justifyContent: "flex-end",
   },
   topPosition: {
+    bottom: 80,
     justifyContent: "flex-start",
-
-    marginTop: "auto",
   },
   topText: {
     color: Color.base.White,
@@ -440,5 +359,55 @@ const styles = StyleSheet.create({
     color: Color.base.White,
     width: "100%",
     height: 48,
+  },
+  errorContainer: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  prefixListContainer: {
+    position: "absolute",
+    zIndex: 100,
+    top: -196,
+    width: "80%",
+    backgroundColor: Color.Gray.gray400,
+    borderRadius: 16,
+    overflow: "hidden",
+    left: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: Color.Gray.gray500,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 12,
+      },
+    }),
+  },
+  prefixItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 15,
+    backgroundColor: Color.Gray.gray400,
+  },
+  prefixName: {
+    fontSize: 16,
+    fontWeight: "400",
+    lineHeight: 20,
+    color: Color.base.White,
+  },
+  prefixNumber: {
+    fontSize: 16,
+    fontWeight: "400",
+    lineHeight: 20,
+    color: Color.Gray.gray50,
+  },
+  prefixSeparator: {
+    height: 1,
+    width: "100%",
+    backgroundColor: Color.Gray.gray300,
   },
 });

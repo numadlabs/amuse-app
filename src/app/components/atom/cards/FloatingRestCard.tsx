@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Dimensions,
   Image,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -24,14 +25,12 @@ const { width } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
 const CARD_WIDTH = width * 0.83;
 
-
 interface FloatingRestaurantCardProps {
-  marker: RestaurantType; 
+  marker: RestaurantType;
   // key: string;
-  onPress: () => void; 
+  onPress: () => void;
   isClaimLoading: boolean;
 }
-
 
 const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
   marker,
@@ -39,7 +38,7 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
   onPress,
   isClaimLoading,
 }) => {
-  // console.log("🚀 ~ marker:", key);
+  // console.log(" ~ marker:", key);
   // Example: Set opening time to 9:00 AM and closing time to 5:00 PM
 
   // Convert opensAt and closesAt strings to Date objects
@@ -58,13 +57,112 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
 
   // console.log(isOpen, opensAt, closesAt);
   return (
-    <>
-      <LinearGradient
-        colors={[Color.Brand.card.start, Color.Brand.card.end]}
-        style={styles.card}
-      >
+    <LinearGradient
+      colors={[Color.Brand.card.start, Color.Brand.card.end]}
+      style={styles.card}
+    >
+      {Platform.OS === 'ios' ? (
+        <BlurView intensity={24} style={{
+          flexDirection: "row",
+          alignItems: "center",
+          padding: 12,
+          gap: 16,
+        }}>
+          <Image
+            source={{
+              uri: `${SERVER_SETTING.CDN_LINK}${marker.logo}` as string,
+            }}
+            style={styles.cardImage}
+            // resizeMode="cover"
+          />
+          <View style={styles.textContent}>
+            <View>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.cardtitle}
+              >
+                {marker.name}
+              </Text>
+              <Text numberOfLines={1} style={styles.cardDescription}>
+                {marker.category}
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                width: "80%",
+                alignItems: "center",
+                ...(marker.isOwned
+                  ? { gap: 12 }
+                  : { justifyContent: "space-between" }),
+              }}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View
+                  style={[
+                    styles.dot,
+                    { backgroundColor: marker.isOpen ? Color.System.systemSuccess : Color.System.systemError },
+                  ]}
+                />
+                <Text style={{ color: marker.isOpen ? Color.System.systemSuccess : Color.System.systemError }}>
+                  {marker.isOpen ? "Open" : "Closed"}
+                </Text>
+              </View>
+              {marker.isOwned ? (
+                <View
+                  style={{
+                    width: 1,
+                    height: 14,
+                    backgroundColor: Color.Gray.gray50,
+                  }}
+                />
+              ) : (
+                ""
+              )}
+              {marker.isOwned ? (
+                <View
+                  style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+                >
+                  <Reserve color={Color.Gray.gray100} size={16} />
+                  <Text style={{ color: Color.Gray.gray50 }}>
+                    {marker.visitCount === null ? 0 : marker.visitCount} Check-ins
+                  </Text>
+                </View>
+              ) : (
+                <Button
+                  variant="secondary"
+                  onPress={onPress}
+                  size="small"
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    alignContent: "center",
+                    paddingHorizontal: 20,
+                    borderWidth: 1,
+                    borderColor: Color.Gray.gray50,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 11,
+                      lineHeight: 16,
+                      fontWeight: "600",
+                      color: Color.Gray.gray50,
+                    }}
+                  >
+                    Add
+                  </Text>
+                </Button>
+              )}
+            </View>
+          </View>
+          </BlurView>
+      ) : (
         <BlurView
-          intensity={24}
+          intensity={8}
+          experimentalBlurMethod="dimezisBlurView"
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -163,8 +261,8 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
             </View>
           </View>
         </BlurView>
-      </LinearGradient>
-    </>
+      )}
+    </LinearGradient>
   );
 };
 
@@ -228,6 +326,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-
-// Export the component
 export default FloatingRestaurantCard;
