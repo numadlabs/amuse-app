@@ -29,11 +29,11 @@ const Layout = ({ navigation }) => {
     "Sora-Regular": require("@/public/fonts/Sora-Regular.ttf"),
     "Sora-Bold": require("@/public/fonts/Sora-Regular.ttf"),
   });
-  const { expoPushToken, notification: pushNotification } = usePushNotifications();
+  // const { expoPushToken, notification: pushNotification } = usePushNotifications();
 
-  const { mutateAsync: sendPushToken } = useMutation({
-    mutationFn: registerDeviceNotification
-  })
+  // const { mutateAsync: sendPushToken } = useMutation({
+  //   mutationFn: registerDeviceNotification
+  // })
 
   useEffect(() => {
     const prepareApp = async () => {
@@ -55,15 +55,15 @@ const Layout = ({ navigation }) => {
 
 
         // Get notification data
-        const data = JSON.stringify(pushNotification, undefined, 2)
+        // const data = JSON.stringify(pushNotification, undefined, 2)
 
-        if (expoPushToken?.data) {
-          console.log("Sending push token");
+        // if (expoPushToken?.data) {
+        //   console.log("Sending push token");
           
-          sendPushToken({
-            pushToken: expoPushToken?.data
-          })
-        }
+        //   sendPushToken({
+        //     pushToken: expoPushToken?.data
+        //   })
+        // }
 
 
         // Get current location
