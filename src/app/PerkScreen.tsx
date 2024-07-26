@@ -17,13 +17,13 @@ import PowerUpCard from "./components/atom/cards/PowerUpCard";
 import { LinearGradient } from "expo-linear-gradient";
 import Color from "./constants/Color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import moment from "moment";
 const PerkScreen = () => {
   const { restaurantId, powerUp } = useLocalSearchParams();
   const queryClient = useQueryClient();
   const [visitCount, setVisitCount] = useState(0);
   const [userTier, setUserTier] = useState("Bronze");
-  
+  const currentTime = moment().format('HH:mm');
 
   const tiers = {
     Bronze: 0,
@@ -34,7 +34,7 @@ const PerkScreen = () => {
   const { data: card = [], isLoading } = useQuery({
     queryKey: [restaurantKeys.detail],
     queryFn: () => {
-      return getRestaurantById(restaurantId as string);
+      return getRestaurantById(restaurantId as string ,currentTime);
     },
   });
 
@@ -119,7 +119,7 @@ const PerkScreen = () => {
 
       {!isLoading && card && (
         <>
-          <View style={{ marginBottom: 300, marginTop: 20 }}>
+          {/* <View style={{ marginBottom: 300, marginTop: 20 }}>
             <APassCard
               name={card.name}
               image={card.logo}
@@ -129,7 +129,7 @@ const PerkScreen = () => {
               hasBonus={card.hasBonus}
               visitCount={card.visitCount}
             />
-          </View>
+          </View> */}
           <Animated.View
             style={{ marginBottom: 80, gap: 16 }}
             entering={SlideInDown.springify().damping(20).delay(200)}

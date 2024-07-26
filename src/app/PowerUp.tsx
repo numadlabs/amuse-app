@@ -50,9 +50,23 @@ const PowerUp = () => {
   const [qrData, setQrdata] = useState("")
   const queryClient = useQueryClient()
 
-  socket.on("bonus-scan", (data) => {
-    console.log("Listening on server", data);
+  socket.on("connect", () => {
+    console.log("Connected to server");
+    socket.emit("register", userId);
   });
+
+
+  socket.on("bonus-scan", (data) => {
+    console.log("Tapscan", data);
+    if (data){
+      handleNavigation();
+    }
+  });
+
+  socket.on("connect", () => {
+    console.log("socket connected: ", socket.connected); // true
+  });
+
 
 
   useEffect(() => {
@@ -84,16 +98,16 @@ const PowerUp = () => {
   });
 
 
-  // const { mutateAsync: createRedeemBonusMutation } = useMutation({
-  //   mutationFn: redeemBonus,
-  //   onError: (error) => {
-  //     console.log(error);
-  //   },
-  //   onSuccess: (data, variables) => {
-  //     console.log("🚀 ~ Bonus ~ data:", data.data.data);
+  const { mutateAsync: createRedeemBonusMutation } = useMutation({
+    mutationFn: redeemBonus,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (data, variables) => {
+      console.log("🚀 ~ Bonus ~ data:", data.data.data);
 
-  //   },
-  // });
+    },
+  });
 
 
   const handleNavigation = () => {
@@ -102,6 +116,7 @@ const PowerUp = () => {
     queryClient.invalidateQueries({ queryKey: userKeys.info });
     router.back()
   }
+
   return (
     // <SafeAreaView style={{ flex: 1 }}>
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1, marginTop: Platform.OS === 'ios' ? -10 : 0 }}>

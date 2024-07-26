@@ -51,8 +51,27 @@ const MyQrModal = () => {
     socket.emit("register", userId);
   });
 
+
   socket.on("tap-scan", (data) => {
-    console.log("Listening on server", data);
+    console.log("Tap scan emitted: ", data);
+    const userCard = cards?.data?.cards.find((card) => card.restaurantId === data?.data?.restaurantId);
+    if (!userCard) {
+      router.back();
+      router.push({
+        pathname: `/restaurants/${data?.restaurantId}`,
+        params: { cardId: cardId as any }
+      });
+    } else if (userCard) {
+      router.back();
+      router.navigate({
+        pathname: '/PerkScreen',
+        params: {
+          restaurantId: data?.data?.restaurantId,
+          btcAmount: data.data?.increment,
+          powerUp: data.data?.bonus?.name,
+        }
+      });
+    }
   });
 
   console.log("server: ", socket)
@@ -166,7 +185,7 @@ const MyQrModal = () => {
 
   return (
     <>
-    {/* <SafeAreaView style={{ flex: 1}}> */}
+      {/* <SafeAreaView style={{ flex: 1}}> */}
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1, backgroundColor: Color.Gray.gray600, alignItems: 'center' }}>
           {loading ? (
@@ -181,8 +200,8 @@ const MyQrModal = () => {
                   colors={[Color.Brand.card.start, Color.Brand.card.end]}
                   style={[styles.button]}
                 >
-                  {loading ? <ActivityIndicator/> :  <QRCode backgroundColor="transparent" color={Color.base.White} size={width/1.3} value={`data:image/png;base64,${qrData}`} />}
-                 
+                  {loading ? <ActivityIndicator /> : <QRCode backgroundColor="transparent" color={Color.base.White} size={width / 1.3} value={`data:image/png;base64,${qrData}`} />}
+
                 </LinearGradient>
               </TouchableOpacity>
               <View style={{ marginHorizontal: 32 }}>
