@@ -119,9 +119,6 @@ const SplashScreenAnimated = () => {
             <BlurView intensity={24} experimentalBlurMethod="dimezisBlurView" style={styles.blurView}>
               <AmuseBoucheLogo />
             </BlurView>
-            // <View style={[styles.blurView, { backgroundColor: 'rgba(27, 35, 40, 0.5)' }]}>
-            //   <AmuseBoucheLogo />
-            // </View>
           )}
         </View>
       </View>

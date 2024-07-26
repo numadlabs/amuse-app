@@ -42,7 +42,7 @@ const ProfileEdit = () => {
     queryKey: userKeys.info,
     queryFn: () => getUserById(authState.userId),
   });
-
+  const INPUT_GAP = 24; // or whatever value you prefer
   const [loading, setLoading] = useState(false);
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
@@ -309,7 +309,7 @@ const ProfileEdit = () => {
                     style={{
                       color: Color.base.White,
                       fontSize: 14,
-                      lineHeight: 18,
+                      lineHeight: 30,
                       fontWeight: "600",
                     }}
                   >
@@ -351,7 +351,7 @@ const ProfileEdit = () => {
                       style={{
                         color: Color.System.systemError,
                         fontSize: 14,
-                        lineHeight: 18,
+                        lineHeight: 30,
                         fontWeight: "600",
                         marginVertical: 12
                       }}
@@ -365,7 +365,7 @@ const ProfileEdit = () => {
                     style={{
                       color: Color.base.White,
                       fontSize: 14,
-                      lineHeight: 18,
+                      lineHeight: 30,
                       fontWeight: "600",
                     }}
                   >

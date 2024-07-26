@@ -107,7 +107,7 @@ const PowerUp = () => {
   }
 
   return (
-    // <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1, marginTop: Platform.OS === 'ios' ? -10 : 0 }}>
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity
@@ -167,7 +167,7 @@ const PowerUp = () => {
         </View>
       </View>
     </View>
-    // </SafeAreaView>
+    </SafeAreaView>
   );
 };
 
