@@ -43,7 +43,7 @@ const MyQrModal = () => {
   const { authState } = useAuth()
   const [qrData, setQrdata] = useState("")
 
-  const socket = io(SERVER_SETTING.API_URL, { transports: ["websocket"] });
+  const socket = io(SERVER_SETTING.API_URL);
   const userId = authState.userId;
 
   socket.on("connect", () => {
