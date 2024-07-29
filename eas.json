@@ -27,7 +27,7 @@
     "production": {
       "channel": "main",
       "env": {
-        "EXPO_PUBLIC_GOOGLE_API_KEY": "AIzaSyDLFwoZfCSJErsQQwNwFiqRDmLVICrnjdg"
+        "EXPO_IOS_GOOGLE_API_KEY": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
       }
     }
   },

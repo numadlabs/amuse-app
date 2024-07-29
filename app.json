@@ -1,7 +1,7 @@
 {
   "expo": {
-    "version": "0.4.6",
-    "runtimeVersion": "0.4.6",
+    "version": "0.4.8",
+    "runtimeVersion": "0.4.8",
     "scheme": "acme",
     "owner": "numad-labs",
     "userInterfaceStyle": "dark",
@@ -52,7 +52,7 @@
       "package": "com.numadLabs.amuseApp",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
+          "apiKey": "AIzaSyAR4YHRGnBXdSSm70G9GskzKntYCQkh69I"
         }
       }
     },
@@ -84,7 +84,7 @@
       
       "requestHeaders": {
         "expo-channel-name": "main",
-        "expo-runtime-version": "0.4.6",
+        "expo-runtime-version": "0.4.8",
         "expo-platform": "ios",
         "channel-name":"main"
       }
