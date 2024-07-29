@@ -33,17 +33,17 @@ const PowerUp = () => {
 
   const { authState } = useAuth();
 
-  const socket = io(SERVER_SETTING.API_URL);
+  const socket = io(SERVER_SETTING.API_URL, { transports: ["websocket"] });
   const userId = authState.userId;
 
-  const showToast = () => {
-    setTimeout(() => {
-      Toast.show({
-        type: "perkToast",
-        text1: "Perk consumed"
-      })
-    }, 800)
-  }
+  // const showToast = () => {
+  //   setTimeout(() => {
+  //     Toast.show({
+  //       type: "perkToast",
+  //       text1: "Perk consumed"
+  //     })
+  //   }, 800)
+  // }
   const { id, name, restaurantId } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -55,9 +55,8 @@ const PowerUp = () => {
     socket.emit("register", userId);
   });
 
-
   socket.on("bonus-scan", (data) => {
-    console.log("Tapscan", data);
+    console.log("Tapscan: ", data);
     if (data){
       handleNavigation();
     }
@@ -68,12 +67,6 @@ const PowerUp = () => {
   });
 
 
-
-  useEffect(() => {
-    createBonusQrMutation({
-      id: id as string,
-    });
-  }, [])
 
 
   const {
@@ -87,28 +80,24 @@ const PowerUp = () => {
     },
     onSuccess: (data, variables) => {
       try {
+        setLoading(true)
         console.log("Successfully created");
         const newQrdata = data?.data?.data?.encryptedData;
         setQrdata(newQrdata);
-        
+        setLoading(false)
       } catch (error) {
         console.error("Bonus mutation failed:", error);
       }
     },
   });
 
-
-  const { mutateAsync: createRedeemBonusMutation } = useMutation({
-    mutationFn: redeemBonus,
-    onError: (error) => {
-      console.log(error);
-    },
-    onSuccess: (data, variables) => {
-      console.log("🚀 ~ Bonus ~ data:", data.data.data);
-
-    },
-  });
-
+  useEffect(() => {
+    setLoading(true)
+    createBonusQrMutation({
+      id: id as string,
+    });
+   
+  }, [])
 
   const handleNavigation = () => {
     queryClient.invalidateQueries({ queryKey: restaurantKeys.all });

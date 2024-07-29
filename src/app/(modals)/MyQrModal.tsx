@@ -43,7 +43,7 @@ const MyQrModal = () => {
   const { authState } = useAuth()
   const [qrData, setQrdata] = useState("")
 
-  const socket = io(SERVER_SETTING.API_URL);
+  const socket = io(SERVER_SETTING.API_URL, { transports: ["websocket"] });
   const userId = authState.userId;
 
   socket.on("connect", () => {
@@ -112,6 +112,7 @@ const MyQrModal = () => {
 
   // Set default values when component mounts
   useEffect(() => {
+    setLoading(true)
     createTapMutation();
   }, []);
 
@@ -120,12 +121,13 @@ const MyQrModal = () => {
     mutationFn: generateTap,
     onSuccess: async (data) => {
       try {
+        setLoading(true)
         const newQrdata = data?.data?.data?.encryptedData;
         setQrdata(newQrdata);
 
         // Log the new QR data immediately after setting it
         console.log('QR Data from mutation:', qrData);
-
+        setLoading(false)
       } catch (error) {
         console.error("Redeem mutation failed:", error);
       }
