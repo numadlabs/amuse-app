@@ -25,10 +25,9 @@ export function registerDeviceNotification({
 
 export function generatePerkQr({ id }: { id: string }) {
   console.log("🚀 ~ generatePerkQr");
-  return axiosClient.post(`/userBonus/${id}/generate`)
-  .then((response) => {
+  return axiosClient.post(`/userBonus/${id}/generate`).then((response) => {
     return response;
-  });;
+  });
 }
 
 export function useBonus(id: string) {
@@ -109,21 +108,18 @@ export async function updateUserInfo({
 }
 
 export async function forgotPassword({
-  prefix,
-  telNumber,
-  telVerificationCode,
+  email,
+  verificationCode,
   password,
 }: {
-  prefix: string;
-  telNumber: string;
-  telVerificationCode: number;
+  email: string;
+  verificationCode: number;
   password: string;
 }) {
   return axiosClient
-    .post("/auth/forgotPassword", {
-      prefix,
-      telNumber,
-      telVerificationCode,
+    .put("/auth/forgotPassword", {
+      email,
+      verificationCode,
       password,
     })
     .then((response) => {
@@ -165,26 +161,9 @@ export async function checkPasswordOtp({
     });
 }
 
-
-
-
-export async function sendRegisterOtp({
-  prefix,
-  telNumber,
-}: {
-  prefix: string;
-  telNumber: string;
-}) {
-  return axiosClient
-    .post("/auth/registerOTP", { prefix, telNumber })
-    .then((response) => {
-      return response;
-    });
-}
-
-export async function sendEmailOtp({ email }: { email: string }) {
-  return axiosClient.post("/auth/email", { email }).then((response) => {
-    return response;
+export async function sendOtp({ email }: { email: string }) {
+  return axiosClient.post("/auth/sendOTP", { email }).then((response) => {
+    return response.data;
   });
 }
 
@@ -206,33 +185,22 @@ export async function verifyEmailOtp({
     });
 }
 
-export async function checkSignUpOtp({
-  prefix,
-  telNumber,
-  telVerificationCode,
+export async function checkOtp({
+  email,
+  verificationCode,
 }: {
-  prefix: string;
-  telNumber: string;
-  telVerificationCode: number;
+  email: string;
+  verificationCode: number;
 }) {
   return axiosClient
-    .post("/auth/checkOTP", { prefix, telNumber, telVerificationCode })
+    .post("/auth/checkOTP", { email, verificationCode })
     .then((response) => {
       return response;
     });
 }
 
-
-export async function checkTelNumber({
-  prefix,
-  telNumber,
-}: {
-  prefix: string;
-  telNumber: string;
-}) {
-  return axiosClient
-    .post("/auth/checkTelNumber", { prefix, telNumber })
-    .then((response) => {
-        return response.data;
-    });
+export async function checkEmail({ email }: { email: string }) {
+  return axiosClient.post("/auth/checkEmail", { email }).then((response) => {
+    return response.data;
+  });
 }

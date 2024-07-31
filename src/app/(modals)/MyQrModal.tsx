@@ -15,12 +15,10 @@ import { generateTap, redeemTap } from "../lib/service/mutationHelper";
 import PowerUp from "../components/(feedback)/PowerUp";
 import { getUserCard } from "../lib/service/queryHelper";
 import useLocationStore from "../lib/store/userLocation";
-import Toast from "react-native-toast-message";
 import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
 import { SERVER_SETTING } from "../constants/serverSettings";
 import { LinearGradient } from "expo-linear-gradient";
 import Close from "../components/icons/Close";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { io } from "socket.io-client";
 import { useAuth } from "../context/AuthContext";
 import QRCode from "react-native-qrcode-svg";
@@ -33,7 +31,6 @@ const halfMarkerSize = markerSize / 2;
 const MyQrModal = () => {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [isBtcPopupVisible, setBtcPopupVisible] = useState(false);
-  const [scanned, setScanned] = useState(false);
   const [restaurantId, setRestaurantId] = useState("");
   const [loading, setLoading] = useState(false);
   const [cardId, setCardId] = useState("");
@@ -43,13 +40,15 @@ const MyQrModal = () => {
   const { authState } = useAuth()
   const [qrData, setQrdata] = useState("")
 
-  const socket = io(SERVER_SETTING.API_URL);
+  const socket = io(SERVER_SETTING.API_URL, { transports: ["websocket"] });
   const userId = authState.userId;
 
   socket.on("connect", () => {
     console.log("Connected to server");
     socket.emit("register", userId);
   });
+
+  
 
 
   socket.on("tap-scan", (data) => {

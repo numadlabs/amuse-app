@@ -44,7 +44,7 @@ const validatePassword = (password: string): boolean => {
 const Password = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { prefix, phoneNumber, verificationCode, password, setPassword } = usePasswordStore()
+  const { email, verificationCode, password, setPassword } = usePasswordStore()
   const [focusedInput, setFocusedInput] = useState<'password' | 'confirmPassword' | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState(false)
@@ -98,12 +98,11 @@ const Password = () => {
     try {
       if (isPasswordValid && doPasswordsMatch) {
         setLoading(true)
-        console.log(phoneNumber, prefix, password, verificationCode);
+        console.log(email, password, verificationCode);
 
         await forgotPasswordMutation({
-          prefix: prefix,
-          telNumber: phoneNumber,
-          telVerificationCode: verificationCode,
+          email: email,
+          verificationCode: verificationCode,
           password: password,
         })
 

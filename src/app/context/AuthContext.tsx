@@ -10,7 +10,6 @@ import {
   saveUserId,
 } from "../lib/service/asyncStorageHelper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// impor
 interface AuthProps {
   authState?: {
     token: string | null;
@@ -20,14 +19,12 @@ interface AuthProps {
   };
   onRegister?: (
     nickname: string,
-    preFix: string,
-    telNumber: string,
+    email: string,
     password: string,
     verificationCode: number
   ) => Promise<any>;
   onLogin?: (
-    preFix: string,
-    telNumber: string,
+    email: string,
     password: string
   ) => Promise<any>;
   onLogout?: () => Promise<any>;
@@ -106,15 +103,13 @@ export const AuthProvider = ({ children }: any) => {
 
   const register = async (
     nickname: string,
-    prefix: string,
-    telNumber: string,
+    email: string,
     password: string,
     verificationCode: number
   ) => {
     try {
       const result = await axiosClient.post(`/auth/register`, {
-        prefix,
-        telNumber,
+        email,
         password,
         nickname,
         verificationCode,
@@ -177,11 +172,10 @@ export const AuthProvider = ({ children }: any) => {
     }
   };
 
-  const login = async (prefix: string, telNumber: string, password: string) => {
+  const login = async (email, password: string) => {
     try {
       const result = await axiosClient.post(`/auth/login`, {
-        prefix,
-        telNumber,
+        email,
         password,
       });
       console.log(result.data.data.user.balance)
@@ -257,7 +251,7 @@ export const AuthProvider = ({ children }: any) => {
     await deleteUserId();
     AsyncStorage.clear();
     queryCache.clear();
-    router.push("/Login");
+    router.replace("/Login");
 
   };
 

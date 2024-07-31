@@ -22,10 +22,9 @@ const NickName = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const { nickname,
     setNickname,
-    phoneNumber,
     password,
     verificationCode,
-    prefix,
+    email,
     reset
   } = useSignUpStore();
   const [error, setError] = useState<string>("")
@@ -39,12 +38,10 @@ const NickName = () => {
       setLoading(true);
       const response = await onRegister(
         nickname,
-        prefix as string,
-        phoneNumber as string,
+        email,
         password as string,
         verificationCode
       );
-      console.log(phoneNumber, password, nickname, prefix);
       if (response.data) {
         console.log("Register successful:", response.data);
         router.push("/(tabs)");

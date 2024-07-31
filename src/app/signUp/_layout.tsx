@@ -10,7 +10,7 @@ export default function SuLayout() {
     <>
       <Header title='Sign up' />
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name='PhoneNumber' />
+        <Stack.Screen name='Email' />
         <Stack.Screen name='Otp' options={{presentation: "modal"}}/>
         <Stack.Screen name='Password' />
         <Stack.Screen name='NickName' />

@@ -49,6 +49,7 @@ export async function getUserCard({ latitude, longitude }) {
     });
 }
 
+
 export async function getUserPowerUps(id) {
   return axiosClient.get(`/userBonus/${id}/userCard`).then((response) => {
     if (response.data.success) {
