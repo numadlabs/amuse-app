@@ -30,12 +30,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { usePasswordStore } from "../lib/store/passwordStore";
 import data from 'prefix.json'
 import { useMutation } from "@tanstack/react-query";
-import { updatePassword } from "../lib/service/mutationHelper";
+import { sendOtp, updatePassword } from "../lib/service/mutationHelper";
 import Header from "../components/layout/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 function ForgotPassword() {
-  const { phoneNumber, setPhoneNumber, prefix, setPrefix } = usePasswordStore();
+  const { email, setEmail } = usePasswordStore();
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const [isFocused, setIsFocused] = useState(false);
   const [loading, setLoading] = useState(false)
@@ -57,23 +57,23 @@ function ForgotPassword() {
     }
   }, [isOpen]);
 
- 
-const togglePrefix = () => {
-  setIsOpen(!isOpen);
-  offset.value = withSpring(isOpen ? 220 : 230, {
-    damping: 20,
-    mass: 0.5,
-  });
-};
+
+  const togglePrefix = () => {
+    setIsOpen(!isOpen);
+    offset.value = withSpring(isOpen ? 220 : 230, {
+      damping: 20,
+      mass: 0.5,
+    });
+  };
 
   const translateY = useAnimatedStyle(() => ({
     transform: [{ translateY: offset.value }],
   }));
 
   const {
-    mutateAsync: sendPasswordOtp,
+    mutateAsync: sendOtpMutation,
   } = useMutation({
-    mutationFn: updatePassword,
+    mutationFn: sendOtp,
     onError: (error) => {
     },
     onSuccess: (data, variables) => {
@@ -84,21 +84,14 @@ const togglePrefix = () => {
     },
   });
 
-  const handlePrefixSelection = (selectedPrefix) => {
-
-    setPrefix(selectedPrefix);
-    togglePrefix();
-    console.log(selectedPrefix);
-  };
 
   const handleNavigation = async () => {
     try {
 
-      if (phoneNumber && prefix) {
+      if (email) {
         setLoading(true)
-        await sendPasswordOtp({
-          prefix: prefix,
-          telNumber: phoneNumber,
+        await sendOtpMutation({
+          email: email
         })
         setLoading(false)
 
@@ -120,8 +113,6 @@ const togglePrefix = () => {
   };
 
   const inputContainerRef = React.useRef(null);
-
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -163,9 +154,9 @@ const togglePrefix = () => {
               >
                 <View style={styles.textContainer}>
                   <View style={{ gap: 8 }}>
-                    <Text style={styles.topText}>Phone Number</Text>
+                    <Text style={styles.topText}>Email</Text>
                     <Text style={styles.bottomText}>
-                      We will send an SMS verification code.
+                      We will send an email verification code.
                     </Text>
                   </View>
                   <LinearGradient
@@ -196,35 +187,9 @@ const togglePrefix = () => {
                         borderRadius: 16,
                       }}
                     >
-
-                      <AnimatedPressable
-                        entering={FadeIn}
-                        exiting={FadeOut}
-                        onPress={togglePrefix}
-                      >
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 8,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: 16,
-                              lineHeight: 20,
-                              color: Color.Gray.gray50,
-                            }}
-                          >
-                            +{prefix}
-                          </Text>
-                          <ArrowDown2 color={Color.Gray.gray50} />
-                        </View>
-                      </AnimatedPressable>
-
                       <TextInput
-                        inputMode="tel"
-                        placeholder={phonePlaceholder}
+                        autoCapitalize="none"
+                        placeholder={"Enter your email"}
                         placeholderTextColor={Color.Gray.gray100}
                         onFocus={() => setFocusedInput('Phone number')}
                         onBlur={() => setFocusedInput(null)}
@@ -236,8 +201,8 @@ const togglePrefix = () => {
                           color: Color.base.White,
                           width: '100%'
                         }}
-                        value={phoneNumber}
-                        onChangeText={setPhoneNumber}
+                        value={email}
+                        onChangeText={setEmail}
                       />
                     </View>
                   </LinearGradient>
@@ -258,8 +223,8 @@ const togglePrefix = () => {
                 ]}
               >
                 <Button
-                  variant={phoneNumber ? "primary" : 'disabled'}
-                  textStyle={phoneNumber ? "primary" : 'disabled'}
+                  variant={email ? "primary" : 'disabled'}
+                  textStyle={email ? "primary" : 'disabled'}
                   size="default"
                   onPress={handleNavigation}
                 >
@@ -267,71 +232,7 @@ const togglePrefix = () => {
                 </Button>
               </View>
             </KeyboardAvoidingView>
-            {isOpen && (
-              <Animated.View
-                style={[
-                  translateY,
-                  {
-                    position: "absolute",
-                    zIndex: 100,
-                    bottom: height / 2.3,
-                    width: "65%",
-                    backgroundColor: Color.Gray.gray400,
-                    borderRadius: 16,
-                    overflow: "hidden",
-                    left: width / 11,
-                  },
-                ]}
-              >
-                <ScrollView>
-                  {data.map((prefix, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => handlePrefixSelection(prefix.prefix)}
-                    >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          paddingHorizontal: 16,
-                          paddingVertical: 15,
-                          backgroundColor: Color.Gray.gray400,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            fontWeight: "400",
-                            lineHeight: 20,
-                            color: Color.base.White,
-                          }}
-                        >
-                          {prefix.name}
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            fontWeight: "400",
-                            lineHeight: 20,
-                            color: Color.Gray.gray50,
-                          }}
-                        >
-                          +{prefix.prefix}
-                        </Text>
-                      </View>
-                      <View
-                        style={{
-                          height: 1,
-                          width: "100%",
-                          backgroundColor: Color.Gray.gray300,
-                        }}
-                      />
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              </Animated.View>
-            )}
+
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>

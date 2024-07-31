@@ -16,9 +16,7 @@ import Divider from "./components/atom/Divider";
 import Button from "./components/ui/Button";
 import { useAuth } from "./context/AuthContext";
 import Color from "./constants/Color";
-import Animated, {
-  FadeIn,
-  FadeOut,
+import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -33,33 +31,30 @@ import { LinearGradient } from "expo-linear-gradient";
 import data from 'prefix.json'
 
 function Login() {
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [prefix, setPrefix] = useState<string>(data[0].prefix);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [focusedInput, setFocusedInput] = useState<'Phone number' | 'Password' | null>(null);
-  const [phonePlaceholder, setPhonePlaceholder] =
-    useState<string>("Phone number");
-  const [passwordPlaceholder, setPasswordPlaceholder] =
-    useState<string>("Password");
+  const [focusedInput, setFocusedInput] = useState<'Email' | 'Password' | null>(null);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { onLogin } = useAuth();
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+
+
   const handleLogin = async () => {
     try {
       setLoading(true);
-      const response = await onLogin(prefix, phoneNumber, password);
+      const response = await onLogin(email, password);
       if (response.success) {
         router.replace("/(tabs)");
 
       } else {
         console.log("Login failed:", response.data);
         setError(
-          "Phone number and/or password do not match our records"
+          "Email and/or password do not match our records"
         );
-        console.log(prefix, phoneNumber, password);
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -174,7 +169,7 @@ function Login() {
               <View style={{ gap: 12 }}>
                 <LinearGradient
                   colors={
-                    focusedInput === "Phone number"
+                    focusedInput === "Email"
                       ? [Color.Brand.main.start, Color.Brand.main.end]
                       : [Color.Gray.gray300, Color.Gray.gray300]
                   }
@@ -200,36 +195,10 @@ function Login() {
                     }}
                   >
 
-                    <AnimatedPressable
-                      entering={FadeIn}
-                      exiting={FadeOut}
-                      onPress={togglePrefix}
-                    >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          gap: 8,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            lineHeight: 20,
-                            color: Color.Gray.gray50,
-                          }}
-                        >
-                          +{prefix}
-                        </Text>
-                        <ArrowDown2 color={Color.Gray.gray50} />
-                      </View>
-                    </AnimatedPressable>
-
                     <TextInput
-                      inputMode="tel"
-                      placeholder={phonePlaceholder}
+                      placeholder={"Email"}
                       placeholderTextColor={Color.Gray.gray100}
-                      onFocus={() => setFocusedInput('Phone number')}
+                      onFocus={() => setFocusedInput('Email')}
                       onBlur={() => setFocusedInput(null)}
                       style={{
                         height: 40,
@@ -239,16 +208,17 @@ function Login() {
                         color: Color.base.White,
                         width: '100%'
                       }}
-                      value={phoneNumber}
-                      onChangeText={setPhoneNumber}
+                      autoCapitalize="none"
+                      value={email}
+                      onChangeText={setEmail}
                     />
                   </View>
                 </LinearGradient>
-                {error && phoneNumber.length < 7 &&
+                {error && email.length < 7 &&
                   <Text
                     style={{ color: Color.System.systemError, paddingHorizontal: 16 }}
                   >
-                    {"Please enter valid phone number"}
+                    {"Please enter valid email"}
                   </Text>}
 
                 <LinearGradient
@@ -280,7 +250,7 @@ function Login() {
                   >
                     <TextInput
                       secureTextEntry={!showPassword}
-                      placeholder={passwordPlaceholder}
+                      placeholder={"Password"}
                       placeholderTextColor={Color.Gray.gray100}
                       onFocus={() => setFocusedInput('Password')}
                       onBlur={() => setFocusedInput(null)}
@@ -319,7 +289,7 @@ function Login() {
                     {error}
                   </Text>
                 )}
-                <Button variant="primary" style={{marginTop:12}} onPress={handleLogin}>
+                <Button variant="primary" style={{ marginTop: 12 }} onPress={handleLogin}>
                   {loading ? (
                     <ActivityIndicator size="small" color="white" />
                   ) : (
@@ -337,7 +307,7 @@ function Login() {
                 <Button
                   style={{ zIndex: 0 }}
                   variant="text"
-                  onPress={() => router.push("/forgotPassword/ForgotPassword")}
+                  onPress={() => router.push("/forgotPassword/Email")}
                 >
                   <Text
                     style={{
@@ -353,7 +323,7 @@ function Login() {
                 <Divider />
                 <Button
                   variant="tertiary"
-                  onPress={() => router.push("/signUp/PhoneNumber")}
+                  onPress={() => router.push("/signUp/Email")}
                 >
                   <Text
                     style={{
@@ -370,71 +340,6 @@ function Login() {
             </View>
           </LinearGradient>
         </View>
-        {isOpen && (
-          <Animated.View
-            style={[
-              translateY,
-              {
-                position: "absolute",
-                zIndex: 100,
-                top: height / 140,
-                width: "65%",
-                backgroundColor: Color.Gray.gray400,
-                borderRadius: 16,
-                overflow: "hidden",
-                left: width / 11,
-              },
-            ]}
-          >
-            <ScrollView>
-              {data.map((prefix, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => handlePrefixSelection(prefix.prefix)}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      paddingHorizontal: 16,
-                      paddingVertical: 15,
-                      backgroundColor: Color.Gray.gray400,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        fontWeight: "400",
-                        lineHeight: 20,
-                        color: Color.base.White,
-                      }}
-                    >
-                      {prefix.name}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        fontWeight: "400",
-                        lineHeight: 20,
-                        color: Color.Gray.gray50,
-                      }}
-                    >
-                      +{prefix.prefix}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      height: 1,
-                      width: "100%",
-                      backgroundColor: Color.Gray.gray300,
-                    }}
-                  />
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </Animated.View>
-        )}
         <View
           style={{
             alignContent: "center",

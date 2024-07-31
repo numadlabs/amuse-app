@@ -25,8 +25,18 @@ const QuickInfo = ({ user, onPress }) => {
   }, [user]);
 
 
+  const handleNavigation = () => {
+    if (user?.email){
+      router.push("(boost)/Area");
+    }else{
+      router.push("(boost)/Email");
+    }
+    
+  }
+
+
   return (
-    <TouchableOpacity style={styles.container} onPress={() => router.push("(boost)/Email")}>
+    <TouchableOpacity style={styles.container} onPress={handleNavigation}>
       <LinearGradient
         colors={[Color.Brand.card.start, Color.Brand.card.end]}
         style={{

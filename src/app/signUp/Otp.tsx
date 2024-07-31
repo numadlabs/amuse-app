@@ -15,7 +15,7 @@ import Button from "../components/ui/Button";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSignUpStore } from "../lib/store/signUpStore";
-import { checkSignUpOtp } from "../lib/service/mutationHelper";
+import { checkOtp } from "../lib/service/mutationHelper";
 import { useMutation } from "@tanstack/react-query";
 import SplitOTPInput from "../components/ui/OtpInput";
 
@@ -34,7 +34,7 @@ const SplitOTP = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [text, onChangeText] = useState("");
   const [error, setError] = useState("")
-  const { verificationCode, setVerificationCode, phoneNumber, setPhoneNumber, prefix, setPrefix } = useSignUpStore();
+  const { verificationCode, setVerificationCode, email } = useSignUpStore();
   const inputRef = useRef(null);
   const onPress = () => {
     if (inputRef.current) {
@@ -43,7 +43,7 @@ const SplitOTP = () => {
   };
 
   const { mutateAsync: checkOtpMutation } = useMutation({
-    mutationFn: checkSignUpOtp,
+    mutationFn: checkOtp,
     onError: (error) => {
       console.log(error);
     },
@@ -82,20 +82,13 @@ const SplitOTP = () => {
       setVerificationCode(isNaN(code) ? 0 : code);
 
       if (text) {
-
         await checkOtpMutation({
-          prefix: prefix,
-          telNumber: phoneNumber,
-          telVerificationCode: code,
+          email: email,
+          verificationCode: verificationCode
         });
         router.back()
         router.navigate({
           pathname: "/signUp/Password",
-          params: {
-            phoneNumber: phoneNumber,
-            prefix: prefix,
-            verificationCode: code,
-          },
         });
       }
     } catch (error) {
@@ -132,18 +125,18 @@ const SplitOTP = () => {
               </View>
               <View>
                 <Text style={styles.bottomText}>
-                  We will send an SMS verification code.
+                  We will send an email verification code.
                 </Text>
               </View>
               <View style={{ marginTop: 12 }}>
                 <SplitOTPInput codeLength={4} onCodeFilled={handleCodeFilled} />
               </View>
               <Text style={{ color: Color.System.systemError }}>
-              {error}
-            </Text>
+                {error}
+              </Text>
             </View>
 
-           
+
           </LinearGradient>
         </View>
         <KeyboardAvoidingView

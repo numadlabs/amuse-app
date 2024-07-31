@@ -33,7 +33,7 @@ const PowerUp = () => {
 
   const { authState } = useAuth();
 
-  const socket = io(SERVER_SETTING.API_URL);
+  const socket = io(SERVER_SETTING.API_URL, { transports: ["websocket"] });
   const userId = authState.userId;
 
   // const showToast = () => {

@@ -18,7 +18,7 @@ import useBoostInfoStore from "../lib/store/boostInfoStore";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { useMutation } from "@tanstack/react-query";
-import { sendEmailOtp } from "../lib/service/mutationHelper";
+import { sendOtp } from "../lib/service/mutationHelper";
 
 const Email = () => {
   // State for managing the button position
@@ -59,8 +59,8 @@ const Email = () => {
     setEmail(text);
   };
 
-  const { mutateAsync: sendEmailOtpMutation} = useMutation({
-    mutationFn: sendEmailOtp,
+  const { mutateAsync: sendOtpMutation} = useMutation({
+    mutationFn: sendOtp,
     onError: (error) => {
       console.log(error);
     },
@@ -72,7 +72,7 @@ const Email = () => {
   const handleNavigation = async() => {
     if (emailRegex.test(email)) {
       setLoading(true);
-      await sendEmailOtpMutation({
+      await sendOtpMutation({
         email: email
       })
       setLoading(false);

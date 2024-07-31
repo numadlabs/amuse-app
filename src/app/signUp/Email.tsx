@@ -1,41 +1,33 @@
 import { useRouter } from "expo-router";
-import { ArrowDown2 } from "iconsax-react-native";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
 import Animated, {
   FadeIn,
-  FadeOut,
-  useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
 import Steps from "../components/atom/Steps";
 import Button from "../components/ui/Button";
 import Color from "../constants/Color";
-import { useAuth } from "../context/AuthContext";
 import { useSignUpStore } from "../lib/store/signUpStore";
 import { height } from "../lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
-import data from 'prefix.json'
-import { sendRegisterOtp, checkTelNumber } from "../lib/service/mutationHelper";
+import { checkEmail, sendOtp } from "../lib/service/mutationHelper";
 import { useMutation } from "@tanstack/react-query";
 
-const PhoneNumber = () => {
-  const { prefix, setPrefix, phoneNumber, setPhoneNumber, reset } = useSignUpStore();
+const Email = () => {
+  const { email, setEmail, reset } = useSignUpStore();
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [buttonPosition, setButtonPosition] = useState("bottom");
@@ -43,8 +35,6 @@ const PhoneNumber = () => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-  const { onRegister } = useAuth();
 
   const offset = useSharedValue(300);
   const togglePrefix = () => {
@@ -53,14 +43,6 @@ const PhoneNumber = () => {
       damping: 20,
       mass: 0.5,
     });
-  };
-  const translateY = useAnimatedStyle(() => ({
-    transform: [{ translateY: offset.value }],
-  }));
-
-  const handlePrefixSelection = (selectedPrefix) => {
-    setPrefix(selectedPrefix);
-    togglePrefix();
   };
 
   useEffect(() => {
@@ -80,23 +62,21 @@ const PhoneNumber = () => {
   }, []);
 
   const handleNavigation = () => {
-    if (phoneNumber && !isButtonDisabled) {
+    if (email && !isButtonDisabled) {
       setLoading(true);
       setIsButtonDisabled(true);
-      checkTelNumberMutation({
-        prefix: prefix,
-        telNumber: phoneNumber,
+      checkEmailMutation({
+        email: email,
       })
         .then((response) => {
-          if (response && response.data.success === false) {
+          if (response.data.success === false) {
 
-            setError("This phone number is already registered.");
-            throw new Error("Phone number already registered");
-           
+            setError("This email is already registered.");
+            throw new Error("Email already registered");
+
           } else {
-            return sendOtp({
-              prefix: prefix,
-              telNumber: phoneNumber,
+            return sendOtpMutation({
+              email: email
             });
           }
         })
@@ -105,19 +85,13 @@ const PhoneNumber = () => {
             // OTP sent successfully
             router.push({
               pathname: "/signUp/Otp",
-              params: {
-                prefix: prefix,
-                phoneNumber: phoneNumber,
-              },
             });
           }
         })
         .catch((error) => {
           console.log(error);
-        
-            setError("This phone number is already registered.");
-            reset()
-          
+          setError("This email is already registered.");
+          reset()
         })
         .finally(() => {
           setLoading(false);
@@ -134,16 +108,16 @@ const PhoneNumber = () => {
     }
   };
 
-  const { mutateAsync: checkTelNumberMutation } = useMutation({
-    mutationFn: checkTelNumber,
+  const { mutateAsync: checkEmailMutation } = useMutation({
+    mutationFn: checkEmail,
     onError: (error) => {
       console.log(error);
     },
   });
 
 
-  const { mutateAsync: sendOtp } = useMutation({
-    mutationFn: sendRegisterOtp,
+  const { mutateAsync: sendOtpMutation } = useMutation({
+    mutationFn: sendOtp,
     onError: (error) => {
       console.log(error);
       setLoading(false);
@@ -152,17 +126,9 @@ const PhoneNumber = () => {
     },
     onSuccess: (data, variables) => {
       // Navigate to OTP screen on successful OTP send
-     
+
     },
   });
-
-
-  const handleOtp = (prefix: string, phoneNumber: string) => {
-    sendOtp({
-      prefix: prefix,
-      telNumber: phoneNumber,
-    })
-  }
 
 
   return (
@@ -190,7 +156,7 @@ const PhoneNumber = () => {
               >
                 <View style={styles.textContainer}>
                   <View style={{ gap: 8 }}>
-                    <Text style={styles.topText}>Phone Number</Text>
+                    <Text style={styles.topText}>Email</Text>
                     <Text style={styles.bottomText}>
                       This will be kept private. No surprise DMs.
                     </Text>
@@ -222,33 +188,14 @@ const PhoneNumber = () => {
                         borderRadius: 16,
                       }}
                     >
-                      <AnimatedPressable
-                        entering={FadeIn}
-                        exiting={FadeOut}
-                        onPress={togglePrefix}
-                      >
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 8,
-                          }}
-                        >
-                          <Text style={{ color: Color.Gray.gray50 }}>
-                            +{prefix}
-                          </Text>
-                          <ArrowDown2 color={Color.Gray.gray50} />
-                        </View>
-                      </AnimatedPressable>
                       <TextInput
                         onFocus={() => setIsFocused(true)}
                         onBlur={() => setIsFocused(false)}
-                        keyboardType="phone-pad"
-                        placeholder="XXXXXXXX"
+                        placeholder="Enter your email"
                         placeholderTextColor={Color.Gray.gray100}
-                        value={phoneNumber}
+                        value={email}
                         style={styles.input}
-                        onChangeText={setPhoneNumber}
+                        onChangeText={setEmail}
                       />
                     </View>
                   </LinearGradient>
@@ -276,8 +223,8 @@ const PhoneNumber = () => {
                 ]}
               >
                 <Button
-                  variant={!phoneNumber ? "disabled" : "primary"}
-                  textStyle={!phoneNumber ? "disabled" : "primary"}
+                  variant={!email ? "disabled" : "primary"}
+                  textStyle={!email ? "disabled" : "primary"}
                   size="default"
                   onPress={handleNavigation}
                 >
@@ -289,84 +236,6 @@ const PhoneNumber = () => {
                 </Button>
               </View>
             </KeyboardAvoidingView>
-
-            {isOpen && (
-              <Animated.View
-                style={[
-                  translateY,
-                  {
-                    position: "absolute",
-                    zIndex: 100,
-                    top: -196,
-                    width: "80%",
-                    backgroundColor: Color.Gray.gray400,
-                    borderRadius: 16,
-                    overflow: "hidden",
-                    left: 16,
-                    ...Platform.select({
-                      ios: {
-                        shadowColor: Color.Gray.gray500,
-                        shadowOffset: { width: 0, height: 4 },
-                        shadowOpacity: 0.1,
-                        shadowRadius: 4,
-                        elevation: 12,
-                      },
-                      android: {
-                        elevation: 12,
-                      },
-                    }),
-                  },
-                ]}
-              >
-                <ScrollView style={{}}>
-                  {data.map((prefix, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => handlePrefixSelection(prefix.prefix)}
-                    >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          paddingHorizontal: 16,
-                          paddingVertical: 15,
-                          backgroundColor: Color.Gray.gray400,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            fontWeight: "400",
-                            lineHeight: 20,
-                            color: Color.base.White,
-                          }}
-                        >
-                          {prefix.name}
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            fontWeight: "400",
-                            lineHeight: 20,
-                            color: Color.Gray.gray50,
-                          }}
-                        >
-                          +{prefix.prefix}
-                        </Text>
-                      </View>
-                      <View
-                        style={{
-                          height: 1,
-                          width: "100%",
-                          backgroundColor: Color.Gray.gray300,
-                        }}
-                      />
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              </Animated.View>
-            )}
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
@@ -374,7 +243,7 @@ const PhoneNumber = () => {
   );
 };
 
-export default PhoneNumber;
+export default Email;
 
 const styles = StyleSheet.create({
   body: {

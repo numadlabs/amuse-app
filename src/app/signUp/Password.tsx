@@ -39,8 +39,6 @@ const validatePassword = (password: string): boolean => {
 const Password = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { prefix, phoneNumber, verificationCode } = useLocalSearchParams(); 
-  console.log(prefix, phoneNumber, verificationCode);
   const { password, setPassword } = useSignUpStore();
   const [focusedInput, setFocusedInput] = useState<'password' | 'confirmPassword' | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -81,14 +79,8 @@ const Password = () => {
   };
   const handleNavigation = () => {
     if (isPasswordValid && doPasswordsMatch) {
-      console.log(phoneNumber, prefix, password);
       router.push({
         pathname: "/signUp/NickName",
-        params: {
-          phoneNumber: phoneNumber,
-          prefix: prefix,
-          password: password,
-        },
       });
     } else {
       console.log("Password does not meet the validation rules or passwords do not match.");

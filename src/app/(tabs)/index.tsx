@@ -82,15 +82,15 @@ const Page = () => {
   });
 
 
-  const data = JSON.stringify(pushNotification, undefined, 2)
+  // const data = JSON.stringify(pushNotification, undefined, 2)
 
-  if (expoPushToken?.data) {
-    console.log("Sending push token");
+  // if (expoPushToken?.data) {
+  //   console.log("Sending push token");
 
-    sendPushToken({
-      pushToken: expoPushToken?.data
-    })
-  }
+  //   sendPushToken({
+  //     pushToken: expoPushToken?.data
+  //   })
+  // }
 
   const toggleBottomSheet = () => {
     setIsOpen(!isOpen);
@@ -114,6 +114,7 @@ const Page = () => {
         dayNoOfTheWeek: 7,
       });
     },
+    
     enabled: !!currentLocation,
   });
 
