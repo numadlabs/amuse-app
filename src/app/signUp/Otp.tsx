@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
-  TextInput,
   SafeAreaView,
   Text,
   View,
@@ -13,7 +12,7 @@ import {
 } from "react-native";
 import Color from "../constants/Color";
 import Button from "../components/ui/Button";
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSignUpStore } from "../lib/store/signUpStore";
 import { checkOtp } from "../lib/service/mutationHelper";
@@ -82,8 +81,6 @@ const SplitOTP = () => {
     try {
       setLoading(true)
       const code = Number(text);
-      
-
       if (text) {
         await checkOtpMutation({
           email: email,
@@ -109,52 +106,52 @@ const SplitOTP = () => {
 
 
   return (
-    <KeyboardAvoidingView 
-    style={styles.container}
-    behavior={Platform.OS === "ios" ? "padding" : "height"}
-    keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
-  >
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.content}>
-          <LinearGradient
-            colors={[Color.Brand.card.start, Color.Brand.card.end]}
-            style={styles.gradientContainer}
-          >
-            <View style={styles.textContainer}>
-              <View>
-                <Text style={styles.topText}>Verification code</Text>
-              </View>
-              <View>
-                <Text style={styles.bottomText}>
-                  We will send an email verification code.
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView style={styles.safeArea}>
+          <View style={styles.content}>
+            <LinearGradient
+              colors={[Color.Brand.card.start, Color.Brand.card.end]}
+              style={styles.gradientContainer}
+            >
+              <View style={styles.textContainer}>
+                <View>
+                  <Text style={styles.topText}>Verification code</Text>
+                </View>
+                <View>
+                  <Text style={styles.bottomText}>
+                    We will send an email verification code.
+                  </Text>
+                </View>
+                <View style={{ marginTop: 12 }}>
+                  <SplitOTPInput
+                    codeLength={4}
+                    onCodeFilled={handleCodeFilled}
+                  />
+                </View>
+                <Text style={{ color: Color.System.systemError }}>
+                  {error}
                 </Text>
               </View>
-              <View style={{ marginTop: 12 }}>
-                <SplitOTPInput
-                  codeLength={4}
-                  onCodeFilled={handleCodeFilled}
-                />
-              </View>
-              <Text style={{ color: Color.System.systemError }}>
-                {error}
-              </Text>
-            </View>
-          </LinearGradient>
-        </View>
-        <View style={styles.buttonWrapper}>
-          <Button
-            variant={text && text.length === 4 ? "primary" : 'disabled'}
-            textStyle={text && text.length === 4 ? "primary" : 'disabled'}
-            size="default"
-            onPress={handleNavigation}
-          >
-            {loading ? <ActivityIndicator /> : "Continue"}
-          </Button>
-        </View>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
-  </KeyboardAvoidingView>
+            </LinearGradient>
+          </View>
+          <View style={styles.buttonWrapper}>
+            <Button
+              variant={text && text.length === 4 ? "primary" : 'disabled'}
+              textStyle={text && text.length === 4 ? "primary" : 'disabled'}
+              size="default"
+              onPress={handleNavigation}
+            >
+              {loading ? <ActivityIndicator /> : "Continue"}
+            </Button>
+          </View>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -163,8 +160,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Color.Gray.gray600,
   },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
   safeArea: {
     flex: 1,
+    paddingHorizontal: 16,
+  },
+  innerContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
     paddingHorizontal: 16,
   },
   content: {
@@ -180,13 +185,23 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     paddingHorizontal: 16,
   },
-  buttonWrapper: {
-    paddingBottom: Platform.OS === 'ios' ? 20 : 10,
-  },
   textContainer: {
     justifyContent: "center",
     alignItems: "center",
     gap: 8,
+  },
+  topText: {
+    color: Color.base.White,
+    fontWeight: "bold",
+    fontSize: 24,
+  },
+  bottomText: {
+    color: Color.Gray.gray100,
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  buttonWrapper: {
+    marginBottom: 80,
   },
   textStyle: {
     height: 48,
@@ -209,16 +224,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 24,
   },
-  topText: {
-    color: Color.base.White,
-    fontWeight: "bold",
-    fontSize: 24,
-  },
-  bottomText: {
-    color: Color.Gray.gray100,
-    fontSize: 12,
-    lineHeight: 16,
-  },
+
   topPosition: {
     justifyContent: "flex-start",
     marginBottom: "auto",
