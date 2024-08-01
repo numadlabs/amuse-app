@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
   },
   container: {
     borderRadius: 32,
-    marginTop: 16,
+    marginVertical: 16,
   },
   input: {
     height: 0,

@@ -74,6 +74,7 @@ const Area = () => {
                     <View style={styles.inputWrapper}>
                       <GooglePlacesAutocomplete
                         placeholder="Area (ex. Prague)"
+                        placeholderTextColor="white"
                         onPress={(data, details = null) => {
                           setArea(data.description);
                         }}
@@ -153,7 +154,6 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     paddingTop: 24,
     gap: 24,
-    borderRadius: 32,
   },
   textWrapper: {
     gap: 8,
@@ -173,11 +173,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 16,
     padding: 1,
-    zIndex:9
+    zIndex: 9,
   },
   inputWrapper: {
     alignItems: "center",
     gap: 12,
+    justifyContent: "center",
     alignContent: "center",
     flexDirection: "row",
     backgroundColor: Color.Gray.gray500,
@@ -190,7 +191,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderRadius: 16,
-    color: Color.Gray.gray100,
+    color: Color.Gray.gray50,
     fontSize: 16,
     lineHeight: 20,
     backgroundColor: Color.Gray.gray500,
@@ -221,7 +222,6 @@ const styles = StyleSheet.create({
   },
   bottomPosition: {
     justifyContent: "flex-end",
-
     ...Platform.select({
       ios: {
         marginBottom: 50,

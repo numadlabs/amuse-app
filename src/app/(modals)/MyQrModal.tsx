@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Color from "../constants/Color";
@@ -186,7 +187,11 @@ const MyQrModal = () => {
 
   return (
     <>
+<<<<<<< Updated upstream
     <SafeAreaView style={{ flex: 1}}>
+=======
+    <SafeAreaView style={{ flex: 1, marginTop: 20}}>
+>>>>>>> Stashed changes
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1, backgroundColor: Color.Gray.gray600, alignItems: 'center' }}>
           {loading ? (
