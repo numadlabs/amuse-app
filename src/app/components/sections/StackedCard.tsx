@@ -57,7 +57,7 @@ const StackedCard = () => {
         }),
       },
     ],
-    originY: 0,
+    originY: 10,
     zIndex: 999,
     top: cardPositions.value,
     marginBottom: -220

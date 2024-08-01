@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import Color from "../constants/Color";
 import Button from "../components/ui/Button";
@@ -32,6 +33,7 @@ export enum KeyBoardTypes {
 const SplitOTP = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const [isFocused, setIsFocused] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [text, onChangeText] = useState("");
   const [error, setError] = useState("")
   const { verificationCode, setVerificationCode, email } = useSignUpStore();
@@ -78,18 +80,22 @@ const SplitOTP = () => {
 
   const handleNavigation = async () => {
     try {
+      setLoading(true)
       const code = Number(text);
-      setVerificationCode(isNaN(code) ? 0 : code);
+      
 
       if (text) {
         await checkOtpMutation({
           email: email,
-          verificationCode: verificationCode
+          verificationCode: code
         });
+        setVerificationCode(isNaN(code) ? 0 : code);
+
         router.back()
         router.navigate({
           pathname: "/signUp/Password",
         });
+        setLoading(false)
       }
     } catch (error) {
       setError("Invalid code")
@@ -103,21 +109,17 @@ const SplitOTP = () => {
 
 
   return (
+    <KeyboardAvoidingView 
+    style={styles.container}
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+    keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+  >
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.body}>
-        <View style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.content}>
           <LinearGradient
             colors={[Color.Brand.card.start, Color.Brand.card.end]}
-            style={{
-              width: "100%",
-              borderRadius: 32,
-              marginTop: 16,
-              borderWidth: 1,
-              borderColor: Color.Gray.gray400,
-              paddingBottom: 32,
-              paddingTop: 24,
-              paddingHorizontal: 16,
-            }}
+            style={styles.gradientContainer}
           >
             <View style={styles.textContainer}>
               <View>
@@ -129,60 +131,57 @@ const SplitOTP = () => {
                 </Text>
               </View>
               <View style={{ marginTop: 12 }}>
-                <SplitOTPInput codeLength={4} onCodeFilled={handleCodeFilled} />
+                <SplitOTPInput
+                  codeLength={4}
+                  onCodeFilled={handleCodeFilled}
+                />
               </View>
               <Text style={{ color: Color.System.systemError }}>
                 {error}
               </Text>
             </View>
-
-
           </LinearGradient>
         </View>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          keyboardVerticalOffset={100}
-          behavior={Platform.OS === "ios" ? "height" : "padding"}
-        >
-          <View>
-            <Button
-              variant={text ? "primary" : "disabled"}
-              textStyle={text ? "primary" : "disabled"}
-              size="default"
-              onPress={handleNavigation}
-            >
-              Continue
-            </Button>
-          </View>
-        </KeyboardAvoidingView>
-      </View>
+        <View style={styles.buttonWrapper}>
+          <Button
+            variant={text && text.length === 4 ? "primary" : 'disabled'}
+            textStyle={text && text.length === 4 ? "primary" : 'disabled'}
+            size="default"
+            onPress={handleNavigation}
+          >
+            {loading ? <ActivityIndicator /> : "Continue"}
+          </Button>
+        </View>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
+  </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  body: {
+  container: {
+    flex: 1,
     backgroundColor: Color.Gray.gray600,
-    height: "100%",
+  },
+  safeArea: {
+    flex: 1,
     paddingHorizontal: 16,
   },
-  container: {
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  gradientContainer: {
+    width: "100%",
     borderRadius: 32,
-    marginTop: 16,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
+    paddingBottom: 32,
+    paddingTop: 24,
+    paddingHorizontal: 16,
   },
-  input: {
-    height: 0,
-    width: 0,
-    color: Color.base.White,
-  },
-  inputFocused: {
-    borderColor: Color.base.White,
-  },
-  containerStyle: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 12,
+  buttonWrapper: {
+    paddingBottom: Platform.OS === 'ios' ? 20 : 10,
   },
   textContainer: {
     justifyContent: "center",
@@ -222,7 +221,7 @@ const styles = StyleSheet.create({
   },
   topPosition: {
     justifyContent: "flex-start",
-    marginTop: "auto",
+    marginBottom: "auto",
   },
 });
 

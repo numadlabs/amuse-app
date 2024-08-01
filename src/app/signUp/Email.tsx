@@ -194,6 +194,7 @@ const Email = () => {
                         placeholder="Enter your email"
                         placeholderTextColor={Color.Gray.gray100}
                         value={email}
+                        autoCapitalize="none"
                         style={styles.input}
                         onChangeText={setEmail}
                       />
