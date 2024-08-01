@@ -107,8 +107,6 @@ const Layout = ({ navigation }) => {
         name="index"
         options={{
           headerStyle: {
-            display: "none",
-            justifyContent: "space-around",
             shadowOpacity: 0,
             backgroundColor: Color.Gray.gray600,
           },
