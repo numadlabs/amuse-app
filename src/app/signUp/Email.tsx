@@ -219,9 +219,9 @@ const Email = () => {
                         keyboardType="phone-pad"
                         placeholder="XXXXXXXX"
                         placeholderTextColor={Color.Gray.gray100}
-                        value={phoneNumber}
+                        value={email}
+                        autoCapitalize="none"
                         style={styles.input}
-                        onChangeText={setPhoneNumber}
                       />
                     </View>
                   </LinearGradient>

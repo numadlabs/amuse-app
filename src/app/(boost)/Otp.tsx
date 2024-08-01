@@ -35,7 +35,7 @@ const SplitOTP = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const [isFocused, setIsFocused] = useState(false);
   const [text, onChangeText] = useState("");
-  const [loading, setLoading] = useState()
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const { email } = useBoostInfoStore()
   const [otp, setOtp] = useState<number>(0)
@@ -82,18 +82,22 @@ const SplitOTP = () => {
 
   const handleNavigation = async () => {
     try {
+      setLoading(true)
       const code = Number(text);
-      setOtp(isNaN(code) ? 0 : code);
+      
 
       if (text) {
         await checkOtpMutation({
-         email: email,
-         emailVerificationCode: code
+          email: email,
+          emailVerificationCode: code
         });
+        setOtp(isNaN(code) ? 0 : code);
+
         router.back()
         router.navigate({
           pathname: "/(boost)/Area",
         });
+        setLoading(false)
       }
     } catch (error) {
       setError("Invalid code")
@@ -101,9 +105,11 @@ const SplitOTP = () => {
     }
   };
 
+  
   const handleCodeFilled = (code) => {
     onChangeText(code);
   };
+
 
 
   return (
