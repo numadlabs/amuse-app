@@ -27,7 +27,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_IOS_GOOGLE_API_KEY": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
+        "EXPO_ANDROID_GOOGLE_API_KEY": "AIzaSyAR4YHRGnBXdSSm70G9GskzKntYCQkh69I"
       }
     },
     "production": {

@@ -92,7 +92,7 @@ const PowerUp = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <View
         style={{
           backgroundColor: Color.Gray.gray600,
