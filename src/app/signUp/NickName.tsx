@@ -44,7 +44,7 @@ const NickName = () => {
       );
       if (response.data) {
         console.log("Register successful:", response.data);
-        router.push("/(tabs)");
+        router.replace("/(tabs)");
         reset()
       } else if (response && response.error) {
         setError("Phone number is already signed up.");

@@ -26,8 +26,8 @@ const Layout = ({ navigation }) => {
   const { getLocation, currentLocation } = useLocationStore();
   const [notification, setNotification] = useState("");
   const [fontsLoaded] = useFonts({
-    "Sora-Regular": require("@/public/fonts/Sora-Regular.ttf"),
-    "Sora-Bold": require("@/public/fonts/Sora-Regular.ttf"),
+    "Sora-Regular": require("@/public/fonts/Sora-Regular.otf"),
+    "Sora-Bold": require("@/public/fonts/Sora-Bold.otf"),
   });
   // const { expoPushToken, notification: pushNotification } = usePushNotifications();
 

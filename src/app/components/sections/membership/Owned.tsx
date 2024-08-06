@@ -46,6 +46,9 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
     enabled: !!currentLocation,
   });
 
+  console.log(perks);
+  
+
   const handleNavigation = () => {
     router.push({
       pathname: "/PerkMarket",
@@ -96,13 +99,16 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
               }
             />
           ))}
+          {perks?.followingBonus && (
+
+       
           <TouchableOpacity
             style={styles.container}
             onPress={notOwnedNavigation}
           >
             <View style={styles.perkDetails}>
               <TicketStar size={28} color={Color.base.White} />
-              <Text style={styles.perkText}>{perks?.followingBonus.name}</Text>
+              <Text style={styles.perkText}>{perks?.followingBonus?.name}</Text>
             </View>
             <View>
               <Text style={styles.perkCount}>
@@ -110,6 +116,7 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
               </Text>
             </View>
           </TouchableOpacity>
+             )}
           <TouchableOpacity onPress={handleNavigation}>
             <View style={styles.addPerkButton}>
               <Add color={Color.base.White} size={24} />

@@ -45,6 +45,7 @@ export default function Layout() {
           />
 
           <Stack.Screen name="MyAcards" />
+          <Stack.Screen name="Wallet" />
           <Stack.Screen name="TermsAndCondo" />
           <Stack.Screen name="SplashScreenAnimated" />
           <Stack.Screen name="Faq" />

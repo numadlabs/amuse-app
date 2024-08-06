@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import Color from "../constants/Color";
 import Button from "../components/ui/Button";
@@ -34,6 +35,7 @@ const SplitOTP = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const [isFocused, setIsFocused] = useState(false);
   const [text, onChangeText] = useState("");
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const { verificationCode, setVerificationCode, email } = usePasswordStore();
   const inputRef = useRef(null);
@@ -79,24 +81,27 @@ const SplitOTP = () => {
 
   const handleNavigation = async () => {
     try {
+      setLoading(true)
       const code = Number(text);
-      setVerificationCode(isNaN(code) ? 0 : code);
-
       if (text) {
         await checkOtpMutation({
           email: email,
-          verificationCode: verificationCode
+          verificationCode: code
         });
+        setVerificationCode(isNaN(code) ? 0 : code);
+
         router.back()
         router.navigate({
           pathname: "/forgotPassword/NewPassword",
         });
+        setLoading(false)
       }
     } catch (error) {
       setError("Invalid code")
       console.log("OTP check failed:", error);
     }
   };
+
 
   const handleCodeFilled = (code) => {
     onChangeText(code);
@@ -152,7 +157,7 @@ const SplitOTP = () => {
               size="default"
               onPress={handleNavigation}
             >
-              Continue
+              {loading ? <ActivityIndicator /> : "Continue"}
             </Button>
           </View>
         </KeyboardAvoidingView>
