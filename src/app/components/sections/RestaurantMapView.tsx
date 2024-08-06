@@ -58,7 +58,7 @@ export default function RestaurantMapView() {
   const [initialRegion, setInitialRegion] = useState(null);
   const [scrollViewHidden, setScrollViewHidden] = useState(true);
   const [isClaimLoading, setIsClaimLoading] = useState(false);
-  const currentTime = moment().format('HH:mm');
+  const currentTime = moment().format("HH:mm");
   const [cardIndexToScroll, setCardIndexToScroll] = useState<number | null>(
     null
   );
@@ -276,15 +276,18 @@ export default function RestaurantMapView() {
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         initialRegion={{
-          latitude: 50.0755,   // Latitude for Prague
-          longitude: 14.4378,  // Longitude for Prague
-          latitudeDelta: 0.1,  // Adjust the delta values for desired zoom level
+          latitude: 50.0755, // Latitude for Prague
+          longitude: 14.4378, // Longitude for Prague
+          latitudeDelta: 0.1, // Adjust the delta values for desired zoom level
           longitudeDelta: 0.1,
         }} // Pass the initialRegion prop here
-        
         customMapStyle={mapStyle}
-        cacheEnabled={true}
-        onPress={toggleLocation} // Add this onPress handler
+        // cacheEnabled={true}
+        scrollEnabled={true}
+        zoomEnabled={true}
+        pitchEnabled={true}
+        rotateEnabled={true}
+        // onPress={toggleLocation} // Add this onPress handler
       >
         {/* <View style={styles.locationToggleContainer}>
           <TouchableOpacity onPress={toggleLocation} style={styles.locationToggle}>
@@ -305,7 +308,7 @@ export default function RestaurantMapView() {
               latitude: currentLocation.latitude,
               longitude: currentLocation.longitude,
             }}
-          // title="Your Location"
+            // title="Your Location"
           >
             <Image source={require("@/public/images/locationPin.png")} />
           </Marker>
