@@ -57,6 +57,10 @@ const RestaurantListView = () => {
     });
   };
 
+
+  console.log("Card id: ", restaurantsData);
+  
+
   const chunkArray = (arr: any[], chunkSize: number) => {
     const chunks = [];
     for (let i = 0; i < arr.length; i += chunkSize) {

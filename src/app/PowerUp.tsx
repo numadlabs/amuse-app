@@ -62,13 +62,6 @@ const PowerUp = () => {
     }
   });
 
-  socket.on("connect", () => {
-    console.log("socket connected: ", socket.connected); // true
-  });
-
-
-
-
   const {
     data,
     error,

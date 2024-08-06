@@ -28,7 +28,10 @@ const QuickInfo = ({ user, onPress }) => {
   const handleNavigation = () => {
     if (user?.email){
       router.push("(boost)/Area");
-    }else{
+    }else if(user?.email && user?.location){
+      router.push("(boost)/Birthday");
+    }
+    else{
       router.push("(boost)/Email");
     }
     

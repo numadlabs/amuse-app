@@ -56,6 +56,8 @@ const Restaurant = () => {
   const toggleBottomSheet = () => {
     setBottomSheet(!bottomSheet);
   };
+  console.log("data: ", restaurantsData);
+  
 
   
 
@@ -82,7 +84,7 @@ const Restaurant = () => {
   const handleGetAcard = async (id: string) => {
     setIsClaimLoading(true);
     if (authState.userId) {
-      await createGetAcardMutation({ userId: authState.userId, cardId: id });
+      await createGetAcardMutation({ userId: authState.userId, cardId: restaurantsData?.cardId });
     }
   };
 

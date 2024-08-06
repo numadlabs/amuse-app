@@ -55,11 +55,11 @@ const PerkBuy = () => {
           setIsClaimLoading(false);
           router.back();
         } else if (data.data.success === false) {
-          console.log("🚀 ~ Purchase failed");
+          setBalance("Purchase failed");
           setIsClaimLoading(false);
         }
       } catch (error) {
-        setBalance("Insufficient Bitcoin balance");
+        setBalance("Please try again");
         setIsClaimLoading(false);
         console.log(error);
       }
