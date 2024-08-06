@@ -7,15 +7,15 @@ import {
   ActivityIndicator,
   Platform,
 } from "react-native";
-import Color from "./constants/Color";
-import Close from "./components/icons/Close";
+import Color from "@/constants/Color";
+import Close from "@/components/icons/Close";
 import { router, useLocalSearchParams } from "expo-router";
-import PerkGradient from "./components/icons/PerkGradient";
-import Button from "./components/ui/Button";
-import { purchasePerk } from "./lib/service/mutationHelper";
+import PerkGradient from "@/components/icons/PerkGradient";
+import Button from "@/components/ui/Button";
+import { purchasePerk } from "@/lib/service/mutationHelper";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "./context/AuthContext";
-import { restaurantKeys, userKeys } from "./lib/service/keysHelper";
+import { useAuth } from "@/context/AuthContext";
+import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -51,7 +51,7 @@ const PerkBuy = () => {
           console.log("🚀 ~ Purchase successful", data.data.data);
           queryClient.invalidateQueries({ queryKey: userKeys.cards });
           queryClient.invalidateQueries({ queryKey: userKeys.info });
-          queryClient.invalidateQueries({queryKey: restaurantKeys.all,});
+          queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
           setIsClaimLoading(false);
           router.back();
         } else if (data.data.success === false) {
@@ -68,95 +68,103 @@ const PerkBuy = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-    <View
-      style={{
-        backgroundColor: Color.Gray.gray600,
-        flex: 1,
-        paddingHorizontal: 16,
-        marginTop: Platform.OS === 'ios' ? -10 : 0
-      }}
-      key={id as string}
-    >
-      <View style={styles.closeButtonContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.closeButton]}
-          onPress={() => {
-            router.back();
-          }}
-        >
-          <Close />
-        </TouchableOpacity>
-      </View>
       <View
         style={{
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "80%",
-          gap: 24,
+          backgroundColor: Color.Gray.gray600,
+          flex: 1,
+          paddingHorizontal: 16,
+          marginTop: Platform.OS === "ios" ? -10 : 0,
         }}
+        key={id as string}
       >
+        <View style={styles.closeButtonContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.closeButton]}
+            onPress={() => {
+              router.back();
+            }}
+          >
+            <Close />
+          </TouchableOpacity>
+        </View>
         <View
           style={{
-            padding: 12,
-            backgroundColor: Color.Gray.gray400,
-            borderRadius: 12,
-            width: 56,
-            height: 56,
+            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
+            height: "80%",
+            gap: 24,
           }}
         >
-          <PerkGradient />
-        </View>
-        <View
-          style={{ flexDirection: "column", gap: 12, justifyContent: "center" }}
-        >
-          <Text
+          <View
             style={{
-              textAlign: "center",
-              color: Color.base.White,
-              fontWeight: "bold",
-              fontSize: 20,
+              padding: 12,
+              backgroundColor: Color.Gray.gray400,
+              borderRadius: 12,
+              width: 56,
+              height: 56,
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            {name}
-          </Text>
-          <Text
+            <PerkGradient />
+          </View>
+          <View
             style={{
-              color: Color.Gray.gray100,
-              fontSize: 14,
-              lineHeight: 18,
-              textAlign: "center",
+              flexDirection: "column",
+              gap: 12,
+              justifyContent: "center",
             }}
           >
-            Redeem with Bitcoin and use it {"\n"} on your next visit
-          </Text>
-          {balance && (
-            <AnimatedText
-              entering={FadeIn}
-              exiting={FadeOut}
-              style={{ color: Color.System.systemError, textAlign: "center" }}
+            <Text
+              style={{
+                textAlign: "center",
+                color: Color.base.White,
+                fontWeight: "bold",
+                fontSize: 20,
+              }}
             >
-              {balance}
-            </AnimatedText>
-          )}
+              {name}
+            </Text>
+            <Text
+              style={{
+                color: Color.Gray.gray100,
+                fontSize: 14,
+                lineHeight: 18,
+                textAlign: "center",
+              }}
+            >
+              Redeem with Bitcoin and use it {"\n"} on your next visit
+            </Text>
+            {balance && (
+              <AnimatedText
+                entering={FadeIn}
+                exiting={FadeOut}
+                style={{ color: Color.System.systemError, textAlign: "center" }}
+              >
+                {balance}
+              </AnimatedText>
+            )}
+          </View>
         </View>
+        <Button
+          variant={isClaimLoading ? "disabled" : "primary"}
+          size="large"
+          onPress={isClaimLoading ? null : () => handleGetAPerk(id as string)}
+        >
+          {isClaimLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: "600",
+                color: Color.base.White,
+              }}
+            >{`Redeem for ${price} Bitcoin`}</Text>
+          )}
+        </Button>
       </View>
-      <Button
-        variant={isClaimLoading ? "disabled" : "primary"}
-        size="large"
-        onPress={isClaimLoading ? null : () => handleGetAPerk(id as string)}
-      >
-        {isClaimLoading ? (
-          <ActivityIndicator />
-        ) : (
-          <Text
-            style={{ fontSize: 15, fontWeight: "600", color: Color.base.White }}
-          >{`Redeem for ${price} Bitcoin`}</Text>
-        )}
-      </Button>
-    </View>
     </SafeAreaView>
   );
 };

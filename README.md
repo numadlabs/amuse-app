@@ -1,14 +1,7 @@
-# Expo Router and Tailwind CSS
+# Amuse Bouche mobile app project
 
-Use [Expo Router](https://docs.expo.dev/router/introduction/) with [Nativewind](https://www.nativewind.dev/v4/overview/) styling.
+## How to start
 
-## 🚀 How to use
+npm i
 
-```sh
-npx create-expo-app -e with-router-tailwind
-```
-## How to start 
-
-npm i 
-
-npx expo start
+npm start

@@ -1,13 +1,9 @@
-import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import "../global.css";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { StatusBar } from "expo-status-bar";
 import Toast from "react-native-toast-message";
-import { toastConfig } from "./constants/ToasterConfig";
-import { usePushNotifications } from "./hooks/usePushNotification";
-import { useEffect } from "react";
+import { toastConfig } from "@/constants/ToasterConfig";
 
 const queryClient = new QueryClient();
 
@@ -16,8 +12,6 @@ export const unstable_settings = {
 };
 
 export default function Layout() {
-
-
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
@@ -32,7 +26,7 @@ export default function Layout() {
         >
           <Stack.Screen
             name="restaurants/[id]"
-            options={{ presentation: 'modal', gestureEnabled: true}}
+            options={{ presentation: "modal", gestureEnabled: true }}
           />
 
           {/* <Stack.Screen

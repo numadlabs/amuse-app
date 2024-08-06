@@ -1,8 +1,8 @@
-import React from 'react';
-import { Stack, router } from 'expo-router';
-import { TouchableOpacity, View } from 'react-native';
-import Color from '../constants/Color';
-import { ArrowLeft } from 'iconsax-react-native';
+import React from "react";
+import { Stack, router } from "expo-router";
+import { TouchableOpacity, View } from "react-native";
+import Color from "@/constants/Color";
+import { ArrowLeft } from "iconsax-react-native";
 
 const _layout = () => {
   return (
@@ -16,21 +16,19 @@ const _layout = () => {
               </View>
             </TouchableOpacity>
           ),
-          headerTitle: 'Boost',
-          headerTitleAlign: 'center',
+          headerTitle: "Boost",
+          headerTitleAlign: "center",
           headerTitleStyle: {
-            color: 'white',
+            color: "white",
             fontSize: 16,
-            fontWeight: 'bold',
+            fontWeight: "bold",
           },
           headerStyle: { backgroundColor: Color.Gray.gray600 },
         }}
       >
-        <Stack.Screen name='Email'/>
-        <Stack.Screen name='Area'/>
-        <Stack.Screen name='Otp' options={{presentation: 'modal'}}/>
-        <Stack.Screen name='Birthday'/>
-        <Stack.Screen options={{ headerShown: false }} name='Success'/>
+        <Stack.Screen name="Area" />
+        <Stack.Screen name="Birthday" />
+        <Stack.Screen options={{ headerShown: false }} name="Success" />
       </Stack>
     </>
   );

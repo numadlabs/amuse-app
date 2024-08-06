@@ -1,10 +1,8 @@
 import { View, Text, StyleSheet, Platform } from "react-native";
 import React from "react";
-import Header from "./components/layout/Header";
-import Color from "./constants/Color";
-import Accordion from "./components/ui/Accordion";
+import Header from "@/components/layout/Header";
+import Color from "@/constants/Color";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 
 const TermsAndCondo = () => {
   const data = [
@@ -24,18 +22,25 @@ const TermsAndCondo = () => {
 
   return (
     <>
-    <SafeAreaView style={{ flex: 1}}>
-      <Header title="Terms and Conditions" />
-      <View style={styles.container}>
-        {/* {data.map((item, index) => (
+      <SafeAreaView style={{ flex: 1 }}>
+        <Header title="Terms and Conditions" />
+        <View style={styles.container}>
+          {/* {data.map((item, index) => (
           <Accordion key={index} title={item.title} text={item.text} />
         ))} */}
-        <Text style={{color: Color.Gray.gray50, fontSize:16, marginTop:16}}>
-          This app is a proof of concept. Any images, locations, rewards, and offers are purely for demonstration purposes and do not construe any sort of commitment. No Bitcoin, rewards, or perks listed in this app are redeemable in any physical location.{"\n"}{"\n"}
-          This proof of concept app is confidential. Reproduction, publication, or dissemination is strictly prohibited.
-        </Text>
-      </View>
-    </SafeAreaView>
+          <Text
+            style={{ color: Color.Gray.gray50, fontSize: 16, marginTop: 16 }}
+          >
+            This app is a proof of concept. Any images, locations, rewards, and
+            offers are purely for demonstration purposes and do not construe any
+            sort of commitment. No Bitcoin, rewards, or perks listed in this app
+            are redeemable in any physical location.{"\n"}
+            {"\n"}
+            This proof of concept app is confidential. Reproduction,
+            publication, or dissemination is strictly prohibited.
+          </Text>
+        </View>
+      </SafeAreaView>
     </>
   );
 };
@@ -47,7 +52,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray600,
     flex: 1,
     paddingHorizontal: 16,
-    flexDirection: 'column',
-    gap: 16
+    flexDirection: "column",
+    gap: 16,
   },
 });

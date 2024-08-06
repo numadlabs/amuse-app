@@ -8,13 +8,13 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import Steps from "../components/atom/Steps";
-import Color from "../constants/Color";
-import Button from "../components/ui/Button";
+import Steps from "@/components/atom/Steps";
+import Color from "@/constants/Color";
+import Button from "@/components/ui/Button";
 import { useRouter } from "expo-router";
-import useBoostInfoStore from "../lib/store/boostInfoStore";
+import useBoostInfoStore from "@/lib/store/boostInfoStore";
 import { LinearGradient } from "expo-linear-gradient";
-import { height, width } from "../lib/utils";
+import { height, width } from "@/lib/utils";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 const Area = () => {
@@ -43,16 +43,14 @@ const Area = () => {
   return (
     <>
       <Steps activeStep={2} />
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-      >
+      <KeyboardAvoidingView style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.container}>
             <View style={styles.body}>
               <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
                 style={styles.gradient}
-              > 
+              >
                 <View style={styles.textContainer}>
                   <View style={styles.textWrapper}>
                     <Text style={styles.topText}>Area</Text>
@@ -74,13 +72,13 @@ const Area = () => {
                     <View style={styles.inputWrapper}>
                       <GooglePlacesAutocomplete
                         placeholder="Area (ex. Prague)"
-                        placeholderTextColor="white"
+                        // placeholderTextColor="white"
                         onPress={(data, details = null) => {
                           setArea(data.description);
                         }}
                         query={{
-                          key: 'AIzaSyD6P0kwuwr_7RTb5_2UZLNteryotRLItCM',
-                          language: 'en',
+                          key: "AIzaSyD6P0kwuwr_7RTb5_2UZLNteryotRLItCM",
+                          language: "en",
                           components: "country:cz",
                         }}
                         fetchDetails={true}
@@ -93,7 +91,9 @@ const Area = () => {
                           poweredContainer: styles.poweredContainer,
                         }}
                         renderRow={(rowData) => (
-                          <Text style={styles.suggestion}>{rowData.description}</Text>
+                          <Text style={styles.suggestion}>
+                            {rowData.description}
+                          </Text>
                         )}
                         listViewDisplayed="auto"
                         renderDescription={(rowData) => rowData.description}
@@ -198,14 +198,14 @@ const styles = StyleSheet.create({
   },
   listView: {
     maxHeight: height / 3,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   row: {
     backgroundColor: Color.Gray.gray400,
     width: width,
   },
   poweredContainer: {
-    display: 'none',
+    display: "none",
   },
   suggestion: {
     fontSize: 16,

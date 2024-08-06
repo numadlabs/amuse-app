@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -10,14 +10,14 @@ import {
   Platform,
   ActivityIndicator,
 } from "react-native";
-import Color from "../constants/Color";
-import Button from "../components/ui/Button";
+import Color from "@/constants/Color";
+import Button from "@/components/ui/Button";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import { useSignUpStore } from "../lib/store/signUpStore";
-import { checkOtp } from "../lib/service/mutationHelper";
+import { useSignUpStore } from "@/lib/store/signUpStore";
+import { checkOtp } from "@/lib/service/mutationHelper";
 import { useMutation } from "@tanstack/react-query";
-import SplitOTPInput from "../components/ui/OtpInput";
+import SplitOTPInput from "@/components/ui/OtpInput";
 
 export enum KeyBoardTypes {
   default = "default",
@@ -30,72 +30,34 @@ export enum KeyBoardTypes {
 }
 
 const SplitOTP = () => {
-  const [buttonPosition, setButtonPosition] = useState("bottom");
-  const [isFocused, setIsFocused] = useState(false);
   const [loading, setLoading] = useState(false);
   const [text, onChangeText] = useState("");
-  const [error, setError] = useState("")
+  const [error, setError] = useState("");
   const { verificationCode, setVerificationCode, email } = useSignUpStore();
-  const inputRef = useRef(null);
-  const onPress = () => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  };
 
   const { mutateAsync: checkOtpMutation } = useMutation({
     mutationFn: checkOtp,
-    onError: (error) => {
-      console.log(error);
-    },
-    onSuccess: (data, variables) => {
-      console.log(data);
-    },
   });
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => setButtonPosition("top")
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => setButtonPosition("bottom")
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
-  const onFocus = () => {
-    setIsFocused(true);
-  };
-
-  const onBlur = () => {
-    setIsFocused(false);
-  };
 
   const handleNavigation = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const code = Number(text);
       if (text) {
         await checkOtpMutation({
           email: email,
-          verificationCode: code
+          verificationCode: code,
         });
         setVerificationCode(isNaN(code) ? 0 : code);
 
-        router.back()
+        router.back();
         router.navigate({
           pathname: "/signUp/Password",
         });
-        setLoading(false)
+        setLoading(false);
       }
     } catch (error) {
-      setError("Invalid code")
+      setError("Invalid code");
       console.log("OTP check failed:", error);
     }
   };
@@ -103,7 +65,6 @@ const SplitOTP = () => {
   const handleCodeFilled = (code) => {
     onChangeText(code);
   };
-
 
   return (
     <KeyboardAvoidingView
@@ -133,16 +94,14 @@ const SplitOTP = () => {
                     onCodeFilled={handleCodeFilled}
                   />
                 </View>
-                <Text style={{ color: Color.System.systemError }}>
-                  {error}
-                </Text>
+                <Text style={{ color: Color.System.systemError }}>{error}</Text>
               </View>
             </LinearGradient>
           </View>
           <View style={styles.buttonWrapper}>
             <Button
-              variant={text && text.length === 4 ? "primary" : 'disabled'}
-              textStyle={text && text.length === 4 ? "primary" : 'disabled'}
+              variant={text && text.length === 4 ? "primary" : "disabled"}
+              textStyle={text && text.length === 4 ? "primary" : "disabled"}
               size="default"
               onPress={handleNavigation}
             >
@@ -169,12 +128,12 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     paddingHorizontal: 16,
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   gradientContainer: {
     width: "100%",

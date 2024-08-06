@@ -7,7 +7,7 @@ import {
   Sms,
   User,
 } from "iconsax-react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Linking,
   ScrollView,
@@ -15,28 +15,24 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image
+  Image,
 } from "react-native";
 import { useQuery } from "@tanstack/react-query";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Header from "../components/layout/Header";
-import Color from "../constants/Color";
-import { useAuth } from "../context/AuthContext";
+import Header from "@/components/layout/Header";
+import Color from "@/constants/Color";
+import { useAuth } from "@/context/AuthContext";
 import {
   getUserById,
   getUserCard,
   getUserTaps,
-} from "../lib/service/queryHelper";
-import useLocationStore from "../lib/store/userLocation";
-import { userKeys } from "../lib/service/keysHelper";
+} from "@/lib/service/queryHelper";
+import useLocationStore from "@/lib/store/userLocation";
+import { userKeys } from "@/lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { SERVER_SETTING } from "../constants/serverSettings";
+import { SERVER_SETTING } from "@/constants/serverSettings";
 
 const Profile = () => {
-  const [internalVisitCount, setInternalVisitCount] = useState(0);
-  const [userTier, setUserTier] = useState('Bronze');
-
   const { currentLocation } = useLocationStore();
   const router = useRouter();
   const { data: taps = [] } = useQuery({
@@ -65,39 +61,20 @@ const Profile = () => {
     },
   });
 
-
-  useEffect(() => {
-    const loadUserData = async () => {
-      try {
-        const savedInternalVisitCount = await AsyncStorage.getItem('internalVisitCount');
-        const savedTier = await AsyncStorage.getItem('userTier');
-
-        if (savedInternalVisitCount !== null) {
-          const visitCountParsed = parseInt(savedInternalVisitCount, 10);
-          console.log(`Loaded internal visit count: ${visitCountParsed}`);
-          setInternalVisitCount(visitCountParsed);
-        }
-
-        if (savedTier !== null) {
-          console.log(`Loaded user tier: ${savedTier}`);
-          setUserTier(savedTier);
-        }
-      } catch (error) {
-        console.error('Error loading user data:', error);
-      }
-    };
-
-    loadUserData();
-  }, []);
-
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
         <Header title="Profile" />
         <ScrollView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
           <View style={styles.body}>
-            <View style={{ borderWidth: 1, borderColor: Color.Gray.gray300, borderRadius: 16, }}>
-              <TouchableOpacity onPress={() => router.push('/Tier')}>
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: Color.Gray.gray300,
+                borderRadius: 16,
+              }}
+            >
+              <TouchableOpacity onPress={() => router.push("/Tier")}>
                 <LinearGradient
                   colors={[Color.Brand.card.start, Color.Brand.card.end]}
                   start={{ x: 1, y: 0 }}
@@ -105,9 +82,9 @@ const Profile = () => {
                   style={{
                     padding: 16,
                     borderRadius: 16,
-                    alignItems: 'center',
-                    alignContent: 'center',
-                    flexDirection: 'row',
+                    alignItems: "center",
+                    alignContent: "center",
+                    flexDirection: "row",
                     gap: 20,
                     borderWidth: 1,
                     borderColor: Color.Gray.gray300,
@@ -116,17 +93,46 @@ const Profile = () => {
                   <View style={styles.profilePic}>
                     {user?.user?.profilePicture ? (
                       <Image
-                        source={{ uri: `${SERVER_SETTING.PROFILE_PIC_LINK}${user?.user?.profilePicture}`, }}
+                        source={{
+                          uri: `${SERVER_SETTING.PROFILE_PIC_LINK}${user?.user?.profilePicture}`,
+                        }}
                         style={{ width: 72, height: 72, borderRadius: 48 }}
                       />
                     ) : (
                       <User size={48} color={Color.Gray.gray50} />
                     )}
                   </View>
-                  <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
-                    <View style={{ alignContent: 'center', justifyContent: 'center', gap: 8 }}>
-                      <Text numberOfLines={1} ellipsizeMode="tail" style={styles.profileName}>{user?.user?.nickname}</Text>
-                      <Text style={{ fontSize: 14, lineHeight: 18, color: Color.Gray.gray100 }}>Tier: {userTier}</Text>
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View
+                      style={{
+                        alignContent: "center",
+                        justifyContent: "center",
+                        gap: 8,
+                      }}
+                    >
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={styles.profileName}
+                      >
+                        {user?.user?.nickname}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          lineHeight: 18,
+                          color: Color.Gray.gray100,
+                        }}
+                      >
+                        Tier: Bronze
+                      </Text>
                     </View>
                     <View>
                       <ArrowRight2 color={Color.Gray.gray100} />

@@ -1,30 +1,14 @@
 import { View, StyleSheet, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
-import Header from "./components/layout/Header";
-import Color from "./constants/Color";
-import NotificationCard from "./components/atom/cards/NotificationCard";
+import Header from "@/components/layout/Header";
+import Color from "@/constants/Color";
+import NotificationCard from "@/components/atom/cards/NotificationCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Notification = () => {
+  //TODO notifcations fetch hiih
   const [notifications, setNotifications] = useState([]);
-
-  useEffect(() => {
-    const retrieveNotifications = async () => {
-      try {
-        const storedNotifications = await AsyncStorage.getItem(
-          "restaurantCard"
-        );
-        if (storedNotifications !== null) {
-          const parsedNotifications = JSON.parse(storedNotifications);
-          setNotifications(parsedNotifications);
-        }
-      } catch (error) {
-        console.log("Error retrieving notifications:", error);
-      }
-    };
-    retrieveNotifications();
-  }, []);
 
   const getRelativeTime = (date) => {
     const now = new Date();
@@ -49,22 +33,22 @@ const Notification = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-    <View style={styles.body}>
-      <Header title="Notifications" />
-      <FlatList
-        style={styles.container}
-        ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-        data={notifications}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <NotificationCard
-            title={item.name}
-            description={`You received 1 EUR of Bitcoin from ${item.name}`}
-            time={getRelativeTime(item.date)}
-          />
-        )}
-      />
-    </View>
+      <View style={styles.body}>
+        <Header title="Notifications" />
+        <FlatList
+          style={styles.container}
+          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+          data={notifications}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <NotificationCard
+              title={item.name}
+              description={`You received 1 EUR of Bitcoin from ${item.name}`}
+              time={getRelativeTime(item.date)}
+            />
+          )}
+        />
+      </View>
     </SafeAreaView>
   );
 };

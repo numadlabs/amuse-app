@@ -1,13 +1,8 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import RestaurantListView from "../components/sections/RestaurantListView";
-import RestaurantMapView from "../components/sections/RestaurantMapView";
-import Color from "../constants/Color";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import RestaurantListView from "@/components/sections/RestaurantListView";
+import RestaurantMapView from "@/components/sections/RestaurantMapView";
+import Color from "@/constants/Color";
 import Animated, {
   withSpring,
   useSharedValue,
@@ -38,7 +33,7 @@ const Acards = () => {
           {/* <View style={styles.header}>
             <View style={styles.searchBar}>
               <SearchNormal1 color={Color.Gray.gray600} />
-              <TextInput placeholder="Search..." style={styles.searchInput} />
+              <TextInput placeholder="Search@." style={styles.searchInput} />
             </View>
             <TouchableOpacity onPress={() => { }}>
               <Setting4 color={Color.Gray.gray600} />

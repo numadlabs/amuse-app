@@ -11,21 +11,31 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Platform,
 } from "react-native";
-import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import APassCard from "../components/atom/cards/APassCard";
-import Close from "../components/icons/Close";
-import Owned from "../components/sections/membership/Owned";
-import UnOwned from "../components/sections/membership/UnOwned";
-import Button from "../components/ui/Button";
-import Color from "../constants/Color";
-import { useAuth } from "../context/AuthContext";
-import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
-import { getAcard } from "../lib/service/mutationHelper";
-import { getPerksByRestaurant, getRestaurantId } from "../lib/service/queryHelper";
-import useLocationStore from "../lib/store/userLocation";
-import { height, width } from "../lib/utils";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  SlideInDown,
+  SlideOutDown,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import APassCard from "@/components/atom/cards/APassCard";
+import Close from "@/components/icons/Close";
+import Owned from "@/components/sections/membership/Owned";
+import UnOwned from "@/components/sections/membership/UnOwned";
+import Button from "@/components/ui/Button";
+import Color from "@/constants/Color";
+import { useAuth } from "@/context/AuthContext";
+import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
+import { getAcard } from "@/lib/service/mutationHelper";
+import {
+  getPerksByRestaurant,
+  getRestaurantId,
+} from "@/lib/service/queryHelper";
+import useLocationStore from "@/lib/store/userLocation";
+import { height, width } from "@/lib/utils";
 import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment";
 
@@ -37,9 +47,7 @@ const Restaurant = () => {
   const queryClient = useQueryClient();
   const { currentLocation } = useLocationStore();
   const [perkId, setPerkId] = useState<string>("");
-  const [loading, setLoading] = useState(false);
-  const currentTime = moment().format('HH:mm');
-
+  const currentTime = moment().format("HH:mm");
 
   const { data: restaurantsData, isLoading } = useQuery({
     queryKey: restaurantKeys.detail(id as string),
@@ -51,7 +59,7 @@ const Restaurant = () => {
     queryKey: restaurantKeys.perks(id as string),
     queryFn: () => getPerksByRestaurant(id),
     enabled: !!currentLocation && !!id,
-  })
+  });
 
   const toggleBottomSheet = () => {
     setBottomSheet(!bottomSheet);
@@ -59,11 +67,11 @@ const Restaurant = () => {
   console.log("data: ", restaurantsData);
   
 
-  
-
   const pressed = useSharedValue(false);
   const animatedStyles = useAnimatedStyle(() => ({
-    transform: [{ scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) }],
+    transform: [
+      { scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) },
+    ],
   }));
 
   const { mutateAsync: createGetAcardMutation } = useMutation({
@@ -79,8 +87,6 @@ const Restaurant = () => {
     },
   });
 
-
-
   const handleGetAcard = async (id: string) => {
     setIsClaimLoading(true);
     if (authState.userId) {
@@ -91,7 +97,10 @@ const Restaurant = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <View style={styles.closeButtonContainer}>
-        <TouchableOpacity style={[styles.button, styles.closeButton]} onPress={() => router.back()}>
+        <TouchableOpacity
+          style={[styles.button, styles.closeButton]}
+          onPress={() => router.back()}
+        >
           <Close />
         </TouchableOpacity>
       </View>
@@ -114,7 +123,10 @@ const Restaurant = () => {
         ) : (
           <>
             {restaurantsData?.isOwned ? (
-              <Animated.View style={{ paddingBottom: 100 }} entering={SlideInDown.springify().damping(20).delay(200)} >
+              <Animated.View
+                style={{ paddingBottom: 100 }}
+                entering={SlideInDown.springify().damping(20).delay(200)}
+              >
                 <Owned
                   // userCardId={perks?.userBonuses?.[0]?.userCardId}
                   // followingPerk={perks?.followingBonus?.name}
@@ -127,12 +139,10 @@ const Restaurant = () => {
                 />
               </Animated.View>
             ) : (
-              <Animated.View entering={SlideInDown.springify().damping(20).delay(200)}>
-                <UnOwned
-                  restaurant={restaurantsData}
-                  isClaimLoading={isClaimLoading}
-                  onPress={() => handleGetAcard(cardId as string)}
-                />
+              <Animated.View
+                entering={SlideInDown.springify().damping(20).delay(200)}
+              >
+                <UnOwned restaurant={restaurantsData} />
               </Animated.View>
             )}
           </>
@@ -142,17 +152,34 @@ const Restaurant = () => {
         <View style={styles.buttonContainer}>
           <Button
             onPress={() => {
-              setLoading(true);
               handleGetAcard(cardId as string);
-              setLoading(false);
             }}
             size="small"
             variant="tertiary"
-            style={{ alignItems: "center", justifyContent: "center", height: 48 }}
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              height: 48,
+            }}
           >
-            <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 12, top: 2 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 12,
+                top: 2,
+              }}
+            >
               <WalletAdd color={Color.base.White} />
-              <Text style={{ color: Color.base.White, fontSize: 15, fontWeight: "bold", top: 2 }}>
+              <Text
+                style={{
+                  color: Color.base.White,
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  top: 2,
+                }}
+              >
                 {isClaimLoading ? <ActivityIndicator /> : "Add membership card"}
               </Text>
             </View>
@@ -197,21 +224,67 @@ const Restaurant = () => {
                 animatedStyles,
               ]}
             >
-              <View style={{ paddingVertical: 8, justifyContent: "center", alignItems: "center", flexDirection: 'row' }}>
-                <Text style={{ fontSize: 20, lineHeight: 24, color: Color.base.White, fontWeight: "bold" }}>Perk</Text>
+              <View
+                style={{
+                  paddingVertical: 8,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    lineHeight: 24,
+                    color: Color.base.White,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Perk
+                </Text>
                 <TouchableOpacity onPress={toggleBottomSheet}>
-                  <View style={{ backgroundColor: Color.Gray.gray400, borderRadius: 48, padding: 8, width: 32, alignContent: 'center', alignItems: 'center', justifyContent: 'center', aspectRatio: 1, position: "absolute", left: 115, top: -18 }}>
+                  <View
+                    style={{
+                      backgroundColor: Color.Gray.gray400,
+                      borderRadius: 48,
+                      padding: 8,
+                      width: 32,
+                      alignContent: "center",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      aspectRatio: 1,
+                      position: "absolute",
+                      left: 115,
+                      top: -18,
+                    }}
+                  >
                     <Close />
                   </View>
                 </TouchableOpacity>
               </View>
-              <View style={{ alignItems: "center", gap: 16}}>
-                <Image source={require("@/public/images/perk.png")} style={{ width: width / 1.2, height: 58 }} resizeMode="contain" />
-                <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray50, textAlign: "center" }}>
-                  Earn perks after every 3 check-ins. Keep visiting your favorite spots and multiply your rewards!
+              <View style={{ alignItems: "center", gap: 16 }}>
+                <Image
+                  source={require("@/public/images/perk.png")}
+                  style={{ width: width / 1.2, height: 58 }}
+                  resizeMode="contain"
+                />
+                <Text
+                  style={{
+                    lineHeight: 18,
+                    fontSize: 14,
+                    color: Color.Gray.gray50,
+                    textAlign: "center",
+                  }}
+                >
+                  Earn perks after every 3 check-ins. Keep visiting your
+                  favorite spots and multiply your rewards!
                 </Text>
               </View>
-              <Button variant="primary" textStyle="primary" onPress={toggleBottomSheet}>
+              <Button
+                variant="primary"
+                textStyle="primary"
+                onPress={toggleBottomSheet}
+              >
                 <Text>Got it</Text>
               </Button>
             </Animated.View>

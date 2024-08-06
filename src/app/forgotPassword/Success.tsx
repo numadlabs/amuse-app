@@ -1,25 +1,25 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import Color from "../constants/Color";
-import Button from "../components/ui/Button";
+import Color from "@/constants/Color";
+import Button from "@/components/ui/Button";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { useQueryClient } from "@tanstack/react-query";
-import { userKeys } from "../lib/service/keysHelper";
-import TickCircle from "../components/icons/TickCircle";
-import useBoostInfoStore from "../lib/store/boostInfoStore";
+import { userKeys } from "@/lib/service/keysHelper";
+import TickCircle from "@/components/icons/TickCircle";
+import useBoostInfoStore from "@/lib/store/boostInfoStore";
 
 const Success = () => {
   // Initialize the query client
   const queryClient = useQueryClient();
-  const {reset} = useBoostInfoStore()
+  const { reset } = useBoostInfoStore();
   // Handler for navigation
   const handleNavigation = () => {
     // Invalidate queries related to user info
     queryClient.invalidateQueries({ queryKey: userKeys.info });
     // Navigate to the main tabs
     router.replace("/(tabs)");
-    reset()
+    reset();
   };
 
   return (
@@ -38,9 +38,7 @@ const Success = () => {
         {/* Congratulations message */}
         <Text style={styles.topText}>Password changed</Text>
         {/* Reward message */}
-        <Text style={styles.bottomText}>
-        Your password has been changed. 
-        </Text>
+        <Text style={styles.bottomText}>Your password has been changed.</Text>
       </LinearGradient>
       {/* Container for the confirm button */}
       <View style={styles.buttonContainer}>

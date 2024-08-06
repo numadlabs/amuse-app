@@ -8,55 +8,34 @@ import {
   Platform,
   TouchableWithoutFeedback,
   StyleSheet,
-  Pressable,
-  TouchableOpacity,
-  ScrollView,
   ActivityIndicator,
 } from "react-native";
-import Button from "../components/ui/Button";
-import Color from "../constants/Color";
-import { router, useNavigation } from "expo-router";
-import Steps from "@/app/components/atom/Steps";
-import { ArrowDown2 } from "iconsax-react-native";
-import Animated, {
-  FadeIn,
-  FadeOut,
+import Button from "@/components/ui/Button";
+import Color from "@/constants/Color";
+import Steps from "@/components/atom/Steps";
+import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { height, width } from "../lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
-import { usePasswordStore } from "../lib/store/passwordStore";
-import data from 'prefix.json'
+import { usePasswordStore } from "@/lib/store/passwordStore";
 import { useMutation } from "@tanstack/react-query";
-import { sendOtp, updatePassword } from "../lib/service/mutationHelper";
-import Header from "../components/layout/Header";
+import Header from "@/components/layout/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { sendOtp } from "@/lib/service/mutationHelper";
+import { router } from "expo-router";
 
 function ForgotPassword() {
   const { email, setEmail } = usePasswordStore();
   const [buttonPosition, setButtonPosition] = useState("bottom");
-  const [isFocused, setIsFocused] = useState(false);
-  const [loading, setLoading] = useState(false)
-  const [phonePlaceholder, setPhonePlaceholder] =
-    useState<string>("Phone number");
+  const [loading, setLoading] = useState(false);
+
   const [focusedInput, setFocusedInput] = useState<
     "Phone number" | "Password" | null
   >(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const offset = useSharedValue(300);
-
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
-
-  useEffect(() => {
-    if (isOpen && inputContainerRef.current) {
-      inputContainerRef.current.measure((x, y, width, height, pageX, pageY) => {
-        setDropdownPosition({ top: pageY + height, left: pageX });
-      });
-    }
-  }, [isOpen]);
-
 
   const togglePrefix = () => {
     setIsOpen(!isOpen);
@@ -70,45 +49,32 @@ function ForgotPassword() {
     transform: [{ translateY: offset.value }],
   }));
 
-  const {
-    mutateAsync: sendOtpMutation,
-  } = useMutation({
+  const { mutateAsync: sendOtpMutation } = useMutation({
     mutationFn: sendOtp,
-    onError: (error) => {
-    },
-    onSuccess: (data, variables) => {
-      try {
-      } catch (error) {
-        console.error("Send OTP failed:", error);
-      }
-    },
   });
-
 
   const handleNavigation = async () => {
     try {
-
       if (email) {
-        setLoading(true)
+        setLoading(true);
         await sendOtpMutation({
-          email: email
-        })
-        setLoading(false)
+          email: email,
+        });
+        setLoading(false);
 
         router.push({
           pathname: "/forgotPassword/VerificationCode",
         });
       }
     } catch (error) {
-      console.log("Error sending OTP")
+      console.log("Error sending OTP");
     }
-
   };
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
     if (isOpen) {
-      togglePrefix()
+      togglePrefix();
     }
   };
 
@@ -131,11 +97,9 @@ function ForgotPassword() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
-      <Header title='Forgot password?' />
+      <Header title="Forgot password?" />
       <Steps activeStep={1} />
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-      >
+      <KeyboardAvoidingView style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
@@ -191,7 +155,7 @@ function ForgotPassword() {
                         autoCapitalize="none"
                         placeholder={"Enter your email"}
                         placeholderTextColor={Color.Gray.gray100}
-                        onFocus={() => setFocusedInput('Phone number')}
+                        onFocus={() => setFocusedInput("Phone number")}
                         onBlur={() => setFocusedInput(null)}
                         style={{
                           height: 40,
@@ -199,7 +163,7 @@ function ForgotPassword() {
                           fontWeight: "400",
                           lineHeight: 20,
                           color: Color.base.White,
-                          width: '100%'
+                          width: "100%",
                         }}
                         value={email}
                         onChangeText={setEmail}
@@ -223,8 +187,8 @@ function ForgotPassword() {
                 ]}
               >
                 <Button
-                  variant={email ? "primary" : 'disabled'}
-                  textStyle={email ? "primary" : 'disabled'}
+                  variant={email ? "primary" : "disabled"}
+                  textStyle={email ? "primary" : "disabled"}
                   size="default"
                   onPress={handleNavigation}
                 >
@@ -232,7 +196,6 @@ function ForgotPassword() {
                 </Button>
               </View>
             </KeyboardAvoidingView>
-
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>

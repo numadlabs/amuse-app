@@ -2,13 +2,13 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { useQuery } from "@tanstack/react-query";
-import OwnedAcards from "./components/atom/cards/OwnedAcards";
-import Header from "./components/layout/Header";
-import Color from "./constants/Color";
-import { getUserCard } from "./lib/service/queryHelper";
-import useLocationStore from "./lib/store/userLocation";
-import { RestaurantType } from "./lib/types";
-import { userKeys } from "./lib/service/keysHelper";
+import OwnedAcards from "@/components/atom/cards/OwnedAcards";
+import Header from "@/components/layout/Header";
+import Color from "@/constants/Color";
+import { getUserCard } from "@/lib/service/queryHelper";
+import useLocationStore from "@/lib/store/userLocation";
+import { RestaurantType } from "@/lib/types";
+import { userKeys } from "@/lib/service/keysHelper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const MyAcards = () => {
@@ -24,24 +24,16 @@ const MyAcards = () => {
     enabled: !!currentLocation,
   });
 
-  console.log(cards?.data?.cards);
-
   const router = useRouter();
   const handleNavigation = (restaurant: RestaurantType) => {
     router.push({
       pathname: `/restaurants/${restaurant.restaurantId}`,
-     
     });
   };
   return (
     <SafeAreaView style={{ backgroundColor: Color.Gray.gray600 }}>
       <Header title="My memberships" />
-      {/* <View style={styles.searchBarContainer}>
-        <View style={styles.searchBar}>
-          <SearchNormal1 color={Color.Gray.gray600} />
-          <TextInput placeholder="Search Acards" style={styles.searchInput} />
-        </View>
-      </View> */}
+
       <ScrollView style={styles.container}>
         {cards &&
           cards?.data?.cards.map((card, index) => (

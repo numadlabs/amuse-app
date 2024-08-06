@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
-import Header from "./components/layout/Header";
-import Color from "./constants/Color";
-import Accordion from "./components/ui/Accordion";
+import Header from "@/components/layout/Header";
+import Color from "@/constants/Color";
+import Accordion from "@/components/ui/Accordion";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Faq = () => {
@@ -31,13 +31,13 @@ const Faq = () => {
 
   return (
     <>
-    <SafeAreaView style={{ flex: 1}}>
-      <Header title="FAQ" />
-      <View style={styles.container}>
-        {data.map((item, index) => (
-          <Accordion key={index} title={item.title} text={item.text} />
-        ))}
-      </View>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Header title="FAQ" />
+        <View style={styles.container}>
+          {data.map((item, index) => (
+            <Accordion key={index} title={item.title} text={item.text} />
+          ))}
+        </View>
       </SafeAreaView>
     </>
   );
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray600,
     flex: 1,
     paddingHorizontal: 16,
-    flexDirection: 'column',
-    gap: 16
+    flexDirection: "column",
+    gap: 16,
   },
 });
