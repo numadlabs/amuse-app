@@ -1,7 +1,7 @@
 {
   "expo": {
-    "version": "0.5.9",
-    "runtimeVersion": "0.5.9",
+    "version": "0.5.8",
+    "runtimeVersion": "0.5.8",
     "scheme": "acme",
     "owner": "numad-labs",
     "userInterfaceStyle": "dark",
@@ -81,7 +81,7 @@
 
       "requestHeaders": {
         "expo-channel-name": "main",
-        "expo-runtime-version": "0.5.9",
+        "expo-runtime-version": "0.5.8",
         "expo-platform": "ios",
         "channel-name": "main"
       }
