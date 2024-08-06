@@ -137,6 +137,7 @@ const Email = () => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
+        keyboardVerticalOffset={50}
       >
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
@@ -194,7 +195,6 @@ const Email = () => {
                         placeholder="Enter your email"
                         placeholderTextColor={Color.Gray.gray100}
                         value={email}
-                        autoCapitalize="none"
                         style={styles.input}
                         onChangeText={setEmail}
                       />
