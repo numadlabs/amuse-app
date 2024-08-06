@@ -6,7 +6,9 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "submit-ios": "eas build -p ios --auto-submit",
+    "submit-android": "eas build -p android"
   },
   "dependencies": {
     "@expo/cli": "^0.17.8",
@@ -43,13 +45,14 @@
     "react-native-google-places-autocomplete": "^2.5.6",
     "react-native-indicators": "^0.17.0",
     "react-native-maps": "1.14.0",
-    "styled-components": "^6.1.8",
     "react-native-qrcode-svg": "^6.3.1",
     "react-native-reanimated": "~3.10.1",
     "react-native-safe-area-context": "4.10.5",
+    "react-native-screens": "^3.34.0",
     "react-native-svg": "15.2.0",
     "react-native-toast-message": "^2.2.0",
     "socket.io-client": "^4.7.5",
+    "styled-components": "^6.1.8",
     "zod": "^3.22.4",
     "zustand": "^4.5.0"
   },
