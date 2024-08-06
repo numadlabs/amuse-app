@@ -15,7 +15,10 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "channel": "development"
+      "channel": "development",
+      "env": {
+        "EXPO_IOS_GOOGLE_API_KEY": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
+      }
     },
     "preview": {
       "distribution": "internal",
@@ -23,6 +26,9 @@
       "android": {
         "buildType": "apk"
       },
+      "env": {
+        "EXPO_IOS_GOOGLE_API_KEY": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
+      }
     },
     "production": {
       "channel": "main",

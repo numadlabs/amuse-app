@@ -202,6 +202,7 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     marginBottom: 80,
+    paddingHorizontal:16
   },
   textStyle: {
     height: 48,

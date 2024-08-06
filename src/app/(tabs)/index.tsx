@@ -114,7 +114,7 @@ const Page = () => {
         dayNoOfTheWeek: 7,
       });
     },
-    
+
     enabled: !!currentLocation,
   });
 
@@ -137,12 +137,14 @@ const Page = () => {
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <Animated.View entering={SlideOutDown}>
           {user && (
-            <Balance
-              amount={user?.user?.balance}
-              convertedAmount={user?.convertedBalance}
-              currencyName="CZK"
-              handleToggle={() => toggleBalanceBottomSheet()}
-            />
+            <TouchableOpacity onPress={() => router.push('/Wallet')}>
+              <Balance
+                amount={user?.user?.balance}
+                convertedAmount={user?.convertedBalance}
+                currencyName="EUR"
+                handleToggle={() => toggleBalanceBottomSheet()}
+              />
+            </TouchableOpacity>
           )}
         </Animated.View>
 

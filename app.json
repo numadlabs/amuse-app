@@ -1,7 +1,7 @@
 {
   "expo": {
-    "version": "0.4.9",
-    "runtimeVersion": "0.4.9",
+    "version": "0.5.7",
+    "runtimeVersion": "0.5.7",
     "scheme": "acme",
     "owner": "numad-labs",
     "userInterfaceStyle": "dark",
@@ -22,14 +22,14 @@
         "expo-font",
         {
           "fonts": [
-            "./src/public/fonts/Sora-Medium.ttf",
-            "./src/public/fonts/Sora-Bold.ttf",
-            "./src/public/fonts/Sora-ExtraBold.ttf",
-            "./src/public/fonts/Sora-ExtraLight.ttf",
-            "./src/public/fonts/Sora-Light.ttf",
-            "./src/public/fonts/Sora-Regular.ttf",
-            "./src/public/fonts/Sora-SemiBold.ttf",
-            "./src/public/fonts/Sora-Thin.ttf"
+            "./src/public/fonts/Sora-Medium.otf",
+            "./src/public/fonts/Sora-Bold.otf",
+            "./src/public/fonts/Sora-ExtraBold.otf",
+            "./src/public/fonts/Sora-ExtraLight.otf",
+            "./src/public/fonts/Sora-Light.otf",
+            "./src/public/fonts/Sora-Regular.otf",
+            "./src/public/fonts/Sora-SemiBold.otf",
+            "./src/public/fonts/Sora-Thin.otf"
           ]
         }
       ],
@@ -39,9 +39,11 @@
     "name": "Amuse Bouche",
     "slug": "amuse-app",
     "ios": {
+      
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "The app accesses your photos to let you share them with your friends."
       },
+      
       "supportsTablet": false,
       "bundleIdentifier": "com.numadLabs.amuseApp",
       "config": {
@@ -69,10 +71,10 @@
       },
       "fonts": {
         "YourFont-Regular": [
-          "./public/fonts/Sora-Regular.ttf"
+          "./public/fonts/Sora-Regular.otf"
         ],
         "YourFont-Bold": [
-          "./public/fonts/Sora-Bold.ttf"
+          "./public/fonts/Sora-Bold.otf"
         ]
       }
     },
@@ -84,7 +86,7 @@
       
       "requestHeaders": {
         "expo-channel-name": "main",
-        "expo-runtime-version": "0.4.9",
+        "expo-runtime-version": "0.5.7",
         "expo-platform": "ios",
         "channel-name":"main"
       }

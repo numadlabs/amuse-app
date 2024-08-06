@@ -89,7 +89,7 @@ const PerkScreen = () => {
       const updatedNotifications = [...parsedNotifications, { ...card, date: new Date() }];
       await AsyncStorage.setItem("restaurantCard", JSON.stringify(updatedNotifications));
       console.log("Card information stored successfully.");
-
+      await queryClient.invalidateQueries({ queryKey: userKeys.cards });
       const newVisitCount = visitCount + 1;
       setVisitCount(newVisitCount);
       updateTier(newVisitCount);
@@ -157,7 +157,7 @@ const PerkScreen = () => {
                   color: Color.base.White,
                 }}
               >
-                +1 CZK of Bitcoin
+                +1 EUR of Bitcoin
               </Text>
               <Text
                 style={{

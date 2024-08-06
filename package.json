@@ -24,6 +24,7 @@
     "expo-device": "~6.0.2",
     "expo-font": "~12.0.7",
     "expo-image": "~1.12.13",
+    "expo-image-picker": "~15.0.7",
     "expo-linear-gradient": "~13.0.2",
     "expo-linking": "~6.3.1",
     "expo-location": "~17.0.1",
@@ -47,7 +48,7 @@
     "react-native-gesture-handler": "~2.16.1",
     "react-native-google-places-autocomplete": "^2.5.6",
     "react-native-indicators": "^0.17.0",
-    "react-native-maps": "1.14.0",
+    "react-native-maps": "^1.17.3",
     "react-native-paper": "^5.12.3",
     "react-native-progress": "^5.0.1",
     "react-native-qrcode-svg": "^6.3.1",
@@ -61,8 +62,7 @@
     "styled-components": "^6.1.8",
     "tailwindcss": "^3.4.0",
     "zod": "^3.22.4",
-    "zustand": "^4.5.0",
-    "expo-image-picker": "~15.0.7"
+    "zustand": "^4.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -53,14 +53,12 @@ const MyQrModal = () => {
 
   socket.on("tap-scan", (data) => {
     console.log("Tap scan emitted: ", data);
-    const userCard = cards?.data?.cards.find((card) => card.restaurantId === data?.data?.restaurantId);
-    if (!userCard) {
+    if (!data.isOwned) {
       router.back();
       router.push({
         pathname: `/restaurants/${data?.restaurantId}`,
-        params: { cardId: cardId as any }
       });
-    } else if (userCard) {
+    } else {
       router.back();
       router.navigate({
         pathname: '/PerkScreen',
@@ -71,11 +69,6 @@ const MyQrModal = () => {
         }
       });
     }
-  });
-
-  console.log("server: ", socket)
-  socket.on("connect", () => {
-    console.log("socket connected: ", socket.connected); // true
   });
 
   const togglePopup = () => {
@@ -162,31 +155,9 @@ const MyQrModal = () => {
     },
   });
 
-  // Handle scan button press
-  const handleScanButtonPress = async () => {
-    const userCard = cards?.data?.cards.find((card) => card.restaurantId === restaurantId);
-    try {
-      setLoading(true);
-
-      if (!userCard) {
-        // router.back();
-        // router.push({
-        //   pathname: `/restaurants/${restaurantId}`,
-        //   params: { cardId: cardId as any }
-        // });
-      } else if (userCard) {
-        // await createTapMutation();
-      }
-    } catch (error) {
-      console.log("Map mutation failed:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <>
-      {/* <SafeAreaView style={{ flex: 1}}> */}
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1, backgroundColor: Color.Gray.gray600, alignItems: 'center' }}>
           {loading ? (
@@ -196,7 +167,7 @@ const MyQrModal = () => {
           ) : (
             <View style={{ alignItems: 'center', marginTop: 100, gap: 32 }}>
               <Text style={{ fontSize: 20, lineHeight: 24, color: Color.base.White, fontWeight: '700' }}>My QR Code</Text>
-              <TouchableOpacity onPress={handleScanButtonPress}>
+
                 <LinearGradient
                   colors={[Color.Brand.card.start, Color.Brand.card.end]}
                   style={[styles.button]}
@@ -204,7 +175,7 @@ const MyQrModal = () => {
                   {loading ? <ActivityIndicator /> : <QRCode backgroundColor="transparent" color={Color.base.White} size={width / 1.3} value={`data:image/png;base64,${qrData}`} />}
 
                 </LinearGradient>
-              </TouchableOpacity>
+
               <View style={{ marginHorizontal: 32 }}>
                 <Text style={{ textAlign: 'center', fontSize: 14, lineHeight: 18, color: Color.Gray.gray100 }}>
                   Show this to your waiter to check-in.{"\n"} Do not worry, they are pros.
@@ -231,7 +202,6 @@ const MyQrModal = () => {
           />
         ) : null}
       </View>
-      {/* </SafeAreaView> */}
     </>
   );
 };

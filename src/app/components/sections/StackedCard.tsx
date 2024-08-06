@@ -30,17 +30,7 @@ const StackedCard = () => {
   });
 
 
-  console.log(cards);
-
-
-  // const fetchPerksQueries = cards?.data?.cards.map(card => {
-  //   return useQuery({
-  //     queryKey: [restaurantKeys.perks, card.restaurantId],
-  //     queryFn: () => getPerksByRestaurant(card.restaurantId),
-  //     enabled: !!currentLocation && !!card.restaurantId,
-  //   });
-  // });
-
+  console.log("hellooo", cards);
 
 
   useEffect(() => {
@@ -126,7 +116,7 @@ const StackedCard = () => {
                 category={card.categoryName}
                 hasBonus={card.hasBonus}
                 visitCount={card.visitCount}
-                target={3}
+                target={card?.target}
               // target={perks?.followingBonus?.target}
               />
             </Animated.View>
