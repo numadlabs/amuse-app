@@ -1,102 +1,31 @@
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  StyleSheet,
-} from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
+import React from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getRestaurantById } from "./lib/service/queryHelper";
-import APassCard from "./components/atom/cards/APassCard";
-import Button from "./components/ui/Button";
-import { restaurantKeys, userKeys } from "./lib/service/keysHelper";
+import { getRestaurantById } from "@/lib/service/queryHelper";
+import Button from "@/components/ui/Button";
+import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
 import Animated, { SlideInDown } from "react-native-reanimated";
-import { height } from "./lib/utils";
-import PowerUpCard from "./components/atom/cards/PowerUpCard";
+import { height } from "@/lib/utils";
+import PowerUpCard from "@/components/atom/cards/PowerUpCard";
 import { LinearGradient } from "expo-linear-gradient";
-import Color from "./constants/Color";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import Color from "@/constants/Color";
 import moment from "moment";
 const PerkScreen = () => {
   const { restaurantId, powerUp } = useLocalSearchParams();
   const queryClient = useQueryClient();
-  const [visitCount, setVisitCount] = useState(0);
-  const [userTier, setUserTier] = useState("Bronze");
-  const currentTime = moment().format('HH:mm');
-
-  const tiers = {
-    Bronze: 0,
-    Silver: 3,
-    Gold: 10,
-  };
+  const currentTime = moment().format("HH:mm");
 
   const { data: card = [], isLoading } = useQuery({
     queryKey: [restaurantKeys.detail],
     queryFn: () => {
-      return getRestaurantById(restaurantId as string ,currentTime);
+      return getRestaurantById(restaurantId as string, currentTime);
     },
   });
-
-  useEffect(() => {
-    loadUserData();
-  }, []);
-
-  useEffect(() => {
-    if (card.visitCount !== undefined) {
-      setVisitCount(visitCount);
-      updateTier(visitCount);
-    }
-  }, [card.visitCount]);
-
-  const loadUserData = async () => {
-    try {
-      const savedVisitCount = await AsyncStorage.getItem("visitCount");
-      const savedTier = await AsyncStorage.getItem("userTier");
-      if (savedVisitCount !== null) setVisitCount(parseInt(savedVisitCount));
-      if (savedTier !== null) setUserTier(savedTier);
-    } catch (error) {
-      console.error("Error loading user data:", error);
-    }
-  };
-
-  const saveUserData = async () => {
-    try {
-      await AsyncStorage.setItem("visitCount", visitCount.toString());
-      await AsyncStorage.setItem("userTier", userTier);
-    } catch (error) {
-      console.error("Error saving user data:", error);
-    }
-  };
-
-  const updateTier = (visits) => {
-    let newTier = "Bronze";
-    if (visits >= tiers.Gold) {
-      newTier = "Gold";
-    } else if (visits >= tiers.Silver) {
-      newTier = "Silver";
-    }
-    setUserTier(newTier);
-    saveUserData();
-  };
 
   const handleNavigation = async () => {
     router.back();
     queryClient.invalidateQueries({ queryKey: userKeys.info });
-    try {
-      const existingNotifications = await AsyncStorage.getItem("restaurantCard");
-      const parsedNotifications = existingNotifications ? JSON.parse(existingNotifications) : [];
-      const updatedNotifications = [...parsedNotifications, { ...card, date: new Date() }];
-      await AsyncStorage.setItem("restaurantCard", JSON.stringify(updatedNotifications));
-      console.log("Card information stored successfully.");
-      await queryClient.invalidateQueries({ queryKey: userKeys.cards });
-      const newVisitCount = visitCount + 1;
-      setVisitCount(newVisitCount);
-      updateTier(newVisitCount);
-      await AsyncStorage.setItem("visitCount", newVisitCount.toString());
-    } catch (error) {
-      console.log("Error storing card information:", error);
-    }
   };
 
   return (

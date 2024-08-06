@@ -13,17 +13,19 @@ import {
   View,
   ScrollView,
 } from "react-native";
-import Divider from "./components/atom/Divider";
-import Button from "./components/ui/Button";
-import { useAuth } from "./context/AuthContext";
-import Color from "./constants/Color";
+import Divider from "@/components/atom/Divider";
+import Button from "@/components/ui/Button";
+import { useAuth } from "@/context/AuthContext";
+import Color from "@/constants/Color";
 import { LinearGradient } from "expo-linear-gradient";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [focusedInput, setFocusedInput] = useState<'Email' | 'Password' | null>(null);
+  const [focusedInput, setFocusedInput] = useState<"Email" | "Password" | null>(
+    null
+  );
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const { onLogin } = useAuth();
@@ -151,7 +153,7 @@ function Login() {
                       <TextInput
                         placeholder={"Email"}
                         placeholderTextColor={Color.Gray.gray100}
-                        onFocus={() => setFocusedInput('Email')}
+                        onFocus={() => setFocusedInput("Email")}
                         onBlur={() => setFocusedInput(null)}
                         style={{
                           height: 40,
@@ -159,7 +161,7 @@ function Login() {
                           fontWeight: "400",
                           lineHeight: 20,
                           color: Color.base.White,
-                          width: '100%'
+                          width: "100%",
                         }}
                         autoCapitalize="none"
                         value={email}
@@ -167,12 +169,16 @@ function Login() {
                       />
                     </View>
                   </LinearGradient>
-                  {error && email.length < 7 &&
+                  {error && email.length < 7 && (
                     <Text
-                      style={{ color: Color.System.systemError, paddingHorizontal: 16 }}
+                      style={{
+                        color: Color.System.systemError,
+                        paddingHorizontal: 16,
+                      }}
                     >
                       {"Please enter valid email"}
-                    </Text>}
+                    </Text>
+                  )}
 
                   <LinearGradient
                     colors={
@@ -205,7 +211,7 @@ function Login() {
                         secureTextEntry={!showPassword}
                         placeholder={"Password"}
                         placeholderTextColor={Color.Gray.gray100}
-                        onFocus={() => setFocusedInput('Password')}
+                        onFocus={() => setFocusedInput("Password")}
                         onBlur={() => setFocusedInput(null)}
                         style={{
                           flex: 1,
@@ -213,36 +219,48 @@ function Login() {
                           fontWeight: "400",
                           lineHeight: 20,
                           color: Color.base.White,
-                          width: '100%'
+                          width: "100%",
                         }}
                         value={password}
                         onChangeText={setPassword}
                       />
                       <TouchableOpacity onPress={toggleShowPassword}>
                         <Ionicons
-                          name={showPassword ? "eye-outline" : "eye-off-outline"}
+                          name={
+                            showPassword ? "eye-outline" : "eye-off-outline"
+                          }
                           size={24}
                           color={Color.Gray.gray50}
                         />
                       </TouchableOpacity>
                     </View>
                   </LinearGradient>
-                  {password.length < 8 && null &&
+                  {password.length < 8 && null && (
                     <Text
-                      style={{ color: Color.System.systemError, paddingHorizontal: 16 }}
+                      style={{
+                        color: Color.System.systemError,
+                        paddingHorizontal: 16,
+                      }}
                     >
                       {"Please enter valid password"}
                     </Text>
-                  }
+                  )}
 
                   {error && (
                     <Text
-                      style={{ color: Color.System.systemError, paddingHorizontal: 16 }}
+                      style={{
+                        color: Color.System.systemError,
+                        paddingHorizontal: 16,
+                      }}
                     >
                       {error}
                     </Text>
                   )}
-                  <Button variant="primary" style={{ marginTop: 12 }} onPress={handleLogin}>
+                  <Button
+                    variant="primary"
+                    style={{ marginTop: 12 }}
+                    onPress={handleLogin}
+                  >
                     {loading ? (
                       <ActivityIndicator size="small" color="white" />
                     ) : (

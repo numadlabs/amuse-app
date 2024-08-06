@@ -1,21 +1,27 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Color from "./constants/Color";
-import Close from "./components/icons/Close";
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Color from "@/constants/Color";
+import Close from "@/components/icons/Close";
 import Toast from "react-native-toast-message";
-import PerkGradient from "./components/icons/PerkGradient";
-import Tick from "./components/icons/Tick";
+import PerkGradient from "@/components/icons/PerkGradient";
+import Tick from "@/components/icons/Tick";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 interface FollowingPerkParams {
   visitCount: number;
 }
 type ParamType = {
-  name: string
+  name: string;
   current: string;
   target: string;
-}
+};
 
 const NotOwnedPerk: React.FC<FollowingPerkParams> = () => {
   const { current, target, name } = useLocalSearchParams<ParamType>();
@@ -38,10 +44,7 @@ const NotOwnedPerk: React.FC<FollowingPerkParams> = () => {
         indicators.push(
           <View
             key={i}
-            style={[
-              styles.indicator,
-              { backgroundColor: Color.Gray.gray500 },
-            ]}
+            style={[styles.indicator, { backgroundColor: Color.Gray.gray500 }]}
           >
             <Tick size={20} color={Color.base.White} />
           </View>
@@ -72,39 +75,62 @@ const NotOwnedPerk: React.FC<FollowingPerkParams> = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-    <View style={{ backgroundColor: Color.Gray.gray600, flex: 1, marginTop: Platform.OS === 'ios' ? -10 : 0  }}>
-      <View style={styles.closeButtonContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.closeButton]}
-          onPress={() => router.back()}
-        >
-          <Close />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.container}>
-        <View style={{ justifyContent: "center", alignItems: "center", gap: 64 }}>
-          <View style={{ flexDirection: "column", gap: 24, alignItems: "center" }}>
-            <View style={styles.perkIconContainer}>
-              <PerkGradient />
-            </View>
-            <View style={{ flexDirection: "column", gap: 12, alignItems: "center" }}>
-              <Text style={styles.perkTitle}>{name}</Text>
-              <Text style={styles.perkDescription}>
-                Enjoy a free perk on the house, every {targetCount} visits.
-              </Text>
+      <View
+        style={{
+          backgroundColor: Color.Gray.gray600,
+          flex: 1,
+          marginTop: Platform.OS === "ios" ? -10 : 0,
+        }}
+      >
+        <View style={styles.closeButtonContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.closeButton]}
+            onPress={() => router.back()}
+          >
+            <Close />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.container}>
+          <View
+            style={{ justifyContent: "center", alignItems: "center", gap: 64 }}
+          >
+            <View
+              style={{ flexDirection: "column", gap: 24, alignItems: "center" }}
+            >
+              <View style={styles.perkIconContainer}>
+                <PerkGradient />
+              </View>
+              <View
+                style={{
+                  flexDirection: "column",
+                  gap: 12,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={styles.perkTitle}>{name}</Text>
+                <Text style={styles.perkDescription}>
+                  Enjoy a free perk on the house, every {targetCount} visits.
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
-        <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 24 }}>
-          <View style={{ flexDirection: 'row', gap: 16 }}>
-            {renderIndicators()}
+          <View
+            style={{
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 24,
+            }}
+          >
+            <View style={{ flexDirection: "row", gap: 16 }}>
+              {renderIndicators()}
+            </View>
+            <Text style={styles.checkinText}>
+              {target} Check-ins until next perk
+            </Text>
           </View>
-          <Text style={styles.checkinText}>
-            {target} Check-ins until next perk
-          </Text>
         </View>
       </View>
-    </View>
     </SafeAreaView>
   );
 };
@@ -162,8 +188,8 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   checkinText: {
     fontSize: 14,

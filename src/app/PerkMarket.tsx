@@ -1,22 +1,28 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, Platform } from "react-native";
-import Color from "./constants/Color";
-import {  useQuery, useQueryClient } from "@tanstack/react-query";
-import { purchaseablePerkKeys } from "./lib/service/keysHelper";
-import { getPurchaseablePerks } from "./lib/service/queryHelper";
-import useLocationStore from "./lib/store/userLocation";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+  Platform,
+} from "react-native";
+import Color from "@/constants/Color";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { purchaseablePerkKeys } from "@/lib/service/keysHelper";
+import { getPurchaseablePerks } from "@/lib/service/queryHelper";
+import useLocationStore from "@/lib/store/userLocation";
 import { useLocalSearchParams } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   GestureHandlerRootView,
   TouchableOpacity,
 } from "react-native-gesture-handler";
-import Close from "./components/icons/Close";
+import Close from "@/components/icons/Close";
 import { router } from "expo-router";
-import PerkGradientSm from "./components/icons/PerkGradientSm";
-import { useAuth } from "./context/AuthContext";
+import PerkGradientSm from "@/components/icons/PerkGradientSm";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { width } from "./lib/utils";
+import { width } from "@/lib/utils";
 
 const PerkMarket = () => {
   const { id } = useLocalSearchParams();
@@ -48,76 +54,78 @@ const PerkMarket = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-    <GestureHandlerRootView style={styles.container}>
-      <View style={styles.closeButtonContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.closeButton]}
-          onPress={() => {
-            router.back();
-          }}
-        >
-          <Close />
-        </TouchableOpacity>
-      </View>
-      {isLoading ? (
-        <ActivityIndicator/>
-      ) : isError ? (
-        <Text>Error fetching data</Text>
-      ) : (
-        <FlatList
-          style={{ width: "100%", marginTop: 20 }}
-          data={perks}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <LinearGradient
-              colors={[Color.Brand.card.start, Color.Brand.card.end]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.content}
-            >
-              <TouchableOpacity
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                  flexDirection: "column",
-                  gap: 12,
-                  width: "100%",
-                }}
-                onPress={() => handleNavigation(item.id, item.name, item.price)}
+      <GestureHandlerRootView style={styles.container}>
+        <View style={styles.closeButtonContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.closeButton]}
+            onPress={() => {
+              router.back();
+            }}
+          >
+            <Close />
+          </TouchableOpacity>
+        </View>
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : isError ? (
+          <Text>Error fetching data</Text>
+        ) : (
+          <FlatList
+            style={{ width: "100%", marginTop: 20 }}
+            data={perks}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <LinearGradient
+                colors={[Color.Brand.card.start, Color.Brand.card.end]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.content}
               >
-                <View
+                <TouchableOpacity
                   style={{
-                    borderRadius: 8,
-                    backgroundColor: Color.Gray.gray400,
-                    height: 40,
-                    width: 40,
-                    alignItems: "center",
                     justifyContent: "center",
-                  }}
-                >
-                  <PerkGradientSm />
-                </View>
-                <Text style={styles.perkName}>{item.name}</Text>
-                <View
-                  style={{
-                    backgroundColor: Color.Gray.gray400,
-                    borderRadius: 48,
-                    paddingVertical: 8,
-                    width: "50%",
                     alignItems: "center",
-                    justifyContent: "center",
+                    flexDirection: "column",
+                    gap: 12,
+                    width: "100%",
                   }}
+                  onPress={() =>
+                    handleNavigation(item.id, item.name, item.price)
+                  }
                 >
-                  <Text style={styles.perkPrice}>{`Redeem`}</Text>
-                </View>
-              </TouchableOpacity>
-            </LinearGradient>
-          )}
-          numColumns={2}
-        />
-      )}
-    </GestureHandlerRootView>
-  </SafeAreaView>
+                  <View
+                    style={{
+                      borderRadius: 8,
+                      backgroundColor: Color.Gray.gray400,
+                      height: 40,
+                      width: 40,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <PerkGradientSm />
+                  </View>
+                  <Text style={styles.perkName}>{item.name}</Text>
+                  <View
+                    style={{
+                      backgroundColor: Color.Gray.gray400,
+                      borderRadius: 48,
+                      paddingVertical: 8,
+                      width: "50%",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text style={styles.perkPrice}>{`Redeem`}</Text>
+                  </View>
+                </TouchableOpacity>
+              </LinearGradient>
+            )}
+            numColumns={2}
+          />
+        )}
+      </GestureHandlerRootView>
+    </SafeAreaView>
   );
 };
 
@@ -128,10 +136,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 16,
-    marginTop: Platform.OS === 'ios' ? -10 : 0
+    marginTop: Platform.OS === "ios" ? -10 : 0,
   },
   content: {
-    width:width/2.4,
+    width: width / 2.4,
     paddingHorizontal: 12,
     paddingTop: 20,
     paddingBottom: 12,

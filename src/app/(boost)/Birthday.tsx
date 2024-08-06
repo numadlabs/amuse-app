@@ -10,15 +10,15 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import Steps from "../components/atom/Steps";
-import Color from "../constants/Color";
-import Button from "../components/ui/Button";
+import Steps from "@/components/atom/Steps";
+import Color from "@/constants/Color";
+import Button from "@/components/ui/Button";
 import { useRouter } from "expo-router";
-import { useAuth } from "../context/AuthContext";
-import useBoostInfoStore from "../lib/store/boostInfoStore";
+import { useAuth } from "@/context/AuthContext";
+import useBoostInfoStore from "@/lib/store/boostInfoStore";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useMutation } from "@tanstack/react-query";
-import { updateUserInfo } from "../lib/service/mutationHelper";
+import { updateUserInfo } from "@/lib/service/mutationHelper";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
 
@@ -34,7 +34,7 @@ const Birthday = () => {
   const [initialDate, setInitialDate] = useState(new Date());
   const [temporaryDate, setTemporaryDate] = useState(new Date());
   const { authState } = useAuth();
-  
+
   useEffect(() => {
     // Add keyboard listeners to adjust button position
     const keyboardDidShowListener = Keyboard.addListener(
@@ -46,7 +46,7 @@ const Birthday = () => {
       "keyboardDidHide",
       () => setButtonPosition("bottom")
     );
-    
+
     // Clean up listeners on component unmount
     return () => {
       keyboardDidShowListener.remove();
@@ -69,9 +69,7 @@ const Birthday = () => {
   };
 
   // Mutation hook for updating user information
-  const {
-    mutateAsync: handleUpdateUser,
-  } = useMutation({
+  const { mutateAsync: handleUpdateUser } = useMutation({
     mutationFn: updateUserInfo,
     onError: (error) => {
       console.log(error);
@@ -93,6 +91,8 @@ const Birthday = () => {
       email,
       location: area,
       dateOfBirth: birthdate,
+      //TODO boost birthday tusdaa salgah
+      nickname: "",
     };
     try {
       const data = await handleUpdateUser({
@@ -180,7 +180,9 @@ const Birthday = () => {
                 {loading ? (
                   <ActivityIndicator size="small" color="white" />
                 ) : (
-                  <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
+                  <Text
+                    style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                  >
                     Finish
                   </Text>
                 )}
@@ -188,10 +190,11 @@ const Birthday = () => {
             </View>
             {/* Animated date picker overlay */}
             {showDatePicker && (
-              <Animated.View style={styles.dateTimePickerOverlay}
-              entering={SlideInDown.springify().damping(20)}
-              exiting={SlideOutDown.springify().damping(10)}>
-               
+              <Animated.View
+                style={styles.dateTimePickerOverlay}
+                entering={SlideInDown.springify().damping(20)}
+                exiting={SlideOutDown.springify().damping(10)}
+              >
                 <DateTimePicker
                   value={initialDate}
                   mode="date"
@@ -201,7 +204,7 @@ const Birthday = () => {
                 <Button
                   variant="tertiary"
                   onPress={handleDatePickerDone}
-                  style={{bottom:15}}
+                  style={{ bottom: 15 }}
                 >
                   <Text
                     style={{
@@ -263,12 +266,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   datePickerContainer: {
-    width: '100%',
+    width: "100%",
     borderWidth: 1,
     borderColor: Color.Gray.gray300,
     height: 48,
     borderRadius: 16,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: 16,
   },
   datePickerText: {
@@ -278,7 +281,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     right: 0,
-    zIndex:99,
+    zIndex: 99,
     width: "100%",
     backgroundColor: Color.Gray.gray500,
     padding: 16,

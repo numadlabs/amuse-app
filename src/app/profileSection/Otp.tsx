@@ -11,15 +11,15 @@ import {
   Platform,
   ActivityIndicator,
 } from "react-native";
-import Color from "../constants/Color";
-import Button from "../components/ui/Button";
+import Color from "@/constants/Color";
+import Button from "@/components/ui/Button";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import { useSignUpStore } from "../lib/store/signUpStore";
-import { verifyEmailOtp } from "../lib/service/mutationHelper";
+import { useSignUpStore } from "@/lib/store/signUpStore";
+import { verifyEmailOtp } from "@/lib/service/mutationHelper";
 import { useMutation } from "@tanstack/react-query";
-import SplitOTPInput from "../components/ui/OtpInput";
-import useBoostInfoStore from "../lib/store/boostInfoStore";
+import SplitOTPInput from "@/components/ui/OtpInput";
+import useBoostInfoStore from "@/lib/store/boostInfoStore";
 
 export enum KeyBoardTypes {
   default = "default",
@@ -35,10 +35,10 @@ const SplitOTP = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const [isFocused, setIsFocused] = useState(false);
   const [text, onChangeText] = useState("");
-  const [loading, setLoading] = useState()
-  const [error, setError] = useState("")
-  const { email } = useBoostInfoStore()
-  const [otp, setOtp] = useState<number>(0)
+  const [loading, setLoading] = useState();
+  const [error, setError] = useState("");
+  const { email } = useBoostInfoStore();
+  const [otp, setOtp] = useState<number>(0);
   const inputRef = useRef(null);
   const onPress = () => {
     if (inputRef.current) {
@@ -48,12 +48,6 @@ const SplitOTP = () => {
 
   const { mutateAsync: checkOtpMutation } = useMutation({
     mutationFn: verifyEmailOtp,
-    onError: (error) => {
-      console.log(error);
-    },
-    onSuccess: (data, variables) => {
-      console.log(data);
-    },
   });
 
   useEffect(() => {
@@ -87,16 +81,16 @@ const SplitOTP = () => {
 
       if (text) {
         await checkOtpMutation({
-         email: email,
-         emailVerificationCode: code
+          email: email,
+          emailVerificationCode: code,
         });
-        router.back()
+        router.back();
         router.navigate({
           pathname: "/(boost)/Area",
         });
       }
     } catch (error) {
-      setError("Invalid code")
+      setError("Invalid code");
       console.log("OTP check failed:", error);
     }
   };
@@ -104,7 +98,6 @@ const SplitOTP = () => {
   const handleCodeFilled = (code) => {
     onChangeText(code);
   };
-
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -133,17 +126,10 @@ const SplitOTP = () => {
                 </Text>
               </View>
               <View style={{ marginTop: 12 }}>
-              <SplitOTPInput 
-                  codeLength={4} 
-                  onCodeFilled={handleCodeFilled}
-                />
+                <SplitOTPInput codeLength={4} onCodeFilled={handleCodeFilled} />
               </View>
-              <Text style={{ color: Color.System.systemError }}>
-                {error}
-              </Text>
+              <Text style={{ color: Color.System.systemError }}>{error}</Text>
             </View>
-
-
           </LinearGradient>
         </View>
         <KeyboardAvoidingView
@@ -160,8 +146,8 @@ const SplitOTP = () => {
             ]}
           >
             <Button
-              variant={text && text.length === 4 ? "primary" : 'disabled'}
-              textStyle={text && text.length === 4 ? "primary" : 'disabled'}
+              variant={text && text.length === 4 ? "primary" : "disabled"}
+              textStyle={text && text.length === 4 ? "primary" : "disabled"}
               size="default"
               onPress={handleNavigation}
             >

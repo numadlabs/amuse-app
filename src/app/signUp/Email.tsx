@@ -17,13 +17,13 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import Steps from "../components/atom/Steps";
-import Button from "../components/ui/Button";
-import Color from "../constants/Color";
-import { useSignUpStore } from "../lib/store/signUpStore";
-import { height } from "../lib/utils";
+import Steps from "@/components/atom/Steps";
+import Button from "@/components/ui/Button";
+import Color from "@/constants/Color";
+import { useSignUpStore } from "@/lib/store/signUpStore";
+import { height } from "@/lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
-import { checkEmail, sendOtp } from "../lib/service/mutationHelper";
+import { checkEmail, sendOtp } from "@/lib/service/mutationHelper";
 import { useMutation } from "@tanstack/react-query";
 
 const Email = () => {
@@ -70,13 +70,11 @@ const Email = () => {
       })
         .then((response) => {
           if (response.data.success === false) {
-
             setError("This email is already registered.");
             throw new Error("Email already registered");
-
           } else {
             return sendOtpMutation({
-              email: email
+              email: email,
             });
           }
         })
@@ -91,7 +89,7 @@ const Email = () => {
         .catch((error) => {
           console.log(error);
           setError("This email is already registered.");
-          reset()
+          reset();
         })
         .finally(() => {
           setLoading(false);
@@ -99,7 +97,6 @@ const Email = () => {
         });
     }
   };
-
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -115,7 +112,6 @@ const Email = () => {
     },
   });
 
-
   const { mutateAsync: sendOtpMutation } = useMutation({
     mutationFn: sendOtp,
     onError: (error) => {
@@ -126,10 +122,8 @@ const Email = () => {
     },
     onSuccess: (data, variables) => {
       // Navigate to OTP screen on successful OTP send
-
     },
   });
-
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
@@ -201,7 +195,10 @@ const Email = () => {
                     </View>
                   </LinearGradient>
                   {error && (
-                    <Animated.View entering={FadeIn} style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <Animated.View
+                      entering={FadeIn}
+                      style={{ justifyContent: "center", alignItems: "center" }}
+                    >
                       <Text style={{ color: Color.System.systemError }}>
                         {error}
                       </Text>

@@ -1,10 +1,4 @@
-import {
-  Cake,
-  Camera,
-  Location,
-  Sms,
-  User,
-} from "iconsax-react-native";
+import { Cake, Camera, Location, Sms, User } from "iconsax-react-native";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -15,26 +9,24 @@ import {
   Text,
   Platform,
   TouchableOpacity,
-  Image
+  Image,
 } from "react-native";
-import Header from "../components/layout/Header";
-import Color from "../constants/Color";
+import Header from "@/components/layout/Header";
+import Color from "@/constants/Color";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUserById } from "../lib/service/queryHelper";
-import { useAuth } from "../context/AuthContext";
-import { updateUserInfo } from "../lib/service/mutationHelper";
+import { getUserById } from "@/lib/service/queryHelper";
+import { useAuth } from "@/context/AuthContext";
+import { updateUserInfo } from "@/lib/service/mutationHelper";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import Button from "../components/ui/Button";
-import Toast from "react-native-toast-message";
+import Button from "@/components/ui/Button";
 import { router } from "expo-router";
-import { userKeys } from "../lib/service/keysHelper";
-import ProgressBar from "../components/sections/ProgressBar";
-import { width } from "../lib/utils";
+import { userKeys } from "@/lib/service/keysHelper";
+import { width } from "@/lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as ImagePicker from 'expo-image-picker';
-import { SERVER_SETTING } from "../constants/serverSettings";
+import * as ImagePicker from "expo-image-picker";
+import { SERVER_SETTING } from "@/constants/serverSettings";
 
 const ProfileEdit = () => {
   const { authState } = useAuth();
@@ -42,25 +34,23 @@ const ProfileEdit = () => {
     queryKey: userKeys.info,
     queryFn: () => getUserById(authState.userId),
   });
-  const INPUT_GAP = 24; // or whatever value you prefer
   const [loading, setLoading] = useState(false);
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [location, setLocation] = useState("");
   const [profilePicture, setProfilePicture] = useState(null);
   const [initialDate, setInitialDate] = useState(new Date());
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [dataChanged, setDataChanged] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [focusedInput, setFocusedInput] = useState<
     "Nickname" | "Email" | "Area" | "Birthday" | null
   >(null);
-  const [error, setError] = useState("")
-  const [emailError, setEmailError] = useState("")
+  const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const isProfilePrefilled = user?.user?.email && user?.user?.location && user?.user?.dateOfBirth;
+  const isProfilePrefilled =
+    user?.user?.email && user?.user?.location && user?.user?.dateOfBirth;
 
   useEffect(() => {
     if (user) {
@@ -85,15 +75,13 @@ const ProfileEdit = () => {
   }, [user, nickname, email, location, dateOfBirth]);
 
   const onDateChange = (event, selectedDate) => {
-    setShow(Platform.OS === 'ios');
+    setShow(Platform.OS === "ios");
     if (selectedDate) {
-      setDateOfBirth(selectedDate.toISOString().split('T')[0]);
+      setDateOfBirth(selectedDate.toISOString().split("T")[0]);
       setInitialDate(selectedDate);
     }
   };
   const queryClient = useQueryClient();
-
-
 
   const triggerUpdateUser = async () => {
     setLoading(true);
@@ -136,15 +124,17 @@ const ProfileEdit = () => {
       return;
     }
 
-    const userData = { 
-      nickname, 
-      location, 
+    const userData = {
+      nickname,
+      location,
       dateOfBirth,
-      profilePicture: profilePicture ? {
-        uri: profilePicture.uri,
-        type: 'image/jpeg', 
-        name: 'profile_picture.jpg'
-      } : undefined
+      profilePicture: profilePicture
+        ? {
+            uri: profilePicture.uri,
+            type: "image/jpeg",
+            name: "profile_picture.jpg",
+          }
+        : undefined,
     };
     try {
       await updateUserInfo({ userId: authState.userId, data: userData });
@@ -164,7 +154,6 @@ const ProfileEdit = () => {
       // Handle error (e.g., show toast message)
     }
   };
-
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -201,7 +190,6 @@ const ProfileEdit = () => {
     return formattedDate;
   };
 
-
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
@@ -221,16 +209,20 @@ const ProfileEdit = () => {
             >
               <View style={styles.container}>
                 <View style={styles.profileContainer}>
-                  <TouchableOpacity onPress={pickImage} style={styles.profilePic}>
+                  <TouchableOpacity
+                    onPress={pickImage}
+                    style={styles.profilePic}
+                  >
                     {user?.user?.profilePicture ? (
                       <Image
-                        source={{  uri: `${SERVER_SETTING.PROFILE_PIC_LINK}${user?.user?.profilePicture}`, }}
+                        source={{
+                          uri: `${SERVER_SETTING.PROFILE_PIC_LINK}${user?.user?.profilePicture}`,
+                        }}
                         style={{ width: 96, height: 96, borderRadius: 48 }}
                       />
                     ) : (
                       <User size={48} color={Color.Gray.gray50} />
                     )}
-                   
                   </TouchableOpacity>
                   <View
                     style={{
@@ -267,7 +259,6 @@ const ProfileEdit = () => {
                     style={{
                       borderRadius: 16,
                       padding: 1,
-
                     }}
                   >
                     <View style={styles.input}>
@@ -287,22 +278,20 @@ const ProfileEdit = () => {
                         }}
                       />
                     </View>
-
                   </LinearGradient>
-                  {error &&
+                  {error && (
                     <Text
                       style={{
                         color: Color.System.systemError,
                         fontSize: 14,
                         lineHeight: 18,
                         fontWeight: "600",
-                        marginVertical: 12
+                        marginVertical: 12,
                       }}
                     >
                       {error}
                     </Text>
-                  }
-
+                  )}
                 </View>
                 <View style={{ gap: 8 }}>
                   <Text
@@ -346,19 +335,19 @@ const ProfileEdit = () => {
                       />
                     </View>
                   </LinearGradient>
-                  {emailError &&
+                  {emailError && (
                     <Text
                       style={{
                         color: Color.System.systemError,
                         fontSize: 14,
                         lineHeight: 30,
                         fontWeight: "600",
-                        marginVertical: 12
+                        marginVertical: 12,
                       }}
                     >
                       {emailError}
                     </Text>
-                  }
+                  )}
                 </View>
                 <View style={{ gap: 8 }}>
                   <Text
@@ -403,7 +392,6 @@ const ProfileEdit = () => {
                       />
                     </View>
                   </LinearGradient>
-
                 </View>
                 <View style={{ gap: 8 }}>
                   <Text
@@ -488,7 +476,7 @@ const ProfileEdit = () => {
               width: "100%",
               backgroundColor: Color.Gray.gray500,
               padding: 16,
-              zIndex: 99
+              zIndex: 99,
             }}
           >
             <DateTimePicker
@@ -497,8 +485,12 @@ const ProfileEdit = () => {
               display="spinner"
               onChange={onDateChange}
             />
-            {Platform.OS === 'ios' && (
-              <Button variant="tertiary" onPress={confirmDate} style={{ bottom: 15 }}>
+            {Platform.OS === "ios" && (
+              <Button
+                variant="tertiary"
+                onPress={confirmDate}
+                style={{ bottom: 15 }}
+              >
                 <Text
                   style={{
                     fontSize: 15,
@@ -510,7 +502,6 @@ const ProfileEdit = () => {
                 </Text>
               </Button>
             )}
-
           </Animated.View>
         )}
       </SafeAreaView>

@@ -11,23 +11,18 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import Steps from "../components/atom/Steps";
-import Button from "../components/ui/Button";
-import Color from "../constants/Color";
-import { useAuth } from "../context/AuthContext";
-import { useSignUpStore } from "../lib/store/signUpStore";
+import Steps from "@/components/atom/Steps";
+import Button from "@/components/ui/Button";
+import Color from "@/constants/Color";
+import { useAuth } from "@/context/AuthContext";
+import { useSignUpStore } from "@/lib/store/signUpStore";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeIn } from "react-native-reanimated";
 const NickName = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
-  const { nickname,
-    setNickname,
-    password,
-    verificationCode,
-    email,
-    reset
-  } = useSignUpStore();
-  const [error, setError] = useState<string>("")
+  const { nickname, setNickname, password, verificationCode, email, reset } =
+    useSignUpStore();
+  const [error, setError] = useState<string>("");
   const [isFocused, setIsFocused] = useState(false);
 
   const { onRegister } = useAuth();
@@ -45,12 +40,11 @@ const NickName = () => {
       if (response.data) {
         console.log("Register successful:", response.data);
         router.replace("/(tabs)");
-        reset()
+        reset();
       } else if (response && response.error) {
         setError("Phone number is already signed up.");
-        console.log(error)
-      }
-      else {
+        console.log(error);
+      } else {
         console.log("Register failed:", response.data);
       }
     } catch (error) {
@@ -76,8 +70,7 @@ const NickName = () => {
     };
   }, []);
 
-
-  const AnimatedText = Animated.createAnimatedComponent(Text)
+  const AnimatedText = Animated.createAnimatedComponent(Text);
 
   return (
     <>
@@ -91,7 +84,13 @@ const NickName = () => {
             <View style={styles.body}>
               <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                style={{ borderWidth: 1, borderColor: Color.Gray.gray400, borderRadius: 32, marginTop: 16 }}>
+                style={{
+                  borderWidth: 1,
+                  borderColor: Color.Gray.gray400,
+                  borderRadius: 32,
+                  marginTop: 16,
+                }}
+              >
                 <View style={styles.textContainer}>
                   <View style={{ gap: 8 }}>
                     <Text style={styles.topText}>Nickname</Text>
@@ -142,14 +141,24 @@ const NickName = () => {
                           color: Color.base.White,
                         }}
                       />
-
                     </View>
-
                   </LinearGradient>
-                  <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    {error ? <AnimatedText entering={FadeIn} style={{ color: Color.System.systemError, fontSize: 15, textAlign: 'center' }}>{error}</AnimatedText> : null}
+                  <View
+                    style={{ justifyContent: "center", alignItems: "center" }}
+                  >
+                    {error ? (
+                      <AnimatedText
+                        entering={FadeIn}
+                        style={{
+                          color: Color.System.systemError,
+                          fontSize: 15,
+                          textAlign: "center",
+                        }}
+                      >
+                        {error}
+                      </AnimatedText>
+                    ) : null}
                   </View>
-
                 </View>
               </LinearGradient>
             </View>
@@ -167,19 +176,15 @@ const NickName = () => {
                 ]}
               >
                 <Button
-                  variant={!nickname ? "disabled" : 'primary'}
+                  variant={!nickname ? "disabled" : "primary"}
                   onPress={handleRegister}
-                  textStyle={!nickname ? "disabled" : 'primary'}
+                  textStyle={!nickname ? "disabled" : "primary"}
                   disabled={loading}
                 >
                   {loading ? (
                     <ActivityIndicator size="small" color="white" />
                   ) : (
-
-                    <Text
-                    >
-                      Finish
-                    </Text>
+                    <Text>Finish</Text>
                   )}
                 </Button>
               </View>

@@ -9,20 +9,20 @@ import {
   FlatList,
 } from "react-native";
 import React, { useState } from "react";
-import Color from "../constants/Color";
-import Balance from "../components/sections/Balance";
-import QuickInfo from "../components/sections/QuickInfo";
-import StackedCard from "../components/sections/StackedCard";
-import { useAuth } from "../context/AuthContext";
+import Color from "@/constants/Color";
+import Balance from "@/components/sections/Balance";
+import QuickInfo from "@/components/sections/QuickInfo";
+import StackedCard from "@/components/sections/StackedCard";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getUserById, getUserCard } from "../lib/service/queryHelper";
-import useLocationStore from "../lib/store/userLocation";
-import { RestaurantType } from "../lib/types";
-import { GetRestaurantsResponseType } from "../lib/types/apiResponseType";
-import { restaurantKeys, userKeys } from "../lib/service/keysHelper";
-import { getRestaurants } from "../lib/service/queryHelper";
-import HomeRestList from "../components/atom/cards/HomeRestList";
+import { getUserById, getUserCard } from "@/lib/service/queryHelper";
+import useLocationStore from "@/lib/store/userLocation";
+import { RestaurantType } from "@/lib/types";
+import { GetRestaurantsResponseType } from "@/lib/types/apiResponseType";
+import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
+import { getRestaurants } from "@/lib/service/queryHelper";
+import HomeRestList from "@/components/atom/cards/HomeRestList";
 import { InfoCircle } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, {
@@ -35,13 +35,12 @@ import Animated, {
   SlideOutDown,
   SlideInLeft,
 } from "react-native-reanimated";
-import { height, width } from "../lib/utils";
-import Button from "../components/ui/Button";
-import Close from "../components/icons/Close";
-import { usePushNotifications } from "../hooks/usePushNotification";
+import { height, width } from "@/lib/utils";
+import Button from "@/components/ui/Button";
+import Close from "@/components/icons/Close";
+import { usePushNotifications } from "@/hooks/usePushNotification";
 import moment from "moment";
-import { registerDeviceNotification } from "../lib/service/mutationHelper";
-
+import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 
 const Page = () => {
   const router = useRouter();
@@ -51,17 +50,15 @@ const Page = () => {
   const [isQuickInfoVisible, setIsQuickInfoVisible] = useState(true);
   const pressed = useSharedValue(false);
   const { authState } = useAuth();
-  const { expoPushToken, notification: pushNotification } = usePushNotifications();
+  const { expoPushToken, notification: pushNotification } =
+    usePushNotifications();
 
   const { mutateAsync: sendPushToken } = useMutation({
-    mutationFn: registerDeviceNotification
-  })
-
-
-
+    mutationFn: registerDeviceNotification,
+  });
 
   const { currentLocation } = useLocationStore();
-  const currentTime = moment().format('HH:mm');
+  const currentTime = moment().format("HH:mm");
   const { data: user, isSuccess } = useQuery({
     queryKey: userKeys.info,
     queryFn: () => {
@@ -80,7 +77,6 @@ const Page = () => {
     },
     enabled: !!currentLocation,
   });
-
 
   // const data = JSON.stringify(pushNotification, undefined, 2)
 
@@ -154,13 +150,13 @@ const Page = () => {
               fontSize: 14,
               fontWeight: "600",
               color: Color.Gray.gray100,
-              paddingHorizontal: 16
+              paddingHorizontal: 16,
             }}
           >
             Featured
           </Text>
           {restaurantsArray?.length > 0 && (
-            <View style={{ alignItems: 'center', gap: 8, width }}>
+            <View style={{ alignItems: "center", gap: 8, width }}>
               {restaurantsArray?.length > 0 && (
                 <Animated.ScrollView
                   snapToAlignment="center"
@@ -172,23 +168,30 @@ const Page = () => {
                 >
                   <Animated.View
                     entering={SlideInLeft.springify().damping(15)}
-                    style={{ flexDirection: 'row', gap: 8, left: 16, paddingRight: 32 }}
+                    style={{
+                      flexDirection: "row",
+                      gap: 8,
+                      left: 16,
+                      paddingRight: 32,
+                    }}
                   >
                     {user?.user?.email &&
-                      user?.user?.dateOfBirth &&
-                      user?.user?.nickname &&
-                      user?.user?.location
+                    user?.user?.dateOfBirth &&
+                    user?.user?.nickname &&
+                    user?.user?.location
                       ? null
                       : isQuickInfoVisible && (
-                        <QuickInfo
-                          onPress={() => setIsQuickInfoVisible(false)}
-                          user={user?.user}
-                        />
-                      )}
+                          <QuickInfo
+                            onPress={() => setIsQuickInfoVisible(false)}
+                            user={user?.user}
+                          />
+                        )}
 
                     <FlatList
                       style={{ gap: 10, flex: 1 }}
-                      ItemSeparatorComponent={() => <View style={{ width: 8, }} />}
+                      ItemSeparatorComponent={() => (
+                        <View style={{ width: 8 }} />
+                      )}
                       data={filteredRestaurantsArray}
                       horizontal
                       keyExtractor={(item, index) => index.toString()}
@@ -214,7 +217,7 @@ const Page = () => {
             marginTop: 24,
             marginBottom: 12,
             justifyContent: "space-between",
-            paddingHorizontal: 16
+            paddingHorizontal: 16,
           }}
         >
           <Text
@@ -222,7 +225,6 @@ const Page = () => {
               fontSize: 14,
               fontWeight: "600",
               color: Color.Gray.gray100,
-
             }}
           >
             Memberships
@@ -312,7 +314,7 @@ const Page = () => {
                   justifyContent: "center",
                   alignContent: "center",
                   alignItems: "center",
-                  flexDirection: 'row'
+                  flexDirection: "row",
                 }}
               >
                 <Text
@@ -326,7 +328,21 @@ const Page = () => {
                   About your Balance
                 </Text>
                 <TouchableOpacity onPress={toggleBalanceBottomSheet}>
-                  <View style={{ backgroundColor: Color.Gray.gray400, borderRadius: 48, padding: 8, width: 32, alignContent: 'center', alignItems: 'center', justifyContent: 'center', aspectRatio: 1, position: "absolute", left: 55, top: -18 }}>
+                  <View
+                    style={{
+                      backgroundColor: Color.Gray.gray400,
+                      borderRadius: 48,
+                      padding: 8,
+                      width: 32,
+                      alignContent: "center",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      aspectRatio: 1,
+                      position: "absolute",
+                      left: 55,
+                      top: -18,
+                    }}
+                  >
                     <Close />
                   </View>
                 </TouchableOpacity>
@@ -335,7 +351,14 @@ const Page = () => {
                 source={require("../../public/images/balanceInfo.png")}
                 style={{ height: 64, width: 204 }}
               />
-              <Text style={{ textAlign: 'center', fontSize: 14, color: Color.Gray.gray50, lineHeight: 18 }}>
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 14,
+                  color: Color.Gray.gray50,
+                  lineHeight: 18,
+                }}
+              >
                 You earned ALYS Bitcoin, which is faster and cheaper to use but
                 still pegged 1:1 with mainchain Bitcoin. Use your balance to
                 redeem perks at restaurants. Withdrawals to external crypto
@@ -397,7 +420,7 @@ const Page = () => {
                   justifyContent: "center",
                   alignContent: "center",
                   alignItems: "center",
-                  flexDirection: 'row'
+                  flexDirection: "row",
                 }}
               >
                 <Text
@@ -411,14 +434,28 @@ const Page = () => {
                   Membership
                 </Text>
                 <TouchableOpacity onPress={toggleBottomSheet}>
-                  <View style={{ backgroundColor: Color.Gray.gray400, borderRadius: 48, padding: 8, width: 32, alignContent: 'center', alignItems: 'center', justifyContent: 'center', aspectRatio: 1, position: "absolute", left: 85, top: -18 }}>
+                  <View
+                    style={{
+                      backgroundColor: Color.Gray.gray400,
+                      borderRadius: 48,
+                      padding: 8,
+                      width: 32,
+                      alignContent: "center",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      aspectRatio: 1,
+                      position: "absolute",
+                      left: 85,
+                      top: -18,
+                    }}
+                  >
                     <Close />
                   </View>
                 </TouchableOpacity>
               </View>
               <View style={{ alignItems: "center", gap: 16 }}>
                 <Image
-                  source={require("@/public/images/membership.png")}
+                  source={require("../../public/images/membership.png")}
                   style={{ width: width / 1.8, height: 166 }}
                   resizeMode="contain"
                 />
@@ -455,7 +492,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
-
   },
   modal: {
     position: "absolute",

@@ -1,36 +1,31 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   Dimensions,
   Platform,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
-import Color from "./constants/Color";
-import Close from "./components/icons/Close";
-import Popup from "./components/(feedback)/Popup";
-import Toast from "react-native-toast-message";
-import PerkGradient from "./components/icons/PerkGradient";
+import Color from "@/constants/Color";
+import Close from "@/components/icons/Close";
+import Popup from "@/components/(feedback)/Popup";
+import PerkGradient from "@/components/icons/PerkGradient";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { generatePerkQr, redeemBonus, useBonus } from "./lib/service/mutationHelper";
-import { restaurantKeys, userKeys } from "./lib/service/keysHelper";
+import { generatePerkQr } from "@/lib/service/mutationHelper";
+import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { io } from "socket.io-client";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import QRCode from "react-native-qrcode-svg";
-import { SERVER_SETTING } from "./constants/serverSettings";
+import { SERVER_SETTING } from "@/constants/serverSettings";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 const PowerUp = () => {
-
-
-
   const { authState } = useAuth();
 
   const socket = io(SERVER_SETTING.API_URL, { transports: ["websocket"] });
@@ -47,8 +42,8 @@ const PowerUp = () => {
   const { id, name, restaurantId } = useLocalSearchParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [qrData, setQrdata] = useState("")
-  const queryClient = useQueryClient()
+  const [qrData, setQrdata] = useState("");
+  const queryClient = useQueryClient();
 
   socket.on("connect", () => {
     console.log("Connected to server");
@@ -57,27 +52,25 @@ const PowerUp = () => {
 
   socket.on("bonus-scan", (data) => {
     console.log("Tapscan: ", data);
-    if (data){
+    if (data) {
       handleNavigation();
     }
   });
 
-  const {
-    data,
-    error,
-    status,
-    mutateAsync: createBonusQrMutation,
-  } = useMutation({
+  socket.on("connect", () => {
+    console.log("socket connected: ", socket.connected); // true
+  });
+
+  const { mutateAsync: createBonusQrMutation } = useMutation({
     mutationFn: generatePerkQr,
-    onError: (error) => {
-    },
+    onError: (error) => {},
     onSuccess: (data, variables) => {
       try {
-        setLoading(true)
+        setLoading(true);
         console.log("Successfully created");
         const newQrdata = data?.data?.data?.encryptedData;
         setQrdata(newQrdata);
-        setLoading(false)
+        setLoading(false);
       } catch (error) {
         console.error("Bonus mutation failed:", error);
       }
@@ -85,81 +78,101 @@ const PowerUp = () => {
   });
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     createBonusQrMutation({
       id: id as string,
     });
-   
-  }, [])
+  }, []);
 
   const handleNavigation = () => {
     queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
     queryClient.invalidateQueries({ queryKey: userKeys.cards });
     queryClient.invalidateQueries({ queryKey: userKeys.info });
-    router.back()
-  }
+    router.back();
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-    <View style={{ backgroundColor: Color.Gray.gray600, flex: 1, marginTop: Platform.OS === 'ios' ? -10 : 0 }}>
-      <View style={styles.closeButtonContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.closeButton]}
-          onPress={() => {
-            router.back();
-          }}
-        >
-          <Close />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.container} key={id as string}>
+      <View
+        style={{
+          backgroundColor: Color.Gray.gray600,
+          flex: 1,
+          marginTop: Platform.OS === "ios" ? -10 : 0,
+        }}
+      >
+        <View style={styles.closeButtonContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.closeButton]}
+            onPress={() => {
+              router.back();
+            }}
+          >
+            <Close />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.container} key={id as string}>
+          <LinearGradient
+            colors={[Color.Brand.card.start, Color.Brand.card.end]}
+            style={[styles.qrContainer]}
+          >
+            {loading ? (
+              <ActivityIndicator />
+            ) : (
+              <QRCode
+                backgroundColor="transparent"
+                color={Color.base.White}
+                size={width / 1.3}
+                value={`data:image/png;base64,${qrData}`}
+              />
+            )}
+          </LinearGradient>
 
-        <LinearGradient
-          colors={[Color.Brand.card.start, Color.Brand.card.end]}
-          style={[styles.qrContainer]}
-        >
-          {loading ? <ActivityIndicator /> : <QRCode backgroundColor="transparent" color={Color.base.White} size={width / 1.3} value={`data:image/png;base64,${qrData}`} />}
-        </LinearGradient>
-
-
-        <Popup
-          title="Perk consumed."
-          isVisible={isPopupVisible}
-          onClose={handleNavigation}
-        />
-        <View
-          style={{ justifyContent: "center", alignItems: "center", gap: 24 }}
-        >
-          <View style={{ padding: 12, backgroundColor: Color.Gray.gray400, borderRadius: 12, width: 52, height: 52 }}>
-            <PerkGradient />
-          </View>
-
-          <View style={{ gap: 12, alignItems: 'center' }}>
-            <Text
+          <Popup
+            title="Perk consumed."
+            isVisible={isPopupVisible}
+            onClose={handleNavigation}
+          />
+          <View
+            style={{ justifyContent: "center", alignItems: "center", gap: 24 }}
+          >
+            <View
               style={{
-                fontSize: 20,
-                fontWeight: "700",
-                lineHeight: 24,
-                color: Color.base.White,
+                padding: 12,
+                backgroundColor: Color.Gray.gray400,
+                borderRadius: 12,
+                width: 52,
+                height: 52,
               }}
             >
-              {name}
-            </Text>
-            <Text
-              style={{
-                color: Color.Gray.gray100,
-                fontSize: 14,
-                textAlign: "center",
-                lineHeight: 18,
-              }}
-            >
-              Show this to your waiter to redeem.{"\n"} Do not worry, they are pros.
+              <PerkGradient />
+            </View>
 
-            </Text>
+            <View style={{ gap: 12, alignItems: "center" }}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "700",
+                  lineHeight: 24,
+                  color: Color.base.White,
+                }}
+              >
+                {name}
+              </Text>
+              <Text
+                style={{
+                  color: Color.Gray.gray100,
+                  fontSize: 14,
+                  textAlign: "center",
+                  lineHeight: 18,
+                }}
+              >
+                Show this to your waiter to redeem.{"\n"} Do not worry, they are
+                pros.
+              </Text>
+            </View>
           </View>
         </View>
       </View>
-    </View>
     </SafeAreaView>
   );
 };
@@ -280,5 +293,5 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray400,
     width: width - 64,
     aspectRatio: 1,
-  }
+  },
 });

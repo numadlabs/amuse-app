@@ -1,8 +1,6 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
-  TextInput,
-  SafeAreaView,
   Text,
   View,
   Keyboard,
@@ -11,15 +9,14 @@ import {
   Platform,
   ActivityIndicator,
 } from "react-native";
-import Color from "../constants/Color";
-import Button from "../components/ui/Button";
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import Color from "@/constants/Color";
+import Button from "@/components/ui/Button";
+import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import { useSignUpStore } from "../lib/store/signUpStore";
-import { checkOtp } from "../lib/service/mutationHelper";
+import { checkOtp } from "@/lib/service/mutationHelper";
 import { useMutation } from "@tanstack/react-query";
-import SplitOTPInput from "../components/ui/OtpInput";
-import { usePasswordStore } from "../lib/store/passwordStore";
+import SplitOTPInput from "@/components/ui/OtpInput";
+import { usePasswordStore } from "@/lib/store/passwordStore";
 
 export enum KeyBoardTypes {
   default = "default",
@@ -32,81 +29,39 @@ export enum KeyBoardTypes {
 }
 
 const SplitOTP = () => {
-  const [buttonPosition, setButtonPosition] = useState("bottom");
-  const [isFocused, setIsFocused] = useState(false);
   const [text, onChangeText] = useState("");
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [error, setError] = useState("");
   const { verificationCode, setVerificationCode, email } = usePasswordStore();
-  const inputRef = useRef(null);
-  const onPress = () => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  };
+  const [loading, setLoading] = useState(false);
 
   const { mutateAsync: checkOtpMutation } = useMutation({
     mutationFn: checkOtp,
-    onError: (error) => {
-      console.log(error);
-    },
-    onSuccess: (data, variables) => {
-      console.log(data);
-    },
   });
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => setButtonPosition("top")
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => setButtonPosition("bottom")
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
-  const onFocus = () => {
-    setIsFocused(true);
-  };
-
-  const onBlur = () => {
-    setIsFocused(false);
-  };
 
   const handleNavigation = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const code = Number(text);
       if (text) {
         await checkOtpMutation({
           email: email,
-          verificationCode: code
+          verificationCode: verificationCode,
         });
-        setVerificationCode(isNaN(code) ? 0 : code);
-
-        router.back()
+        router.back();
         router.navigate({
           pathname: "/forgotPassword/NewPassword",
         });
-        setLoading(false)
+        setLoading(false);
       }
     } catch (error) {
-      setError("Invalid code")
+      setError("Invalid code");
       console.log("OTP check failed:", error);
     }
   };
 
-
   const handleCodeFilled = (code) => {
     onChangeText(code);
   };
-
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -137,12 +92,8 @@ const SplitOTP = () => {
               <View style={{ marginTop: 12 }}>
                 <SplitOTPInput codeLength={4} onCodeFilled={handleCodeFilled} />
               </View>
-              <Text style={{ color: Color.System.systemError }}>
-                {error}
-              </Text>
+              <Text style={{ color: Color.System.systemError }}>{error}</Text>
             </View>
-
-
           </LinearGradient>
         </View>
         <KeyboardAvoidingView
