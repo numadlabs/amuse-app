@@ -15,7 +15,7 @@ import APassCard from "@/components/atom/cards/APassCard";
 const PerkScreen = () => {
   const { restaurantId, powerUp } = useLocalSearchParams();
   const queryClient = useQueryClient();
-  const currentTime = moment().format("HH:mm");
+  const currentTime = moment().format("HH:mm:ss");
 
   const { data: card = [], isLoading } = useQuery({
     queryKey: [restaurantKeys.detail],

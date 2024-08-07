@@ -58,7 +58,7 @@ const Page = () => {
   });
 
   const { currentLocation } = useLocationStore();
-  const currentTime = moment().format("HH:mm");
+  const currentTime = moment().format("HH:mm:ss");
   const { data: user, isSuccess } = useQuery({
     queryKey: userKeys.info,
     queryFn: () => {
