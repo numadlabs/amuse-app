@@ -11,6 +11,7 @@ import PowerUpCard from "@/components/atom/cards/PowerUpCard";
 import { LinearGradient } from "expo-linear-gradient";
 import Color from "@/constants/Color";
 import moment from "moment";
+import APassCard from "@/components/atom/cards/APassCard";
 const PerkScreen = () => {
   const { restaurantId, powerUp } = useLocalSearchParams();
   const queryClient = useQueryClient();
@@ -21,11 +22,13 @@ const PerkScreen = () => {
     queryFn: () => {
       return getRestaurantById(restaurantId as string, currentTime);
     },
+    enabled:!!restaurantId,
   });
 
   const handleNavigation = async () => {
     router.back();
     queryClient.invalidateQueries({ queryKey: userKeys.info });
+    queryClient.invalidateQueries({ queryKey: userKeys.cards });
   };
 
   return (
@@ -57,6 +60,7 @@ const PerkScreen = () => {
               category={card.category}
               hasBonus={card.hasBonus}
               visitCount={card.visitCount}
+              target={card.target}
             />
           </View> */}
           <Animated.View
@@ -137,7 +141,7 @@ export default PerkScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 70,
+    paddingTop: 70,
     backgroundColor: Color.Gray.gray600,
     paddingHorizontal: 16,
     flex: 1,
