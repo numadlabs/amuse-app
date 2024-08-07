@@ -69,7 +69,7 @@ const Email = () => {
         email: email,
       })
         .then((response) => {
-          if (response.data.success === false) {
+          if (response.success === false) {
             setError("This email is already registered.");
             throw new Error("Email already registered");
           } else {

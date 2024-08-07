@@ -87,10 +87,14 @@ const Restaurant = () => {
     },
   });
 
-  const handleGetAcard = async (id: string) => {
+  const handleGetAcard = async () => {
     setIsClaimLoading(true);
     if (authState.userId) {
-      await createGetAcardMutation({ userId: authState.userId, cardId: restaurantsData?.cardId });
+      await createGetAcardMutation(restaurantsData?.cardId)
+      .then((response) => {
+        console.log(response);
+        
+      });
     }
   };
 
@@ -151,9 +155,7 @@ const Restaurant = () => {
       {restaurantsData?.isOwned ? null : (
         <View style={styles.buttonContainer}>
           <Button
-            onPress={() => {
-              handleGetAcard(cardId as string);
-            }}
+            onPress={handleGetAcard}
             size="small"
             variant="tertiary"
             style={{

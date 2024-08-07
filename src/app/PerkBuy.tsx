@@ -43,10 +43,7 @@ const PerkBuy = () => {
     setBalance("");
     if (authState.userId) {
       try {
-        const data = await purchasePerkMutation({
-          bonusId: id,
-          restaurantId: restaurantId as string,
-        });
+        const data = await purchasePerkMutation(id);
         if (data.data.success) {
           console.log("🚀 ~ Purchase successful", data.data.data);
           queryClient.invalidateQueries({ queryKey: userKeys.cards });

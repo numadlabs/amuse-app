@@ -49,32 +49,16 @@ export function redeemTap(encryptedData: string) {
     });
 }
 
-export function getAcard({
-  userId,
-  cardId,
-}: {
-  userId: string;
-  cardId: string;
-}) {
-  return axiosClient
-    .post("/userCards/buy", { userId, cardId })
-    .then((response) => {
-      return response;
-    });
+export function getAcard(cardId: string) {
+  return axiosClient.post(`/userCards/${cardId}/buy`).then((response) => {
+    return response;
+  });
 }
 
-export function purchasePerk({
-  bonusId,
-  restaurantId,
-}: {
-  bonusId: string;
-  restaurantId: string;
-}) {
-  return axiosClient
-    .post("/userBonus/buy", { bonusId, restaurantId })
-    .then((response) => {
-      return response;
-    });
+export function purchasePerk(bonusId) {
+  return axiosClient.post(`/userBonus/${bonusId}/buy`).then((response) => {
+    return response;
+  });
 }
 
 export async function updateUserInfo({
