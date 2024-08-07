@@ -22,7 +22,7 @@ const RestaurantListView = () => {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
 
-  const currentTime = moment().format("HH:mm");
+  const currentTime = moment().format("HH:mm:ss");
 
   const {
     data: restaurantsData,

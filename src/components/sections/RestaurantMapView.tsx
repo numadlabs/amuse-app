@@ -57,7 +57,7 @@ export default function RestaurantMapView() {
   const scrollViewRef = useRef(null);
   const [initialRegion, setInitialRegion] = useState(null);
   const [scrollViewHidden, setScrollViewHidden] = useState(true);
-  const currentTime = moment().format("HH:mm");
+  const currentTime = moment().format("HH:mm:ss");
   const [cardIndexToScroll, setCardIndexToScroll] = useState<number | null>(
     null
   );

@@ -47,7 +47,7 @@ const Restaurant = () => {
   const queryClient = useQueryClient();
   const { currentLocation } = useLocationStore();
   const [perkId, setPerkId] = useState<string>("");
-  const currentTime = moment().format("HH:mm");
+  const currentTime = moment().format("HH:mm:ss");
 
   const { data: restaurantsData, isLoading } = useQuery({
     queryKey: restaurantKeys.detail(id as string),
