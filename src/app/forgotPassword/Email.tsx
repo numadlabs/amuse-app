@@ -31,23 +31,9 @@ function ForgotPassword() {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const [loading, setLoading] = useState(false);
 
-  const [focusedInput, setFocusedInput] = useState<
-    "Phone number" | "Password" | null
-  >(null);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const offset = useSharedValue(300);
-
-  const togglePrefix = () => {
-    setIsOpen(!isOpen);
-    offset.value = withSpring(isOpen ? 220 : 230, {
-      damping: 20,
-      mass: 0.5,
-    });
-  };
-
-  const translateY = useAnimatedStyle(() => ({
-    transform: [{ translateY: offset.value }],
-  }));
+  const [focusedInput, setFocusedInput] = useState<"Email" | "Password" | null>(
+    null,
+  );
 
   const { mutateAsync: sendOtpMutation } = useMutation({
     mutationFn: sendOtp,
@@ -73,21 +59,18 @@ function ForgotPassword() {
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
-    if (isOpen) {
-      togglePrefix();
-    }
   };
 
   const inputContainerRef = React.useRef(null);
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
-      () => setButtonPosition("top")
+      () => setButtonPosition("top"),
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
-      () => setButtonPosition("bottom")
+      () => setButtonPosition("bottom"),
     );
     return () => {
       keyboardDidShowListener.remove();
@@ -125,7 +108,7 @@ function ForgotPassword() {
                   </View>
                   <LinearGradient
                     colors={
-                      focusedInput === "Phone number"
+                      focusedInput === "Email"
                         ? [Color.Brand.main.start, Color.Brand.main.end]
                         : [Color.Gray.gray300, Color.Gray.gray300]
                     }
@@ -152,6 +135,7 @@ function ForgotPassword() {
                       }}
                     >
                       <TextInput
+                        keyboardType="email-address"
                         autoCapitalize="none"
                         placeholder={"Enter your email"}
                         placeholderTextColor={Color.Gray.gray100}

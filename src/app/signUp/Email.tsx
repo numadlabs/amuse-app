@@ -48,12 +48,12 @@ const Email = () => {
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
-      () => setButtonPosition("top")
+      () => setButtonPosition("top"),
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
-      () => setButtonPosition("bottom")
+      () => setButtonPosition("bottom"),
     );
     return () => {
       keyboardDidShowListener.remove();
@@ -61,11 +61,11 @@ const Email = () => {
     };
   }, []);
 
-  const handleNavigation = () => {
+  const handleNavigation = async () => {
     if (email && !isButtonDisabled) {
       setLoading(true);
       setIsButtonDisabled(true);
-      checkEmailMutation({
+      await checkEmailMutation({
         email: email,
       })
         .then((response) => {
