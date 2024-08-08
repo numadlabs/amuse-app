@@ -59,6 +59,20 @@ export async function getUserPowerUps(id) {
   });
 }
 
+export async function getUserTransaction(id) {
+  return axiosClient.get(`/transactions/${id}/user`)
+  .then((response) => {
+    if (response.data.success) {
+      console.log(response?.data.data.transaction);
+      return response?.data.data.transaction;
+     
+      
+    } else {
+      throw new Error(response.data.error);
+    }
+  })
+}
+
 export async function getPerksByRestaurant(id) {
   return axiosClient.get(`/userBonus/${id}/restaurant`).then((response) => {
     if (response.data.success) {

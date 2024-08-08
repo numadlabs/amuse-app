@@ -101,7 +101,7 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
           >
             <View style={styles.perkDetails}>
               <TicketStar size={28} color={Color.base.White} />
-              <Text style={styles.perkText}>{perks?.followingBonus.name}</Text>
+              <Text style={styles.perkText}>{perks?.followingBonus?.name}</Text>
             </View>
             <View>
               <Text style={styles.perkCount}>

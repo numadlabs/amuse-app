@@ -1,11 +1,11 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, ScrollView, FlatList } from 'react-native'
 import React, { useState } from 'react'
 import Color from '@/constants/Color'
 import Header from '@/components/layout/Header'
 import Balance from '@/components/sections/Balance'
 import { useQuery } from '@tanstack/react-query'
 import { userKeys } from '@/lib/service/keysHelper'
-import { getUserById, getUserTaps } from '@/lib/service/queryHelper'
+import { getUserById, getUserTaps, getUserTransaction } from '@/lib/service/queryHelper'
 import { useAuth } from '@/context/AuthContext'
 import Close from '@/components/icons/Close'
 import Button from '@/components/ui/Button'
@@ -22,6 +22,7 @@ import { height, width } from '@/lib/utils'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { CardSend } from 'iconsax-react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import TransactionCard from '@/components/atom/cards/TransactionCard'
 
 const Wallet = () => {
   const { authState } = useAuth()
@@ -36,11 +37,13 @@ const Wallet = () => {
     enabled: !!authState.userId,
   });
 
+  console.log("userid", authState.userId);
+  
 
-  const {data: taps} = useQuery({
-    queryKey: userKeys.taps,
+  const { data: transaction = [] } = useQuery({
+    queryKey: ['transactions'],
     queryFn: () => {
-      return getUserTaps();
+      return getUserTransaction(authState.userId);
     },
   })
 
@@ -55,8 +58,7 @@ const Wallet = () => {
   }));
 
 
-  console.log(taps);
-  
+
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -70,20 +72,33 @@ const Wallet = () => {
 
 
         <View style={styles.button}>
-          <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center',  gap: 4,}}>
+          <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', gap: 4, }}>
             <CardSend size={24} color={Color.Gray.gray100} />
             <Text style={{ color: Color.Gray.gray100, fontWeight: '600', lineHeight: 16, fontSize: 13 }}>
               Withdraw
             </Text>
           </TouchableOpacity>
         </View>
-        
 
 
-        <View style={{marginHorizontal:16}}>
-          <Text style={{lineHeight:24, fontSize:20, fontWeight:'700', color: Color.base.White}}>
+
+        <View style={{ marginHorizontal: 16 }}>
+          <Text style={{ lineHeight: 24, fontSize: 20, fontWeight: '700', color: Color.base.White }}>
             Transaction history
           </Text>
+
+          <FlatList
+            ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+            data={transaction}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <TransactionCard
+                amount={item?.amount}
+                type={item?.type}
+                createdAt={item?.createdAt}
+              />
+            )}
+          />
         </View>
       </ScrollView>
 
@@ -196,8 +211,8 @@ const styles = StyleSheet.create({
     gap: 16
   },
   button: {
-    width: 68,
-    height: 68,
+    width: 80,
+    height: 80,
     marginTop: 16,
     marginHorizontal: 16,
   }
