@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import Steps from "@/components/atom/Steps";
+import BoostSteps from "@/components/atom/BoostSteps";
 import Color from "@/constants/Color";
 import Button from "@/components/ui/Button";
 import { useRouter } from "expo-router";
@@ -42,7 +42,7 @@ const Area = () => {
 
   return (
     <>
-      <Steps activeStep={2} />
+      <BoostSteps activeStep={1} />
       <KeyboardAvoidingView style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.container}>
@@ -75,6 +75,10 @@ const Area = () => {
                         // placeholderTextColor="white"
                         onPress={(data, details = null) => {
                           setArea(data.description);
+                        }}
+                        textInputProps={{
+                          placeholderTextColor: Color.Gray.gray100,
+                          returnKeyType: "search"
                         }}
                         query={{
                           key: "AIzaSyD6P0kwuwr_7RTb5_2UZLNteryotRLItCM",
@@ -188,7 +192,6 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray300,
   },
   textInput: {
-    paddingVertical: 14,
     paddingHorizontal: 16,
     borderRadius: 16,
     color: Color.Gray.gray50,

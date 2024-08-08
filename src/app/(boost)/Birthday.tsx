@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import Steps from "@/components/atom/Steps";
+import BoostSteps from "@/components/atom/BoostSteps";
 import Color from "@/constants/Color";
 import Button from "@/components/ui/Button";
 import { useRouter } from "expo-router";
@@ -126,7 +126,7 @@ const Birthday = () => {
 
   return (
     <>
-      <Steps activeStep={3} />
+      <BoostSteps activeStep={2} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
