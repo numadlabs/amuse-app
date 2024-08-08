@@ -18,7 +18,7 @@ import Button from "@/components/ui/Button";
 import { useAuth } from "@/context/AuthContext";
 import Color from "@/constants/Color";
 import { LinearGradient } from "expo-linear-gradient";
-
+import LoginSchema from "@/validators/LoginSchema";
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
