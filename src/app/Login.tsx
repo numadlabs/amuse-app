@@ -24,7 +24,7 @@ function Login() {
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [focusedInput, setFocusedInput] = useState<"Email" | "Password" | null>(
-    null
+    null,
   );
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -119,7 +119,7 @@ function Login() {
                     marginBottom: 24,
                   }}
                 >
-                  Welcome
+                  Welcome,
                 </Text>
 
                 <View style={{ gap: 12 }}>
