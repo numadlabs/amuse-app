@@ -21,6 +21,7 @@ import Animated, {
 import { height, width } from '@/lib/utils'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { CardSend } from 'iconsax-react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const Wallet = () => {
   const { authState } = useAuth()
@@ -58,6 +59,7 @@ const Wallet = () => {
   
 
   return (
+    <SafeAreaView style={{flex: 1}}>
     <GestureHandlerRootView>
       <Header title='Wallet' />
       <ScrollView style={styles.body}>
@@ -179,6 +181,7 @@ const Wallet = () => {
         </Modal>
       )}
     </GestureHandlerRootView>
+    </SafeAreaView>
   )
 }
 

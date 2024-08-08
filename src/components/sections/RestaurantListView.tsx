@@ -86,58 +86,6 @@ const RestaurantListView = () => {
               />
             </TouchableOpacity>
           ))}
-          <View style={styles.navigationContainer}>
-            <TouchableOpacity
-              disabled={currentStep === 1}
-              onPress={() => setCurrentStep((prev) => prev - 1)}
-              style={[
-                styles.navButton,
-                {
-                  backgroundColor:
-                    currentStep === 1 ? Color.Gray.gray200 : Color.Gray.gray500,
-                },
-              ]}
-            >
-              <ArrowLeft2
-                color={
-                  currentStep === 1 ? Color.Gray.gray200 : Color.Gray.gray50
-                }
-                size={20}
-              />
-            </TouchableOpacity>
-            {Array.from({ length: numSteppers }, (_, i) => i + 1).map(
-              (step) => (
-                <Pagination
-                  key={step}
-                  step={step}
-                  currentStep={currentStep}
-                  handleNavigation={(step) => setCurrentStep(step)}
-                />
-              )
-            )}
-            <TouchableOpacity
-              disabled={currentStep === numSteppers}
-              onPress={() => setCurrentStep((prev) => prev + 1)}
-              style={[
-                styles.navButton,
-                {
-                  backgroundColor:
-                    currentStep === numSteppers
-                      ? Color.Gray.gray200
-                      : Color.Gray.gray500,
-                },
-              ]}
-            >
-              <ArrowRight2
-                color={
-                  currentStep === numSteppers
-                    ? Color.Gray.gray200
-                    : Color.Gray.gray50
-                }
-                size={20}
-              />
-            </TouchableOpacity>
-          </View>
         </View>
       </ScrollView>
     </View>

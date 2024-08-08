@@ -279,8 +279,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: "center",
     borderColor: Color.Gray.gray400,
-
-    height: 304,
+    height: "auto",
   },
   blurContainer: {
     backgroundColor: Color.Gray.gray500,
@@ -290,6 +289,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 28,
     overflow: "hidden",
+    height:"auto",
   },
   titleText: {
     color: Color.base.White,
