@@ -19,6 +19,7 @@ import { checkOtp } from "@/lib/service/mutationHelper";
 import { useMutation } from "@tanstack/react-query";
 import SplitOTPInput from "@/components/ui/OtpInput";
 import Header from "@/components/layout/Header";
+import { usePasswordStore } from "@/lib/store/passwordStore";
 
 export enum KeyBoardTypes {
   default = "default",
@@ -34,7 +35,7 @@ const SplitOTP = () => {
   const [loading, setLoading] = useState(false);
   const [text, onChangeText] = useState("");
   const [error, setError] = useState("");
-  const { verificationCode, setVerificationCode, email } = useSignUpStore();
+  const { setVerificationCode, email } = usePasswordStore();
 
   const { mutateAsync: checkOtpMutation } = useMutation({
     mutationFn: checkOtp,
@@ -50,7 +51,6 @@ const SplitOTP = () => {
           verificationCode: code,
         });
         setVerificationCode(isNaN(code) ? 0 : code);
-
         router.back();
         router.navigate({
           pathname: "/forgotPassword/NewPassword",
@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: "center",
+    marginHorizontal: 16,
   },
   gradientContainer: {
     width: "100%",
