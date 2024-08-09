@@ -42,7 +42,7 @@ const NickName = () => {
         router.replace("/(tabs)");
         reset();
       } else if (response && response.error) {
-        setError("Phone number is already signed up.");
+        setError("Email is already signed up.");
         console.log(error);
       } else {
         console.log("Register failed:", response.data);
