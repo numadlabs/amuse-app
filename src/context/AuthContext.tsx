@@ -127,7 +127,7 @@ export const AuthProvider = ({ children }: any) => {
       ) {
         return {
           error: true,
-          msg: "User already exists with this phone number",
+          msg: "User already exists with this email",
         };
       } else {
         // Register failed

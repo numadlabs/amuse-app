@@ -29,12 +29,12 @@ export type UserBoostData = {
 };
 
 export type UserBoostRequestData = {
-  nickname: string;
-  location: string;
+  nickname?: string;
+  location?: string;
   profilePicture?: {
     uri: string;
     type: string;
     name: string;
   };
-  dateOfBirth: string;
+  dateOfBirth?: string;
 };
