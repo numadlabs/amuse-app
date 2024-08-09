@@ -7,10 +7,9 @@ import Logo from "@/components/icons/Logo";
 import Color from "@/constants/Color";
 import { useAuth } from "@/context/AuthContext";
 import useLocationStore from "@/lib/store/userLocation";
-import { LinearGradient } from "expo-linear-gradient";
 import * as Updates from "expo-updates";
-import SplashScreenWithLoadingBar from "../SplashScreenAnimated";
 import { useFonts } from "expo-font";
+import SplashScreenAnimated from "../SplashScreenAnimated";
 
 const Layout = ({ navigation }) => {
   const { authState } = useAuth();
@@ -18,8 +17,7 @@ const Layout = ({ navigation }) => {
   const { getLocation, currentLocation } = useLocationStore();
   const [notification, setNotification] = useState("");
   const [fontsLoaded] = useFonts({
-    "Sora-Regular": require("@/public/fonts/Sora-Regular.otf"),
-    "Sora-Bold": require("@/public/fonts/Sora-Bold.otf"),
+    Sora: require("@/public/fonts/Sora-Regular.otf"),
   });
 
   useEffect(() => {
@@ -66,11 +64,11 @@ const Layout = ({ navigation }) => {
 
     // Call prepareApp function on component mount
     prepareApp();
-  }, [currentLocation, authState.loading, fontsLoaded]);
+  }, [currentLocation, authState?.loading, fontsLoaded]);
 
   // Show loading screen if app is not ready
   if (!appIsReady) {
-    return <SplashScreenWithLoadingBar />;
+    return <SplashScreenAnimated />;
   }
 
   // Redirect to login if user is not authenticated
@@ -78,7 +76,6 @@ const Layout = ({ navigation }) => {
     return <Redirect href={"/Login"} />;
   }
 
-  // Render main app content with Tabs
   return (
     <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
       <Tabs.Screen
@@ -113,14 +110,6 @@ const Layout = ({ navigation }) => {
             <TouchableOpacity onPress={() => router.push("/Notification")}>
               <View style={{ paddingHorizontal: 20 }}>
                 <Notification color={Color.base.White} />
-                <View style={{ position: "absolute", right: 22 }}>
-                  {notification ? (
-                    <LinearGradient
-                      colors={[Color.Brand.main.start, Color.Brand.main.end]}
-                      style={{ width: 8, height: 8, borderRadius: 8 }}
-                    />
-                  ) : null}
-                </View>
               </View>
             </TouchableOpacity>
           ),

@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
 import {
   ArrowRight2,
+  Lock,
   LogoutCurve,
   MessageQuestion,
   NoteText,
@@ -25,6 +26,7 @@ import {
   getUserById,
   getUserCard,
   getUserTaps,
+  getUserTiers,
 } from "@/lib/service/queryHelper";
 import useLocationStore from "@/lib/store/userLocation";
 import { userKeys } from "@/lib/service/keysHelper";
@@ -34,12 +36,19 @@ import { SERVER_SETTING } from "@/constants/serverSettings";
 
 const Profile = () => {
   const { currentLocation } = useLocationStore();
+  const { authState, onLogout } = useAuth();
   const router = useRouter();
   const { data: taps = [] } = useQuery({
     queryKey: userKeys.taps,
     queryFn: () => {
       return getUserTaps();
     },
+  });
+
+  const { data: userTier = [], isLoading: isUserTierLoading } = useQuery({
+    queryKey: userKeys.tier,
+    queryFn: getUserTiers,
+    enabled: !!authState.userId,
   });
 
   const { data: cards = [] } = useQuery({
@@ -53,7 +62,6 @@ const Profile = () => {
     enabled: !!currentLocation,
   });
 
-  const { authState, onLogout } = useAuth();
   const { data: user = [] } = useQuery({
     queryKey: userKeys.info,
     queryFn: () => {
@@ -61,6 +69,10 @@ const Profile = () => {
     },
   });
 
+  const userCurrentTier = userTier.findIndex(
+    (tier) => tier.id === user?.user.userTierId,
+  );
+  console.log(userCurrentTier);
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
@@ -131,7 +143,7 @@ const Profile = () => {
                           color: Color.Gray.gray100,
                         }}
                       >
-                        Tier: Bronze
+                        Tier: {userTier?.name}
                       </Text>
                     </View>
                     <View>
@@ -298,6 +310,31 @@ const Profile = () => {
                     <NoteText size={24} color={Color.Gray.gray100} />
                     <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>
                       Terms and Conditions
+                    </Text>
+                  </View>
+                  <ArrowRight2 color={Color.Gray.gray100} />
+                </TouchableOpacity>
+              </LinearGradient>
+              <LinearGradient
+                colors={[Color.Brand.card.start, Color.Brand.card.end]}
+                start={{ x: 1, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{ borderRadius: 16 }}
+              >
+                <TouchableOpacity
+                  style={styles.configContainer}
+                  onPress={() => router.push("PrivacyPolicy")}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 12,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Lock size={24} color={Color.Gray.gray100} />
+                    <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>
+                      Privacy
                     </Text>
                   </View>
                   <ArrowRight2 color={Color.Gray.gray100} />

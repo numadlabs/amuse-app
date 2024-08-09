@@ -1,9 +1,15 @@
 import { Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { StatusBar } from "expo-status-bar";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "@/constants/ToasterConfig";
+import { useFonts } from "expo-font";
+import { useEffect, useState } from "react";
+import useLocationStore from "@/lib/store/userLocation";
+import * as Updates from "expo-updates";
+import { Redirect } from "expo-router";
+import SplashScreenAnimated from "./SplashScreenAnimated";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +43,8 @@ export default function Layout() {
             name="(modals)/MyQrModal"
             options={{ presentation: "modal" }}
           />
+
+          <Stack.Screen name="PrivacyPolicy" />
 
           <Stack.Screen name="MyAcards" />
           <Stack.Screen name="Wallet" />

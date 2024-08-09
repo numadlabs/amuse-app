@@ -50,7 +50,7 @@ const StackedCard = () => {
     originY: 10,
     zIndex: 999,
     top: cardPositions.value,
-    marginBottom: -220,
+    marginBottom: -230,
   }));
 
   const latestCards = cards?.data?.cards.slice(0, 5);

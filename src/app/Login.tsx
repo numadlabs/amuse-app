@@ -33,6 +33,10 @@ function Login() {
   const handleLogin = async () => {
     try {
       setLoading(true);
+      LoginSchema.parse({
+        email: email,
+        password: password,
+      });
       const response = await onLogin(email, password);
       if (response.success) {
         router.replace("/(tabs)");
@@ -115,6 +119,7 @@ function Login() {
                     fontSize: 24,
                     color: Color.base.White,
                     fontWeight: "bold",
+                    fontFamily: "Sora",
                     textAlign: "center",
                     marginBottom: 24,
                   }}

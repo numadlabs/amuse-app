@@ -20,6 +20,7 @@ const Tier = () => {
   const { data: userTier = [], isLoading: isUserTierLoading } = useQuery({
     queryKey: userKeys.tier,
     queryFn: getUserTiers,
+    enabled: !!authState.userId,
   });
 
   const { data: user, isLoading: isUserLoading } = useQuery({
@@ -45,7 +46,7 @@ const Tier = () => {
 
   // Find the active tier and move it to the top
   const activeTierIndex = orderedUserTier.findIndex(
-    (tier) => tier.id === user?.user.userTierId
+    (tier) => tier.id === user?.user.userTierId,
   );
   if (activeTierIndex > -1) {
     const [activeTier] = orderedUserTier.splice(activeTierIndex, 1);
