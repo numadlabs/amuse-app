@@ -13,24 +13,17 @@ import {
 import Button from "@/components/ui/Button";
 import Color from "@/constants/Color";
 import Steps from "@/components/atom/Steps";
-import {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 import { usePasswordStore } from "@/lib/store/passwordStore";
 import { useMutation } from "@tanstack/react-query";
 import Header from "@/components/layout/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { sendOtp } from "@/lib/service/mutationHelper";
+import { checkEmail, sendOtp } from "@/lib/service/mutationHelper";
 import { router } from "expo-router";
 
 function ForgotPassword() {
   const { email, setEmail } = usePasswordStore();
-  const [buttonPosition, setButtonPosition] = useState("bottom");
   const [loading, setLoading] = useState(false);
-
   const [focusedInput, setFocusedInput] = useState<"Email" | "Password" | null>(
     null,
   );
@@ -39,15 +32,22 @@ function ForgotPassword() {
     mutationFn: sendOtp,
   });
 
+  const { mutateAsync: checkEmailMutation } = useMutation({
+    mutationFn: checkEmail,
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
   const handleNavigation = async () => {
     try {
       if (email) {
         setLoading(true);
+
         await sendOtpMutation({
           email: email,
         });
         setLoading(false);
-
         router.push({
           pathname: "/forgotPassword/VerificationCode",
         });
@@ -62,27 +62,12 @@ function ForgotPassword() {
   };
 
   const inputContainerRef = React.useRef(null);
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => setButtonPosition("top"),
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => setButtonPosition("bottom"),
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <Header title="Forgot password?" />
       <Steps activeStep={1} />
-      <KeyboardAvoidingView style={{ flex: 1 }}>
+      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
@@ -139,7 +124,7 @@ function ForgotPassword() {
                         autoCapitalize="none"
                         placeholder={"Enter your email"}
                         placeholderTextColor={Color.Gray.gray100}
-                        onFocus={() => setFocusedInput("Phone number")}
+                        onFocus={() => setFocusedInput("Email")}
                         onBlur={() => setFocusedInput(null)}
                         style={{
                           height: 40,
@@ -157,29 +142,17 @@ function ForgotPassword() {
                 </View>
               </LinearGradient>
             </View>
-            <KeyboardAvoidingView
-              style={{ flex: 1 }}
-              keyboardVerticalOffset={100}
-              behavior={Platform.OS === "ios" ? "height" : "padding"}
-            >
-              <View
-                style={[
-                  styles.buttonContainer,
-                  buttonPosition === "bottom"
-                    ? styles.bottomPosition
-                    : styles.topPosition,
-                ]}
+
+            <View style={[styles.buttonContainer, styles.bottomPosition]}>
+              <Button
+                variant={email ? "primary" : "disabled"}
+                textStyle={email ? "primary" : "disabled"}
+                size="default"
+                onPress={handleNavigation}
               >
-                <Button
-                  variant={email ? "primary" : "disabled"}
-                  textStyle={email ? "primary" : "disabled"}
-                  size="default"
-                  onPress={handleNavigation}
-                >
-                  {loading ? <ActivityIndicator /> : "Send code"}
-                </Button>
-              </View>
-            </KeyboardAvoidingView>
+                {loading ? <ActivityIndicator /> : "Send code"}
+              </Button>
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
@@ -203,27 +176,8 @@ const styles = StyleSheet.create({
   },
   bottomPosition: {
     justifyContent: "flex-end",
+  },
 
-    ...Platform.select({
-      ios: {
-        marginBottom: 50,
-      },
-      android: {
-        marginBottom: 20,
-      },
-    }),
-  },
-  topPosition: {
-    justifyContent: "flex-start",
-    ...Platform.select({
-      ios: {
-        marginBottom: 50,
-      },
-      android: {
-        marginBottom: 20,
-      },
-    }),
-  },
   topText: {
     color: Color.base.White,
     fontSize: 24,

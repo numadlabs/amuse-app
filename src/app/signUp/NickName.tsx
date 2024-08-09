@@ -1,4 +1,3 @@
-
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -19,8 +18,8 @@ import { useAuth } from "@/context/AuthContext";
 import { useSignUpStore } from "@/lib/store/signUpStore";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeIn } from "react-native-reanimated";
+import Header from "@/components/layout/Header";
 const NickName = () => {
-  const [buttonPosition, setButtonPosition] = useState("bottom");
   const { nickname, setNickname, password, verificationCode, email, reset } =
     useSignUpStore();
   const [error, setError] = useState<string>("");
@@ -36,7 +35,7 @@ const NickName = () => {
         nickname,
         email,
         password as string,
-        verificationCode
+        verificationCode,
       );
       if (response.data) {
         console.log("Register successful:", response.data);
@@ -55,31 +54,13 @@ const NickName = () => {
     }
   };
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => setButtonPosition("top")
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => setButtonPosition("bottom")
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
   const AnimatedText = Animated.createAnimatedComponent(Text);
 
   return (
     <>
+      <Header title="Sign up" />
       <Steps activeStep={3} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-      >
+      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
@@ -163,33 +144,21 @@ const NickName = () => {
                 </View>
               </LinearGradient>
             </View>
-            <KeyboardAvoidingView
-              style={{ flex: 1 }}
-              keyboardVerticalOffset={110}
-              behavior={Platform.OS === "ios" ? "height" : "padding"}
-            >
-              <View
-                style={[
-                  styles.buttonContainer,
-                  buttonPosition === "bottom"
-                    ? styles.bottomPosition
-                    : styles.topPosition,
-                ]}
+
+            <View style={[styles.buttonContainer, styles.bottomPosition]}>
+              <Button
+                variant={!nickname ? "disabled" : "primary"}
+                onPress={handleRegister}
+                textStyle={!nickname ? "disabled" : "primary"}
+                disabled={loading}
               >
-                <Button
-                  variant={!nickname ? "disabled" : "primary"}
-                  onPress={handleRegister}
-                  textStyle={!nickname ? "disabled" : "primary"}
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <ActivityIndicator size="small" color="white" />
-                  ) : (
-                    <Text>Finish</Text>
-                  )}
-                </Button>
-              </View>
-            </KeyboardAvoidingView>
+                {loading ? (
+                  <ActivityIndicator size="small" color="white" />
+                ) : (
+                  <Text>Finish</Text>
+                )}
+              </Button>
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>

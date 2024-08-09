@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-// Define the password validation schema
+// Email validation schema
+const emailSchema = z.string().email("Please provide valid email address");
+const nicknameSchema = z.string().emoji();
+// Password validation schema (you can keep this for later use)
 const passwordSchema = z
   .string()
   .min(8, "Password must be at least 8 characters long")
@@ -10,10 +13,10 @@ const passwordSchema = z
   .regex(/[0-9]/, "Password must contain at least one digit")
   .regex(/[@$!%*?&#]/, "Password must contain at least one special character");
 
-// Define a schema for the whole form, including the password
+// Register schema combining email and password
 const registerSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: emailSchema,
   password: passwordSchema,
 });
 
-export default registerSchema;
+export { emailSchema, passwordSchema, registerSchema, nicknameSchema };

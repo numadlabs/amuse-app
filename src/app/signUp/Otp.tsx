@@ -18,6 +18,7 @@ import { useSignUpStore } from "@/lib/store/signUpStore";
 import { checkOtp } from "@/lib/service/mutationHelper";
 import { useMutation } from "@tanstack/react-query";
 import SplitOTPInput from "@/components/ui/OtpInput";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 export enum KeyBoardTypes {
   default = "default",
@@ -59,6 +60,9 @@ const SplitOTP = () => {
     } catch (error) {
       setError("Invalid code");
       console.log("OTP check failed:", error);
+      setTimeout(() => {
+        setError("");
+      }, 4000);
     }
   };
 
@@ -94,7 +98,17 @@ const SplitOTP = () => {
                     onCodeFilled={handleCodeFilled}
                   />
                 </View>
-                <Text style={{ color: Color.System.systemError }}>{error}</Text>
+                {error && (
+                  <Animated.View
+                    entering={FadeIn}
+                    exiting={FadeOut}
+                    style={{ justifyContent: "center", alignItems: "center" }}
+                  >
+                    <Text style={{ color: Color.System.systemError }}>
+                      {error}
+                    </Text>
+                  </Animated.View>
+                )}
               </View>
             </LinearGradient>
           </View>
@@ -161,7 +175,7 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     marginBottom: 80,
-    paddingHorizontal:16
+    paddingHorizontal: 16,
   },
   textStyle: {
     height: 48,
