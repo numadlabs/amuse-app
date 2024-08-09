@@ -19,6 +19,7 @@ import { useAuth } from "@/context/AuthContext";
 import Color from "@/constants/Color";
 import { LinearGradient } from "expo-linear-gradient";
 import LoginSchema from "@/validators/LoginSchema";
+import { BODY_1_REGULAR, BODY_2_REGULAR, BUTTON_48, H5 } from "@/constants/typography";
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -122,9 +123,8 @@ function Login() {
 
                 <Text
                   style={{
-                    fontSize: 24,
+                    ...H5,
                     color: Color.base.White,
-                    fontFamily: "SoraBold",
                     textAlign: "center",
                     marginBottom: 24,
                   }}
@@ -167,9 +167,7 @@ function Login() {
                         onBlur={() => setFocusedInput(null)}
                         style={{
                           height: 40,
-                          fontSize: 16,
-                          fontWeight: "400",
-                          lineHeight: 20,
+                          ...BODY_1_REGULAR,
                           color: Color.base.White,
                           width: "100%",
                         }}
@@ -224,9 +222,7 @@ function Login() {
                         onBlur={() => setFocusedInput(null)}
                         style={{
                           flex: 1,
-                          fontSize: 16,
-                          fontWeight: "400",
-                          lineHeight: 20,
+                          ...BODY_1_REGULAR,
                           color: Color.base.White,
                           width: "100%",
                         }}
@@ -256,8 +252,7 @@ function Login() {
                       <Text
                         style={{
                           color: "white",
-                          fontSize: 16,
-                          fontWeight: "bold",
+                          ...BUTTON_48,
                         }}
                       >
                         Log in
@@ -272,8 +267,7 @@ function Login() {
                     <Text
                       style={{
                         color: Color.base.White,
-                        fontSize: 14,
-                        fontWeight: "bold",
+                        ...BUTTON_48,
                         marginTop: 12,
                       }}
                     >
@@ -288,8 +282,7 @@ function Login() {
                     <Text
                       style={{
                         color: Color.base.White,
-                        fontSize: 16,
-                        fontWeight: "bold",
+                        ...BUTTON_48,
                       }}
                     >
                       Sign up
@@ -312,9 +305,8 @@ function Login() {
             <Text
               style={{
                 textAlign: "center",
-                fontSize: 14,
+                ...BODY_2_REGULAR,
                 color: Color.Gray.gray100,
-                fontWeight: "400",
                 marginBottom: 0,
               }}
             >
@@ -324,8 +316,7 @@ function Login() {
               <Text
                 style={{
                   color: Color.base.White,
-                  fontSize: 14,
-                  fontWeight: "500",
+                  ...BODY_2_REGULAR,
                 }}
               >
                 Terms and Conditions.

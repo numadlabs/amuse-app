@@ -5,6 +5,7 @@ import PerkGradient from "../../icons/PerkGradient";
 import Button from "../../ui/Button";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
+import { BODY_2_MEDIUM, BUTTON_32 } from "@/constants/typography";
 
 interface PowerUpCardProp {
   title: string;
@@ -26,8 +27,7 @@ const PowerUpCard: React.FC<PowerUpCardProp> = ({ title, onPress }) => {
           <PerkGradient />
           <Text
             style={{
-              fontWeight: "bold",
-              fontSize: 14,
+              ...BODY_2_MEDIUM,
               color: Color.base.White,
             }}
           >
@@ -43,8 +43,7 @@ const PowerUpCard: React.FC<PowerUpCardProp> = ({ title, onPress }) => {
         >
           <Text
             style={{
-              fontSize: 11,
-              lineHeight: 16,
+              ...BUTTON_32,
             }}
           >
             Use

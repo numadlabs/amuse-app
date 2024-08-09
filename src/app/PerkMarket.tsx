@@ -23,6 +23,7 @@ import { router } from "expo-router";
 import PerkGradientSm from "@/components/icons/PerkGradientSm";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { width } from "@/lib/utils";
+import { BUTTON_32, CAPTION_1_MEDIUM } from "@/constants/typography";
 
 const PerkMarket = () => {
   const { id } = useLocalSearchParams();
@@ -150,18 +151,14 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   perkName: {
-    fontSize: 12,
-    height: 32,
-    lineHeight: 16,
+    ...CAPTION_1_MEDIUM,
     fontWeight: "bold",
     textAlign: "center",
     color: Color.Gray.gray50,
   },
   perkPrice: {
-    fontSize: 11,
-    lineHeight: 16,
     color: Color.base.White,
-    fontWeight: "600",
+    ...BUTTON_32,
   },
   closeButtonContainer: {
     width: "100%",

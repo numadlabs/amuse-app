@@ -12,6 +12,7 @@ import ProgressBar from "./ProgressBar";
 import { width } from "@/lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
 import CloseSm from "../icons/CloseSm";
+import { BODY_1_BOLD, CAPTION_1_REGULAR } from "@/constants/typography";
 
 const QuickInfo = ({ user, onPress }) => {
   const [progress, setProgress] = useState(0);
@@ -113,11 +114,11 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   topTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
+    ...BODY_1_BOLD,
     color: Color.base.White,
   },
   bottomTitle: {
+    ...CAPTION_1_REGULAR,
     fontSize: 12,
     color: Color.Gray.gray100,
   },

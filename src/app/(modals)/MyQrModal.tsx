@@ -21,6 +21,7 @@ import Close from "@/components/icons/Close";
 import { io } from "socket.io-client";
 import { useAuth } from "@/context/AuthContext";
 import QRCode from "react-native-qrcode-svg";
+import { BODY_2_REGULAR, H6 } from "@/constants/typography";
 
 const { width } = Dimensions.get("window");
 const markerSize = 250;
@@ -136,10 +137,8 @@ const MyQrModal = () => {
               <View style={{ alignItems: "center", marginTop: 100, gap: 32 }}>
                 <Text
                   style={{
-                    fontSize: 20,
-                    lineHeight: 24,
+                    ...H6,
                     color: Color.base.White,
-                    fontWeight: "700",
                   }}
                 >
                   My QR Code
@@ -164,9 +163,8 @@ const MyQrModal = () => {
                 <View style={{ marginHorizontal: 32 }}>
                   <Text
                     style={{
+                      ...BODY_2_REGULAR,
                       textAlign: "center",
-                      fontSize: 14,
-                      lineHeight: 18,
                       color: Color.Gray.gray100,
                     }}
                   >

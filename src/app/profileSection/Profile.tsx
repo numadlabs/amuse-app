@@ -33,6 +33,7 @@ import { userKeys } from "@/lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SERVER_SETTING } from "@/constants/serverSettings";
+import { BODY_1_REGULAR, BODY_2_REGULAR, H5, H6 } from "@/constants/typography";
 
 const Profile = () => {
   const { currentLocation } = useLocationStore();
@@ -138,8 +139,7 @@ const Profile = () => {
                       </Text>
                       <Text
                         style={{
-                          fontSize: 14,
-                          lineHeight: 18,
+                          ...BODY_2_REGULAR,
                           color: Color.Gray.gray100,
                         }}
                       >
@@ -162,14 +162,13 @@ const Profile = () => {
                       paddingHorizontal: 10,
                     }}
                   >
-                    <Text style={{ color: Color.Gray.gray100, fontSize: 16 }}>
+                    <Text style={{ color: Color.Gray.gray100, ...BODY_2_REGULAR}}>
                       Check-ins
                     </Text>
                     <Text
                       style={{
                         color: Color.Gray.gray50,
-                        fontSize: 24,
-                        fontWeight: "bold",
+                        ...H5,
                       }}
                     >
                       {taps?.data?.taps.length === 0
@@ -193,14 +192,13 @@ const Profile = () => {
                       paddingHorizontal: 10,
                     }}
                   >
-                    <Text style={{ color: Color.Gray.gray100, fontSize: 16 }}>
+                    <Text style={{ color: Color.Gray.gray100, ...BODY_2_REGULAR }}>
                       Memberships
                     </Text>
                     <Text
                       style={{
-                        color: Color.Gray.gray50,
-                        fontSize: 24,
-                        fontWeight: "bold",
+                        color: Color.Gray.gray50, 
+                        ...H5,
                       }}
                     >
                       {cards?.data?.cards.length === 0
@@ -231,7 +229,7 @@ const Profile = () => {
                     }}
                   >
                     <User size={24} color={Color.Gray.gray100} />
-                    <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>
+                    <Text style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}>
                       Account
                     </Text>
                   </View>
@@ -258,7 +256,7 @@ const Profile = () => {
                     }}
                   >
                     <Sms size={24} color={Color.Gray.gray100} />
-                    <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>
+                    <Text style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}>
                       Contact
                     </Text>
                   </View>
@@ -283,7 +281,7 @@ const Profile = () => {
                     }}
                   >
                     <MessageQuestion size={24} color={Color.Gray.gray100} />
-                    <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>
+                    <Text style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}>
                       FAQ
                     </Text>
                   </View>
@@ -308,7 +306,7 @@ const Profile = () => {
                     }}
                   >
                     <NoteText size={24} color={Color.Gray.gray100} />
-                    <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>
+                    <Text style={{  ...BODY_1_REGULAR, color: Color.Gray.gray50 }}>
                       Terms and Conditions
                     </Text>
                   </View>
@@ -333,7 +331,7 @@ const Profile = () => {
                     }}
                   >
                     <Lock size={24} color={Color.Gray.gray100} />
-                    <Text style={{ fontSize: 16, color: Color.Gray.gray50 }}>
+                    <Text style={{  ...BODY_1_REGULAR, color: Color.Gray.gray50 }}>
                       Privacy
                     </Text>
                   </View>
@@ -407,9 +405,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray300,
   },
   profileName: {
-    fontSize: 20,
-    lineHeight: 24,
-    fontWeight: "bold",
+    ...H6,
     color: Color.base.White,
   },
   profileContainer: {

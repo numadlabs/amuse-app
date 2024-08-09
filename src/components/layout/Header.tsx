@@ -5,6 +5,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   StyleSheet,
+  TextStyle,
+  StyleProp,
 } from "react-native";
 import { ArrowLeft } from "iconsax-react-native";
 import Color from "../../constants/Color";
@@ -12,9 +14,10 @@ import { useRouter } from "expo-router";
 
 interface NavbarProps {
   title: string;
+  titleStyle?: StyleProp<TextStyle>;
 }
 
-const Header: React.FC<NavbarProps> = ({ title }) => {
+const Header: React.FC<NavbarProps> = ({ title, titleStyle}) => {
   const router = useRouter();
 
   return (
@@ -24,7 +27,7 @@ const Header: React.FC<NavbarProps> = ({ title }) => {
           <TouchableOpacity onPress={() => router.back()} style={styles.icon}>
             <ArrowLeft size={24} color={Color.Gray.gray50} />
           </TouchableOpacity>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={[styles.title, titleStyle]}>{title}</Text>
         </View>
       </SafeAreaView>
     </>

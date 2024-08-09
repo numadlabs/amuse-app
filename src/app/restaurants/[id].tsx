@@ -38,6 +38,7 @@ import useLocationStore from "@/lib/store/userLocation";
 import { height, width } from "@/lib/utils";
 import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment";
+import { BODY_2_REGULAR, BUTTON_48, H6 } from "@/constants/typography";
 
 const Restaurant = () => {
   const { cardId, id } = useLocalSearchParams();
@@ -176,8 +177,7 @@ const Restaurant = () => {
               <Text
                 style={{
                   color: Color.base.White,
-                  fontSize: 15,
-                  fontWeight: "bold",
+                  ...BUTTON_48,
                   top: 2,
                 }}
               >
@@ -235,10 +235,8 @@ const Restaurant = () => {
               >
                 <Text
                   style={{
-                    fontSize: 20,
-                    lineHeight: 24,
                     color: Color.base.White,
-                    fontWeight: "bold",
+                    ...H6,
                   }}
                 >
                   Perk
@@ -271,8 +269,7 @@ const Restaurant = () => {
                 />
                 <Text
                   style={{
-                    lineHeight: 18,
-                    fontSize: 14,
+                    ...BODY_2_REGULAR,
                     color: Color.Gray.gray50,
                     textAlign: "center",
                   }}

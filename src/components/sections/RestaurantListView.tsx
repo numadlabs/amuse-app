@@ -119,3 +119,4 @@ const styles = StyleSheet.create({
 });
 
 export default RestaurantListView;
+5

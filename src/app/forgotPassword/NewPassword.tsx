@@ -23,6 +23,7 @@ import { usePasswordStore } from "@/lib/store/passwordStore";
 import Header from "@/components/layout/Header";
 import { useMutation } from "@tanstack/react-query";
 import { forgotPassword } from "@/lib/service/mutationHelper";
+import { BODY_1_REGULAR, CAPTION_1_REGULAR, H5 } from "@/constants/typography";
 
 const validatePassword = (password: string): boolean => {
   if (password.length < 8) {
@@ -143,10 +144,8 @@ const Password = () => {
                         onFocus={() => setFocusedInput("password")}
                         onBlur={() => setFocusedInput(null)}
                         style={{
+                          ...BODY_1_REGULAR,
                           flex: 1,
-                          fontSize: 16,
-                          fontWeight: "400",
-                          lineHeight: 20,
                           color: Color.base.White,
                         }}
                         value={password}
@@ -198,9 +197,7 @@ const Password = () => {
                         onBlur={() => setFocusedInput(null)}
                         style={{
                           flex: 1,
-                          fontSize: 16,
-                          fontWeight: "400",
-                          lineHeight: 20,
+                          ...BODY_1_REGULAR,
                           color: Color.base.White,
                         }}
                         value={confirmPassword}
@@ -311,9 +308,8 @@ const styles = StyleSheet.create({
   },
 
   topText: {
+    ...H5,
     color: Color.base.White,
-    fontWeight: "bold",
-    fontSize: 24,
   },
 
   bottomText: {
@@ -351,6 +347,7 @@ const styles = StyleSheet.create({
   },
 
   ruleText: {
+    ...CAPTION_1_REGULAR,
     fontSize: 14,
     color: Color.Gray.gray100,
   },
@@ -360,6 +357,7 @@ const styles = StyleSheet.create({
   },
 
   errorText: {
+    ...CAPTION_1_REGULAR,
     color: Color.System.systemError,
     marginTop: 8,
     paddingHorizontal: 16,

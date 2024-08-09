@@ -3,6 +3,7 @@ import React from "react";
 import Header from "@/components/layout/Header";
 import Color from "@/constants/Color";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { BODY_2_REGULAR } from "@/constants/typography";
 
 const TermsAndCondo = () => {
   const data = [
@@ -22,12 +23,13 @@ const TermsAndCondo = () => {
 
   return (
     <>
+      <SafeAreaView style={{flex:1}}>
       <Header title="Terms and Conditions" />
       <View style={styles.container}>
         {/* {data.map((item, index) => (
           <Accordion key={index} title={item.title} text={item.text} />
         ))} */}
-        <Text style={{ color: Color.Gray.gray50, fontSize: 16, marginTop: 16 }}>
+        <Text style={{ color: Color.Gray.gray50, ...BODY_2_REGULAR, marginTop: 16 }}>
           This app is a proof of concept. Any images, locations, rewards, and
           offers are purely for demonstration purposes and do not construe any
           sort of commitment. No Bitcoin, rewards, or perks listed in this app
@@ -37,6 +39,7 @@ const TermsAndCondo = () => {
           or dissemination is strictly prohibited.
         </Text>
       </View>
+      </SafeAreaView>
     </>
   );
 };

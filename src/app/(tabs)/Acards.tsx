@@ -8,6 +8,7 @@ import Animated, {
   useSharedValue,
   ReduceMotion,
 } from "react-native-reanimated";
+import { BUTTON_40 } from "@/constants/typography";
 
 const Acards = () => {
   const [showMapView, setShowMapView] = useState(true);
@@ -123,9 +124,7 @@ const styles = StyleSheet.create({
     width: "48%",
   },
   buttonText: {
-    fontSize: 13,
-    lineHeight: 16,
-    fontWeight: "bold",
+    ...BUTTON_40,
     color: Color.base.White,
   },
   activeButton: {

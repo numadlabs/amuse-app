@@ -19,6 +19,7 @@ import { checkOtp } from "@/lib/service/mutationHelper";
 import { useMutation } from "@tanstack/react-query";
 import SplitOTPInput from "@/components/ui/OtpInput";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { CAPTION_1_REGULAR, H5 } from "@/constants/typography";
 
 export enum KeyBoardTypes {
   default = "default",
@@ -165,13 +166,11 @@ const styles = StyleSheet.create({
   },
   topText: {
     color: Color.base.White,
-    fontWeight: "bold",
-    fontSize: 24,
+    ...H5,
   },
   bottomText: {
     color: Color.Gray.gray100,
-    fontSize: 12,
-    lineHeight: 16,
+    ...CAPTION_1_REGULAR,
   },
   buttonWrapper: {
     marginBottom: 80,

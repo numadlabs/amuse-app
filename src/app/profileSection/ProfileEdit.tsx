@@ -27,6 +27,7 @@ import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import { SERVER_SETTING } from "@/constants/serverSettings";
+import { BODY_1_REGULAR, BODY_2_MEDIUM } from "@/constants/typography";
 
 const ProfileEdit = () => {
   const { authState } = useAuth();
@@ -243,9 +244,7 @@ const ProfileEdit = () => {
                   <Text
                     style={{
                       color: Color.base.White,
-                      fontSize: 14,
-                      lineHeight: 18,
-                      fontWeight: "600",
+                      ...BODY_2_MEDIUM,
                     }}
                   >
                     Nickname
@@ -273,7 +272,7 @@ const ProfileEdit = () => {
                         onFocus={() => setFocusedInput("Nickname")}
                         onBlur={() => setFocusedInput(null)}
                         style={{
-                          fontSize: 20,
+                          ...BODY_1_REGULAR,
                           color: Color.base.White,
                           width: "100%",
                           height: 48,
@@ -299,9 +298,7 @@ const ProfileEdit = () => {
                   <Text
                     style={{
                       color: Color.base.White,
-                      fontSize: 14,
-                      lineHeight: 30,
-                      fontWeight: "600",
+                      ...BODY_2_MEDIUM,
                     }}
                   >
                     Email
@@ -329,7 +326,7 @@ const ProfileEdit = () => {
                         onFocus={() => setFocusedInput("Email")}
                         onBlur={() => setFocusedInput(null)}
                         style={{
-                          fontSize: 20,
+                          ...BODY_1_REGULAR,
                           color: Color.base.White,
                           width: "100%",
                           height: 48,
@@ -355,9 +352,7 @@ const ProfileEdit = () => {
                   <Text
                     style={{
                       color: Color.base.White,
-                      fontSize: 14,
-                      lineHeight: 30,
-                      fontWeight: "600",
+                      ...BODY_2_MEDIUM,
                     }}
                   >
                     Area
@@ -386,7 +381,7 @@ const ProfileEdit = () => {
                         onFocus={() => setFocusedInput("Area")}
                         onBlur={() => setFocusedInput(null)}
                         style={{
-                          fontSize: 20,
+                          ...BODY_1_REGULAR,
                           color: Color.base.White,
                           width: "100%",
                           height: 48,
@@ -399,9 +394,7 @@ const ProfileEdit = () => {
                   <Text
                     style={{
                       color: Color.base.White,
-                      fontSize: 14,
-                      lineHeight: 18,
-                      fontWeight: "600",
+                      ...BODY_2_MEDIUM,
                     }}
                   >
                     Birthday
@@ -425,7 +418,7 @@ const ProfileEdit = () => {
                       <TouchableOpacity onPress={showDatepicker}>
                         <Text
                           style={{
-                            fontSize: 20,
+                            ...BODY_1_REGULAR,
                             color: Color.base.White,
                             width: "100%",
                           }}

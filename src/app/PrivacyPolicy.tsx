@@ -8,7 +8,8 @@ import Accordion from "@/components/ui/Accordion";
 const TermsAndCondo = () => {
   return (
     <>
-      <Header title="Privacy policy" />
+      <SafeAreaView style={{flex:1}}>
+      <Header title="Privacy policy" titleStyle={{fontFamily: "Sora", fontWeight: 600}} />
       <View style={styles.container}>
         <ScrollView style={styles.scrollViewContainer}>
           <Text style={styles.header}>1. Data Collection: </Text>
@@ -112,6 +113,7 @@ const TermsAndCondo = () => {
           </Text>
         </ScrollView>
       </View>
+      </SafeAreaView>
     </>
   );
 };

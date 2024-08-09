@@ -41,6 +41,7 @@ import Close from "@/components/icons/Close";
 import { usePushNotifications } from "@/hooks/usePushNotification";
 import moment from "moment";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
+import { BODY_2_MEDIUM, BODY_2_REGULAR, H6 } from "@/constants/typography";
 
 const Page = () => {
   const router = useRouter();
@@ -147,8 +148,7 @@ const Page = () => {
         <View style={{ marginTop: 16, gap: 12 }}>
           <Text
             style={{
-              fontSize: 14,
-              fontWeight: "600",
+              ...BODY_2_MEDIUM,
               color: Color.Gray.gray100,
               paddingHorizontal: 16,
             }}
@@ -222,8 +222,7 @@ const Page = () => {
         >
           <Text
             style={{
-              fontSize: 14,
-              fontWeight: "600",
+              ...BODY_2_MEDIUM,
               color: Color.Gray.gray100,
             }}
           >
@@ -319,10 +318,9 @@ const Page = () => {
               >
                 <Text
                   style={{
-                    fontSize: 20,
-                    lineHeight: 24,
+                    ...H6,
+                    fontSize: 18,
                     color: Color.base.White,
-                    fontWeight: "bold",
                   }}
                 >
                   About your Balance
@@ -353,10 +351,9 @@ const Page = () => {
               />
               <Text
                 style={{
+                  ...BODY_2_REGULAR,
                   textAlign: "center",
-                  fontSize: 14,
                   color: Color.Gray.gray50,
-                  lineHeight: 18,
                 }}
               >
                 You earned ALYS Bitcoin, which is faster and cheaper to use but
@@ -425,10 +422,8 @@ const Page = () => {
               >
                 <Text
                   style={{
-                    fontSize: 20,
-                    lineHeight: 24,
+                    ...H6,
                     color: Color.base.White,
-                    fontWeight: "bold",
                   }}
                 >
                   Membership
@@ -461,8 +456,7 @@ const Page = () => {
                 />
                 <Text
                   style={{
-                    lineHeight: 18,
-                    fontSize: 14,
+                    ...BODY_2_REGULAR,
                     color: Color.Gray.gray50,
                     textAlign: "center",
                   }}

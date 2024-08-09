@@ -19,6 +19,7 @@ import { useMutation } from "@tanstack/react-query";
 import SplitOTPInput from "@/components/ui/OtpInput";
 import Header from "@/components/layout/Header";
 import { usePasswordStore } from "@/lib/store/passwordStore";
+import { BODY_1_REGULAR, CAPTION_1_REGULAR, H5 } from "@/constants/typography";
 
 export enum KeyBoardTypes {
   default = "default",
@@ -86,13 +87,13 @@ const SplitOTP = () => {
                       We will send an email verification code.
                     </Text>
                   </View>
-                  <View style={{ marginTop: 12 }}>
+                  <View style={{ ...BODY_1_REGULAR, marginTop: 12 }}>
                     <SplitOTPInput
                       codeLength={4}
                       onCodeFilled={handleCodeFilled}
                     />
                   </View>
-                  <Text style={{ color: Color.System.systemError }}>
+                  <Text style={{ ...CAPTION_1_REGULAR, color: Color.System.systemError }}>
                     {error}
                   </Text>
                 </View>
@@ -152,11 +153,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   topText: {
+    ...H5,
     color: Color.base.White,
     fontWeight: "bold",
     fontSize: 24,
   },
   bottomText: {
+    ...CAPTION_1_REGULAR,
     color: Color.Gray.gray100,
     fontSize: 12,
     lineHeight: 16,

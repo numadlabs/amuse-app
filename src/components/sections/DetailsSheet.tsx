@@ -10,6 +10,7 @@ import { RestaurantType } from "@/lib/types";
 import TimeAccordion from "../ui/TimeAccordion";
 import { useQuery } from "@tanstack/react-query";
 import { getTimeTable } from "@/lib/service/queryHelper";
+import { BODY_1_BOLD, BODY_1_REGULAR } from "@/constants/typography";
 
 interface BottomSheetProps {
   data: RestaurantType;
@@ -54,7 +55,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ data }) => {
     <View style={[styles.bottomSheet]}>
       <View style={styles.content}>
         <Text
-          style={{ fontWeight: "bold", fontSize: 16, color: Color.base.White }}
+          style={{ ...BODY_1_BOLD, color: Color.base.White }}
         >
           Rewards
         </Text>
@@ -67,8 +68,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ data }) => {
         <View style={{ gap: 16 }}>
           <Text
             style={{
-              fontWeight: "bold",
-              fontSize: 16,
+              ...BODY_1_BOLD,
               color: Color.base.White,
             }}
           >
@@ -87,8 +87,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ data }) => {
           <View style={{ gap: 16 }}>
             <Text
               style={{
-                fontWeight: "bold",
-                fontSize: 16,
+                ...BODY_1_BOLD,
                 color: Color.base.White,
               }}
             >
@@ -119,8 +118,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ data }) => {
                 >
                   <Text
                     style={{
-                      fontWeight: "bold",
-                      fontSize: 16,
+                      ...BODY_1_BOLD,
                       color: Color.base.White,
                     }}
                   >
@@ -181,8 +179,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ data }) => {
           <View style={{ gap: 16 }}>
             <Text
               style={{
-                fontWeight: "bold",
-                fontSize: 16,
+                ...BODY_1_BOLD,
                 color: Color.base.White,
               }}
             >
@@ -246,14 +243,13 @@ const styles = StyleSheet.create({
   },
   attributeText: {
     color: Color.Gray.gray50,
-    fontSize: 16,
+    ...BODY_1_REGULAR,
     width: "95%",
   },
 
   attributeLocText: {
     color: Color.System.systemInformation,
-    fontSize: 16,
-    lineHeight: 20,
+    ...BODY_1_REGULAR,
     flex: 1,
   },
   membershipContainer: {

@@ -5,6 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Animated from "react-native-reanimated";
 import APassStripes from "../icons/APassStripes";
 import { InfoCircle } from "iconsax-react-native";
+import { BODY_1_REGULAR, CAPTION_1_REGULAR, H4 } from "@/constants/typography";
 
 interface BalanceProps {
   amount?: number;
@@ -39,10 +40,8 @@ const Balance: React.FC<BalanceProps> = ({
           <View style={{ flexDirection: "column", gap: 4 }}>
             <Text
               style={{
+                ...CAPTION_1_REGULAR,
                 color: Color.Gray.gray100,
-                fontSize: 12,
-                fontWeight: "400",
-                lineHeight: 16,
               }}
             >
               Total balance
@@ -53,8 +52,7 @@ const Balance: React.FC<BalanceProps> = ({
               <Text
                 style={{
                   color: Color.base.White,
-                  fontSize: 28,
-                  lineHeight: 36,
+                  ...H4,
                 }}
               >
                 {amount == 0 ? "0.0000" : convertedAmount?.toFixed(2)}
@@ -63,7 +61,7 @@ const Balance: React.FC<BalanceProps> = ({
                 style={{
                   bottom: 3,
                   color: Color.Gray.gray100,
-                  lineHeight: 20,
+                  ...BODY_1_REGULAR,
                 }}
               >
                 {currencyName}
@@ -99,7 +97,7 @@ const Balance: React.FC<BalanceProps> = ({
                 style={{
                   fontSize: 12,
                   color: Color.Gray.gray50,
-                  lineHeight: 16,
+                  ...CAPTION_1_REGULAR,
                 }}
               >
                 {amount?.toFixed(8)} Bitcoin

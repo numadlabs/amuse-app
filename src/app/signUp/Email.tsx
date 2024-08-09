@@ -23,6 +23,7 @@ import { checkEmail } from "@/lib/service/mutationHelper";
 import { emailSchema } from "@/validators/SignUpSchema";
 import { ZodError } from "zod";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { BODY_1_REGULAR, CAPTION_1_REGULAR, H5 } from "@/constants/typography";
 
 function Email() {
   const { email, setEmail, reset } = useSignUpStore();
@@ -103,7 +104,7 @@ function Email() {
     },
   });
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+    <>
       <Header title="Sign up" />
       <Steps activeStep={1} />
       <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
@@ -164,9 +165,7 @@ function Email() {
                         placeholderTextColor={Color.Gray.gray100}
                         style={{
                           height: 40,
-                          fontSize: 16,
-                          fontWeight: "400",
-                          lineHeight: 20,
+                          ...BODY_1_REGULAR,
                           color: Color.base.White,
                           width: "100%",
                         }}
@@ -181,7 +180,7 @@ function Email() {
                       exiting={FadeOut}
                       style={{ justifyContent: "center", alignItems: "center" }}
                     >
-                      <Text style={{ color: Color.System.systemError }}>
+                      <Text style={{ color: Color.System.systemError, ...CAPTION_1_REGULAR  }}>
                         {error}
                       </Text>
                     </Animated.View>
@@ -203,7 +202,7 @@ function Email() {
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </>
   );
 }
 
@@ -227,14 +226,12 @@ const styles = StyleSheet.create({
 
   topText: {
     color: Color.base.White,
-    fontSize: 24,
-    fontWeight: "bold",
+    ...H5,
     textAlign: "center",
   },
   bottomText: {
     color: Color.Gray.gray100,
-    fontSize: 12,
-    lineHeight: 16,
+    ...CAPTION_1_REGULAR,
     textAlign: "center",
   },
 });

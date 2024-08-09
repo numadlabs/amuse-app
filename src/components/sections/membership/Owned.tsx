@@ -23,6 +23,7 @@ import {
 } from "@/lib/service/queryHelper";
 import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
 import useLocationStore from "@/lib/store/userLocation";
+import { BODY_2_MEDIUM, BUTTON_40, BUTTON_48, CAPTION_1_REGULAR } from "@/constants/typography";
 
 interface OwnedProps {
   // userCardId: string;
@@ -210,9 +211,7 @@ const styles = StyleSheet.create({
     borderRadius: 48,
   },
   buttonText: {
-    fontSize: 13,
-    lineHeight: 16,
-    fontWeight: "bold",
+    ...BUTTON_40,
     color: Color.base.White,
   },
   activeText: {
@@ -258,13 +257,11 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   perkText: {
-    fontWeight: "bold",
-    fontSize: 14,
+    ...BODY_2_MEDIUM,
     color: Color.base.White,
   },
   perkCount: {
-    fontSize: 14,
-    lineHeight: 18,
+    ...BODY_2_MEDIUM,
     color: Color.base.White,
     fontWeight: "600",
   },
@@ -279,9 +276,7 @@ const styles = StyleSheet.create({
     borderRadius: 48,
   },
   addPerkText: {
-    fontSize: 15,
-    fontWeight: "600",
-    lineHeight: 24,
+    ...BUTTON_48,
     color: Color.base.White,
   },
   gradientContainer: {
@@ -307,9 +302,7 @@ const styles = StyleSheet.create({
   },
   noPerksText: {
     textAlign: "center",
-    lineHeight: 16,
-    fontSize: 12,
-    fontWeight: "400",
+    ...CAPTION_1_REGULAR,
     color: Color.Gray.gray50,
   },
   detailsContainer: {

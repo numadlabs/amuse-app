@@ -19,6 +19,7 @@ import Color from "@/constants/Color";
 import { useSignUpStore } from "@/lib/store/signUpStore";
 import { LinearGradient } from "expo-linear-gradient";
 import Header from "@/components/layout/Header";
+import { BODY_1_REGULAR, CAPTION_1_REGULAR, H5 } from "@/constants/typography";
 
 const validatePassword = (password: string): boolean => {
   if (password.length < 8) {
@@ -123,9 +124,7 @@ const Password = () => {
                         onBlur={() => setFocusedInput(null)}
                         style={{
                           flex: 1,
-                          fontSize: 16,
-                          fontWeight: "400",
-                          lineHeight: 20,
+                          ...BODY_1_REGULAR,
                           color: Color.base.White,
                         }}
                         value={password}
@@ -177,9 +176,7 @@ const Password = () => {
                         onBlur={() => setFocusedInput(null)}
                         style={{
                           flex: 1,
-                          fontSize: 16,
-                          fontWeight: "400",
-                          lineHeight: 20,
+                          ...BODY_1_REGULAR,
                           color: Color.base.White,
                         }}
                         value={confirmPassword}
@@ -288,8 +285,8 @@ const styles = StyleSheet.create({
   },
   topText: {
     color: Color.base.White,
-    fontWeight: "bold",
-    fontSize: 24,
+    ...H5,
+    
   },
   bottomText: {
     color: Color.Gray.gray400,
@@ -321,7 +318,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   ruleText: {
-    fontSize: 14,
+    ...CAPTION_1_REGULAR,
     color: Color.Gray.gray100,
   },
   greenRuleText: {
@@ -329,6 +326,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: Color.System.systemError,
+    ...CAPTION_1_REGULAR,
     marginTop: 8,
     paddingHorizontal: 16,
   },

@@ -3,6 +3,7 @@ import { Stack, router } from "expo-router";
 import { TouchableOpacity, View } from "react-native";
 import Color from "@/constants/Color";
 import { ArrowLeft } from "iconsax-react-native";
+import { BODY_1_BOLD } from "@/constants/typography";
 
 const _layout = () => {
   return (
@@ -19,9 +20,9 @@ const _layout = () => {
           headerTitle: "Boost",
           headerTitleAlign: "center",
           headerTitleStyle: {
+            ...BODY_1_BOLD,
             color: "white",
             fontSize: 16,
-            fontWeight: "bold",
           },
           headerStyle: { backgroundColor: Color.Gray.gray600 },
         }}
