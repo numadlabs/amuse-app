@@ -58,6 +58,7 @@ const ProfileEdit = () => {
       setEmail(user.user.email || "");
       setLocation(user.user.location || "");
       setDateOfBirth(user.user.dateOfBirth || "");
+      setProfilePicture(user.user.profilePicture || "");
     }
   }, [user]);
 
@@ -66,13 +67,14 @@ const ProfileEdit = () => {
       user.user.nickname !== nickname ||
       user.user.profilePicture !== profilePicture ||
       user.user.location !== location ||
-      user.user.dateOfBirth !== dateOfBirth
+      user.user.dateOfBirth !== dateOfBirth ||
+      user.user.profilePicture !== profilePicture
     ) {
       setDataChanged(true);
     } else {
       setDataChanged(false);
     }
-  }, [user, nickname, email, location, dateOfBirth]);
+  }, [user, nickname, email, location, dateOfBirth, profilePicture]);
 
   const onDateChange = (event, selectedDate) => {
     setShow(Platform.OS === "ios");
@@ -185,7 +187,7 @@ const ProfileEdit = () => {
     };
     const formattedDate = date.toLocaleDateString(
       Platform.OS === "ios" ? "en-US" : "en-GB",
-      options
+      options,
     );
     return formattedDate;
   };

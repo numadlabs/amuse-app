@@ -69,10 +69,10 @@ const Profile = () => {
     },
   });
 
-  const userCurrentTier = userTier.findIndex(
-    (tier) => tier.id === user?.user.userTierId,
+  const userTierData = userTier.find(
+    (tier) => tier.id === user?.user?.userTierId,
   );
-  console.log(userCurrentTier);
+  console.log(userTier);
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
@@ -143,7 +143,7 @@ const Profile = () => {
                           color: Color.Gray.gray100,
                         }}
                       >
-                        Tier: {userTier?.name}
+                        Tier: {userTierData?.name}
                       </Text>
                     </View>
                     <View>
