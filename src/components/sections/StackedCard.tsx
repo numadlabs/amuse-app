@@ -123,7 +123,7 @@ const StackedCard = () => {
                 category={card.categoryName}
                 hasBonus={card.hasBonus}
                 visitCount={card.visitCount}
-                target={card?.target}
+                target={card?.target - card?.current}
               />
             </Animated.View>
           ))}
