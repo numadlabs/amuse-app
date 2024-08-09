@@ -14,7 +14,6 @@ import Color from "@/constants/Color";
 import Button from "@/components/ui/Button";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import { useSignUpStore } from "@/lib/store/signUpStore";
 import { checkOtp } from "@/lib/service/mutationHelper";
 import { useMutation } from "@tanstack/react-query";
 import SplitOTPInput from "@/components/ui/OtpInput";
@@ -36,7 +35,6 @@ const SplitOTP = () => {
   const [text, onChangeText] = useState("");
   const [error, setError] = useState("");
   const { setVerificationCode, email } = usePasswordStore();
-
   const { mutateAsync: checkOtpMutation } = useMutation({
     mutationFn: checkOtp,
   });
@@ -69,12 +67,9 @@ const SplitOTP = () => {
 
   return (
     <>
-      <Header title="Forgot Password?" />
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
-      >
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <Header title="Forgot Password?" />
+
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <SafeAreaView style={styles.safeArea}>
             <View style={styles.content}>
@@ -147,7 +142,7 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     borderWidth: 1,
     borderColor: Color.Gray.gray400,
-    paddingBottom: 32,
+
     paddingTop: 24,
     paddingHorizontal: 16,
   },
@@ -167,7 +162,7 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
   buttonWrapper: {
-    marginBottom: 80,
+    marginBottom: 10,
     paddingHorizontal: 16,
   },
   textStyle: {
@@ -190,11 +185,6 @@ const styles = StyleSheet.create({
   safeAreaStyle: {
     marginHorizontal: 20,
     marginTop: 24,
-  },
-
-  topPosition: {
-    justifyContent: "flex-start",
-    marginBottom: "auto",
   },
 });
 

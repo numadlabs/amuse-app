@@ -18,6 +18,7 @@ import Button from "@/components/ui/Button";
 import Color from "@/constants/Color";
 import { useSignUpStore } from "@/lib/store/signUpStore";
 import { LinearGradient } from "expo-linear-gradient";
+import Header from "@/components/layout/Header";
 
 const validatePassword = (password: string): boolean => {
   if (password.length < 8) {
@@ -61,18 +62,16 @@ const Password = () => {
       });
     } else {
       console.log(
-        "Password does not meet the validation rules or passwords do not match."
+        "Password does not meet the validation rules or passwords do not match.",
       );
     }
   };
 
   return (
     <>
+      <Header title="Sign up" />
       <Steps activeStep={2} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-      >
+      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.body}>
             <LinearGradient
@@ -249,26 +248,21 @@ const Password = () => {
                 </View>
               </View>
             </LinearGradient>
-            <KeyboardAvoidingView
-              style={{ flex: 1 }}
-              keyboardVerticalOffset={110}
-              behavior={Platform.OS === "ios" ? "height" : "padding"}
-            >
-              <View style={[styles.buttonContainer]}>
-                <Button
-                  variant={
-                    isPasswordValid && doPasswordsMatch ? "primary" : "disabled"
-                  }
-                  textStyle={
-                    isPasswordValid && doPasswordsMatch ? "primary" : "disabled"
-                  }
-                  size="default"
-                  onPress={handleNavigation}
-                >
-                  Confirm
-                </Button>
-              </View>
-            </KeyboardAvoidingView>
+
+            <View style={[styles.buttonContainer, styles.bottomPosition]}>
+              <Button
+                variant={
+                  isPasswordValid && doPasswordsMatch ? "primary" : "disabled"
+                }
+                textStyle={
+                  isPasswordValid && doPasswordsMatch ? "primary" : "disabled"
+                }
+                size="default"
+                onPress={handleNavigation}
+              >
+                Confirm
+              </Button>
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
@@ -343,7 +337,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 10,
-
+    paddingHorizontal: 16,
     marginBottom: 20,
   },
   bottomPosition: {

@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { ActivityIndicator, Image } from "react-native";
-
+import { ActivityIndicator, Image, KeyboardAvoidingView } from "react-native";
 import React, { useState } from "react";
+import { ZodError } from "zod";
 import {
   Keyboard,
   Platform,
@@ -33,10 +33,13 @@ function Login() {
   const handleLogin = async () => {
     try {
       setLoading(true);
+      // Parse the input with the schema
       LoginSchema.parse({
         email: email,
         password: password,
       });
+
+      // If validation passes, proceed with login
       const response = await onLogin(email, password);
       if (response.success) {
         router.replace("/(tabs)");
@@ -44,9 +47,16 @@ function Login() {
         console.log("Login failed:", response.data);
         setError("Email and/or password do not match our records");
       }
-    } catch (error) {
-      console.error("Error during login:", error);
-      setError("Login Error. Please try again later.");
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const formattedErrors = err.issues.map((issue) => {
+          return `${issue.path[0]}: ${issue.message}`;
+        });
+        setError(formattedErrors.join("\n"));
+      } else {
+        console.error("Error during login:", err);
+        setError("Login Error. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }
@@ -61,7 +71,7 @@ function Login() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View
@@ -118,7 +128,6 @@ function Login() {
                   style={{
                     fontSize: 24,
                     color: Color.base.White,
-                    fontWeight: "600",
                     fontFamily: "SoraBold",
                     textAlign: "center",
                     marginBottom: 24,
@@ -174,17 +183,16 @@ function Login() {
                       />
                     </View>
                   </LinearGradient>
-                  {error && email.length < 7 && (
+                  {error && (
                     <Text
                       style={{
                         color: Color.System.systemError,
                         paddingHorizontal: 16,
                       }}
                     >
-                      {"Please enter valid email"}
+                      {error}
                     </Text>
                   )}
-
                   <LinearGradient
                     colors={
                       focusedInput === "Password"
@@ -240,27 +248,7 @@ function Login() {
                       </TouchableOpacity>
                     </View>
                   </LinearGradient>
-                  {password.length < 8 && null && (
-                    <Text
-                      style={{
-                        color: Color.System.systemError,
-                        paddingHorizontal: 16,
-                      }}
-                    >
-                      {"Please enter valid password"}
-                    </Text>
-                  )}
 
-                  {error && (
-                    <Text
-                      style={{
-                        color: Color.System.systemError,
-                        paddingHorizontal: 16,
-                      }}
-                    >
-                      {error}
-                    </Text>
-                  )}
                   <Button
                     variant="primary"
                     style={{ marginTop: 12 }}
@@ -350,7 +338,7 @@ function Login() {
           </View>
         </ScrollView>
       </View>
-    </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 

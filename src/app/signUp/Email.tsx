@@ -1,108 +1,89 @@
-import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  ActivityIndicator,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
+  View,
   Text,
   TextInput,
+  KeyboardAvoidingView,
+  Keyboard,
   TouchableWithoutFeedback,
-  View,
+  StyleSheet,
+  ActivityIndicator,
 } from "react-native";
-import Animated, {
-  FadeIn,
-  useSharedValue,
-  withSpring,
-} from "react-native-reanimated";
-import Steps from "@/components/atom/Steps";
 import Button from "@/components/ui/Button";
 import Color from "@/constants/Color";
-import { useSignUpStore } from "@/lib/store/signUpStore";
-import { height } from "@/lib/utils";
+import Steps from "@/components/atom/Steps";
 import { LinearGradient } from "expo-linear-gradient";
-import { checkEmail, sendOtp } from "@/lib/service/mutationHelper";
 import { useMutation } from "@tanstack/react-query";
+import Header from "@/components/layout/Header";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { sendOtp } from "@/lib/service/mutationHelper";
+import { router } from "expo-router";
+import { useSignUpStore } from "@/lib/store/signUpStore";
+import { checkEmail } from "@/lib/service/mutationHelper";
+import { emailSchema } from "@/validators/SignUpSchema";
+import { ZodError } from "zod";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
-const Email = () => {
+function Email() {
   const { email, setEmail, reset } = useSignUpStore();
   const [loading, setLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [buttonPosition, setButtonPosition] = useState("bottom");
-  const [isFocused, setIsFocused] = useState(false);
-  const router = useRouter();
   const [error, setError] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
-  const offset = useSharedValue(300);
-  const togglePrefix = () => {
-    setIsOpen(!isOpen);
-    offset.value = withSpring(isOpen ? height / 3 : height / 3 + 10, {
-      damping: 20,
-      mass: 0.5,
-    });
-  };
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => setButtonPosition("top"),
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => setButtonPosition("bottom"),
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleNavigation = async () => {
-    if (email && !isButtonDisabled) {
-      setLoading(true);
-      setIsButtonDisabled(true);
-      await checkEmailMutation({
-        email: email,
-      })
-        .then((response) => {
-          if (response.success === false) {
+    try {
+      if (email && !isButtonDisabled) {
+        setLoading(true);
+        setIsButtonDisabled(true);
+        emailSchema.parse(email);
+        await checkEmailMutation({
+          email: email,
+        })
+          .then((response) => {
+            if (response.success === false) {
+              setError("This email is already registered.");
+              throw new Error("Email already registered");
+            } else {
+              return sendOtpMutation({
+                email: email,
+              });
+            }
+          })
+          .then((otpResponse) => {
+            if (otpResponse) {
+              router.push({
+                pathname: "/signUp/Otp",
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(error);
             setError("This email is already registered.");
-            throw new Error("Email already registered");
-          } else {
-            return sendOtpMutation({
-              email: email,
-            });
-          }
-        })
-        .then((otpResponse) => {
-          if (otpResponse) {
-            // OTP sent successfully
-            router.push({
-              pathname: "/signUp/Otp",
-            });
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          setError("This email is already registered.");
-          reset();
-        })
-        .finally(() => {
-          setLoading(false);
-          setIsButtonDisabled(false);
+            reset();
+          })
+          .finally(() => {
+            setLoading(false);
+            setIsButtonDisabled(false);
+          });
+      }
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const formattedErrors = error.issues.map((issue) => {
+          return `${issue.message}`;
         });
+        setError(formattedErrors.join("\n"));
+        setLoading(false);
+        setIsButtonDisabled(false);
+        setTimeout(() => {
+          setError("");
+        }, 4000);
+      }
     }
   };
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
-    if (isOpen) {
-      togglePrefix();
-    }
   };
 
   const { mutateAsync: checkEmailMutation } = useMutation({
@@ -117,22 +98,15 @@ const Email = () => {
     onError: (error) => {
       console.log(error);
       setLoading(false);
-      setIsButtonDisabled(false);
+      setIsButtonDisabled(true);
       setError("Error sending OTP. Please try again.");
     },
-    onSuccess: (data, variables) => {
-      // Navigate to OTP screen on successful OTP send
-    },
   });
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+      <Header title="Sign up" />
       <Steps activeStep={1} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={50}
-      >
+      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
@@ -153,7 +127,7 @@ const Email = () => {
                   <View style={{ gap: 8 }}>
                     <Text style={styles.topText}>Email</Text>
                     <Text style={styles.bottomText}>
-                      This will be kept private. No surprise DMs.
+                      We will send an email verification code.
                     </Text>
                   </View>
                   <LinearGradient
@@ -184,12 +158,19 @@ const Email = () => {
                       }}
                     >
                       <TextInput
-                        onFocus={() => setIsFocused(true)}
-                        onBlur={() => setIsFocused(false)}
-                        placeholder="Enter your email"
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                        placeholder={"Enter your email"}
                         placeholderTextColor={Color.Gray.gray100}
+                        style={{
+                          height: 40,
+                          fontSize: 16,
+                          fontWeight: "400",
+                          lineHeight: 20,
+                          color: Color.base.White,
+                          width: "100%",
+                        }}
                         value={email}
-                        style={styles.input}
                         onChangeText={setEmail}
                       />
                     </View>
@@ -197,6 +178,7 @@ const Email = () => {
                   {error && (
                     <Animated.View
                       entering={FadeIn}
+                      exiting={FadeOut}
                       style={{ justifyContent: "center", alignItems: "center" }}
                     >
                       <Text style={{ color: Color.System.systemError }}>
@@ -207,41 +189,23 @@ const Email = () => {
                 </View>
               </LinearGradient>
             </View>
-            <KeyboardAvoidingView
-              style={{ flex: 1 }}
-              keyboardVerticalOffset={100}
-              behavior={Platform.OS === "ios" ? "height" : "padding"}
-            >
-              <View
-                style={[
-                  styles.buttonContainer,
-                  buttonPosition === "bottom"
-                    ? styles.bottomPosition
-                    : styles.topPosition,
-                ]}
+
+            <View style={[styles.buttonContainer, styles.bottomPosition]}>
+              <Button
+                variant={email ? "primary" : "disabled"}
+                textStyle={email ? "primary" : "disabled"}
+                size="default"
+                onPress={handleNavigation}
               >
-                <Button
-                  variant={!email ? "disabled" : "primary"}
-                  textStyle={!email ? "disabled" : "primary"}
-                  size="default"
-                  onPress={handleNavigation}
-                >
-                  {loading ? (
-                    <ActivityIndicator size="small" color="white" />
-                  ) : (
-                    <Text>Confirm</Text>
-                  )}
-                </Button>
-              </View>
-            </KeyboardAvoidingView>
+                {loading ? <ActivityIndicator /> : "Send code"}
+              </Button>
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-};
-
-export default Email;
+}
 
 const styles = StyleSheet.create({
   body: {
@@ -249,47 +213,18 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     gap: 24,
-    flexDirection: "column",
-  },
-  prefixContainer: {
-    position: "absolute",
-    zIndex: 100,
-    bottom: height / 1.3,
-    width: "80%",
-    height: height / 4.5,
-    backgroundColor: Color.base.White,
-    borderRadius: 16,
-    overflow: "hidden",
-    left: 20,
-    ...Platform.select({
-      ios: {
-        shadowColor: Color.Gray.gray500,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 12,
-      },
-      android: {
-        elevation: 12,
-      },
-    }),
   },
   buttonContainer: {
     position: "absolute",
     left: 0,
     right: 0,
-    bottom: 30,
+    bottom: 10,
     paddingHorizontal: 20,
-    marginBottom: 20,
   },
   bottomPosition: {
     justifyContent: "flex-end",
   },
-  topPosition: {
-    justifyContent: "flex-start",
 
-    marginTop: "auto",
-  },
   topText: {
     color: Color.base.White,
     fontSize: 24,
@@ -299,13 +234,9 @@ const styles = StyleSheet.create({
   bottomText: {
     color: Color.Gray.gray100,
     fontSize: 12,
+    lineHeight: 16,
     textAlign: "center",
   },
-  input: {
-    fontSize: 16,
-    fontWeight: "normal",
-    color: Color.base.White,
-    width: "100%",
-    height: 48,
-  },
 });
+
+export default Email;

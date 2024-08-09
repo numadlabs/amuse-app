@@ -61,22 +61,6 @@ const Password = () => {
     return rule.test(password);
   };
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => setButtonPosition("top")
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => setButtonPosition("bottom")
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
   const { mutateAsync: forgotPasswordMutation } = useMutation({
     mutationFn: forgotPassword,
   });
@@ -98,7 +82,7 @@ const Password = () => {
         setLoading(false);
       } else {
         console.log(
-          "Password does not meet the validation rules or passwords do not match."
+          "Password does not meet the validation rules or passwords do not match.",
         );
       }
     } catch (error) {}
@@ -108,10 +92,7 @@ const Password = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <Header title="Forgot password?" />
       <Steps activeStep={3} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-      >
+      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.body}>
             <LinearGradient
@@ -288,33 +269,21 @@ const Password = () => {
                 </View>
               </View>
             </LinearGradient>
-            <KeyboardAvoidingView
-              style={{ flex: 1 }}
-              keyboardVerticalOffset={110}
-              behavior={Platform.OS === "ios" ? "height" : "padding"}
-            >
-              <View
-                style={[
-                  styles.buttonContainer,
-                  buttonPosition === "bottom"
-                    ? styles.bottomPosition
-                    : styles.topPosition,
-                ]}
+
+            <View style={[styles.bottomPosition, styles.buttonContainer]}>
+              <Button
+                variant={
+                  isPasswordValid && doPasswordsMatch ? "primary" : "disabled"
+                }
+                textStyle={
+                  isPasswordValid && doPasswordsMatch ? "primary" : "disabled"
+                }
+                size="default"
+                onPress={handleNavigation}
               >
-                <Button
-                  variant={
-                    isPasswordValid && doPasswordsMatch ? "primary" : "disabled"
-                  }
-                  textStyle={
-                    isPasswordValid && doPasswordsMatch ? "primary" : "disabled"
-                  }
-                  size="default"
-                  onPress={handleNavigation}
-                >
-                  {loading ? <ActivityIndicator /> : "Confirm"}
-                </Button>
-              </View>
-            </KeyboardAvoidingView>
+                {loading ? <ActivityIndicator /> : "Confirm"}
+              </Button>
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
@@ -328,28 +297,34 @@ const styles = StyleSheet.create({
     height: "100%",
     paddingHorizontal: 16,
   },
+
   container: {
     paddingHorizontal: 16,
     paddingTop: 24,
     paddingBottom: 16,
   },
+
   textContainer: {
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 24,
   },
+
   topText: {
     color: Color.base.White,
     fontWeight: "bold",
     fontSize: 24,
   },
+
   bottomText: {
     color: Color.Gray.gray400,
     fontSize: 12,
   },
+
   inputContainer: {
     gap: 12,
   },
+
   input: {
     height: 48,
     borderWidth: 1,
@@ -359,6 +334,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 16,
   },
+
   inputFocused: {
     height: 48,
     borderWidth: 1,
@@ -368,17 +344,21 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 16,
   },
+
   ruleContainer: {
     marginTop: 16,
     gap: 6,
   },
+
   ruleText: {
     fontSize: 14,
     color: Color.Gray.gray100,
   },
+
   greenRuleText: {
     color: Color.System.systemSuccess,
   },
+
   errorText: {
     color: Color.System.systemError,
     marginTop: 8,
@@ -390,14 +370,9 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 10,
     paddingHorizontal: 20,
-    marginBottom: 20,
   },
   bottomPosition: {
     justifyContent: "flex-end",
-  },
-  topPosition: {
-    justifyContent: "flex-start",
-    marginTop: "auto",
   },
 });
 
