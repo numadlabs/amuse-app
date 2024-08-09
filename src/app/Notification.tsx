@@ -5,6 +5,9 @@ import Color from "@/constants/Color";
 import NotificationCard from "@/components/atom/cards/NotificationCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Text } from "react-native";
+import NotificationIcon from "@/components/icons/NotificationIcon";
+import { height } from "@/lib/utils";
 
 const Notification = () => {
   //TODO notifcations fetch hiih
@@ -31,23 +34,47 @@ const Notification = () => {
     }
   };
 
+  function renderIndicators(): React.ReactNode {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <View style={styles.body}>
         <Header title="Notifications" />
-        <FlatList
-          style={styles.container}
-          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-          data={notifications}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <NotificationCard
-              title={item.name}
-              description={`You received 1 EUR of Bitcoin from ${item.name}`}
-              time={getRelativeTime(item.date)}
-            />
-          )}
-        />
+        {notifications.length > 0 ? (
+          <FlatList
+            style={styles.container}
+            ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+            data={notifications}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <NotificationCard
+                title={item.name}
+                description={`You received 1 EUR of Bitcoin from ${item.name}`}
+                time={getRelativeTime(item.date)}
+              />
+            )}
+          />
+        ) : (
+          <View style={{ justifyContent: "center", alignItems: "center", height: height/1.5, gap: 64 }}>
+            <View style={{ flexDirection: "column", gap: 24, alignItems: "center" }}>
+              <View style={styles.IconContainer}>
+                <NotificationIcon />
+              </View>
+              <View
+                style={{
+                  flexDirection: "column",
+                  gap: 8,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={styles.Title}>No notification yet</Text>
+                <Text style={styles.Description}>We will notify you when something arrives</Text>
+              </View>
+            </View>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -63,13 +90,25 @@ const styles = StyleSheet.create({
   container: {
     gap: 16,
   },
-  emptyContainer: {
-    flex: 1,
+  IconContainer: {
+    padding: 12,
+    backgroundColor: Color.Gray.gray400,
+    borderRadius: 12,
+    width: 52,
+    height: 52,
     justifyContent: "center",
     alignItems: "center",
   },
-  emptyText: {
+  Title: {
     color: Color.base.White,
     fontSize: 16,
+    lineHeight: 24,
+    fontWeight: "bold",
+  },
+  Description: {
+    color: Color.Gray.gray100,
+    fontSize: 12,
+    lineHeight: 18,
+    textAlign: "center",
   },
 });

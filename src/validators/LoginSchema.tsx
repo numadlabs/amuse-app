@@ -1,8 +1,7 @@
-import { z } from 'zod'
+import { z } from "zod";
 
 const LoginSchema = z.object({
-  prefix: z.string(),
-  telNumber: z.string(),
+  email: z.string(),
   password: z.string(),
 });
 
