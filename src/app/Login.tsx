@@ -34,10 +34,6 @@ function Login() {
     try {
       setLoading(true);
       // Parse the input with the schema
-      LoginSchema.parse({
-        email: email,
-        password: password,
-      });
 
       // If validation passes, proceed with login
       const response = await onLogin(email, password);
