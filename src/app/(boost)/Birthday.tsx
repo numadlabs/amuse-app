@@ -88,11 +88,8 @@ const Birthday = () => {
   const triggerUpdateUser = async () => {
     setLoading(true);
     const userData = {
-      email,
       location: area,
       dateOfBirth: birthdate,
-      //TODO boost birthday tusdaa salgah
-      nickname: "",
     };
     try {
       const data = await handleUpdateUser({
