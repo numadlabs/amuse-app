@@ -31,14 +31,12 @@ const Faq = () => {
 
   return (
     <>
-      <SafeAreaView style={{ flex: 1 }}>
-        <Header title="FAQ" />
-        <View style={styles.container}>
-          {data.map((item, index) => (
-            <Accordion key={index} title={item.title} text={item.text} />
-          ))}
-        </View>
-      </SafeAreaView>
+      <Header title="FAQ" />
+      <View style={styles.container}>
+        {data.map((item, index) => (
+          <Accordion key={index} title={item.title} text={item.text} />
+        ))}
+      </View>
     </>
   );
 };

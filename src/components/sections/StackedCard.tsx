@@ -61,6 +61,7 @@ const StackedCard = () => {
     });
   };
 
+  console.log(cards?.data?.cards);
   return (
     <>
       {cards?.data?.cards.length === 0 ? (
@@ -122,8 +123,7 @@ const StackedCard = () => {
                 category={card.categoryName}
                 hasBonus={card.hasBonus}
                 visitCount={card.visitCount}
-                target={3}
-                // target={perks?.followingBonus?.target}
+                target={card?.target}
               />
             </Animated.View>
           ))}
