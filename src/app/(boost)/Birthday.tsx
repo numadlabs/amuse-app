@@ -17,7 +17,7 @@ import { useRouter } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
 import useBoostInfoStore from "@/lib/store/boostInfoStore";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { updateUserInfo } from "@/lib/service/mutationHelper";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
@@ -39,12 +39,12 @@ const Birthday = () => {
     // Add keyboard listeners to adjust button position
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
-      () => setButtonPosition("top")
+      () => setButtonPosition("top"),
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
-      () => setButtonPosition("bottom")
+      () => setButtonPosition("bottom"),
     );
 
     // Clean up listeners on component unmount
@@ -119,7 +119,7 @@ const Birthday = () => {
     };
     const formattedDate = date.toLocaleDateString(
       Platform.OS === "ios" ? "en-US" : "en-GB",
-      options
+      options,
     );
     return formattedDate;
   };

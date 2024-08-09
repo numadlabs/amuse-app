@@ -20,7 +20,7 @@ interface AuthProps {
     nickname: string,
     email: string,
     password: string,
-    verificationCode: number
+    verificationCode: number,
   ) => Promise<any>;
   onLogin?: (email: string, password: string) => Promise<any>;
   onLogout?: () => Promise<any>;
@@ -55,9 +55,8 @@ export const AuthProvider = ({ children }: any) => {
         const token = await SecureStore.getItemAsync(SERVER_SETTING.TOKEN_KEY);
         if (token) {
           const userId = await loadUserId();
-          axiosClient.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${token}`;
+          axiosClient.defaults.headers.common["Authorization"] =
+            `Bearer ${token}`;
           setAuthState({
             token: token,
             authenticated: true,
@@ -91,7 +90,7 @@ export const AuthProvider = ({ children }: any) => {
     nickname: string,
     email: string,
     password: string,
-    verificationCode: number
+    verificationCode: number,
   ) => {
     try {
       const result = await axiosClient.post(`/auth/register`, {
@@ -109,17 +108,16 @@ export const AuthProvider = ({ children }: any) => {
           userId: result.data.data.user.id,
         });
 
-        axiosClient.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${result.data.data.auth.accessToken}`;
+        axiosClient.defaults.headers.common["Authorization"] =
+          `Bearer ${result.data.data.auth.accessToken}`;
 
         await SecureStore.setItemAsync(
           SERVER_SETTING.TOKEN_KEY,
-          result.data.data.auth.accessToken
+          result.data.data.auth.accessToken,
         );
         await SecureStore.setItemAsync(
           SERVER_SETTING.REFRESH_TOKEN_KEY,
-          result.data.data.auth.refreshToken
+          result.data.data.auth.refreshToken,
         );
         await saveUserId(result.data.data.user.id);
         return result.data;
@@ -142,7 +140,7 @@ export const AuthProvider = ({ children }: any) => {
         // that falls out of the range of 2xx
         console.error(
           "Server responded with error status:",
-          error.response.status
+          error.response.status,
         );
         return { error: true, msg: "Server error. Please try again later." };
       } else if (error.request) {
@@ -175,17 +173,16 @@ export const AuthProvider = ({ children }: any) => {
           userId: result.data.data.user.id,
         });
 
-        axiosClient.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${result.data.data.auth.accessToken}`;
+        axiosClient.defaults.headers.common["Authorization"] =
+          `Bearer ${result.data.data.auth.accessToken}`;
 
         await SecureStore.setItemAsync(
           SERVER_SETTING.TOKEN_KEY,
-          result.data.data.auth.accessToken
+          result.data.data.auth.accessToken,
         );
         await SecureStore.setItemAsync(
           SERVER_SETTING.REFRESH_TOKEN_KEY,
-          result.data.data.auth.refreshToken
+          result.data.data.auth.refreshToken,
         );
         await saveUserId(result.data.data.user.id);
 
@@ -201,7 +198,7 @@ export const AuthProvider = ({ children }: any) => {
         // that falls out of the range of 2xx
         console.error(
           "Server responded with error status:",
-          error.response.status
+          error.response.status,
         );
         return { error: true, msg: "Server error. Please try again later." };
       } else if (error.request) {

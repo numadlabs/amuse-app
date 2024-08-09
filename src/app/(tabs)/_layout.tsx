@@ -18,6 +18,8 @@ const Layout = ({ navigation }) => {
   const [notification, setNotification] = useState("");
   const [fontsLoaded] = useFonts({
     Sora: require("@/public/fonts/Sora-Regular.otf"),
+    SoraBold: require("@/public/fonts/Sora-Bold.otf"),
+    SoraThin: require("@/public/fonts/Sora-Thin.otf"),
   });
 
   useEffect(() => {

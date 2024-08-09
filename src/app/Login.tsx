@@ -118,8 +118,8 @@ function Login() {
                   style={{
                     fontSize: 24,
                     color: Color.base.White,
-                    fontWeight: "bold",
-                    fontFamily: "Sora",
+                    fontWeight: "600",
+                    fontFamily: "SoraBold",
                     textAlign: "center",
                     marginBottom: 24,
                   }}
