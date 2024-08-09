@@ -65,7 +65,6 @@ const Restaurant = () => {
     setBottomSheet(!bottomSheet);
   };
   console.log("data: ", restaurantsData);
-  
 
   const pressed = useSharedValue(false);
   const animatedStyles = useAnimatedStyle(() => ({
@@ -90,10 +89,8 @@ const Restaurant = () => {
   const handleGetAcard = async () => {
     setIsClaimLoading(true);
     if (authState.userId) {
-      await createGetAcardMutation(restaurantsData?.cardId)
-      .then((response) => {
+      await createGetAcardMutation(restaurantsData?.cardId).then((response) => {
         console.log(response);
-        
       });
     }
   };
@@ -117,7 +114,9 @@ const Restaurant = () => {
           category={restaurantsData?.categoryName}
           hasBonus={false}
           visitCount={restaurantsData?.visitCount || 0}
-          target={perks?.followingBonus?.target}
+          target={
+            restaurantsData?.perkOccurence - perks?.followingBonus?.current
+          }
         />
 
         {isLoading ? (
