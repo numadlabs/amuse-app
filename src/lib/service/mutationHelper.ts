@@ -104,7 +104,9 @@ export async function forgotPassword({
       return response;
     });
 }
-
+export async function deleteUser() {
+  return axiosClient.delete("/users");
+}
 export async function updatePassword({
   prefix,
   telNumber,

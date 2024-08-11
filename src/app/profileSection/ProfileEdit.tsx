@@ -1,4 +1,12 @@
-import { Cake, Camera, Location, Sms, User } from "iconsax-react-native";
+import {
+  Cake,
+  Camera,
+  CloseCircle,
+  DocumentDownload,
+  Location,
+  Sms,
+  User,
+} from "iconsax-react-native";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -10,23 +18,35 @@ import {
   Platform,
   TouchableOpacity,
   Image,
+  Modal,
 } from "react-native";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
 import Header from "@/components/layout/Header";
 import Color from "@/constants/Color";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserById } from "@/lib/service/queryHelper";
 import { useAuth } from "@/context/AuthContext";
-import { updateUserInfo } from "@/lib/service/mutationHelper";
+import { deleteUser, updateUserInfo } from "@/lib/service/mutationHelper";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "@/components/ui/Button";
 import { router } from "expo-router";
 import { userKeys } from "@/lib/service/keysHelper";
-import { width } from "@/lib/utils";
+import { height, width } from "@/lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
-import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  SlideInDown,
+  SlideOutDown,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import { SERVER_SETTING } from "@/constants/serverSettings";
+import Close from "@/components/icons/Close";
 
 const ProfileEdit = () => {
   const { authState } = useAuth();
@@ -34,6 +54,7 @@ const ProfileEdit = () => {
     queryKey: userKeys.info,
     queryFn: () => getUserById(authState.userId),
   });
+
   const [loading, setLoading] = useState(false);
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
@@ -41,16 +62,36 @@ const ProfileEdit = () => {
   const [profilePicture, setProfilePicture] = useState(null);
   const [initialDate, setInitialDate] = useState(new Date());
   const [dateOfBirth, setDateOfBirth] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
   const [dataChanged, setDataChanged] = useState(false);
   const [focusedInput, setFocusedInput] = useState<
     "Nickname" | "Email" | "Area" | "Birthday" | null
   >(null);
   const [error, setError] = useState("");
+  const pressed = useSharedValue(false);
   const [emailError, setEmailError] = useState("");
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const isProfilePrefilled =
     user?.user?.email && user?.user?.location && user?.user?.dateOfBirth;
+  const animatedStyles = useAnimatedStyle(() => ({
+    transform: [
+      { scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) },
+    ],
+  }));
+
+  const { mutateAsync: deleteUserMutation } = useMutation({
+    mutationFn: deleteUser,
+  });
+
+  const handleDeleteUser = async () => {
+    setLoading(true);
+    await deleteUserMutation().then(() => {
+      toggleBottomSheet;
+      setLoading(false);
+      router.replace("/Login");
+    });
+  };
 
   useEffect(() => {
     if (user) {
@@ -84,6 +125,63 @@ const ProfileEdit = () => {
     }
   };
   const queryClient = useQueryClient();
+
+  const generateCSV = (userData) => {
+    const headers = [
+      "Nickname",
+      "Email",
+      "Location",
+      "Date of Birth",
+      "Balance",
+      "Converted Balance",
+      "Created At",
+      "Visit Count",
+      "Profile Picture Link",
+    ];
+
+    const profilePicLink = userData.user.profilePicture
+      ? `${SERVER_SETTING.PROFILE_PIC_LINK}${userData.user.profilePicture}`
+      : "";
+
+    const data = [
+      userData.user.nickname,
+      userData.user.email,
+      userData.user.location,
+      userData.user.dateOfBirth || "",
+      userData.user.balance,
+      userData.convertedBalance,
+      userData.user.createdAt,
+      userData.user.visitCount,
+      profilePicLink,
+    ];
+
+    return headers.join(",") + "\n" + data.map((item) => `"${item}"`).join(",");
+  };
+
+  const toggleBottomSheet = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const exportUserData = async () => {
+    try {
+      const csvContent = generateCSV(user);
+      const fileUri = FileSystem.documentDirectory + "user_data.csv";
+
+      await FileSystem.writeAsStringAsync(fileUri, csvContent, {
+        encoding: FileSystem.EncodingType.UTF8,
+      });
+
+      if (!(await Sharing.isAvailableAsync())) {
+        alert("Sharing isn't available on your platform");
+        return;
+      }
+
+      await Sharing.shareAsync(fileUri);
+    } catch (error) {
+      console.error("Error exporting user data:", error);
+      alert("Failed to export user data");
+    }
+  };
 
   const triggerUpdateUser = async () => {
     setLoading(true);
@@ -448,6 +546,72 @@ const ProfileEdit = () => {
                   <Text style={{ color: Color.base.White, fontSize: 12, lineHeight: 16, fontWeight: '700' }}>{`${progress * 100}%`}</Text>
                 </View>
               </Animated.View> */}
+
+              <TouchableOpacity
+                style={{
+                  marginTop: 24,
+                }}
+                onPress={() => exportUserData()}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    paddingVertical: 12,
+                    borderWidth: 1,
+                    borderColor: Color.Gray.gray400,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 48,
+                    gap: 12,
+                  }}
+                >
+                  <DocumentDownload size={24} color={Color.base.White} />
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontWeight: "600",
+                      lineHeight: 24,
+                      color: Color.base.White,
+                    }}
+                  >
+                    Download Data
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  marginTop: 12,
+                }}
+                onPress={toggleBottomSheet}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    paddingVertical: 12,
+                    borderWidth: 1,
+                    borderColor: Color.System.systemError,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 48,
+                    gap: 12,
+                  }}
+                >
+                  <DocumentDownload
+                    size={24}
+                    color={Color.System.systemError}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontWeight: "600",
+                      lineHeight: 24,
+                      color: Color.System.systemError,
+                    }}
+                  >
+                    Delete Account
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </LinearGradient>
           </View>
         </ScrollView>
@@ -506,6 +670,183 @@ const ProfileEdit = () => {
             )}
           </Animated.View>
         )}
+
+        {isOpen &&
+          (loading ? (
+            <View style={{ flex: 1 }}>
+              <ActivityIndicator />
+            </View>
+          ) : (
+            <Modal transparent={true}>
+              <Animated.View
+                entering={FadeIn}
+                exiting={FadeOut}
+                style={[
+                  {
+                    position: "absolute",
+                    backgroundColor: "rgba(0, 0, 0, 0.25)",
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    zIndex: 98,
+                  },
+                  animatedStyles,
+                ]}
+              />
+              <Animated.View
+                entering={SlideInDown.springify().damping(18)}
+                exiting={SlideOutDown.springify()}
+                style={[
+                  {
+                    backgroundColor: Color.Gray.gray600,
+                    height: height / 1.5,
+                    bottom: 0,
+                    width: width,
+                    zIndex: 99,
+                    position: "absolute",
+                    borderTopStartRadius: 32,
+                    borderTopEndRadius: 32,
+                    gap: 24,
+                    padding: 16,
+                  },
+                  animatedStyles,
+                ]}
+              >
+                <View
+                  style={{
+                    paddingVertical: 8,
+                    justifyContent: "center",
+                    alignContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      lineHeight: 24,
+                      color: Color.base.White,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Delete account
+                  </Text>
+                  <TouchableOpacity onPress={toggleBottomSheet}>
+                    <View
+                      style={{
+                        backgroundColor: Color.Gray.gray400,
+                        borderRadius: 48,
+                        padding: 8,
+                        width: 32,
+                        alignContent: "center",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        aspectRatio: 1,
+                        position: "absolute",
+                        left: 85,
+                        top: -18,
+                      }}
+                    >
+                      <Close />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ alignItems: "center", gap: 16, padding: 16 }}>
+                  <CloseCircle size={96} color={Color.System.systemError} />
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: "bold",
+                      color: Color.System.systemError,
+                      marginBottom: 8,
+                      textAlign: "center",
+                    }}
+                  >
+                    Are you sure you want to delete your account?
+                  </Text>
+                  <Text
+                    style={{
+                      lineHeight: 20,
+                      fontSize: 14,
+                      color: Color.Gray.gray50,
+                      textAlign: "center",
+                    }}
+                  >
+                    This action cannot be undone. You will lose:
+                  </Text>
+                  <View style={{ width: "100%" }}>
+                    <Text
+                      style={{
+                        lineHeight: 20,
+                        fontSize: 14,
+                        color: Color.Gray.gray50,
+                      }}
+                    >
+                      • All your personal data
+                    </Text>
+                    <Text
+                      style={{
+                        lineHeight: 20,
+                        fontSize: 14,
+                        color: Color.System.systemError,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      • Your entire in-app balance
+                    </Text>
+                    <Text
+                      style={{
+                        lineHeight: 20,
+                        fontSize: 14,
+                        color: Color.Gray.gray50,
+                      }}
+                    >
+                      • All associated content, history, and achievements
+                    </Text>
+                  </View>
+                  <Text
+                    style={{
+                      lineHeight: 20,
+                      fontSize: 14,
+                      color: Color.Gray.gray50,
+                      textAlign: "center",
+                      marginTop: 8,
+                    }}
+                  >
+                    Please consider using your in-app balance before deleting
+                    your account.
+                  </Text>
+
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginTop: 16,
+                      width: "100%",
+                    }}
+                  >
+                    <Button
+                      variant="secondary"
+                      textStyle="secondary"
+                      onPress={toggleBottomSheet}
+                      style={{ flex: 1, marginRight: 8 }}
+                    >
+                      <Text style={{ color: Color.base.White }}>No</Text>
+                    </Button>
+                    <Button
+                      variant="primary"
+                      textStyle="primary"
+                      onPress={handleDeleteUser}
+                      style={{ flex: 1, marginLeft: 8 }}
+                    >
+                      <Text style={{ color: Color.base.White }}>Yes</Text>
+                    </Button>
+                  </View>
+                </View>
+              </Animated.View>
+            </Modal>
+          ))}
       </SafeAreaView>
     </>
   );
