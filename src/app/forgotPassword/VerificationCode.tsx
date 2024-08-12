@@ -155,39 +155,14 @@ const styles = StyleSheet.create({
   topText: {
     ...H5,
     color: Color.base.White,
-    fontWeight: "bold",
-    fontSize: 24,
   },
   bottomText: {
     ...CAPTION_1_REGULAR,
     color: Color.Gray.gray100,
-    fontSize: 12,
-    lineHeight: 16,
   },
   buttonWrapper: {
     marginBottom: 10,
     paddingHorizontal: 16,
-  },
-  textStyle: {
-    height: 48,
-    width: 48,
-    borderWidth: 1,
-    borderRadius: 16,
-    fontSize: 16,
-    textAlign: "center",
-    padding: 12,
-    color: Color.base.White,
-  },
-  filledStyle: {
-    overflow: "hidden",
-  },
-  titleStyle: {
-    fontSize: 24,
-    marginVertical: 14,
-  },
-  safeAreaStyle: {
-    marginHorizontal: 20,
-    marginTop: 24,
   },
 });
 

@@ -383,6 +383,7 @@ const ProfileEdit = () => {
                       style={{
                         color: Color.System.systemError,
                         ...BODY_2_REGULAR,
+                        ...BODY_2_REGULAR,
                         marginVertical: 12,
                       }}
                     >
@@ -615,7 +616,7 @@ const ProfileEdit = () => {
             {loading ? (
               <ActivityIndicator size="small" color="white" />
             ) : (
-              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+              <Text style={{ ...BUTTON_48 }}>
                 Save changes
               </Text>
             )}
@@ -649,8 +650,7 @@ const ProfileEdit = () => {
               >
                 <Text
                   style={{
-                    fontSize: 15,
-                    fontWeight: "600",
+                    ...BUTTON_48,
                     color: Color.base.White,
                   }}
                 >
@@ -868,17 +868,6 @@ const styles = StyleSheet.create({
     position: "relative",
     marginBottom: 24,
   },
-  camera: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    backgroundColor: "black",
-    width: 32,
-    height: 32,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 32,
-  },
   input: {
     height: 48,
     width: "100%",
@@ -889,42 +878,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     gap: 12,
   },
-  profileName: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginTop: 16,
-  },
   profileContainer: {
-    alignItems: "center",
-  },
-  profileStatsContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: 16,
-  },
-  profileStats: {
-    alignItems: "center",
-    justifyContent: "center",
-    flex: 1,
-    gap: 8,
-  },
-  profileConfig: {
-    gap: 16,
-    marginTop: 24,
-  },
-  configContainer: {
-    backgroundColor: Color.base.White,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    justifyContent: "space-between",
-    flexDirection: "row",
-    padding: 16,
-    borderRadius: 16,
     alignItems: "center",
   },
 });

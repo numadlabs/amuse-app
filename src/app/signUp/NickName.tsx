@@ -19,7 +19,7 @@ import { useSignUpStore } from "@/lib/store/signUpStore";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeIn } from "react-native-reanimated";
 import Header from "@/components/layout/Header";
-import { BODY_1_REGULAR, CAPTION_1_REGULAR, H5 } from "@/constants/typography";
+import { BODY_1_REGULAR, BUTTON_48, CAPTION_1_REGULAR, H5 } from "@/constants/typography";
 const NickName = () => {
   const { nickname, setNickname, password, verificationCode, email, reset } =
     useSignUpStore();
@@ -132,7 +132,7 @@ const NickName = () => {
                         entering={FadeIn}
                         style={{
                           color: Color.System.systemError,
-                          fontSize: 15,
+                          ...BUTTON_48,
                           textAlign: "center",
                         }}
                       >

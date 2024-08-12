@@ -89,8 +89,6 @@ const styles = StyleSheet.create({
   topText: {
     ...H6,
     color: Color.base.White,
-    fontWeight: "bold",
-    fontSize: 24,
     marginTop: 8,
     textAlign: "center",
   },
@@ -98,7 +96,6 @@ const styles = StyleSheet.create({
     ...BODY_2_REGULAR,
     marginTop: 12,
     color: Color.Gray.gray100,
-    fontSize: 16,
     textAlign: "center",
   },
   buttonContainer: {

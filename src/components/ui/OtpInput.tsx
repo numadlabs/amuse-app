@@ -1,4 +1,5 @@
 import Color from "@/constants/Color";
+import { BODY_1_REGULAR } from "@/constants/typography";
 import React, { useState, useRef, useEffect } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray300,
     borderRadius: 16,
     textAlign: "center",
-    fontSize: 20,
+    ...BODY_1_REGULAR,
     marginHorizontal: 5,
   },
 });

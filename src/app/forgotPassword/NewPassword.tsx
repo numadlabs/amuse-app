@@ -312,11 +312,6 @@ const styles = StyleSheet.create({
     color: Color.base.White,
   },
 
-  bottomText: {
-    color: Color.Gray.gray400,
-    fontSize: 12,
-  },
-
   inputContainer: {
     gap: 12,
   },
@@ -328,7 +323,7 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray100,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    fontSize: 16,
+    ...BODY_1_REGULAR,
   },
 
   inputFocused: {
@@ -338,7 +333,7 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray600,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    fontSize: 16,
+    ...BODY_1_REGULAR,
   },
 
   ruleContainer: {
@@ -348,7 +343,6 @@ const styles = StyleSheet.create({
 
   ruleText: {
     ...CAPTION_1_REGULAR,
-    fontSize: 14,
     color: Color.Gray.gray100,
   },
 

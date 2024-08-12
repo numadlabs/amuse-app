@@ -22,7 +22,6 @@ const _layout = () => {
           headerTitleStyle: {
             ...BODY_1_BOLD,
             color: "white",
-            fontSize: 16,
           },
           headerStyle: { backgroundColor: Color.Gray.gray600 },
         }}

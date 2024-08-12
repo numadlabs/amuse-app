@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, Platform } from "react-native";
 import { ArrowUp2, ArrowDown2 } from "iconsax-react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
+import { BODY_1_MEDIUM, BODY_2_REGULAR } from "@/constants/typography";
 
 const Accordion = ({ text, title }) => {
   const [open, setOpen] = useState(false);
@@ -34,7 +35,7 @@ const Accordion = ({ text, title }) => {
         }}
       >
         <Text
-          style={{ fontSize: 16, fontWeight: "600", color: Color.Gray.gray50 }}
+          style={{ ...BODY_1_MEDIUM, color: Color.Gray.gray50 }}
         >
           {title}
         </Text>
@@ -51,7 +52,7 @@ const Accordion = ({ text, title }) => {
               <Text
                 style={{
                   color: Color.Gray.gray100,
-                  fontSize: 14,
+                  ...BODY_2_REGULAR,
                   marginTop: 8,
                 }}
               >

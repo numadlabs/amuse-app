@@ -176,32 +176,6 @@ const styles = StyleSheet.create({
     marginBottom: 80,
     paddingHorizontal: 16,
   },
-  textStyle: {
-    height: 48,
-    width: 48,
-    borderWidth: 1,
-    borderRadius: 16,
-    fontSize: 16,
-    textAlign: "center",
-    padding: 12,
-    color: Color.base.White,
-  },
-  filledStyle: {
-    overflow: "hidden",
-  },
-  titleStyle: {
-    fontSize: 24,
-    marginVertical: 14,
-  },
-  safeAreaStyle: {
-    marginHorizontal: 20,
-    marginTop: 24,
-  },
-
-  topPosition: {
-    justifyContent: "flex-start",
-    marginBottom: "auto",
-  },
 });
 
 export default SplitOTP;

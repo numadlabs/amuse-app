@@ -4,6 +4,7 @@ import Header from "@/components/layout/Header";
 import Color from "@/constants/Color";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Accordion from "@/components/ui/Accordion";
+import { BODY_1_MEDIUM, BODY_1_REGULAR, H6 } from "@/constants/typography";
 
 const TermsAndCondo = () => {
   return (
@@ -137,16 +138,12 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray300,
   },
   header: {
-    fontWeight: "600",
-    fontSize: 20,
-    fontFamily: "Sora",
+    ...H6,
     color: Color.base.White,
     marginTop: 20,
   },
   subHeader: {
-    fontWeight: "600",
-    fontSize: 16,
-    fontFamily: "Sora",
+    ...BODY_1_MEDIUM,
     color: Color.base.White,
   },
   body: {

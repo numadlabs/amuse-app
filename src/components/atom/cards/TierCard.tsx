@@ -6,6 +6,7 @@ import TierStar from "@/app/components/icons/TierStar";
 import Tick from "../../icons/Tick";
 import Animated from "react-native-reanimated";
 import ProgressBar from "../../sections/ProgressBar";
+import { BODY_2_REGULAR, CAPTION_1_MEDIUM, H6 } from "@/constants/typography";
 
 interface TierCardProps {
   isActive: boolean;
@@ -83,9 +84,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   title: {
-    fontSize: 20,
-    lineHeight: 24,
-    fontWeight: "700",
+    ...H6,
     color: Color.base.White,
   },
   perkContainer: {
@@ -93,18 +92,14 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   perkText: {
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "400",
+    ...BODY_2_REGULAR,
   },
   progressContainer: {
     gap: 8,
   },
   progressText: {
     color: Color.base.White,
-    fontSize: 12,
-    lineHeight: 16,
-    fontWeight: "700",
+    ...CAPTION_1_MEDIUM,
     textAlign: "right",
   },
 });

@@ -6,6 +6,7 @@ import { Reserve } from "iconsax-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Button from "../../ui/Button";
 import { SERVER_SETTING } from "@/constants/serverSettings";
+import { BODY_1_BOLD, BUTTON_32, STYLIZED_UPPERCASE_REGULAR } from "@/constants/typography";
 
 interface ResListCardProp {
   marker: RestaurantType;
@@ -117,11 +118,9 @@ const HomeRestList: React.FC<ResListCardProp> = ({ marker, onPress }) => {
                     height: "100%",
                     width: "100%",
                     marginLeft: 8,
-                    alignItems: "center",
-                    justifyContent: "flex-end",
                   }}
                 >
-                  <Text style={{ fontSize: 11, color: Color.base.White }}>
+                  <Text style={{ ...BUTTON_32, lineHeight: 14, color: Color.base.White }}>
                     Add
                   </Text>
                 </View>
@@ -151,12 +150,11 @@ const styles = StyleSheet.create({
     height: 92,
   },
   title: {
-    fontSize: 16,
-    fontWeight: "bold",
+    ...BODY_1_BOLD,
     color: Color.base.White,
   },
   category: {
-    fontSize: 12,
+    ...STYLIZED_UPPERCASE_REGULAR,
     color: Color.Gray.gray100,
   },
   dot: {

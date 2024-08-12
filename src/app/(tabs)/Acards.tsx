@@ -95,22 +95,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     alignItems: "center",
   },
-  searchBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: Color.Gray.gray50,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderRadius: 16,
-    marginRight: 10,
-  },
-  searchInput: {
-    width: "70%",
-    color: Color.Gray.gray600,
-    fontSize: 16,
-    marginLeft: 10,
-  },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",

@@ -23,7 +23,7 @@ import {
 } from "@/lib/service/queryHelper";
 import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
 import useLocationStore from "@/lib/store/userLocation";
-import { BODY_2_MEDIUM, BUTTON_40, BUTTON_48, CAPTION_1_REGULAR } from "@/constants/typography";
+import { BODY_1_BOLD, BODY_2_MEDIUM, BUTTON_40, BUTTON_48, CAPTION_1_REGULAR } from "@/constants/typography";
 
 interface OwnedProps {
   // userCardId: string;
@@ -232,9 +232,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerText: {
-    fontWeight: "700",
-    fontSize: 16,
-    lineHeight: 20,
+    ...BODY_1_BOLD,
     color: Color.base.White,
   },
   container: {

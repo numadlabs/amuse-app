@@ -286,32 +286,9 @@ const styles = StyleSheet.create({
   topText: {
     color: Color.base.White,
     ...H5,
-    
-  },
-  bottomText: {
-    color: Color.Gray.gray400,
-    fontSize: 12,
   },
   inputContainer: {
     gap: 12,
-  },
-  input: {
-    height: 48,
-    borderWidth: 1,
-    borderRadius: 16,
-    borderColor: Color.Gray.gray100,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
-  },
-  inputFocused: {
-    height: 48,
-    borderWidth: 1,
-    borderRadius: 16,
-    borderColor: Color.Gray.gray600,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
   },
   ruleContainer: {
     marginTop: 16,

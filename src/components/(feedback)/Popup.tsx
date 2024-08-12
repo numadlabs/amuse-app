@@ -8,6 +8,7 @@ import Animated, {
   ReduceMotion,
 } from "react-native-reanimated";
 import TickCircle from "../icons/TickCircle";
+import { H6 } from "@/constants/typography";
 
 interface PopupProps {
   isVisible: boolean;
@@ -86,14 +87,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   title: {
-    fontSize: 24,
+    ...H6,
     color: Color.base.White,
-    fontWeight: "bold",
-  },
-  message: {
-    fontSize: 16,
-    color: Color.Gray.gray50,
-    fontWeight: "normal",
   },
   buttonContainer: {
     marginTop: 16,

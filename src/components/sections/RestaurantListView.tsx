@@ -12,7 +12,6 @@ import { useRouter } from "expo-router";
 import RestListCard from "@/atom/cards/RestListCard";
 import Color from "@/constants/Color";
 import { ArrowRight2, ArrowLeft2 } from "iconsax-react-native";
-import Pagination from "@/atom/Pagination";
 import { restaurantKeys } from "@/lib/service/keysHelper";
 import { getRestaurants } from "@/lib/service/queryHelper";
 import { RestaurantType } from "@/lib/types";

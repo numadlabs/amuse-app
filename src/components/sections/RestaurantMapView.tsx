@@ -409,29 +409,6 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
-  absoluteBox: {
-    position: "absolute",
-    bottom: 20,
-    width: "100%",
-  },
-  button: {
-    backgroundColor: "#212121",
-    padding: 16,
-    margin: 16,
-    alignItems: "center",
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  boxIcon: {
-    position: "absolute",
-    left: 15,
-    top: 18,
-    zIndex: 1,
-  },
   scrollView: {
     position: "absolute",
     bottom: 70,
@@ -439,90 +416,5 @@ const styles = StyleSheet.create({
     right: 0,
     paddingVertical: 10,
     marginBottom: 36,
-  },
-  endPadding: {
-    paddingRight: width - CARD_WIDTH,
-  },
-
-  card: {
-    // padding: 10,
-    elevation: 2,
-    backgroundColor: "#FFF",
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-    marginHorizontal: 10,
-    shadowColor: "#000",
-    shadowRadius: 5,
-    shadowOpacity: 0.3,
-    // shadowOffset: { x: 2, y: -2 },
-    height: CARD_HEIGHT,
-    width: CARD_WIDTH,
-    overflow: "hidden",
-  },
-  cardImage: {
-    flex: 3,
-    width: "100%",
-    height: "100%",
-    alignSelf: "center",
-  },
-  textContent: {
-    flex: 2,
-    padding: 10,
-  },
-  cardtitle: {
-    fontSize: 12,
-    // marginTop: 5,
-    fontWeight: "bold",
-  },
-  cardDescription: {
-    fontSize: 12,
-    color: "#444",
-  },
-  signIn: {
-    width: "100%",
-    padding: 5,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 3,
-  },
-  textSign: {
-    fontSize: 14,
-    fontWeight: "bold",
-  },
-  gpsButton: {
-    backgroundColor: Color.base.White,
-    padding: 12,
-    borderRadius: 48,
-    zIndex: 10,
-    width: 48,
-    height: 48,
-    alignSelf: "flex-end",
-    margin: 16,
-    ...Platform.select({
-      ios: {
-        shadowColor: Color.Gray.gray500,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 12,
-      },
-      android: {
-        elevation: 12,
-      },
-    }),
-  },
-  locationToggleContainer: {
-    position: "absolute",
-    top: 20,
-    right: 20,
-  },
-  locationToggle: {
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-  },
-  locationToggleText: {
-    color: "#333",
   },
 });

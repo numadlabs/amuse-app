@@ -82,9 +82,7 @@ const Balance: React.FC<BalanceProps> = ({
               <Text
                 style={{
                   color: Color.Gray.gray50,
-                  fontSize: 12,
-                  lineHeight: 16,
-                  fontWeight: "400",
+                  ...CAPTION_1_REGULAR,
                 }}
               >
                 ≈
@@ -95,7 +93,6 @@ const Balance: React.FC<BalanceProps> = ({
               />
               <Text
                 style={{
-                  fontSize: 12,
                   color: Color.Gray.gray50,
                   ...CAPTION_1_REGULAR,
                 }}
@@ -127,30 +124,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     gap: 12,
   },
-  balanceInfo: {
-    gap: 4,
-  },
-  balanceLabel: {
-    fontSize: 12,
-    color: Color.Gray.gray50,
-    fontWeight: "600",
-    lineHeight: 16,
-  },
-  balanceAmount: {
-    fontSize: 28,
-    lineHeight: 36,
-    color: Color.base.White,
-    fontWeight: "400",
-  },
   balanceStripesContainer: {
     position: "absolute",
     top: -60,
     right: -72,
     transform: [{ rotate: "270deg" }],
-  },
-  blurContainer: {
-    borderRadius: 20,
-    overflow: "hidden",
   },
 });
 

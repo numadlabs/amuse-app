@@ -113,7 +113,7 @@ const RestListCard: React.FC<ResListCardProp> = ({ marker, onPress }) => {
                     justifyContent: "flex-end",
                   }}
                 >
-                  <Text style={{ ...BUTTON_32, color: Color.base.White }}>
+                  <Text style={{ ...BUTTON_32, lineHeight: 14, color: Color.base.White }}>
                     Add
                   </Text>
                 </View>

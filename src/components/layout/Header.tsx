@@ -11,6 +11,7 @@ import {
 import { ArrowLeft } from "iconsax-react-native";
 import Color from "../../constants/Color";
 import { useRouter } from "expo-router";
+import { BODY_1_BOLD } from "@/constants/typography";
 
 interface NavbarProps {
   title: string;
@@ -49,8 +50,7 @@ const styles = StyleSheet.create({
     left: 16,
   },
   title: {
-    fontSize: 16,
-    fontWeight: "bold",
+    ...BODY_1_BOLD,
     color: Color.Gray.gray50,
   },
 });

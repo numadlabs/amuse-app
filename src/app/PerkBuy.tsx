@@ -18,7 +18,7 @@ import { useAuth } from "@/context/AuthContext";
 import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { BODY_2_REGULAR, CAPTION_2_MEDIUM, H6 } from "@/constants/typography";
+import { BODY_2_REGULAR, BUTTON_48, CAPTION_2_MEDIUM, H6 } from "@/constants/typography";
 
 const PerkBuy = () => {
   const { name, id, price, restaurantId } = useLocalSearchParams();
@@ -153,8 +153,7 @@ const PerkBuy = () => {
           ) : (
             <Text
               style={{
-                fontSize: 15,
-                fontWeight: "600",
+                ...BUTTON_48,
                 color: Color.base.White,
               }}
             >{`Redeem for ${price} Bitcoin`}</Text>

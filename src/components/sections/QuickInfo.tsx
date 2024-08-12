@@ -12,7 +12,7 @@ import ProgressBar from "./ProgressBar";
 import { width } from "@/lib/utils";
 import { LinearGradient } from "expo-linear-gradient";
 import CloseSm from "../icons/CloseSm";
-import { BODY_1_BOLD, CAPTION_1_REGULAR } from "@/constants/typography";
+import { BODY_1_BOLD, CAPTION_1_BOLD, CAPTION_1_REGULAR } from "@/constants/typography";
 
 const QuickInfo = ({ user, onPress }) => {
   const [progress, setProgress] = useState(0);
@@ -78,9 +78,7 @@ const QuickInfo = ({ user, onPress }) => {
             <Text
               style={{
                 color: Color.base.White,
-                fontSize: 12,
-                lineHeight: 16,
-                fontWeight: "700",
+                ...CAPTION_1_BOLD,
               }}
             >{`${progress * 100}%`}</Text>
           </View>
@@ -119,24 +117,7 @@ const styles = StyleSheet.create({
   },
   bottomTitle: {
     ...CAPTION_1_REGULAR,
-    fontSize: 12,
     color: Color.Gray.gray100,
-  },
-  button: {
-    borderRadius: 48,
-    backgroundColor: Color.base.Black,
-    paddingVertical: 12,
-  },
-  buttonText: {
-    color: Color.Gray.gray50,
-    fontSize: 13,
-    fontWeight: "bold",
-  },
-  progressPerc: {
-    fontSize: 10,
-    color: Color.base.White,
-    fontWeight: "bold",
-    marginLeft: 8,
   },
   closeButton: {
     zIndex: 99,

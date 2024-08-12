@@ -41,7 +41,7 @@ import Close from "@/components/icons/Close";
 import { usePushNotifications } from "@/hooks/usePushNotification";
 import moment from "moment";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
-import { BODY_2_MEDIUM, BODY_2_REGULAR, H6 } from "@/constants/typography";
+import { BODY_2_MEDIUM, BODY_2_REGULAR, BUTTON_40, H6 } from "@/constants/typography";
 
 const Page = () => {
   const router = useRouter();
@@ -253,9 +253,8 @@ const Page = () => {
               >
                 <Text
                   style={{
-                    fontWeight: "bold",
                     color: Color.base.White,
-                    fontSize: 16,
+                    ...BUTTON_40,
                   }}
                 >
                   See all
@@ -319,7 +318,6 @@ const Page = () => {
                 <Text
                   style={{
                     ...H6,
-                    fontSize: 18,
                     color: Color.base.White,
                   }}
                 >
@@ -486,32 +484,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
-  },
-  modal: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: Color.base.White,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    padding: 16,
-  },
-  closeButton: {
-    marginTop: 16,
-    backgroundColor: Color.Gray.gray50,
-    borderRadius: 32,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    alignItems: "center",
-  },
-  closeButtonContent: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  closeButtonText: {
-    fontWeight: "bold",
-    color: Color.Gray.gray600,
-    fontSize: 16,
   },
 });

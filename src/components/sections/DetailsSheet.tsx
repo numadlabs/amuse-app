@@ -213,29 +213,6 @@ const styles = StyleSheet.create({
   content: {
     backgroundColor: Color.Gray.gray600,
   },
-  textContainer: {
-    alignItems: "center",
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 24,
-    color: Color.Gray.gray600,
-    fontWeight: "bold",
-  },
-  message: {
-    fontSize: 16,
-    color: Color.Gray.gray400,
-    fontWeight: "normal",
-  },
-  buttonContainer: {
-    alignItems: "center",
-  },
-  buttonText: {
-    color: Color.System.systemSuccess,
-    fontSize: 18,
-    fontWeight: "bold",
-  },
   attribute: {
     flexDirection: "row",
     gap: 12,
@@ -251,16 +228,6 @@ const styles = StyleSheet.create({
     color: Color.System.systemInformation,
     ...BODY_1_REGULAR,
     flex: 1,
-  },
-  membershipContainer: {
-    flexDirection: "row",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  imageContainer: {
-    width: "100%",
-    height: 200,
   },
   dot: {
     width: 10,

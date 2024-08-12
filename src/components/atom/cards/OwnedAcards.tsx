@@ -5,6 +5,7 @@ import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SERVER_SETTING } from "@/constants/serverSettings";
+import { BODY_1_BOLD, CAPTION_1_REGULAR } from "@/constants/typography";
 // Restaurant desc endpoint deeree nemeh
 
 interface OwnedAcardsProp {
@@ -111,12 +112,11 @@ const styles = StyleSheet.create({
     height: 92,
   },
   title: {
-    fontSize: 16,
-    fontWeight: "bold",
+    ...BODY_1_BOLD,
     color: Color.base.White,
   },
   category: {
-    fontSize: 12,
+    ...CAPTION_1_REGULAR,
     color: Color.Gray.gray100,
   },
   dot: {

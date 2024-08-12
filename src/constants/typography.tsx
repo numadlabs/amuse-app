@@ -11,37 +11,6 @@ const FONT_FAMILY_SORA_BOLD="SoraBold"
 const FONT_FAMILY_SORA_MEDIUM="SoraMedium"
 const FONT_FAMILY_SORA_SEMI_BOLD="SoraSemiBold"
 
-// FONT SIZE
-// const FONT_SIZE_64 = styledScaleSize(64);
-// const FONT_SIZE_56 = styledScaleSize(56);
-// const FONT_SIZE_40 = styledScaleSize(40);
-// const FONT_SIZE_36 = styledScaleSize(36);
-// const FONT_SIZE_32 = styledScaleSize(32);
-// const FONT_SIZE_28 = styledScaleSize(28);
-// const FONT_SIZE_24 = styledScaleSize(24);
-// const FONT_SIZE_20 = styledScaleSize(20);
-// const FONT_SIZE_16 = styledScaleSize(16);
-// const FONT_SIZE_15 = styledScaleSize(15);
-// const FONT_SIZE_14 = styledScaleSize(14);
-// const FONT_SIZE_13 = styledScaleSize(13);
-// const FONT_SIZE_12 = styledScaleSize(12);
-// const FONT_SIZE_11 = styledScaleSize(11);
-// const FONT_SIZE_10 = styledScaleSize(10);
-// LINE HEIGHT
-// const LINE_HEIGHT_78 = styledScaleSize(78);
-// const LINE_HEIGHT_68 = styledScaleSize(68);
-// const LINE_HEIGHT_48 = styledScaleSize(48);
-// const LINE_HEIGHT_44 = styledScaleSize(44);
-// const LINE_HEIGHT_40 = styledScaleSize(40);
-// const LINE_HEIGHT_36 = styledScaleSize(36);
-// const LINE_HEIGHT_32 = styledScaleSize(32);
-// const LINE_HEIGHT_24 = styledScaleSize(24);
-// const LINE_HEIGHT_20 = styledScaleSize(20);
-// const LINE_HEIGHT_18 = styledScaleSize(18);
-// const LINE_HEIGHT_16 = styledScaleSize(16);
-// const LINE_HEIGHT_12 = styledScaleSize(12);
-
-
 const FONT_STYLE_NORMAL = "normal";
 const LETTER_SPACING = 0;
 const CR_LETTER_SPACING = -0.48;

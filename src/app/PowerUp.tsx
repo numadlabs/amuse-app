@@ -22,6 +22,7 @@ import { io } from "socket.io-client";
 import { useAuth } from "@/context/AuthContext";
 import QRCode from "react-native-qrcode-svg";
 import { SERVER_SETTING } from "@/constants/serverSettings";
+import { BODY_2_REGULAR, H6 } from "@/constants/typography";
 
 const { width } = Dimensions.get("window");
 
@@ -150,9 +151,7 @@ const PowerUp = () => {
             <View style={{ gap: 12, alignItems: "center" }}>
               <Text
                 style={{
-                  fontSize: 20,
-                  fontWeight: "700",
-                  lineHeight: 24,
+                  ...H6,
                   color: Color.base.White,
                 }}
               >
@@ -161,9 +160,8 @@ const PowerUp = () => {
               <Text
                 style={{
                   color: Color.Gray.gray100,
-                  fontSize: 14,
                   textAlign: "center",
-                  lineHeight: 18,
+                  ...BODY_2_REGULAR,
                 }}
               >
                 Show this to your waiter to redeem.{"\n"} Do not worry, they are
@@ -188,10 +186,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     backgroundColor: Color.Gray.gray300,
   },
-  imageContainer: {
-    width: "100%",
-    height: 200,
-  },
   closeButton: {
     marginTop: 12,
   },
@@ -208,81 +202,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  powerUpGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    marginTop: 16,
-    gap: 15,
-  },
-  textImageContainer: {
-    borderRadius: 32,
-    overflow: "hidden",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  textImageContainer1: {
-    padding: 20,
-    gap: 20,
-    borderRadius: 32,
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-  },
-  textContainer: {
-    justifyContent: "flex-start",
-    flexDirection: "column",
-    width: "100%",
-    gap: 4,
-  },
-  bottomDetails: {
-    flexDirection: "column",
-    gap: 4,
-    alignItems: "center",
-  },
-  bottomDetails1: {
-    flexDirection: "column",
-    gap: 4,
-  },
-  bottomDetailsContainer: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-    width: "100%",
-    paddingHorizontal: 16,
-    alignContent: "center",
-  },
-  image: {
-    width: 300,
-    height: 300,
-    borderRadius: 16,
-  },
-  attrContainer: {
-    marginTop: 32,
-    marginBottom: 40,
-  },
-  attribute: {
-    flexDirection: "row",
-    gap: 12,
-    alignItems: "center",
-  },
-  attributeText: {
-    color: Color.Gray.gray600,
-    fontSize: 16,
-  },
-  membershipContainer: {
-    flexDirection: "row",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  buttonContainer: {
-    position: "absolute",
-    zIndex: 20,
-    bottom: 30,
-    width: "100%",
-    paddingHorizontal: 16,
   },
   qrContainer: {
     alignItems: "center",

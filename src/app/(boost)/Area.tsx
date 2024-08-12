@@ -166,8 +166,6 @@ const styles = StyleSheet.create({
   topText: {
     ...H5,
     color: Color.base.White,
-    fontSize: 24,
-    fontWeight: "bold",
     textAlign: "center",
   },
   bottomText: {
@@ -198,8 +196,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 16,
     color: Color.Gray.gray50,
-    fontSize: 16,
-    lineHeight: 20,
     backgroundColor: Color.Gray.gray500,
   },
   listView: {
@@ -214,8 +210,7 @@ const styles = StyleSheet.create({
     display: "none",
   },
   suggestion: {
-    fontSize: 16,
-    lineHeight: 20,
+    ...BODY_1_REGULAR,
     paddingVertical: 8,
     color: Color.Gray.gray100,
   },

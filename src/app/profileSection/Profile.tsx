@@ -33,7 +33,7 @@ import { userKeys } from "@/lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SERVER_SETTING } from "@/constants/serverSettings";
-import { BODY_1_REGULAR, BODY_2_REGULAR, H5, H6 } from "@/constants/typography";
+import { BODY_1_REGULAR, BODY_2_REGULAR, BUTTON_48, H5, H6 } from "@/constants/typography";
 
 const Profile = () => {
   const { currentLocation } = useLocationStore();
@@ -344,9 +344,8 @@ const Profile = () => {
                   <LogoutCurve color={Color.Gray.gray100} />
                   <Text
                     style={{
-                      fontSize: 16,
                       color: Color.Gray.gray50,
-                      fontWeight: "bold",
+                      ...BUTTON_48,
                     }}
                   >
                     Log out
