@@ -46,11 +46,8 @@ import Animated, {
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import { SERVER_SETTING } from "@/constants/serverSettings";
-<<<<<<< HEAD
-import { BODY_1_REGULAR, BODY_2_MEDIUM } from "@/constants/typography";
-=======
+import { BODY_1_REGULAR, BODY_2_MEDIUM, BODY_2_REGULAR } from "@/constants/typography";
 import Close from "@/components/icons/Close";
->>>>>>> main
 
 const ProfileEdit = () => {
   const { authState } = useAuth();
@@ -385,9 +382,7 @@ const ProfileEdit = () => {
                     <Text
                       style={{
                         color: Color.System.systemError,
-                        fontSize: 14,
-                        lineHeight: 18,
-                        fontWeight: "600",
+                        ...BODY_2_REGULAR,
                         marginVertical: 12,
                       }}
                     >
@@ -439,9 +434,8 @@ const ProfileEdit = () => {
                     <Text
                       style={{
                         color: Color.System.systemError,
-                        fontSize: 14,
+                        ...BODY_1_REGULAR,
                         lineHeight: 30,
-                        fontWeight: "600",
                         marginVertical: 12,
                       }}
                     >
