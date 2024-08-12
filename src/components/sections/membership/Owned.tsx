@@ -23,7 +23,13 @@ import {
 } from "@/lib/service/queryHelper";
 import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
 import useLocationStore from "@/lib/store/userLocation";
-import { BODY_1_BOLD, BODY_2_MEDIUM, BUTTON_40, BUTTON_48, CAPTION_1_REGULAR } from "@/constants/typography";
+import {
+  BODY_1_BOLD,
+  BODY_2_MEDIUM,
+  BUTTON_40,
+  BUTTON_48,
+  CAPTION_1_REGULAR,
+} from "@/constants/typography";
 
 interface OwnedProps {
   // userCardId: string;
@@ -136,6 +142,20 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
               </Text>
             </View>
           </LinearGradient>
+          <TouchableOpacity
+            style={styles.container}
+            onPress={notOwnedNavigation}
+          >
+            <View style={styles.perkDetails}>
+              <TicketStar size={28} color={Color.base.White} />
+              <Text style={styles.perkText}>{perks?.followingBonus?.name}</Text>
+            </View>
+            <View>
+              <Text style={styles.perkCount}>
+                {perks?.followingBonus?.current}/{perks?.followingBonus?.target}
+              </Text>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity onPress={handleNavigation}>
             <View style={styles.addPerkButton}>
               <Add color={Color.base.White} size={24} />
@@ -239,6 +259,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignContent: "center",
     width: "100%",
+    marginTop: 16,
     alignItems: "center",
     justifyContent: "space-between",
     paddingVertical: 23,

@@ -5,7 +5,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SuLayout() {
   return (
-    <SafeAreaView style={{flex: 1}}>
     <>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Email" />
@@ -14,6 +13,5 @@ export default function SuLayout() {
         <Stack.Screen name="NickName" />
       </Stack>
     </>
-    </SafeAreaView>
   );
 }

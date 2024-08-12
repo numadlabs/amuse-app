@@ -6,10 +6,10 @@ import { isPlatformIOS } from "./layouts";
 
 // const { styledScaleSize } = Utils;
 // FONT FAMILY
-const FONT_FAMILY_SORA_REGULAR="Sora"
-const FONT_FAMILY_SORA_BOLD="SoraBold"
-const FONT_FAMILY_SORA_MEDIUM="SoraMedium"
-const FONT_FAMILY_SORA_SEMI_BOLD="SoraSemiBold"
+const FONT_FAMILY_SORA_REGULAR = "Sora";
+const FONT_FAMILY_SORA_BOLD = "SoraBold";
+const FONT_FAMILY_SORA_MEDIUM = "SoraMedium";
+const FONT_FAMILY_SORA_SEMI_BOLD = "SoraSemiBold";
 
 const FONT_STYLE_NORMAL = "normal";
 const LETTER_SPACING = 0;

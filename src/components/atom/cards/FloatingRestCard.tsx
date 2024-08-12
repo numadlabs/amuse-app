@@ -17,7 +17,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import Button from "../../ui/Button";
 import { WalletAdd1 } from "iconsax-react-native";
 import { SERVER_SETTING } from "@/constants/serverSettings";
-import { BODY_1_MEDIUM, BODY_2_REGULAR, BUTTON_32, CAPTION_1_REGULAR } from "@/constants/typography";
+import {
+  BODY_1_MEDIUM,
+  BODY_2_REGULAR,
+  BUTTON_32,
+  CAPTION_1_REGULAR,
+} from "@/constants/typography";
 
 const { width } = Dimensions.get("window");
 
@@ -132,7 +137,7 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                   style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
                 >
                   <Reserve color={Color.Gray.gray100} size={16} />
-                  <Text style={{ color: Color.Gray.gray50 [Symbol]}}>
+                  <Text style={{ color: Color.Gray.gray50 }}>
                     {marker.visitCount === null ? 0 : marker.visitCount}{" "}
                     Check-ins
                   </Text>
@@ -243,7 +248,9 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                   style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
                 >
                   <Reserve color={Color.Gray.gray100} size={16} />
-                  <Text style={{ ...CAPTION_1_REGULAR, color: Color.Gray.gray50 }}>
+                  <Text
+                    style={{ ...CAPTION_1_REGULAR, color: Color.Gray.gray50 }}
+                  >
                     {marker.visitCount === null ? 0 : marker.visitCount}{" "}
                     Check-ins
                   </Text>

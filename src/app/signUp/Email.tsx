@@ -180,7 +180,12 @@ function Email() {
                       exiting={FadeOut}
                       style={{ justifyContent: "center", alignItems: "center" }}
                     >
-                      <Text style={{ color: Color.System.systemError, ...CAPTION_1_REGULAR  }}>
+                      <Text
+                        style={{
+                          color: Color.System.systemError,
+                          ...CAPTION_1_REGULAR,
+                        }}
+                      >
                         {error}
                       </Text>
                     </Animated.View>
@@ -217,7 +222,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     right: 0,
-    bottom: 10,
+    bottom: 20,
     paddingHorizontal: 20,
   },
   bottomPosition: {
