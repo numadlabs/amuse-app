@@ -3,6 +3,7 @@ import React from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import Color from '@/constants/Color'
 import { Bitcoin } from 'iconsax-react-native'
+import { BODY_2_MEDIUM, CAPTION_1_REGULAR, CAPTION_2_REGULAR } from '@/constants/typography'
 
 
 interface NotificationProps {
@@ -42,9 +43,7 @@ const NotificationCard: React.FC<NotificationProps> = ({title, description, time
                 <Text
                   style={{
                     color: Color.base.White,
-                    fontSize: 14,
-                    lineHeight: 18,
-                    fontWeight: '600',
+                    ...BODY_2_MEDIUM,
                   }}
                 >
                   {title}
@@ -52,8 +51,7 @@ const NotificationCard: React.FC<NotificationProps> = ({title, description, time
                 <Text
                   style={{
                     color: Color.Gray.gray50,
-                    fontSize: 12,
-                    fontWeight: '400'
+                    ...CAPTION_1_REGULAR,
                   }}
                 >
                   {description}
@@ -62,7 +60,7 @@ const NotificationCard: React.FC<NotificationProps> = ({title, description, time
             </View>
           </View>
           <View style={{ position: 'absolute', top: 12, right: 12 }}>
-            <Text style={{ fontSize: 10, lineHeight: 12, color: Color.base.White }}>{time}</Text>
+            <Text style={{ ...CAPTION_2_REGULAR, color: Color.base.White }}>{time}</Text>
           </View>
         </LinearGradient>
       </View>

@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import Color from "@/constants/Color";
+import { BODY_2_REGULAR } from "@/constants/typography";
 
 interface TimetableProps {
   title: string;
@@ -25,11 +26,11 @@ const TimeAccordion: React.FC<TimetableProps> = ({
           width: "100%",
         }}
       >
-        <Text style={{ fontSize: 14, color: Color.Gray.gray100 }}>{title}</Text>
+        <Text style={{ ...BODY_2_REGULAR, color: Color.Gray.gray100 }}>{title}</Text>
         {isOffDay ? (
           <Text>-</Text>
         ) : (
-          <Text style={{ fontSize: 14, color: Color.Gray.gray50 }}>
+          <Text style={{ ...BODY_2_REGULAR, color: Color.Gray.gray50 }}>
             {opensAt}-{closesAt}
           </Text>
         )}

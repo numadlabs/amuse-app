@@ -41,6 +41,7 @@ import Close from "@/components/icons/Close";
 import { usePushNotifications } from "@/hooks/usePushNotification";
 import moment from "moment";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
+import { BODY_2_MEDIUM, BODY_2_REGULAR, BUTTON_40, H6 } from "@/constants/typography";
 
 const Page = () => {
   const router = useRouter();
@@ -147,8 +148,7 @@ const Page = () => {
         <View style={{ marginTop: 16, gap: 12 }}>
           <Text
             style={{
-              fontSize: 14,
-              fontWeight: "600",
+              ...BODY_2_MEDIUM,
               color: Color.Gray.gray100,
               paddingHorizontal: 16,
             }}
@@ -222,8 +222,7 @@ const Page = () => {
         >
           <Text
             style={{
-              fontSize: 14,
-              fontWeight: "600",
+              ...BODY_2_MEDIUM,
               color: Color.Gray.gray100,
             }}
           >
@@ -254,9 +253,8 @@ const Page = () => {
               >
                 <Text
                   style={{
-                    fontWeight: "bold",
                     color: Color.base.White,
-                    fontSize: 16,
+                    ...BUTTON_40,
                   }}
                 >
                   See all
@@ -319,10 +317,8 @@ const Page = () => {
               >
                 <Text
                   style={{
-                    fontSize: 20,
-                    lineHeight: 24,
+                    ...H6,
                     color: Color.base.White,
-                    fontWeight: "bold",
                   }}
                 >
                   About your Balance
@@ -353,10 +349,9 @@ const Page = () => {
               />
               <Text
                 style={{
+                  ...BODY_2_REGULAR,
                   textAlign: "center",
-                  fontSize: 14,
                   color: Color.Gray.gray50,
-                  lineHeight: 18,
                 }}
               >
                 You earned ALYS Bitcoin, which is faster and cheaper to use but
@@ -425,10 +420,8 @@ const Page = () => {
               >
                 <Text
                   style={{
-                    fontSize: 20,
-                    lineHeight: 24,
+                    ...H6,
                     color: Color.base.White,
-                    fontWeight: "bold",
                   }}
                 >
                   Membership
@@ -461,8 +454,7 @@ const Page = () => {
                 />
                 <Text
                   style={{
-                    lineHeight: 18,
-                    fontSize: 14,
+                    ...BODY_2_REGULAR,
                     color: Color.Gray.gray50,
                     textAlign: "center",
                   }}
@@ -492,32 +484,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
-  },
-  modal: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: Color.base.White,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    padding: 16,
-  },
-  closeButton: {
-    marginTop: 16,
-    backgroundColor: Color.Gray.gray50,
-    borderRadius: 32,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    alignItems: "center",
-  },
-  closeButtonContent: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  closeButtonText: {
-    fontWeight: "bold",
-    color: Color.Gray.gray600,
-    fontSize: 16,
   },
 });

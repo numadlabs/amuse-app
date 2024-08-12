@@ -8,6 +8,7 @@ import Animated, {
   useSharedValue,
   ReduceMotion,
 } from "react-native-reanimated";
+import { BUTTON_40 } from "@/constants/typography";
 
 const Acards = () => {
   const [showMapView, setShowMapView] = useState(true);
@@ -94,22 +95,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     alignItems: "center",
   },
-  searchBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: Color.Gray.gray50,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderRadius: 16,
-    marginRight: 10,
-  },
-  searchInput: {
-    width: "70%",
-    color: Color.Gray.gray600,
-    fontSize: 16,
-    marginLeft: 10,
-  },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -123,9 +108,7 @@ const styles = StyleSheet.create({
     width: "48%",
   },
   buttonText: {
-    fontSize: 13,
-    lineHeight: 16,
-    fontWeight: "bold",
+    ...BUTTON_40,
     color: Color.base.White,
   },
   activeButton: {

@@ -21,6 +21,7 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import { SERVER_SETTING } from "@/constants/serverSettings";
+import { BODY_1_BOLD, BODY_2_BOLD, CAPTION_1_MEDIUM, CAPTION_1_REGULAR, H3, STYLIZED_UPPERCASE_REGULAR } from "@/constants/typography";
 
 // In the APassCard component
 interface ApassProp {
@@ -188,9 +189,7 @@ const APassCard: React.FC<ApassProp> = ({
                             entering={FadeIn}
                             exiting={FadeOut}
                             style={{
-                              fontSize: 32,
-                              lineHeight: 40,
-                              fontWeight: "700",
+                              ...H3,
                               color: Color.base.White,
                             }}
                           >
@@ -198,9 +197,7 @@ const APassCard: React.FC<ApassProp> = ({
                           </AnimatedText>
                           <Text
                             style={{
-                              fontSize: 12,
-                              lineHeight: 16,
-                              fontWeight: "600",
+                              ...CAPTION_1_MEDIUM,
                               color: Color.base.White,
                             }}
                           >
@@ -236,9 +233,7 @@ const APassCard: React.FC<ApassProp> = ({
                           exiting={FadeOut}
                           style={[
                             {
-                              fontWeight: "700",
-                              fontSize: 14,
-                              lineHeight: 18,
+                              ...BODY_2_BOLD,
                               color: Color.base.White,
                             },
                             animatedStyles,
@@ -249,9 +244,7 @@ const APassCard: React.FC<ApassProp> = ({
 
                         <Text
                           style={{
-                            fontWeight: "400",
-                            fontSize: 10,
-                            lineHeight: 12,
+                            ...CAPTION_1_REGULAR,
                             color: Color.base.White,
                           }}
                         >
@@ -293,16 +286,13 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: Color.base.White,
-    fontSize: 16,
     marginBottom: 10,
-    fontWeight: "bold",
+    ...BODY_1_BOLD,
     width: 210,
   },
   buttonText: {
     color: Color.Gray.gray50,
-    fontSize: 12,
-    lineHeight: 16,
-    fontWeight: "bold",
+    ...STYLIZED_UPPERCASE_REGULAR,
   },
   logo: {
     width: 40,

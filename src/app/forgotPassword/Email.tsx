@@ -20,6 +20,7 @@ import Header from "@/components/layout/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { checkEmail, sendOtp } from "@/lib/service/mutationHelper";
 import { router } from "expo-router";
+import { BODY_1_REGULAR, CAPTION_1_REGULAR, H5 } from "@/constants/typography";
 
 function ForgotPassword() {
   const { email, setEmail } = usePasswordStore();
@@ -64,7 +65,7 @@ function ForgotPassword() {
   const inputContainerRef = React.useRef(null);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+    <>
       <Header title="Forgot password?" />
       <Steps activeStep={1} />
       <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
@@ -128,9 +129,7 @@ function ForgotPassword() {
                         onBlur={() => setFocusedInput(null)}
                         style={{
                           height: 40,
-                          fontSize: 16,
-                          fontWeight: "400",
-                          lineHeight: 20,
+                          ...BODY_1_REGULAR,
                           color: Color.base.White,
                           width: "100%",
                         }}
@@ -156,7 +155,7 @@ function ForgotPassword() {
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </>
   );
 }
 
@@ -171,7 +170,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     right: 0,
-    bottom: 10,
+    bottom: 20,
     paddingHorizontal: 20,
   },
   bottomPosition: {
@@ -179,15 +178,13 @@ const styles = StyleSheet.create({
   },
 
   topText: {
+    ...H5,
     color: Color.base.White,
-    fontSize: 24,
-    fontWeight: "bold",
     textAlign: "center",
   },
   bottomText: {
+    ...CAPTION_1_REGULAR,
     color: Color.Gray.gray100,
-    fontSize: 12,
-    lineHeight: 16,
     textAlign: "center",
   },
 });

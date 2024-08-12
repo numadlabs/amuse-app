@@ -17,6 +17,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import Button from "../../ui/Button";
 import { WalletAdd1 } from "iconsax-react-native";
 import { SERVER_SETTING } from "@/constants/serverSettings";
+import {
+  BODY_1_MEDIUM,
+  BODY_2_REGULAR,
+  BUTTON_32,
+  CAPTION_1_REGULAR,
+} from "@/constants/typography";
 
 const { width } = Dimensions.get("window");
 
@@ -152,9 +158,7 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                 >
                   <Text
                     style={{
-                      fontSize: 11,
-                      lineHeight: 16,
-                      fontWeight: "600",
+                      ...BUTTON_32,
                       color: Color.Gray.gray50,
                     }}
                   >
@@ -244,7 +248,9 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                   style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
                 >
                   <Reserve color={Color.Gray.gray100} size={16} />
-                  <Text style={{ color: Color.Gray.gray50 }}>
+                  <Text
+                    style={{ ...CAPTION_1_REGULAR, color: Color.Gray.gray50 }}
+                  >
                     {marker.visitCount === null ? 0 : marker.visitCount}{" "}
                     Check-ins
                   </Text>
@@ -258,16 +264,14 @@ const FloatingRestaurantCard: React.FC<FloatingRestaurantCardProps> = ({
                     alignItems: "center",
                     justifyContent: "center",
                     alignContent: "center",
-                    paddingHorizontal: 20,
+                    paddingHorizontal: 24,
                     borderWidth: 1,
                     borderColor: Color.Gray.gray50,
                   }}
                 >
                   <Text
                     style={{
-                      fontSize: 11,
-                      lineHeight: 16,
-                      fontWeight: "600",
+                      ...BUTTON_32,
                       color: Color.Gray.gray50,
                     }}
                   >
@@ -324,12 +328,11 @@ const styles = StyleSheet.create({
   },
 
   cardtitle: {
-    fontSize: 18,
     color: Color.base.White,
-    fontWeight: "bold",
+    ...BODY_1_MEDIUM,
   },
   cardDescription: {
-    fontSize: 14,
+    ...BODY_2_REGULAR,
     color: Color.Gray.gray100,
   },
   signIn: {
@@ -337,10 +340,6 @@ const styles = StyleSheet.create({
 
     alignItems: "center",
     borderRadius: 3,
-  },
-  textSign: {
-    fontSize: 16,
-    fontWeight: "bold",
   },
 });
 export default FloatingRestaurantCard;

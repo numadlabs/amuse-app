@@ -8,6 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "react-native";
 import NotificationIcon from "@/components/icons/NotificationIcon";
 import { height } from "@/lib/utils";
+import { BODY_1_MEDIUM, CAPTION_1_REGULAR } from "@/constants/typography";
 
 const Notification = () => {
   //TODO notifcations fetch hiih
@@ -101,14 +102,11 @@ const styles = StyleSheet.create({
   },
   Title: {
     color: Color.base.White,
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: "bold",
+    ...BODY_1_MEDIUM,
   },
   Description: {
     color: Color.Gray.gray100,
-    fontSize: 12,
-    lineHeight: 18,
+    ...CAPTION_1_REGULAR,
     textAlign: "center",
   },
 });

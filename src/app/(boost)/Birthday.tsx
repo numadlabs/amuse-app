@@ -21,6 +21,7 @@ import { QueryClient, useMutation } from "@tanstack/react-query";
 import { updateUserInfo } from "@/lib/service/mutationHelper";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
+import { BUTTON_40, BUTTON_48, CAPTION_1_REGULAR, H5 } from "@/constants/typography";
 
 const Birthday = () => {
   // State for managing button position based on keyboard visibility
@@ -178,7 +179,7 @@ const Birthday = () => {
                   <ActivityIndicator size="small" color="white" />
                 ) : (
                   <Text
-                    style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                    style={{ color: "white", ...BUTTON_48, fontWeight: "bold" }}
                   >
                     Finish
                   </Text>
@@ -205,8 +206,7 @@ const Birthday = () => {
                 >
                   <Text
                     style={{
-                      fontSize: 15,
-                      fontWeight: "600",
+                      ...BUTTON_48,
                       color: Color.base.White,
                     }}
                   >
@@ -253,13 +253,12 @@ const styles = StyleSheet.create({
   },
   topText: {
     color: Color.base.White,
-    fontSize: 24,
-    fontWeight: "bold",
+    ...H5,
     textAlign: "center",
   },
   bottomText: {
     color: Color.Gray.gray100,
-    fontSize: 12,
+    ...CAPTION_1_REGULAR,
     textAlign: "center",
   },
   datePickerContainer: {

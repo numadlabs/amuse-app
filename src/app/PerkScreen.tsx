@@ -12,6 +12,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Color from "@/constants/Color";
 import moment from "moment";
 import APassCard from "@/components/atom/cards/APassCard";
+import { BODY_2_REGULAR, H5 } from "@/constants/typography";
 const PerkScreen = () => {
   const { restaurantId, powerUp } = useLocalSearchParams();
   const queryClient = useQueryClient();
@@ -84,9 +85,7 @@ const PerkScreen = () => {
             >
               <Text
                 style={{
-                  fontWeight: "700",
-                  fontSize: 24,
-                  lineHeight: 32,
+                  ...H5,
                   color: Color.base.White,
                 }}
               >
@@ -94,9 +93,7 @@ const PerkScreen = () => {
               </Text>
               <Text
                 style={{
-                  fontWeight: "400",
-                  fontSize: 14,
-                  lineHeight: 18,
+                  ...BODY_2_REGULAR,
                   color: Color.Gray.gray50,
                 }}
               >

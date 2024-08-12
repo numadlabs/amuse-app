@@ -84,7 +84,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   searchInput: {
-    fontSize: 16,
     color: Color.Gray.gray600,
   },
 });

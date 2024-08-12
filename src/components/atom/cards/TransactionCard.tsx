@@ -2,6 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { Export, Import } from "iconsax-react-native";
 import Color from "@/constants/Color";
+import { BODY_2_MEDIUM, CAPTION_1_REGULAR } from "@/constants/typography";
 
 interface TransactionCardProps {
   amount: number;
@@ -33,10 +34,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
       <View style={{ gap: 8, width: "50%" }}>
         <Text
           style={{
-            fontWeight: "600",
-            fontSize: 14,
-            fontFamily: "Sora",
-            lineHeight: 18,
+            ...BODY_2_MEDIUM,
             color: Color.Gray.gray50,
             textAlign: "left",
           }}
@@ -46,11 +44,8 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
         <Text
           style={{
             color: Color.Gray.gray100,
-            fontSize: 12,
-            fontWeight: "400",
-            lineHeight: 16,
+            ...CAPTION_1_REGULAR,
             textAlign: "left",
-            fontFamily: "Sora",
           }}
         >
           {formattedDate}
@@ -58,10 +53,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
       </View>
       <Text
         style={{
-          fontFamily: "Sora",
-          fontSize: 14,
-          fontWeight: "600",
-          lineHeight: 18,
+          ...BODY_2_MEDIUM,
           textAlign: "left",
           color: Color.Gray.gray50,
         }}

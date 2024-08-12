@@ -36,6 +36,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { CardSend } from "iconsax-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TransactionCard from "@/components/atom/cards/TransactionCard";
+import { BODY_2_REGULAR, BUTTON_40, H6 } from "@/constants/typography";
 
 const Wallet = () => {
   const { authState } = useAuth();
@@ -89,9 +90,7 @@ const Wallet = () => {
               <Text
                 style={{
                   color: Color.Gray.gray100,
-                  fontWeight: "600",
-                  lineHeight: 16,
-                  fontSize: 13,
+                  ...BUTTON_40,
                 }}
               >
                 Withdraw
@@ -102,9 +101,7 @@ const Wallet = () => {
           <View>
             <Text
               style={{
-                lineHeight: 24,
-                fontSize: 20,
-                fontWeight: "700",
+                ...H6,
                 color: Color.base.White,
                 marginHorizontal: 16,
               }}
@@ -181,10 +178,8 @@ const Wallet = () => {
                 >
                   <Text
                     style={{
-                      fontSize: 20,
-                      lineHeight: 24,
+                      ...H6,
                       color: Color.base.White,
-                      fontWeight: "bold",
                     }}
                   >
                     About your Balance
@@ -216,9 +211,8 @@ const Wallet = () => {
                 <Text
                   style={{
                     textAlign: "center",
-                    fontSize: 14,
+                    ...BODY_2_REGULAR,
                     color: Color.Gray.gray50,
-                    lineHeight: 18,
                   }}
                 >
                   You earned ALYS Bitcoin, which is faster and cheaper to use

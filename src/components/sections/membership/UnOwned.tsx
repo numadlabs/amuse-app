@@ -15,6 +15,7 @@ import { router } from "expo-router";
 import * as Linking from "expo-linking";
 import { RestaurantType } from "@/lib/types";
 import Animated, { SlideInDown } from "react-native-reanimated";
+import { BODY_1_BOLD, BODY_1_REGULAR } from "@/constants/typography";
 
 interface ownedProps {
   restaurant: RestaurantType;
@@ -40,8 +41,7 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant }) => {
           >
             <Text
               style={{
-                fontWeight: "bold",
-                fontSize: 16,
+                ...BODY_1_BOLD,
                 color: Color.base.White,
               }}
             >
@@ -60,8 +60,7 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant }) => {
           >
             <Text
               style={{
-                fontWeight: "bold",
-                fontSize: 16,
+                ...BODY_1_BOLD,
                 color: Color.base.White,
               }}
             >
@@ -85,8 +84,7 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant }) => {
           >
             <Text
               style={{
-                fontWeight: "bold",
-                fontSize: 16,
+                ...BODY_1_BOLD,
                 color: Color.base.White,
               }}
             >
@@ -104,8 +102,7 @@ const UnOwned: React.FC<ownedProps> = ({ restaurant }) => {
           >
             <Text
               style={{
-                fontWeight: "bold",
-                fontSize: 16,
+                ...BODY_1_BOLD,
                 color: Color.base.White,
               }}
             >
@@ -134,12 +131,12 @@ const styles = StyleSheet.create({
   },
   attributeText: {
     color: Color.Gray.gray50,
-    fontSize: 16,
+    ...BODY_1_REGULAR,
     flex: 1,
   },
   attributeLocText: {
     color: Color.System.systemInformation,
-    fontSize: 16,
+    ...BODY_1_REGULAR,
     width: "90%",
   },
   buttonContainer: {

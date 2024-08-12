@@ -21,6 +21,7 @@ import Close from "@/components/icons/Close";
 import { io } from "socket.io-client";
 import { useAuth } from "@/context/AuthContext";
 import QRCode from "react-native-qrcode-svg";
+import { BODY_2_REGULAR, H6 } from "@/constants/typography";
 
 const { width } = Dimensions.get("window");
 const markerSize = 250;
@@ -44,7 +45,7 @@ const MyQrModal = () => {
   socket.on("tap-scan", (data) => {
     console.log("Tap scan emitted: ", data);
     const userCard = cards?.data?.cards.find(
-      (card) => card.restaurantId === data?.data?.restaurantId
+      (card) => card.restaurantId === data?.data?.restaurantId,
     );
     if (!userCard) {
       router.back();
@@ -112,91 +113,86 @@ const MyQrModal = () => {
 
   return (
     <>
-      <SafeAreaView style={{ flex: 1, marginTop: 20 }}>
-        <View style={{ flex: 1 }}>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: Color.Gray.gray600,
-              alignItems: "center",
-            }}
-          >
-            {loading ? (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <ActivityIndicator />
-              </View>
-            ) : (
-              <View style={{ alignItems: "center", marginTop: 100, gap: 32 }}>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    lineHeight: 24,
-                    color: Color.base.White,
-                    fontWeight: "700",
-                  }}
-                >
-                  My QR Code
-                </Text>
-                {/* <TouchableOpacity onPress={handleScanButtonPress}> */}
-                <LinearGradient
-                  colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                  style={[styles.button]}
-                >
-                  {loading ? (
-                    <ActivityIndicator />
-                  ) : (
-                    <QRCode
-                      backgroundColor="transparent"
-                      color={Color.base.White}
-                      size={width / 1.3}
-                      value={`data:image/png;base64,${qrData}`}
-                    />
-                  )}
-                </LinearGradient>
-                {/* </TouchableOpacity> */}
-                <View style={{ marginHorizontal: 32 }}>
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      fontSize: 14,
-                      lineHeight: 18,
-                      color: Color.Gray.gray100,
-                    }}
-                  >
-                    Show this to your waiter to check-in.{"\n"} Do not worry,
-                    they are pros.
-                  </Text>
-                </View>
-              </View>
-            )}
-            <TouchableOpacity
-              style={[
-                styles.closeButton,
-                {
-                  backgroundColor: Color.Gray.gray400,
-                  width: 48,
-                  height: 48,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderRadius: 100,
-                },
-              ]}
-              onPress={() => {
-                router.back();
+      <View style={{ flex: 1 }}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Color.Gray.gray600,
+            alignItems: "center",
+          }}
+        >
+          {loading ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center",
               }}
             >
-              <Close />
-            </TouchableOpacity>
-          </View>
+              <ActivityIndicator />
+            </View>
+          ) : (
+            <View style={{ alignItems: "center", marginTop: 100, gap: 32 }}>
+              <Text
+                style={{
+                  ...H6,
+                  color: Color.base.White,
+                }}
+              >
+                My QR Code
+              </Text>
+              {/* <TouchableOpacity onPress={handleScanButtonPress}> */}
+              <LinearGradient
+                colors={[Color.Brand.card.start, Color.Brand.card.end]}
+                style={[styles.button]}
+              >
+                {loading ? (
+                  <ActivityIndicator />
+                ) : (
+                  <QRCode
+                    backgroundColor="transparent"
+                    color={Color.base.White}
+                    size={width / 1.3}
+                    value={`data:image/png;base64,${qrData}`}
+                  />
+                )}
+              </LinearGradient>
+              {/* </TouchableOpacity> */}
+              <View style={{ marginHorizontal: 32 }}>
+                <Text
+                  style={{
+                    ...BODY_2_REGULAR,
+                    textAlign: "center",
+                    color: Color.Gray.gray100,
+                  }}
+                >
+                  Show this to your waiter to check-in.{"\n"} Do not worry, they
+                  are pros.
+                </Text>
+              </View>
+            </View>
+          )}
+          <TouchableOpacity
+            style={[
+              styles.closeButton,
+              {
+                backgroundColor: Color.Gray.gray400,
+                width: 48,
+                height: 48,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 100,
+              },
+            ]}
+            onPress={() => {
+              router.back();
+            }}
+          >
+            <Close />
+          </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      </View>
     </>
   );
 };

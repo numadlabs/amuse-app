@@ -1,7 +1,7 @@
 import React from "react";
-import Header from "@/components/layout/Header";
 import { Stack } from "expo-router";
-import { Platform, SafeAreaView, StatusBar } from "react-native";
+import { Platform, StatusBar } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SuLayout() {
   return (

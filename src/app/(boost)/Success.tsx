@@ -8,6 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { userKeys } from "@/lib/service/keysHelper";
 import TickCircle from "@/components/icons/TickCircle";
 import useBoostInfoStore from "@/lib/store/boostInfoStore";
+import { BODY_2_REGULAR, H6 } from "@/constants/typography";
 
 const Success = () => {
   // Initialize the query client
@@ -86,16 +87,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   topText: {
+    ...H6,
     color: Color.base.White,
-    fontWeight: "bold",
-    fontSize: 24,
     marginTop: 8,
     textAlign: "center",
   },
   bottomText: {
+    ...BODY_2_REGULAR,
     marginTop: 12,
     color: Color.Gray.gray100,
-    fontSize: 16,
     textAlign: "center",
   },
   buttonContainer: {

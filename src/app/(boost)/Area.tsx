@@ -16,6 +16,7 @@ import useBoostInfoStore from "@/lib/store/boostInfoStore";
 import { LinearGradient } from "expo-linear-gradient";
 import { height, width } from "@/lib/utils";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { BODY_1_BOLD, BODY_1_REGULAR, CAPTION_1_REGULAR, H4, H5 } from "@/constants/typography";
 
 const Area = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
@@ -163,14 +164,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   topText: {
+    ...H5,
     color: Color.base.White,
-    fontSize: 24,
-    fontWeight: "bold",
     textAlign: "center",
   },
   bottomText: {
+    ...CAPTION_1_REGULAR,
     color: Color.Gray.gray100,
-    fontSize: 12,
     textAlign: "center",
   },
   inputGradient: {
@@ -192,11 +192,10 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray300,
   },
   textInput: {
+    ...BODY_1_REGULAR,
     paddingHorizontal: 16,
     borderRadius: 16,
     color: Color.Gray.gray50,
-    fontSize: 16,
-    lineHeight: 20,
     backgroundColor: Color.Gray.gray500,
   },
   listView: {
@@ -211,8 +210,7 @@ const styles = StyleSheet.create({
     display: "none",
   },
   suggestion: {
-    fontSize: 16,
-    lineHeight: 20,
+    ...BODY_1_REGULAR,
     paddingVertical: 8,
     color: Color.Gray.gray100,
   },

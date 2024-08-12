@@ -1,6 +1,7 @@
 import React from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import Color from "@/constants/Color";
+import { CAPTION_1_REGULAR } from "@/constants/typography";
 
 function Divider() {
   return (
@@ -32,9 +33,11 @@ const styles = StyleSheet.create({
   text: {
     marginHorizontal: 10,
     color: Color.Gray.gray50, // You can adjust the color as needed
+    ...CAPTION_1_REGULAR,
   },
   androidText: {
     alignItems: "center", // Align the text vertically in the center on Android
+    ...CAPTION_1_REGULAR,
   },
 });
 

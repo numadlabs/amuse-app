@@ -19,6 +19,7 @@ import Color from "@/constants/Color";
 import { useSignUpStore } from "@/lib/store/signUpStore";
 import { LinearGradient } from "expo-linear-gradient";
 import Header from "@/components/layout/Header";
+import { BODY_1_REGULAR, CAPTION_1_REGULAR, H5 } from "@/constants/typography";
 
 const validatePassword = (password: string): boolean => {
   if (password.length < 8) {
@@ -123,9 +124,7 @@ const Password = () => {
                         onBlur={() => setFocusedInput(null)}
                         style={{
                           flex: 1,
-                          fontSize: 16,
-                          fontWeight: "400",
-                          lineHeight: 20,
+                          ...BODY_1_REGULAR,
                           color: Color.base.White,
                         }}
                         value={password}
@@ -177,9 +176,7 @@ const Password = () => {
                         onBlur={() => setFocusedInput(null)}
                         style={{
                           flex: 1,
-                          fontSize: 16,
-                          fontWeight: "400",
-                          lineHeight: 20,
+                          ...BODY_1_REGULAR,
                           color: Color.base.White,
                         }}
                         value={confirmPassword}
@@ -288,40 +285,17 @@ const styles = StyleSheet.create({
   },
   topText: {
     color: Color.base.White,
-    fontWeight: "bold",
-    fontSize: 24,
-  },
-  bottomText: {
-    color: Color.Gray.gray400,
-    fontSize: 12,
+    ...H5,
   },
   inputContainer: {
     gap: 12,
-  },
-  input: {
-    height: 48,
-    borderWidth: 1,
-    borderRadius: 16,
-    borderColor: Color.Gray.gray100,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
-  },
-  inputFocused: {
-    height: 48,
-    borderWidth: 1,
-    borderRadius: 16,
-    borderColor: Color.Gray.gray600,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
   },
   ruleContainer: {
     marginTop: 16,
     gap: 6,
   },
   ruleText: {
-    fontSize: 14,
+    ...CAPTION_1_REGULAR,
     color: Color.Gray.gray100,
   },
   greenRuleText: {
@@ -329,6 +303,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: Color.System.systemError,
+    ...CAPTION_1_REGULAR,
     marginTop: 8,
     paddingHorizontal: 16,
   },

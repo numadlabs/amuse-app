@@ -10,6 +10,7 @@ import useLocationStore from "@/lib/store/userLocation";
 import * as Updates from "expo-updates";
 import { Redirect } from "expo-router";
 import SplashScreenAnimated from "./SplashScreenAnimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const queryClient = new QueryClient();
 

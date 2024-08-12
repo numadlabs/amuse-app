@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Color from "@/constants/Color";
 import { BlurView } from "expo-blur";
+import { BUTTON_48 } from "@/constants/typography";
 
 const buttonVariants = {
   variant: {
@@ -25,11 +26,11 @@ const buttonVariants = {
 };
 
 const textStyles = {
-  primary: { fontSize: 16, fontWeight: "bold", color: Color.base.White },
-  secondary: { fontSize: 16, fontWeight: "bold", color: "black" },
-  disabled: { fontSize: 16, fontWeight: "bold", color: Color.Gray.gray200 },
-  tertiary: { fontSize: 18, color: "white" },
-  text: { fontSize: 16, fontWeight: "bold", color: "black" },
+  primary: { ...BUTTON_48, color: Color.base.White },
+  secondary: { ...BUTTON_48, color: "black" },
+  disabled: { ...BUTTON_48, color: Color.Gray.gray200 },
+  tertiary: { ...BUTTON_48, color: "white" },
+  text: { ...BUTTON_48, color: "black" },
 };
 
 export interface ButtonProps

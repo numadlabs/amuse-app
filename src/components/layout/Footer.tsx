@@ -5,6 +5,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Color from "../../constants/Color";
 import { BlurView } from "expo-blur";
 import { height } from "@/lib/utils";
+import { BUTTON_40 } from "@/constants/typography";
 
 const Footer = ({ navigation }) => {
   const [isActive, setIsActive] = useState("/");
@@ -37,8 +38,7 @@ const Footer = ({ navigation }) => {
         </View>
         <Text
           style={{
-            fontSize: 13,
-            fontWeight: "bold",
+            ...BUTTON_40,
             color: Color.Gray.gray50,
             marginTop: 70,
           }}
@@ -74,8 +74,7 @@ const Footer = ({ navigation }) => {
             />
             <Text
               style={{
-                fontSize: 13,
-                fontWeight: "bold",
+                ...BUTTON_40,
                 color: Color.Gray.gray50,
               }}
             >
@@ -96,8 +95,7 @@ const Footer = ({ navigation }) => {
             />
             <Text
               style={{
-                fontSize: 13,
-                fontWeight: "bold",
+                ...BUTTON_40,
                 color: Color.Gray.gray50,
               }}
             >
@@ -144,7 +142,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     bottom: 10,
-    width: 68,
+    width: 74,
     columnGap: 4,
     height: 98,
     zIndex: 10,

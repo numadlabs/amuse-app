@@ -13,6 +13,7 @@ import Toast from "react-native-toast-message";
 import PerkGradient from "@/components/icons/PerkGradient";
 import Tick from "@/components/icons/Tick";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { BODY_2_REGULAR, CAPTION_1_MEDIUM, H6 } from "@/constants/typography";
 
 interface FollowingPerkParams {
   visitCount: number;
@@ -174,14 +175,11 @@ const styles = StyleSheet.create({
   },
   perkTitle: {
     color: Color.base.White,
-    fontSize: 20,
-    lineHeight: 24,
-    fontWeight: "bold",
+    ...H6,
   },
   perkDescription: {
     color: Color.Gray.gray100,
-    fontSize: 14,
-    lineHeight: 18,
+    ...BODY_2_REGULAR,
     textAlign: "center",
   },
   indicator: {
@@ -192,8 +190,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   checkinText: {
-    fontSize: 14,
-    fontWeight: "600",
+    ...CAPTION_1_MEDIUM,
     color: Color.Gray.gray100,
   },
 });

@@ -8,6 +8,7 @@ import Animated, {
   ReduceMotion,
 } from "react-native-reanimated";
 import PowerUpCard from "../atom/cards/PowerUpCard";
+import { BODY_2_REGULAR, H5 } from "@/constants/typography";
 
 interface PopupProps {
   isVisible: boolean;
@@ -93,14 +94,12 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   title: {
-    fontSize: 24,
+    ...H5,
     color: Color.Gray.gray600,
-    fontWeight: "bold",
   },
   message: {
-    fontSize: 16,
+    ...BODY_2_REGULAR,
     color: Color.Gray.gray400,
-    fontWeight: "normal",
   },
   buttonContainer: {
     marginTop: 16,

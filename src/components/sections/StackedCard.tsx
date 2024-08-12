@@ -16,6 +16,7 @@ import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
 
 import SearchGradient from "../icons/SearchGradient";
+import { BUTTON_40, CAPTION_1_REGULAR } from "@/constants/typography";
 
 const StackedCard = () => {
   const cardPositions = useSharedValue(-400);
@@ -74,14 +75,13 @@ const StackedCard = () => {
             marginBottom: 120,
           }}
         >
-          <View style={styles.container1}>
+          <View style={styles.container}>
             <SearchGradient />
             <Text
               style={{
                 textAlign: "center",
                 color: Color.Gray.gray50,
-                fontSize: 12,
-                lineHeight: 16,
+                ...CAPTION_1_REGULAR,
               }}
             >
               Discover restaurants, add a membership card, and start earning
@@ -141,13 +141,6 @@ export default StackedCard;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Color.Gray.gray600,
-    borderTopRightRadius: 32,
-    borderTopLeftRadius: 32,
-    minHeight: 380,
-    maxHeight: 600,
-  },
-  container1: {
     height: 232,
     paddingHorizontal: 32,
     borderRadius: 32,
@@ -159,41 +152,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Color.Gray.gray200,
   },
-  aCardContainer: {
-    backgroundColor: Color.Gray.gray50,
-    borderRadius: 32,
-    alignItems: "center",
-    marginBottom: "-80%",
-    borderColor: Color.Gray.gray400,
-    overflow: "hidden",
-  },
-  aCardContainer1: {
-    backgroundColor: Color.Gray.gray50,
-    padding: 20,
-    borderRadius: 32,
-    alignItems: "center",
-    elevation: 3,
-    width: "100%",
-    marginBottom: "-90%",
-    borderWidth: 1,
-    borderColor: Color.Gray.gray400,
-  },
-  blurContainer: {
-    width: "100%",
-    flex: 1,
-    padding: 20,
-  },
-  titleText: {
-    color: Color.base.White,
-    fontSize: 16,
-    marginBottom: 10,
-    alignSelf: "flex-start",
-    fontWeight: "bold",
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(33, 33, 33, 0.32)",
-  },
   button: {
     paddingHorizontal: 20,
     paddingVertical: 12,
@@ -203,13 +161,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Color.base.White,
-    fontSize: 13,
-    lineHeight: 16,
-    fontWeight: "600",
-  },
-  image: {
-    width: 300,
-    height: 300,
-    borderRadius: 32,
+    ...BUTTON_40,
   },
 });

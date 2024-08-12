@@ -19,7 +19,8 @@ const Layout = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
     Sora: require("@/public/fonts/Sora-Regular.otf"),
     SoraBold: require("@/public/fonts/Sora-Bold.otf"),
-    SoraThin: require("@/public/fonts/Sora-Thin.otf"),
+    SoraMedium: require("@/public/fonts/Sora-Medium.otf"),    
+    SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),   
   });
 
   useEffect(() => {
