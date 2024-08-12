@@ -46,7 +46,12 @@ import Animated, {
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import { SERVER_SETTING } from "@/constants/serverSettings";
-import { BODY_1_REGULAR, BODY_2_MEDIUM, BODY_2_REGULAR } from "@/constants/typography";
+import {
+  BODY_1_REGULAR,
+  BODY_2_MEDIUM,
+  BODY_2_REGULAR,
+  BUTTON_48,
+} from "@/constants/typography";
 import Close from "@/components/icons/Close";
 
 const ProfileEdit = () => {
@@ -616,9 +621,7 @@ const ProfileEdit = () => {
             {loading ? (
               <ActivityIndicator size="small" color="white" />
             ) : (
-              <Text style={{ ...BUTTON_48 }}>
-                Save changes
-              </Text>
+              <Text style={{ ...BUTTON_48 }}>Save changes</Text>
             )}
           </Button>
         </View>
