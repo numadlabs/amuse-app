@@ -22,14 +22,15 @@ const TermsAndCondo = () => {
   ];
 
   return (
-    <>
-      <SafeAreaView style={{flex:1}}>
+    <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
       <Header title="Terms and Conditions" />
       <View style={styles.container}>
         {/* {data.map((item, index) => (
           <Accordion key={index} title={item.title} text={item.text} />
         ))} */}
-        <Text style={{ color: Color.Gray.gray50, ...BODY_2_REGULAR, marginTop: 16 }}>
+        <Text
+          style={{ color: Color.Gray.gray50, ...BODY_2_REGULAR, marginTop: 16 }}
+        >
           This app is a proof of concept. Any images, locations, rewards, and
           offers are purely for demonstration purposes and do not construe any
           sort of commitment. No Bitcoin, rewards, or perks listed in this app
@@ -39,8 +40,7 @@ const TermsAndCondo = () => {
           or dissemination is strictly prohibited.
         </Text>
       </View>
-      </SafeAreaView>
-    </>
+    </View>
   );
 };
 
