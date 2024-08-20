@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -19,9 +19,8 @@ import { RestaurantType } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import {
   getPerksByRestaurant,
-  getUserPowerUps,
 } from "@/lib/service/queryHelper";
-import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
+import { restaurantKeys } from "@/lib/service/keysHelper";
 import useLocationStore from "@/lib/store/userLocation";
 import {
   BODY_1_BOLD,
@@ -32,17 +31,14 @@ import {
 } from "@/constants/typography";
 
 interface OwnedProps {
-  // userCardId: string;
   data: RestaurantType;
   cardId: string;
-  // perks: any[];
-  // followingPerk: string;
   isLoading: boolean;
   onPress: () => void;
   marker: RestaurantType;
 }
 
-const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
+const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
   const [showPerks, setShowPerks] = useState(true);
   const currentLocation = useLocationStore();
 
@@ -51,6 +47,14 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
     queryFn: () => getPerksByRestaurant(data.id),
     enabled: !!currentLocation,
   });
+
+  const hasPerks = perks && (perks.userBonuses?.length > 0 || perks.followingBonus);
+
+  useEffect(() => {
+    if (!hasPerks) {
+      setShowPerks(false);
+    }
+  }, [hasPerks]);
 
   const handleNavigation = () => {
     router.push({
@@ -73,7 +77,9 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
   };
 
   const toggleView = (view: boolean) => {
-    setShowPerks(view);
+    if (hasPerks || !view) {
+      setShowPerks(view);
+    }
   };
 
   const renderPerks = () => (
@@ -84,7 +90,7 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
           <InfoCircle size={20} color={Color.Gray.gray50} />
         </TouchableOpacity>
       </View>
-      {perks && perks?.userBonuses?.length > 0 ? (
+      {hasPerks ? (
         <>
           {perks?.userBonuses?.map((item, index) => (
             <PowerUpCard
@@ -102,20 +108,22 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
               }
             />
           ))}
-          <TouchableOpacity
-            style={styles.container}
-            onPress={notOwnedNavigation}
-          >
-            <View style={styles.perkDetails}>
-              <TicketStar size={28} color={Color.base.White} />
-              <Text style={styles.perkText}>{perks?.followingBonus?.name}</Text>
-            </View>
-            <View>
-              <Text style={styles.perkCount}>
-                {perks?.followingBonus?.current}/{perks?.followingBonus?.target}
-              </Text>
-            </View>
-          </TouchableOpacity>
+          {perks?.followingBonus && (
+            <TouchableOpacity
+              style={styles.container}
+              onPress={notOwnedNavigation}
+            >
+              <View style={styles.perkDetails}>
+                <TicketStar size={28} color={Color.base.White} />
+                <Text style={styles.perkText}>{perks.followingBonus.name}</Text>
+              </View>
+              <View>
+                <Text style={styles.perkCount}>
+                  {perks.followingBonus.current}/{perks.followingBonus.target}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity onPress={handleNavigation}>
             <View style={styles.addPerkButton}>
               <Add color={Color.base.White} size={24} />
@@ -142,20 +150,6 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
               </Text>
             </View>
           </LinearGradient>
-          <TouchableOpacity
-            style={styles.container}
-            onPress={notOwnedNavigation}
-          >
-            <View style={styles.perkDetails}>
-              <TicketStar size={28} color={Color.base.White} />
-              <Text style={styles.perkText}>{perks?.followingBonus?.name}</Text>
-            </View>
-            <View>
-              <Text style={styles.perkCount}>
-                {perks?.followingBonus?.current}/{perks?.followingBonus?.target}
-              </Text>
-            </View>
-          </TouchableOpacity>
           <TouchableOpacity onPress={handleNavigation}>
             <View style={styles.addPerkButton}>
               <Add color={Color.base.White} size={24} />
@@ -175,30 +169,32 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress, marker }) => {
 
   return (
     <GestureHandlerRootView style={styles.attrContainer}>
-      <View>
-        <Animated.View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[styles.toggleButton, showPerks && styles.activeButton]}
-            onPress={() => toggleView(true)}
-          >
-            <Text style={[styles.buttonText, !showPerks && styles.activeText]}>
-              Perks
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.toggleButton, !showPerks && styles.activeButton]}
-            onPress={() => toggleView(false)}
-          >
-            <Text style={[styles.buttonText, showPerks && styles.activeText]}>
-              Details
-            </Text>
-          </TouchableOpacity>
-        </Animated.View>
-      </View>
+      {hasPerks && (
+        <View>
+          <Animated.View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[styles.toggleButton, showPerks && styles.activeButton]}
+              onPress={() => toggleView(true)}
+            >
+              <Text style={[styles.buttonText, !showPerks && styles.activeText]}>
+                Perks
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.toggleButton, !showPerks && styles.activeButton]}
+              onPress={() => toggleView(false)}
+            >
+              <Text style={[styles.buttonText, showPerks && styles.activeText]}>
+                Details
+              </Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
+      )}
       <View style={styles.contentContainer}>
         {isLoading ? (
           <ActivityIndicator color={Color.Gray.gray600} />
-        ) : showPerks ? (
+        ) : showPerks && hasPerks ? (
           renderPerks()
         ) : (
           renderDetails()

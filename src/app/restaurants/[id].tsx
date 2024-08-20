@@ -36,12 +36,11 @@ import {
 } from "@/lib/service/queryHelper";
 import useLocationStore from "@/lib/store/userLocation";
 import { height, width } from "@/lib/utils";
-import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment";
 import { BODY_2_REGULAR, BUTTON_48, H6 } from "@/constants/typography";
 
 const Restaurant = () => {
-  const { cardId, id } = useLocalSearchParams();
+  const { id } = useLocalSearchParams();
   const [isClaimLoading, setIsClaimLoading] = useState(false);
   const { authState } = useAuth();
   const [bottomSheet, setBottomSheet] = useState(false);
@@ -59,7 +58,7 @@ const Restaurant = () => {
   const { data: perks } = useQuery({
     queryKey: restaurantKeys.perks(id as string),
     queryFn: () => getPerksByRestaurant(id),
-    enabled: !!currentLocation && !!id,
+    enabled: !! id,
   });
 
   const toggleBottomSheet = () => {
@@ -73,6 +72,13 @@ const Restaurant = () => {
       { scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) },
     ],
   }));
+
+  const calculateTarget = (perkOccurence?: number, followingBonusCurrent?: number): number | undefined => {
+    if (perkOccurence === undefined || followingBonusCurrent === undefined) {
+      return undefined;
+    }
+    return perkOccurence - followingBonusCurrent;
+  };
 
   const { mutateAsync: createGetAcardMutation } = useMutation({
     mutationFn: getAcard,
@@ -115,9 +121,8 @@ const Restaurant = () => {
           category={restaurantsData?.categoryName}
           hasBonus={false}
           visitCount={restaurantsData?.visitCount || 0}
-          target={
-            restaurantsData?.perkOccurence - perks?.followingBonus?.current
-          }
+          isLoading={isLoading}
+          target={calculateTarget(restaurantsData?.perkOccurence, perks?.followingBonus?.current)}
         />
 
         {isLoading ? (

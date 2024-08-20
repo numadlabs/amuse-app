@@ -7,8 +7,9 @@ import {
   Modal,
   ScrollView,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Color from "@/constants/Color";
 import Header from "@/components/layout/Header";
 import Balance from "@/components/sections/Balance";
@@ -53,12 +54,18 @@ const Wallet = () => {
 
   console.log("userid", authState.userId);
 
-  const { data: transaction = [] } = useQuery({
+  const { data: transaction = [], isLoading } = useQuery({
     queryKey: ["transactions"],
     queryFn: () => {
       return getUserTransaction(authState.userId);
     },
   });
+
+
+  const reversedTransactions = useMemo(() => {
+    return [...transaction].reverse();
+  }, [transaction]);
+
 
   const toggleBalanceBottomSheet = () => {
     setIsOpenBalance(!isOpenBalance);
@@ -74,7 +81,9 @@ const Wallet = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <GestureHandlerRootView>
         <Header title="Wallet" />
-        <ScrollView style={styles.body}>
+
+      
+        <View style={styles.body}>
           <Balance
             amount={user?.user?.balance}
             convertedAmount={user?.convertedBalance}
@@ -109,9 +118,17 @@ const Wallet = () => {
               Transaction history
             </Text>
 
+            {isLoading ? (
+          <View>
+            <ActivityIndicator />
+          </View>
+        ) : reversedTransactions.length > 0 ? (
+
+      
+
             <FlatList
-              // ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-              data={transaction}
+              style={{marginTop:16}}
+              data={reversedTransactions}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
                 <TransactionCard
@@ -121,8 +138,20 @@ const Wallet = () => {
                 />
               )}
             />
+          ) : (
+            <Text
+              style={{
+                color: Color.Gray.gray100,
+                marginHorizontal: 16,
+                marginTop: 16,
+              }}
+            >
+              No transactions found
+            </Text>
+          )}
           </View>
-        </ScrollView>
+      
+        </View>
 
         {/* Tooltip */}
         {isOpenBalance && (

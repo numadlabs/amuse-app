@@ -51,12 +51,12 @@ const Page = () => {
   const [isQuickInfoVisible, setIsQuickInfoVisible] = useState(true);
   const pressed = useSharedValue(false);
   const { authState } = useAuth();
-  const { expoPushToken, notification: pushNotification } =
-    usePushNotifications();
+  // const { expoPushToken, notification: pushNotification } =
+  //   usePushNotifications();
 
-  const { mutateAsync: sendPushToken } = useMutation({
-    mutationFn: registerDeviceNotification,
-  });
+  // const { mutateAsync: sendPushToken } = useMutation({
+  //   mutationFn: registerDeviceNotification,
+  // });
 
   const { currentLocation } = useLocationStore();
   const currentTime = moment().format("HH:mm:ss");

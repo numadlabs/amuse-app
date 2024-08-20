@@ -130,104 +130,106 @@ const TermsAndCondo = () => {
       />
       <View style={styles.container}>
         <ScrollView style={styles.scrollViewContainer}>
+        <Text style={styles.body}>
+            By using the Amuse Bouche application platform ("Platform"), you agree to the collection
+            and use of information in accordance with this policy.
+          </Text>
+
           <Text style={styles.header}>1. Data Collection: </Text>
           <Text style={styles.body}>
-            <Text style={{ color: Color.base.White, fontWeight: "bold" }}>
-              User Location:
-            </Text>{" "}
-            We use your location information to help you find nearby
-            participating restaurants in our loyalty program.{"\n"}
-            <Text style={{ color: Color.base.White, fontWeight: "bold" }}>
-              Email:
-            </Text>{" "}
-            We require your email address for account creation, login, sending
-            one-time passwords, and password reset functionality. {"\n"}{" "}
-          </Text>
-          <Text style={styles.subHeader}>Optional Data Collection:</Text>
-          <Text style={styles.body}>
-            In addition to the mandatory data, we also collect the following
-            optional information if you choose to provide it: {"\n"}
-            <Text style={{ color: Color.base.White, fontWeight: "bold" }}>
-              Area:
-            </Text>{" "}
-            You can optionally provide information about the area you live or
-            work in. This helps the registered restaurants better understand
-            which areas have the most engaged customers.{"\n"}
-            <Text style={{ color: Color.base.White, fontWeight: "bold" }}>
-              Birthday:{" "}
-            </Text>
-            You can optionally provide your birthday, which may be used to offer
-            special promotions or rewards on your birthday. {"\n"}
-            <Text style={{ color: Color.base.White, fontWeight: "bold" }}>
-              Profile Picture:
-            </Text>{" "}
-            You can optionally upload a profile picture, which will be displayed
-            in your account.
-          </Text>
-          <Text style={styles.header}>2. Data usage: </Text>
-          <Text style={styles.body}>
-            We use the collected data for the following purposes:{"\n"}
-            <Text style={{ color: Color.base.White, fontWeight: "bold" }}>
-              User Location:{" "}
-            </Text>
-            To help you find nearby participating restaurants in our loyalty
-            program.{"\n"}
-            <Text style={{ color: Color.base.White, fontWeight: "bold" }}>
-              Email:{" "}
-            </Text>
-            To create and manage your account, send you one-time passwords, and
-            allow you to reset your password.{"\n"}
-            <Text style={{ color: Color.base.White, fontWeight: "bold" }}>
-              Area:{" "}
-            </Text>
-            To provide participating restaurants with aggregated data about the
-            areas with the most engaged customers.{"\n"}
-            <Text style={{ color: Color.base.White, fontWeight: "bold" }}>
-              Birthday:{" "}
-            </Text>
-            To offer you special promotions or rewards on your birthday.{"\n"}
-            <Text style={{ color: Color.base.White, fontWeight: "bold" }}>
-              {" "}
-              Profile Picture:{" "}
-            </Text>{" "}
-            To personalize your account and display your image to the
-            restaurants you visit.
-          </Text>
-          <Text style={styles.header}>3. Data Protection: </Text>
-          <Text style={styles.body}>
-            We take the security and privacy of your data seriously. We use
-            industry-standard encryption and security measures to protect your
-            personal information from unauthorized access, disclosure, or
-            misuse. Your data is stored securely and is only accessible to
-            authorized personnel who need it to perform their duties.
-          </Text>
-          <Text style={styles.header}>4. Your Rights: </Text>
-          <Text style={styles.body}>
-            You have the following rights regarding your personal data:{"\n"}
-            <Text style={{ color: Color.base.White, fontWeight: "bold" }}>
-              Access:{" "}
-            </Text>{" "}
-            You can request to access the personal data we have collected about
-            you. {"\n"}
-            <Text style={{ color: Color.base.White, fontWeight: "bold" }}>
-              Correction:{" "}
-            </Text>{" "}
-            You can request to correct any inaccurate or incomplete personal
-            data we have about you. {"\n"}
-            <Text style={{ color: Color.base.White, fontWeight: "bold" }}>
-              Deletion:{" "}
-            </Text>{" "}
-            You can request the deletion of your personal data, subject to any
-            legal or regulatory obligations we may have. {"\n"}
-            <Text style={{ color: Color.base.White, fontWeight: "bold" }}>
-              Opt-out:{" "}
-            </Text>{" "}
-            You can opt-out of sharing your optional data (area, birthday,
-            profile picture) at any time.
+            a. The Platform collects two types of data from its users: necessary data
+            collection which cannot be disabled and optional data collection which may
+            be enabled/disabled at your discretion.
           </Text>
           <Text style={styles.body}>
-            If you have any questions or concerns about our privacy practices,
-            please contact our privacy team at privacy@restaurantloyalty.com.
+            b. Necessary Data Collection
+          </Text>
+          <Text style={styles.body}>
+            <Text style={{ color: Color.base.White, fontWeight: 'bold' }}>
+              i. Location:
+            </Text>{' '}
+            We use location data to assist you in locating restaurants
+            participating in a program on the Platform. We may store location
+            data to improve and optimize the Platform.
+          </Text>
+          <Text style={styles.body}>
+            <Text style={{ color: Color.base.White, fontWeight: 'bold' }}>
+              ii. Email:
+            </Text>{' '}
+            We will store and use your email for account creation, user
+            login, password management and Platform-to-user communications.
+          </Text>
+          <Text style={styles.body}>
+            c. Optional Data Collection
+          </Text>
+          <Text style={styles.body}>
+            <Text style={{ color: Color.base.White, fontWeight: 'bold' }}>
+              i. Birthday:
+            </Text>{' '}
+            We use birthday data to allow us to offer you a special
+            birthday promotion or reward.
+          </Text>
+          <Text style={styles.body}>
+            <Text style={{ color: Color.base.White, fontWeight: 'bold' }}>
+              ii. Profile Picture:
+            </Text>{' '}
+            You may opt to add a profile picture in order to
+            personalize your profile. If added, the Platform will automatically
+            store the data.
+          </Text>
+
+          <Text style={styles.header}>2. General Data Protection Regulation: </Text>
+          <Text style={styles.body}>
+            a. Our legal basis for collecting and using the data is for one or more of the
+            following purposes:
+          </Text>
+          <Text style={styles.body}>
+            i. We need to perform a contract with you.{'\n'}
+            ii. You have given us permission to do so.{'\n'}
+            iii. The processing is in our legitimate interest, and it is not overridden by
+            your rights.{'\n'}
+            iv. It is necessary for payment processing purposes.{'\n'}
+            v. It is necessary to comply with the law.
+          </Text>
+
+          <Text style={styles.header}>3. Data Retention and Disclosure: </Text>
+          <Text style={styles.body}>
+            a. We will retain data only for as long as is necessary for the purposes as stated
+            in this policy.
+          </Text>
+          <Text style={styles.body}>
+            b. Disclosure of your data may occur for one or more of the following reasons:
+          </Text>
+          <Text style={styles.body}>
+            i. The Platform is involved in a merger, acquisition or asset sale.{'\n'}
+            ii. We are required by law to disclose your data.{'\n'}
+            iii. We have a good faith belief that it is necessary to disclose your data in
+            relation to the protection of the Platform and/or legal matters, both
+            potential and active.
+          </Text>
+
+          <Text style={styles.header}>4. Data Protection: </Text>
+          <Text style={styles.body}>
+            a. The security of your data is important to us, and we strive to use all
+            commercially reasonable means to protect your data. However, we do not
+            guarantee absolute security of your data.
+          </Text>
+
+          <Text style={styles.header}>5. User Rights: </Text>
+          <Text style={styles.body}>
+            a. You have the following rights regarding your data:
+          </Text>
+          <Text style={styles.body}>
+            i. Access: You can request access to the data of yours that we have
+            collected.{'\n'}
+            ii. Rectification: You have the right to have your information corrected
+            that information is inaccurate or incomplete.{'\n'}
+            iii. Objection: You have the right to request that we restrict the
+            processing of your data.{'\n'}
+            iv. Portability: You have the right to be provided with a copy of your data
+            that we have collected.{'\n'}
+            v. Withdraw Consent: You have the right to withdraw your consent at
+            any time to the collection of your data.
           </Text>
           <TouchableOpacity
             style={{
