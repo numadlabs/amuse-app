@@ -133,9 +133,9 @@ export async function getTimeTable(id) {
   });
 }
 
-export async function getRestaurantId(id, time) {
+export async function getRestaurantId(id, time, dayNoOfTheWeek) {
   return axiosClient
-    .get(`/restaurants/${id}?dayNoOfTheWeek=7&time=${time}`)
+    .get(`/restaurants/${id}?dayNoOfTheWeek=${dayNoOfTheWeek}&time=${time}`)
     .then((response) => {
       if (response.data.success) {
         return response?.data?.data?.restaurant;

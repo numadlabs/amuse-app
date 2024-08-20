@@ -35,7 +35,7 @@ const Accordion = ({ text, title }) => {
         }}
       >
         <Text
-          style={{ ...BODY_1_MEDIUM, color: Color.Gray.gray50 }}
+          style={{ ...BODY_1_MEDIUM, color: Color.base.White, fontSize:14 }}
         >
           {title}
         </Text>
@@ -51,7 +51,7 @@ const Accordion = ({ text, title }) => {
             <Animated.View>
               <Text
                 style={{
-                  color: Color.Gray.gray100,
+                  color: Color.base.White,
                   ...BODY_2_REGULAR,
                   marginTop: 8,
                 }}

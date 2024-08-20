@@ -48,10 +48,10 @@ const Restaurant = () => {
   const { currentLocation } = useLocationStore();
   const [perkId, setPerkId] = useState<string>("");
   const currentTime = moment().format("HH:mm:ss");
-
+  const currentDayOfWeek = moment().isoWeekday();
   const { data: restaurantsData, isLoading } = useQuery({
     queryKey: restaurantKeys.detail(id as string),
-    queryFn: () => getRestaurantId(id, currentTime),
+    queryFn: () => getRestaurantId(id, currentTime, currentDayOfWeek),
     enabled: !!currentLocation && !!id,
   });
 
@@ -141,7 +141,7 @@ const Restaurant = () => {
                   // followingPerk={perks?.followingBonus?.name}
                   onPress={toggleBottomSheet}
                   cardId={perkId}
-                  // perks={perks?.userBonuses}
+                  isOpen={restaurantsData.isOpen}
                   isLoading={isLoading}
                   data={restaurantsData}
                   marker={restaurantsData?.isOwned}
