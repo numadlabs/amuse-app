@@ -1,7 +1,6 @@
+import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-
 import { Image } from "expo-image";
-import React, { useEffect, useState } from "react";
 import { BlurView } from "expo-blur";
 import Color from "@/constants/Color";
 import { width } from "@/lib/utils";
@@ -11,8 +10,11 @@ import APassStripes from "../../icons/APassStripes";
 import Animated, {
   FadeIn,
   FadeOut,
+  interpolate,
+  useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
+  withRepeat,
   withTiming,
 } from "react-native-reanimated";
 import {
@@ -23,7 +25,6 @@ import {
 import { SERVER_SETTING } from "@/constants/serverSettings";
 import { BODY_1_BOLD, BODY_2_BOLD, CAPTION_1_MEDIUM, CAPTION_1_REGULAR, H3, STYLIZED_UPPERCASE_REGULAR } from "@/constants/typography";
 
-// In the APassCard component
 interface ApassProp {
   name: string;
   image: string;
@@ -31,9 +32,57 @@ interface ApassProp {
   onPress: () => void;
   category: string;
   hasBonus: boolean;
-  visitCount: number;
-  target: number;
+  visitCount: number | undefined;
+  target: number | undefined;
+  isLoading: boolean;
 }
+
+
+const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
+
+const SkeletonLoader: React.FC = () => {
+  const translateX = useSharedValue(-width);
+
+  React.useEffect(() => {
+    translateX.value = withRepeat(
+      withTiming(width, { duration: 1000 }),
+      -1,
+      false
+    );
+  }, []);
+
+  const animatedStyles = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
+
+  return (
+    <Animated.View style={styles.skeletonContainer}>
+      <Animated.View style={[StyleSheet.absoluteFill, animatedStyles]}>
+        <LinearGradient
+          style={StyleSheet.absoluteFill}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          colors={['transparent', 'rgba(255, 255, 255, 0.3)', 'transparent']}
+        />
+      </Animated.View>
+      <Animated.View style={styles.skeletonHeader}>
+        <Animated.View style={styles.skeletonLogo} />
+        <Animated.View>
+          <Animated.View style={styles.skeletonTitle} />
+          <Animated.View style={styles.skeletonSubtitle} />
+        </Animated.View>
+      </Animated.View>
+      <Animated.View style={styles.skeletonContent}>
+        <Animated.View style={styles.skeletonImage} />
+        <Animated.View style={styles.skeletonStats}/>
+      </Animated.View>
+    </Animated.View>
+  );
+};
+
+
+
+
 
 const APassCard: React.FC<ApassProp> = ({
   name,
@@ -44,6 +93,7 @@ const APassCard: React.FC<ApassProp> = ({
   visitCount,
   nftImage,
   target,
+  isLoading = false,
 }) => {
   const pressed = useSharedValue(false);
 
@@ -62,6 +112,10 @@ const APassCard: React.FC<ApassProp> = ({
       { scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) },
     ],
   }));
+
+  if (isLoading) {
+    return <SkeletonLoader />;
+  }
 
   return (
     <GestureHandlerRootView>
@@ -164,9 +218,6 @@ const APassCard: React.FC<ApassProp> = ({
                       overflow: "hidden",
                     }}
                   >
-                    {/* <LinearGradient
-                      colors={[Color.Brand.main.start, Color.Brand.main.end]}
-                      style={{ borderRadius: 0, padding: 1 }}> */}
                     <BlurView>
                       <LinearGradient
                         colors={[Color.Brand.card.start, Color.Brand.card.end]}
@@ -206,52 +257,54 @@ const APassCard: React.FC<ApassProp> = ({
                         </View>
                       </LinearGradient>
                     </BlurView>
-                    {/* </LinearGradient> */}
-                    <View
-                      style={{
-                        justifyContent: "center",
-                        alignContent: "center",
-                        alignItems: "center",
-                        flexDirection: "row",
-                        gap: 6,
-                        borderTopWidth: 1,
-                        borderColor: Color.Gray.gray400,
-                      }}
-                    >
+                  
+                    {target && (
                       <View
                         style={{
-                          flexDirection: "row",
                           justifyContent: "center",
                           alignContent: "center",
                           alignItems: "center",
+                          flexDirection: "row",
                           gap: 6,
-                          paddingVertical: 10,
+                          borderTopWidth: 1,
+                          borderColor: Color.Gray.gray400,
                         }}
                       >
-                        <AnimatedText
-                          entering={FadeIn}
-                          exiting={FadeOut}
-                          style={[
-                            {
-                              ...BODY_2_BOLD,
-                              color: Color.base.White,
-                            },
-                            animatedStyles,
-                          ]}
-                        >
-                          {target}
-                        </AnimatedText>
-
-                        <Text
+                        <View
                           style={{
-                            ...CAPTION_1_REGULAR,
-                            color: Color.base.White,
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignContent: "center",
+                            alignItems: "center",
+                            gap: 6,
+                            paddingVertical: 10,
                           }}
                         >
-                          Until next perk
-                        </Text>
+                          <AnimatedText
+                            entering={FadeIn}
+                            exiting={FadeOut}
+                            style={[
+                              {
+                                ...BODY_2_BOLD,
+                                color: Color.base.White,
+                              },
+                              animatedStyles,
+                            ]}
+                          >
+                            {target}
+                          </AnimatedText>
+
+                          <Text
+                            style={{
+                              ...CAPTION_1_REGULAR,
+                              color: Color.base.White,
+                            }}
+                          >
+                            Until next perk
+                          </Text>
+                        </View>
                       </View>
-                    </View>
+                    )}
                   </View>
                 </View>
               </View>
@@ -262,8 +315,6 @@ const APassCard: React.FC<ApassProp> = ({
     </GestureHandlerRootView>
   );
 };
-
-export default APassCard;
 
 const styles = StyleSheet.create({
   aCardContainer: {
@@ -282,7 +333,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 28,
     overflow: "hidden",
-    height:"auto",
+    height: "auto",
   },
   titleText: {
     color: Color.base.White,
@@ -299,4 +350,51 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 8,
   },
+  skeletonContainer: {
+    backgroundColor: Color.Gray.gray500,
+    borderRadius: 24,
+    padding: 20,
+    height: 'auto',
+    overflow: 'hidden',
+  },
+  skeletonHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  skeletonLogo: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    backgroundColor: Color.Gray.gray400,
+    marginRight: 12,
+  },
+  skeletonTitle: {
+    width: 150,
+    height: 20,
+    backgroundColor: Color.Gray.gray400,
+    marginBottom: 5,
+  },
+  skeletonSubtitle: {
+    width: 100,
+    height: 16,
+    backgroundColor: Color.Gray.gray400,
+  },
+  skeletonContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  skeletonImage: {
+    width: width / 2.1,
+    aspectRatio: 1,
+    borderRadius: 12,
+    backgroundColor: Color.Gray.gray400,
+  },
+  skeletonStats: {
+    width: "38%",
+    borderRadius: 12,
+    backgroundColor: Color.Gray.gray400,
+  },
 });
+
+export default APassCard;

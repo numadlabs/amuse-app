@@ -2,16 +2,31 @@ import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import Color from '@/constants/Color'
-import { Bitcoin } from 'iconsax-react-native'
+import { Bitcoin, ScanBarcode, TicketStar } from 'iconsax-react-native'
 import { BODY_2_MEDIUM, CAPTION_1_REGULAR, CAPTION_2_REGULAR } from '@/constants/typography'
 
 
 interface NotificationProps {
   title: string;
-  description: string;
+  type: string;
   time: string;
+  description: string;
 }
-const NotificationCard: React.FC<NotificationProps> = ({title, description, time}) => {
+const NotificationCard: React.FC<NotificationProps> = ({title,type, time, description}) => {
+
+
+  const getNotificationIcon = (type: string) => {
+    switch (type) {
+      case 'REWARD':
+        return <TicketStar size={20} color="#fff" />;
+      case 'TAP':
+        return <ScanBarcode size={20} color="#fff" />;
+      case 'BONUS':
+        return <Bitcoin size={20} color="#fff" />;
+      default:
+        return <Bitcoin size={20} color="#fff" />;
+    }
+  }
   return (
     <View>
       <View style={styles.body}>
@@ -37,7 +52,7 @@ const NotificationCard: React.FC<NotificationProps> = ({title, description, time
                   borderRadius: 100,
                 }}
               >
-                <Bitcoin size={20} color="#fff" />
+                  {getNotificationIcon(type)}
               </View>
               <View style={{ flexDirection: "column", gap: 4, flex: 1 }}>
                 <Text

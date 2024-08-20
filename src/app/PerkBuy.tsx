@@ -65,7 +65,7 @@ const PerkBuy = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+
       <View
         style={{
           backgroundColor: Color.Gray.gray600,
@@ -160,7 +160,7 @@ const PerkBuy = () => {
           )}
         </Button>
       </View>
-    </SafeAreaView>
+
   );
 };
 

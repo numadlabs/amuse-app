@@ -1,18 +1,30 @@
-import { View, StyleSheet, FlatList } from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import React, { useMemo } from "react";
 import Header from "@/components/layout/Header";
 import Color from "@/constants/Color";
 import NotificationCard from "@/components/atom/cards/NotificationCard";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "react-native";
 import NotificationIcon from "@/components/icons/NotificationIcon";
 import { height } from "@/lib/utils";
 import { BODY_1_MEDIUM, CAPTION_1_REGULAR } from "@/constants/typography";
+import { useQuery } from "@tanstack/react-query";
+import { userKeys } from "@/lib/service/keysHelper";
+import { getUserNotification } from "@/lib/service/queryHelper";
+import { useAuth } from "@/context/AuthContext";
 
 const Notification = () => {
-  //TODO notifcations fetch hiih
-  const [notifications, setNotifications] = useState([]);
+  const { authState } = useAuth();
+  const { data: userNotifications = [], isLoading } = useQuery({
+    queryKey: userKeys.notifications,
+    queryFn: getUserNotification,
+    enabled: !!authState.userId,
+  });
+
+  const reversedNotifications = useMemo(() => {
+    return [...userNotifications].reverse();
+  }, [userNotifications]);
+
 
   const getRelativeTime = (date) => {
     const now = new Date();
@@ -35,30 +47,31 @@ const Notification = () => {
     }
   };
 
-  function renderIndicators(): React.ReactNode {
-    throw new Error("Function not implemented.");
-  }
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <View style={styles.body}>
         <Header title="Notifications" />
-        {notifications.length > 0 ? (
+        {isLoading ? (
+          <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
+            <ActivityIndicator />
+          </View>
+        ) : userNotifications.length > 0 ? (
           <FlatList
             style={styles.container}
             ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-            data={notifications}
+            data={reversedNotifications}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <NotificationCard
-                title={item.name}
-                description={`You received 1 EUR of Bitcoin from ${item.name}`}
-                time={getRelativeTime(item.date)}
+                title={item?.message}
+                description={item?.message}
+                type={item?.type}
+                time={getRelativeTime(item.createdAt)}
               />
             )}
           />
         ) : (
-          <View style={{ justifyContent: "center", alignItems: "center", height: height/1.5, gap: 64 }}>
+          <View style={{ justifyContent: "center", alignItems: "center", height: height / 1.5, gap: 64 }}>
             <View style={{ flexDirection: "column", gap: 24, alignItems: "center" }}>
               <View style={styles.IconContainer}>
                 <NotificationIcon />

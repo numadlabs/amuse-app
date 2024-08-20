@@ -49,6 +49,14 @@ export async function getUserCard({ latitude, longitude }) {
     });
 }
 
+
+export async function getUserNotification(){
+  const response = await axiosClient.get('/notifications/user')
+  if(response){
+    return response.data.data
+  }
+}
+
 export async function getUserPowerUps(id) {
   return axiosClient.get(`/userBonus/${id}/userCard`).then((response) => {
     if (response.data.success) {

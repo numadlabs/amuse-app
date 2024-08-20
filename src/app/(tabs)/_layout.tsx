@@ -10,12 +10,22 @@ import useLocationStore from "@/lib/store/userLocation";
 import * as Updates from "expo-updates";
 import { useFonts } from "expo-font";
 import SplashScreenAnimated from "../SplashScreenAnimated";
+import { usePushNotifications } from "@/hooks/usePushNotification";
+import { useMutation } from "@tanstack/react-query";
+import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 
 const Layout = ({ navigation }) => {
   const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState(false);
   const { getLocation, currentLocation } = useLocationStore();
-  const [notification, setNotification] = useState("");
+  const { expoPushToken, notification: pushNotification } =
+  usePushNotifications();
+
+
+  const { mutateAsync: sendPushToken } = useMutation({
+    mutationFn: registerDeviceNotification,
+  });
+  
   const [fontsLoaded] = useFonts({
     Sora: require("@/public/fonts/Sora-Regular.otf"),
     SoraBold: require("@/public/fonts/Sora-Bold.otf"),
@@ -41,15 +51,15 @@ const Layout = ({ navigation }) => {
         }
 
         // Get notification data
-        // const data = JSON.stringify(pushNotification, undefined, 2)
+        const data = JSON.stringify(pushNotification, undefined, 2)
 
-        // if (expoPushToken?.data) {
-        //   console.log("Sending push token");
+        if (expoPushToken?.data) {
+          console.log("Sending push token");
 
-        //   sendPushToken({
-        //     pushToken: expoPushToken?.data
-        //   })
-        // }
+          sendPushToken({
+            pushToken: expoPushToken?.data
+          })
+        }
 
         // Get current location
         if (currentLocation == null) {

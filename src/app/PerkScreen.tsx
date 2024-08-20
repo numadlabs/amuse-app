@@ -30,6 +30,7 @@ const PerkScreen = () => {
     router.back();
     queryClient.invalidateQueries({ queryKey: userKeys.info });
     queryClient.invalidateQueries({ queryKey: userKeys.cards });
+    queryClient.invalidateQueries({ queryKey: userKeys.notifications });
   };
 
   return (

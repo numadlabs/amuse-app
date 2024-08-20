@@ -46,6 +46,7 @@ export default function Layout() {
           />
 
           <Stack.Screen name="PrivacyPolicy" />
+          <Stack.Screen name="/profileSection/UpdateScreen" />
 
           <Stack.Screen name="MyAcards" />
           <Stack.Screen name="Wallet" />
