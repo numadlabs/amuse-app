@@ -26,6 +26,8 @@ const HomeRestList: React.FC<ResListCardProp> = ({ marker, onPress }) => {
   const isOpen =
     currentTime.getTime() >= opensAt?.getTime() &&
     currentTime.getTime() <= closesAt?.getTime();
+
+    
   return (
     <LinearGradient
       colors={[Color.Brand.card.start, Color.Brand.card.end]}

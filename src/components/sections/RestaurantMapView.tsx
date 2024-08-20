@@ -316,6 +316,7 @@ export default function RestaurantMapView() {
           return (
             <Marker
               key={`marker-${index}`}
+              hitSlop={{ top: 40, bottom: 40, left: 40, right: 40 }}
               coordinate={{
                 latitude: restaurant.latitude,
                 longitude: restaurant.longitude,

@@ -51,8 +51,6 @@ const MyQrModal = () => {
       router.back();
       router.push({
         pathname: `/restaurants/${data?.restaurantId}`,
-        //TODO params test hiigeerei
-        // params: { cardId: cardId as any },
       });
     } else {
       router.back();

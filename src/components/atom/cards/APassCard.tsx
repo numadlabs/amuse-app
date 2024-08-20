@@ -258,7 +258,7 @@ const APassCard: React.FC<ApassProp> = ({
                       </LinearGradient>
                     </BlurView>
                   
-                    {target && (
+                    {hasBonus && (
                       <View
                         style={{
                           justifyContent: "center",
