@@ -34,6 +34,7 @@ interface OwnedProps {
   data: RestaurantType;
   cardId: string;
   isLoading: boolean;
+  isOpen: boolean;
   onPress: () => void;
   marker: RestaurantType;
 }
@@ -163,7 +164,7 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
 
   const renderDetails = () => (
     <View style={styles.detailsContainer}>
-      <DetailsSheet data={data} />
+      <DetailsSheet data={data}/>
     </View>
   );
 

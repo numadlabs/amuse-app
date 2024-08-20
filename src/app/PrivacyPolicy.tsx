@@ -7,8 +7,9 @@ import {
   TouchableOpacity,
   Modal,
   ActivityIndicator,
+  Switch,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "@/components/layout/Header";
 import Color from "@/constants/Color";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -35,9 +36,14 @@ import Button from "@/components/ui/Button";
 import Close from "@/components/icons/Close";
 import { height, width } from "@/lib/utils";
 import { router } from "expo-router";
+import Accordion from "@/components/ui/Accordion";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TermsAndCondo = () => {
   const [loading, setLoading] = useState(false);
+  const [showProfilePicture, setShowProfilePicture] = useState(true);
+  const [showDateOfBirth, setShowDateOfBirth] = useState(true);
+  const [showArea, setShowArea] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const { authState } = useAuth();
   const pressed = useSharedValue(false);
@@ -51,6 +57,66 @@ const TermsAndCondo = () => {
       { scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) },
     ],
   }));
+
+  const saveProfilePictureSetting = async (value) => {
+    try {
+      await AsyncStorage.setItem('showProfilePicture', value.toString());
+      setShowProfilePicture(value);
+    } catch (error) {
+      console.error('Error saving profile picture setting:', error);
+    }
+  };
+
+  const saveDateOfBirthSetting = async (value) => {
+    try {
+      await AsyncStorage.setItem('showDateOfBirth', value.toString());
+      setShowDateOfBirth(value);
+    } catch (error) {
+      console.error('Error saving date of birth setting:', error);
+    }
+  };
+  const saveAreaSetting = async (value) => {
+    try {
+      await AsyncStorage.setItem('showArea', value.toString());
+      setShowArea(value);
+    } catch (error) {
+      console.error('Error saving area setting:', error);
+    }
+  };
+
+  const getAreaSetting = async () => {
+    try {
+      const data =  await AsyncStorage.getItem('showArea');
+      setShowArea(data === 'true');
+    } catch (error) {
+      console.error('Error saving area setting:', error);
+    }
+  };
+
+  const getProfilePictureSetting = async () => {
+    try {
+    const data =  await AsyncStorage.getItem('showProfilePicture');
+      setShowProfilePicture(data === 'true');
+    } catch (error) {
+      console.error('Error saving profile picture setting:', error);
+    }
+  };
+
+  const getDateOfBirthSetting = async () => {
+    try {
+      const data =  await AsyncStorage.getItem('showDateOfBirth');
+       console.log(data)
+      setShowDateOfBirth(data === 'true');
+    } catch (error) {
+      console.error('Error saving date of birth setting:', error);
+    }
+  };
+
+  useEffect(() =>  {
+    getProfilePictureSetting();
+    getDateOfBirthSetting();
+    getAreaSetting();
+  }, [])
 
   const { mutateAsync: deleteUserMutation } = useMutation({
     mutationFn: deleteUser,
@@ -122,115 +188,84 @@ const TermsAndCondo = () => {
     });
   };
 
+  const data = [
+    {
+      title: "Data Collection",
+      text: "The Platform collects two types of data from its users: necessary datacollection which cannot be disabled and optional data collection which may be enabled/disabled at your discretion.  i. Location:  We use location data to assist you in locating restaurants participating in a program on the Platform. We may store location data to improve and optimize the Platform. ii. Email:  We will store and use your email for account creation, user login, password management and Platform-to-user communications. c. Optional Data Collection i. Birthday: We use birthday data to allow us to offer you a special birthday promotion or reward. ii. Profile Picture: You may opt to add a profile picture in order to personalize your profile. If added, the Platform will automatically store the data.",
+
+    },
+    {
+      title: "General Data Protection Regulation",
+      text: "a. Our legal basis for collecting and using the data is for one or more of the following purposes: i. We need to perform a contract with you. ii. You have given us permission to do so. iii. The processing is in our legitimate interest, and it is not overridden by your rights. iv. It is necessary for payment processing purposes. v. It is necessary to comply with the law.",
+    },
+    {
+      title: "Data Retention and Disclosure",
+      text: "a. We will retain data only for as long as is necessary for the purposes as stated in this policy. b. Disclosure of your data may occur for one or more of the following reasons: i. The Platform is involved in a merger, acquisition or asset sale.  ii. We are required by law to disclose your data.  iii. We have a good faith belief that it is necessary to disclose your data in relation to the protection of the Platform and/or legal matters, both potential and active.",
+    },
+    {
+      title: "Data Protection",
+      text: "a. The security of your data is important to us, and we strive to use all commercially reasonable means to protect your data. However, we do not guarantee absolute security of your data.",
+    },
+    {
+      title: "User Rights",
+      text: "a. You have the following rights regarding your data: i. Access: You can request access to the data of yours that we have collected.  ii. Rectification: You have the right to have your information corrected that information is inaccurate or incomplete.  iii. Objection: You have the right to request that we restrict the processing of your data.  iv. Portability: You have the right to be provided with a copy of your data that we have collected.  v. Withdraw Consent: You have the right to withdraw your consent at any time to the collection of your data.",
+    },
+  ];
+
   return (
     <>
       <Header
-        title="Privacy policy"
+        title="Privacy policy & Settings"
         titleStyle={{ fontFamily: "Sora", fontWeight: 600 }}
       />
       <View style={styles.container}>
         <ScrollView style={styles.scrollViewContainer}>
-        <Text style={styles.body}>
+          <Text style={[styles.header, { fontSize: 16 }]}>Disclaimer</Text>
+          <Text style={[styles.body, { fontSize: 12 }]}>
             By using the Amuse Bouche application platform ("Platform"), you agree to the collection
             and use of information in accordance with this policy.
           </Text>
 
-          <Text style={styles.header}>1. Data Collection: </Text>
-          <Text style={styles.body}>
-            a. The Platform collects two types of data from its users: necessary data
-            collection which cannot be disabled and optional data collection which may
-            be enabled/disabled at your discretion.
-          </Text>
-          <Text style={styles.body}>
-            b. Necessary Data Collection
-          </Text>
-          <Text style={styles.body}>
-            <Text style={{ color: Color.base.White, fontWeight: 'bold' }}>
-              i. Location:
-            </Text>{' '}
-            We use location data to assist you in locating restaurants
-            participating in a program on the Platform. We may store location
-            data to improve and optimize the Platform.
-          </Text>
-          <Text style={styles.body}>
-            <Text style={{ color: Color.base.White, fontWeight: 'bold' }}>
-              ii. Email:
-            </Text>{' '}
-            We will store and use your email for account creation, user
-            login, password management and Platform-to-user communications.
-          </Text>
-          <Text style={styles.body}>
-            c. Optional Data Collection
-          </Text>
-          <Text style={styles.body}>
-            <Text style={{ color: Color.base.White, fontWeight: 'bold' }}>
-              i. Birthday:
-            </Text>{' '}
-            We use birthday data to allow us to offer you a special
-            birthday promotion or reward.
-          </Text>
-          <Text style={styles.body}>
-            <Text style={{ color: Color.base.White, fontWeight: 'bold' }}>
-              ii. Profile Picture:
-            </Text>{' '}
-            You may opt to add a profile picture in order to
-            personalize your profile. If added, the Platform will automatically
-            store the data.
+          {data.map((item, index) => (
+            <View style={{ marginVertical: 16 }}>
+              <Accordion key={index} title={item.title} text={item.text} />
+            </View>
+
+          ))}
+          <Text style={[styles.header, { fontSize: 16 }]}>Optional Data</Text>
+          <Text style={[styles.body, { fontSize: 12 }]}>
+            To maintain data privacy, you have the option to disable specific fields.
           </Text>
 
-          <Text style={styles.header}>2. General Data Protection Regulation: </Text>
-          <Text style={styles.body}>
-            a. Our legal basis for collecting and using the data is for one or more of the
-            following purposes:
-          </Text>
-          <Text style={styles.body}>
-            i. We need to perform a contract with you.{'\n'}
-            ii. You have given us permission to do so.{'\n'}
-            iii. The processing is in our legitimate interest, and it is not overridden by
-            your rights.{'\n'}
-            iv. It is necessary for payment processing purposes.{'\n'}
-            v. It is necessary to comply with the law.
-          </Text>
+          <View style={styles.item}>
+            <Text style={styles.label}>Profile picture</Text>
+            <Switch
+              trackColor={{ false: Color.Gray.gray300, true: Color.System.systemSuccess }}
+              thumbColor={showProfilePicture ? Color.base.White : Color.Gray.gray100}
+              value={showProfilePicture}
+              onValueChange={saveProfilePictureSetting}
+            />
 
-          <Text style={styles.header}>3. Data Retention and Disclosure: </Text>
-          <Text style={styles.body}>
-            a. We will retain data only for as long as is necessary for the purposes as stated
-            in this policy.
-          </Text>
-          <Text style={styles.body}>
-            b. Disclosure of your data may occur for one or more of the following reasons:
-          </Text>
-          <Text style={styles.body}>
-            i. The Platform is involved in a merger, acquisition or asset sale.{'\n'}
-            ii. We are required by law to disclose your data.{'\n'}
-            iii. We have a good faith belief that it is necessary to disclose your data in
-            relation to the protection of the Platform and/or legal matters, both
-            potential and active.
-          </Text>
+          </View>
+          <View style={styles.item}>
+            <Text style={styles.label}>Date of birth</Text>
+            <Switch
+              trackColor={{ false: Color.Gray.gray300, true: Color.System.systemSuccess }}
+              thumbColor={showDateOfBirth ? Color.base.White : Color.Gray.gray100}
+              value={showDateOfBirth}
+              onValueChange={saveDateOfBirthSetting}
+            />
 
-          <Text style={styles.header}>4. Data Protection: </Text>
-          <Text style={styles.body}>
-            a. The security of your data is important to us, and we strive to use all
-            commercially reasonable means to protect your data. However, we do not
-            guarantee absolute security of your data.
-          </Text>
-
-          <Text style={styles.header}>5. User Rights: </Text>
-          <Text style={styles.body}>
-            a. You have the following rights regarding your data:
-          </Text>
-          <Text style={styles.body}>
-            i. Access: You can request access to the data of yours that we have
-            collected.{'\n'}
-            ii. Rectification: You have the right to have your information corrected
-            that information is inaccurate or incomplete.{'\n'}
-            iii. Objection: You have the right to request that we restrict the
-            processing of your data.{'\n'}
-            iv. Portability: You have the right to be provided with a copy of your data
-            that we have collected.{'\n'}
-            v. Withdraw Consent: You have the right to withdraw your consent at
-            any time to the collection of your data.
-          </Text>
+          </View>
+          <View style={styles.item}>
+            <Text style={styles.label}>Area</Text>
+            <Switch
+              trackColor={{ false: Color.Gray.gray300, true: Color.System.systemSuccess }}
+              thumbColor={showArea ? Color.base.White : Color.Gray.gray100}
+              value={showArea}
+              onValueChange={saveAreaSetting}
+            />
+          </View>
           <TouchableOpacity
             style={{
               marginTop: 24,
@@ -509,5 +544,16 @@ const styles = StyleSheet.create({
     color: Color.Gray.gray50,
     lineHeight: 20,
     marginTop: 20,
+  },
+  item: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderColor: Color.Gray.gray300,
+  },
+  label: {
+    color: Color.base.White,
+    ...BODY_1_REGULAR,
   },
 });

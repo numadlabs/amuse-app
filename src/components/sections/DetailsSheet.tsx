@@ -29,6 +29,7 @@ const DetailsSheet: React.FC<BottomSheetProps> = ({ data }) => {
   const { data: timeTable } = useQuery({
     queryKey: ["RestaurantTimeTable"],
     queryFn: () => getTimeTable(data.id),
+    enabled : !!data.id
   });
 
   const getDayName = (dayNo) => {
