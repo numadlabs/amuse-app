@@ -87,7 +87,13 @@ const TermsAndCondo = () => {
   const getAreaSetting = async () => {
     try {
       const data =  await AsyncStorage.getItem('showArea');
-      setShowArea(data === 'true');
+
+      if(!data){
+        setShowArea(true)
+      }else{
+        setShowArea(data === 'true');
+      }
+     
     } catch (error) {
       console.error('Error saving area setting:', error);
     }
@@ -105,8 +111,12 @@ const TermsAndCondo = () => {
   const getDateOfBirthSetting = async () => {
     try {
       const data =  await AsyncStorage.getItem('showDateOfBirth');
+      if(!data){
+        setShowDateOfBirth(true)
+      }else{
+        setShowDateOfBirth(data === 'true');
+      }
        console.log(data)
-      setShowDateOfBirth(data === 'true');
     } catch (error) {
       console.error('Error saving date of birth setting:', error);
     }
