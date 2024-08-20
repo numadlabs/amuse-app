@@ -21,7 +21,10 @@ const RestaurantListView = () => {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
 
+  
   const currentTime = moment().format("HH:mm:ss");
+  const currentDayOfWeek = moment().isoWeekday();
+
   const {
     data: restaurantsData,
     isLoading,
@@ -33,7 +36,7 @@ const RestaurantListView = () => {
         page: 1,
         limit: 10,
         time: currentTime,
-        dayNoOfTheWeek: 7,
+        dayNoOfTheWeek: currentDayOfWeek,
       }),
   });
 

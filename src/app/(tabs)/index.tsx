@@ -100,6 +100,7 @@ const Page = () => {
       { scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) },
     ],
   }));
+  const currentDayOfWeek = moment().isoWeekday();
 
   const { data: restaurantsData } = useQuery<GetRestaurantsResponseType>({
     queryKey: restaurantKeys.all,
@@ -108,7 +109,7 @@ const Page = () => {
         page: 1,
         limit: 10,
         time: currentTime,
-        dayNoOfTheWeek: 7,
+        dayNoOfTheWeek: currentDayOfWeek,
       });
     },
 
