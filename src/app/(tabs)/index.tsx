@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import Color from "@/constants/Color";
 import Balance from "@/components/sections/Balance";
 import QuickInfo from "@/components/sections/QuickInfo";
+// import DiscoverFloatRestCard from "@/components/sections/DiscoverFloatRestCard";
 import StackedCard from "@/components/sections/StackedCard";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
@@ -42,6 +43,7 @@ import { usePushNotifications } from "@/hooks/usePushNotification";
 import moment from "moment";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 import { BODY_2_MEDIUM, BODY_2_REGULAR, BUTTON_40, H6 } from "@/constants/typography";
+import DiscoverFloatRestCard from "@/components/sections/DiscoverFloatRestCard";
 
 const Page = () => {
   const router = useRouter();
@@ -204,6 +206,9 @@ const Page = () => {
                           onPress={() => handleNavigation(item)}
                         />
                       )}
+                    />
+                    <DiscoverFloatRestCard
+                      onPress={() => setIsQuickInfoVisible(false)}
                     />
                   </Animated.View>
                 </Animated.ScrollView>
