@@ -50,7 +50,7 @@ const throttle = (func, delay) => {
 
 export default function RestaurantMapView() {
   const router = useRouter();
-
+  const currentDayOfWeek = moment().isoWeekday();
   const { currentLocation } = useLocationStore();
   const [selectedLocation, setSelectedLocation] = useState("current");
   const mapRef = useRef(null);
@@ -128,7 +128,7 @@ export default function RestaurantMapView() {
         page: 1,
         limit: 10,
         time: currentTime,
-        dayNoOfTheWeek: 7,
+        dayNoOfTheWeek: currentDayOfWeek,
       });
     },
     // onError(error):{

@@ -33,6 +33,9 @@ const UpdateScreen: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const queryClient = useQueryClient();
   const [otpValue, setOtpValue] = useState<string>('');
+  const maxDate = new Date();
+  maxDate.setFullYear(maxDate.getFullYear() - 18);
+
 
   const { mutateAsync: sendOtpMutation } = useMutation({
     mutationFn: sendOtp,
@@ -60,7 +63,8 @@ const UpdateScreen: React.FC = () => {
 
   useEffect(() => {
     if (field === 'dateOfBirth' && value) {
-      setDate(new Date(value));
+      const initialDate = new Date(value);
+      setDate(initialDate > maxDate ? maxDate : initialDate);
     }
     if (field === 'email') {
       setEmail(value);
@@ -87,11 +91,25 @@ const UpdateScreen: React.FC = () => {
             verificationCode
           });
         }
-      } else {
+      } else if (field === 'dateOfBirth') {
+        if (date > maxDate) {
+         
+          return;
+        }
         setLoading(true);
         const dataToUpdate = { 
-          [field]: field === 'dateOfBirth' ? date.toISOString().split('T')[0] : newValue 
+          [field]: date.toISOString().split('T')[0] 
         };
+        await updateUserInfo({
+          userId: authState.userId,
+          data: dataToUpdate
+        });
+        queryClient.invalidateQueries({ queryKey: userKeys.info });
+        setLoading(false);
+        router.back();
+      } else {
+        setLoading(true);
+        const dataToUpdate = { [field]: newValue };
         await updateUserInfo({
           userId: authState.userId,
           data: dataToUpdate
@@ -108,7 +126,11 @@ const UpdateScreen: React.FC = () => {
   const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(Platform.OS === 'ios');
-    setDate(currentDate);
+    if (currentDate > maxDate) {
+      setDate(maxDate);
+    } else {
+      setDate(currentDate);
+    }
   };
 
   const formatDate = (date: Date): string => {
@@ -117,7 +139,7 @@ const UpdateScreen: React.FC = () => {
 
   const renderOtpInputs = () => {
     return (
-      <Animated.View entering={FadeInLeft.duration(800)}  style={styles.otpMainContainer}>
+      <Animated.View entering={FadeInLeft.duration(800)} style={styles.otpMainContainer}>
         <Text style={styles.otpTitle}>Verification code</Text>
         <Text style={styles.otpSubtitle}>Sent to {email}</Text>
         <OtpInputEmail length={4} onOtpChange={setOtpValue} />
@@ -152,6 +174,7 @@ const UpdateScreen: React.FC = () => {
               mode="date"
               display={Platform.OS === 'ios' ? "spinner" : "default"}
               onChange={onDateChange}
+              maximumDate={maxDate}
             />
           )}
         </>
@@ -206,7 +229,7 @@ const UpdateScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Header title={`Edit ${screenName}`} />
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoidingView}
       >
