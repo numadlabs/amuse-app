@@ -112,7 +112,7 @@ const Profile = () => {
                         style={{ width: 72, height: 72, borderRadius: 48 }}
                       />
                     ) : (
-                      <User size={48} color={Color.Gray.gray50} />
+                      <User size={36} color={Color.Gray.gray50} />
                     )}
                   </View>
                   <View
