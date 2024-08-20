@@ -22,7 +22,6 @@ const RestaurantListView = () => {
   const [currentStep, setCurrentStep] = useState(1);
 
   const currentTime = moment().format("HH:mm:ss");
-
   const {
     data: restaurantsData,
     isLoading,
@@ -37,6 +36,10 @@ const RestaurantListView = () => {
         dayNoOfTheWeek: 7,
       }),
   });
+
+
+  console.log(restaurantsData);
+  
 
   if (isLoading) {
     return <ActivityIndicator size="large" color={Color.Gray.gray100} />;

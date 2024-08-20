@@ -14,7 +14,7 @@ import moment from "moment";
 import APassCard from "@/components/atom/cards/APassCard";
 import { BODY_2_REGULAR, H5 } from "@/constants/typography";
 const PerkScreen = () => {
-  const { restaurantId, powerUp } = useLocalSearchParams();
+  const { restaurantId, powerUp, btcAmount } = useLocalSearchParams();
   const queryClient = useQueryClient();
   const currentTime = moment().format("HH:mm:ss");
 
@@ -90,7 +90,7 @@ const PerkScreen = () => {
                   color: Color.base.White,
                 }}
               >
-                +1 EUR of Bitcoin
+                +{Number(btcAmount).toFixed(2)} EUR of Bitcoin
               </Text>
               <Text
                 style={{

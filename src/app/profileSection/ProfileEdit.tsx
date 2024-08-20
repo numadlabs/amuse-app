@@ -4,138 +4,54 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Switch,
   ScrollView,
-  ActivityIndicator,
   Image,
-  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { User as UserIcon } from "iconsax-react-native";
+import { ArrowRight2, Cake, Camera, Location, Sms, User } from "iconsax-react-native";
 import Color from "@/constants/Color";
 import { BODY_1_REGULAR, BODY_2_BOLD, BODY_2_MEDIUM, BUTTON_48 } from "@/constants/typography";
 import Header from '@/components/layout/Header';
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getUserById } from "@/lib/service/queryHelper";
 import { useAuth } from "@/context/AuthContext";
-import { updateUserInfo } from "@/lib/service/mutationHelper";
-import Button from "@/components/ui/Button";
 import { router } from "expo-router";
 import { userKeys } from "@/lib/service/keysHelper";
-import * as ImagePicker from "expo-image-picker";
 import { SERVER_SETTING } from "@/constants/serverSettings";
+import { LinearGradient } from "expo-linear-gradient";
+import * as ImagePicker from "expo-image-picker";
 import Animated from 'react-native-reanimated';
-import OtpInputEmail from '@/components/atom/OtpInputEmail';
 
 interface User {
   nickname?: string;
   email?: string;
   location?: string;
-  profilePicture?: string | null;
+  profilePicture?: string;
   dateOfBirth?: string;
-}
-
-interface UserResponse {
-  user: User;
 }
 
 const ProfileEdit: React.FC = () => {
   const { authState } = useAuth();
-  const { data: userResponse } = useQuery<UserResponse, Error>({
+  const [showProfilePicture, setShowProfilePicture] = useState(false);
+  const [profilePicture, setProfilePicture] = useState<ImagePicker.ImagePickerAsset | null>(null);
+  const { data: userResponse } = useQuery<{ user: User }>({
     queryKey: userKeys.info,
     queryFn: () => getUserById(authState.userId),
   });
 
-  const user = userResponse?.user || {} as User;
-
-  const [loading, setLoading] = useState(false);
-  const [nickname, setNickname] = useState("");
-  const [email, setEmail] = useState("");
-  const [location, setLocation] = useState("");
-  const [profilePicture, setProfilePicture] = useState<ImagePicker.ImagePickerAsset | null>(null);
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [showNickname, setShowNickname] = useState(false);
-  const [showDateOfBirth, setShowDateOfBirth] = useState(false);
-  const [showArea, setShowArea] = useState(false);
-  const [showProfilePicture, setShowProfilePicture] = useState(false);
-  const [dataChanged, setDataChanged] = useState(false);
-
-  useEffect(() => {
-    if (user) {
-      setNickname(user.nickname || "");
-      setEmail(user.email || "");
-      setLocation(user.location || "");
-      setDateOfBirth(user.dateOfBirth || "");
-      if (user.profilePicture) {
-        setProfilePicture({ uri: `${SERVER_SETTING.PROFILE_PIC_LINK}${user.profilePicture}` } as ImagePicker.ImagePickerAsset);
-      }
-      
-      // Set toggle states based on whether the fields have values
-      setShowNickname(!!user.nickname);
-      setShowDateOfBirth(!!user.dateOfBirth);
-      setShowArea(!!user.location);
-      setShowProfilePicture(!!user.profilePicture);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    const hasChanged = 
-      (showNickname && user.nickname !== nickname) ||
-      (showProfilePicture && user.profilePicture !== profilePicture?.uri) ||
-      (showArea && user.location !== location) ||
-      (showDateOfBirth && user.dateOfBirth !== dateOfBirth) ||
-      (!showNickname && user.nickname) ||
-      (!showProfilePicture && user.profilePicture) ||
-      (!showArea && user.location) ||
-      (!showDateOfBirth && user.dateOfBirth);
-    
-    setDataChanged(hasChanged);
-  }, [user, nickname, location, dateOfBirth, profilePicture, showNickname, showProfilePicture, showArea, showDateOfBirth]);
-
-  const queryClient = useQueryClient();
+  const user = userResponse?.user || {};
 
   const handleNavigation = (field: keyof User, screenName: string) => {
     router.push({
-      pathname: "profileSection/UpdateScreen",
+      pathname: "/profileSection/UpdateScreen",
       params: {
         field, 
-        value: user[field],
+        value: user[field] || '',
         screenName: screenName
       },
     });
-  }
-
-  const triggerUpdateUser = async () => {
-    setLoading(true);
-    const userData: Partial<User> & { profilePicture?: { uri: string; type: string; name: string } | null } = {};
-
-    // Always send values for all fields, empty string if untoggled
-    userData.nickname = showNickname ? nickname : "";
-    userData.location = showArea ? location : "";
-    userData.dateOfBirth = showDateOfBirth ? dateOfBirth : "";
-
-    if (showProfilePicture && profilePicture) {
-      userData.profilePicture = {
-        uri: profilePicture.uri,
-        type: "image/jpeg",
-        name: "profile_picture.jpg",
-      };
-    } else {
-      userData.profilePicture = null;
-    }
-
-    try {
-      await updateUserInfo({ userId: authState.userId, data: userData });
-      setLoading(false);
-      setDataChanged(false);
-      queryClient.invalidateQueries({ queryKey: userKeys.info });
-      router.back();
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-      Alert.alert("Error", "Failed to update profile. Please try again.");
-    }
   };
+
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -151,29 +67,24 @@ const ProfileEdit: React.FC = () => {
     }
   };
 
-  const formatDateForDisplay = (dateString: string): string => {
+  const formatDate = (dateString: string | undefined) => {
     if (!dateString) return "Not set";
     const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
     return date.toLocaleDateString('en-US', options);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Account" />
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.content}>
-          {/* Profile Picture Section */}
-          <View style={styles.item}>
-            <Text style={styles.label}>Profile picture</Text>
-            <Switch
-              trackColor={{ false: Color.Gray.gray300, true: Color.System.systemSuccess }}
-              thumbColor={showProfilePicture ? Color.base.White : Color.Gray.gray100}
-              value={showProfilePicture}
-              onValueChange={setShowProfilePicture}
-            />
-          </View>
-          {showProfilePicture && (
+      <View style={styles.scrollView}>
+        <LinearGradient
+          style={styles.gradientContainer}
+          colors={[Color.Brand.card.start, Color.Brand.card.end]}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 1, y: 1 }}
+        >
+         
             <Animated.View style={{ flexDirection: 'row', padding: 16, alignItems: 'center', gap: 24, alignContent: 'center' }}>
               {profilePicture ? (
                 <Image
@@ -182,103 +93,66 @@ const ProfileEdit: React.FC = () => {
                 />
               ) : (
                 <View style={{ width: 72, aspectRatio: 1, justifyContent: 'center', backgroundColor: Color.Gray.gray400, alignItems: 'center', borderRadius: 48 }}>
-                  <UserIcon size={30} color={Color.base.White} />
+                  <User size={30} color={Color.base.White} />
                 </View>
               )}
               <TouchableOpacity style={styles.changeButton} onPress={pickImage}>
                 <Text style={styles.changeButtonText}>Change</Text>
               </TouchableOpacity>
             </Animated.View>
-          )}
 
-          {/* Email Section */}
-         
-            <Text style={styles.label}>Email</Text>
-            <TouchableOpacity style={styles.item} onPress={() => handleNavigation('email', 'Email')}>
-              <View style={styles.valueContainer}>
-                <Text style={styles.value}>{email || "Not set"}</Text>
-                <Text style={styles.arrow}>{'>'}</Text>
-              </View>
-            </TouchableOpacity>
-         
+          <FieldItem
+            icon={<User color={Color.Gray.gray50} />}
+            label="Nickname"
+            value={user.nickname || "Not set"}
+            onPress={() => handleNavigation('nickname', 'Nickname')}
+          />
 
-          {/* Nickname Section */}
-          {/* <View style={styles.item}>
-            <Text style={styles.label}>Nickname</Text>
-            <Switch
-              trackColor={{ false: Color.Gray.gray300, true: Color.System.systemSuccess }}
-              thumbColor={showNickname ? Color.base.White : Color.Gray.gray100}
-              value={showNickname}
-              onValueChange={setShowNickname}
-            />
-          </View>
-          {showNickname && ( */}
-           <Text style={styles.label}>Nickname</Text>
-            <TouchableOpacity style={styles.item} onPress={() => handleNavigation('nickname', 'Nickname')}>
-              <View style={styles.valueContainer}>
-                <Text style={styles.value}>{nickname || "Not set"}</Text>
-                <Text style={styles.arrow}>{'>'}</Text>
-              </View>
-            </TouchableOpacity>
-        
+          <FieldItem
+            icon={<Sms color={Color.Gray.gray50} />}
+            label="Email"
+            value={user.email || "Not set"}
+            onPress={() => handleNavigation('email', 'Email')}
+          />
 
-          {/* Date of Birth Section */}
-          <View style={styles.item}>
-            <Text style={styles.label}>Date of birth</Text>
-            <Switch
-              trackColor={{ false: Color.Gray.gray300, true: Color.System.systemSuccess }}
-              thumbColor={showDateOfBirth ? Color.base.White : Color.Gray.gray100}
-              value={showDateOfBirth}
-              onValueChange={setShowDateOfBirth}
-            />
-          </View>
-          {showDateOfBirth && (
-            <TouchableOpacity style={styles.item} onPress={() => handleNavigation('dateOfBirth', 'Date of birth')}>
-              <View style={styles.valueContainer}>
-                <Text style={styles.value}>{formatDateForDisplay(dateOfBirth)}</Text>
-                <Text style={styles.arrow}>{'>'}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
+          <FieldItem
+            icon={<Location color={Color.Gray.gray50} />}
+            label="Area"
+            value={user.location || "Not set"}
+            onPress={() => handleNavigation('location', 'Area')}
+          />
 
-          {/* Area Section */}
-          <View style={styles.item}>
-            <Text style={styles.label}>Area</Text>
-            <Switch
-              trackColor={{ false: Color.Gray.gray300, true: Color.System.systemSuccess }}
-              thumbColor={showArea ? Color.base.White : Color.Gray.gray100}
-              value={showArea}
-              onValueChange={setShowArea}
-            />
-          </View>
-          {showArea && (
-            <TouchableOpacity style={styles.item} onPress={() => handleNavigation('location', 'Area')}>
-              <View style={styles.valueContainer}>
-                <Text style={styles.value}>{location || "Not set"}</Text>
-                <Text style={styles.arrow}>{'>'}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-        </View>
-      </ScrollView>
-      <View style={styles.buttonContainer}>
-        <Button
-          variant={dataChanged ? "primary" : "disabled"}
-          textStyle={dataChanged ? "primary" : "disabled"}
-          size="default"
-          onPress={triggerUpdateUser}
-        >
-          {loading ? (
-            <ActivityIndicator size="small" color="white" />
-          ) : (
-            <Text style={{ ...BUTTON_48 }}>Save changes</Text>
-          )}
-        </Button>
+          <FieldItem
+            icon={<Cake color={Color.Gray.gray50} />}
+            label="Birthday"
+            value={formatDate(user.dateOfBirth)}
+            onPress={() => handleNavigation('dateOfBirth', 'Birthday')}
+          />
+        </LinearGradient>
       </View>
     </SafeAreaView>
   );
 };
 
+interface FieldItemProps {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  onPress: () => void;
+}
+
+const FieldItem: React.FC<FieldItemProps> = ({ icon, label, value, onPress }) => (
+  <View style={styles.fieldContainer}>
+    <Text style={styles.fieldLabel}>{label}</Text>
+    <TouchableOpacity style={styles.fieldValueContainer} onPress={onPress}>
+      <View style={styles.fieldContent}>
+        {icon}
+        <Text style={styles.fieldValue}>{value}</Text>
+      </View>
+      <ArrowRight2 size={20} color={Color.Gray.gray50} />
+    </TouchableOpacity>
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -287,6 +161,69 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+  },
+  gradientContainer: {
+    padding: 16,
+    borderWidth:1,
+    borderColor: Color.Gray.gray400,
+    borderRadius: 24,
+    margin: 16,
+  },
+  profileContainer: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  profilePic: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    backgroundColor: Color.Gray.gray300,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileImage: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+  },
+  cameraIconContainer: {
+    position: 'absolute',
+    bottom: 0,
+    right: '35%',
+    backgroundColor: Color.Gray.gray400,
+    padding: 8,
+    borderRadius: 20,
+  },
+  fieldContainer: {
+    marginBottom: 16,
+  },
+  fieldLabel: {
+    ...BODY_2_MEDIUM,
+    color: Color.base.White,
+    marginBottom: 8,
+  },
+  fieldValueContainer: {
+    backgroundColor: Color.Gray.gray500,
+    borderWidth:1,
+    borderColor: Color.Gray.gray400,
+    borderRadius: 16,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  fieldContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  fieldValue: {
+    ...BODY_1_REGULAR,
+    color: Color.base.White,
+    marginLeft: 12,
+  },
+  arrow: {
+    color: Color.Gray.gray200,
+    fontSize: 20,
   },
   content: {
     padding: 16,
@@ -316,10 +253,6 @@ const styles = StyleSheet.create({
     ...BODY_2_BOLD,
     marginRight: 8,
     fontSize: 16
-  },
-  arrow: {
-    color: Color.Gray.gray200,
-    fontSize: 20,
   },
   changeButton: {
     backgroundColor: Color.Gray.gray300,
