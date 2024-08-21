@@ -22,6 +22,7 @@ const TermsAndCondo = () => {
   ];
 
   return (
+    <SafeAreaView style={{flex: 1}}>
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
       <Header title="Terms and Conditions" />
       <View style={styles.container}>
@@ -41,6 +42,7 @@ const TermsAndCondo = () => {
         </Text>
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 

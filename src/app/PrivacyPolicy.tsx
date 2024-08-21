@@ -224,6 +224,7 @@ const TermsAndCondo = () => {
 
   return (
     <>
+      <SafeAreaView style={{flex: 1}}>
       <Header
         title="Privacy policy & Settings"
         titleStyle={{ fontFamily: "Sora", fontWeight: 600 }}
@@ -517,6 +518,7 @@ const TermsAndCondo = () => {
             </Animated.View>
           </Modal>
         ))}
+        </SafeAreaView>
     </>
   );
 };

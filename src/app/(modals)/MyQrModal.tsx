@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   Dimensions,
   ActivityIndicator,
-  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Color from "@/constants/Color";
@@ -22,6 +21,7 @@ import { io } from "socket.io-client";
 import { useAuth } from "@/context/AuthContext";
 import QRCode from "react-native-qrcode-svg";
 import { BODY_2_REGULAR, H6 } from "@/constants/typography";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
 const markerSize = 250;
@@ -111,6 +111,7 @@ const MyQrModal = () => {
 
   return (
     <>
+      <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         <View
           style={{
@@ -191,6 +192,7 @@ const MyQrModal = () => {
           </TouchableOpacity>
         </View>
       </View>
+      </SafeAreaView>
     </>
   );
 };
