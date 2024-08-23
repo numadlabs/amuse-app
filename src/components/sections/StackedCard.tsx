@@ -23,7 +23,7 @@ const StackedCard = () => {
   const { currentLocation } = useLocationStore();
 
   const router = useRouter();
-  const { data: cards = [] } = useQuery({
+  const { data: cards = [], isLoading } = useQuery({
     queryKey: userKeys.cards,
     queryFn: () => {
       return getUserCard({
@@ -116,6 +116,7 @@ const StackedCard = () => {
               ]}
             >
               <APassCard
+
                 name={card.name}
                 nftImage={card.nftImageUrl}
                 image={card.logo}
@@ -128,6 +129,7 @@ const StackedCard = () => {
                     ? 0
                     : card?.target - card?.current
                 }
+                isLoading={isLoading}
               />
             </Animated.View>
           ))}

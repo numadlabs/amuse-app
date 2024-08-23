@@ -91,7 +91,7 @@ const Wallet = () => {
             handleToggle={() => toggleBalanceBottomSheet()}
           />
 
-          <View style={styles.button}>
+          {/* <View style={styles.button}>
             <TouchableOpacity
               style={{ alignItems: "center", justifyContent: "center", gap: 4 }}
             >
@@ -105,7 +105,7 @@ const Wallet = () => {
                 Withdraw
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           <View>
             <Text

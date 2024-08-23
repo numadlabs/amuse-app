@@ -44,6 +44,7 @@ import moment from "moment";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 import { BODY_2_MEDIUM, BODY_2_REGULAR, BUTTON_40, H6 } from "@/constants/typography";
 import DiscoverFloatRestCard from "@/components/sections/DiscoverFloatRestCard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Page = () => {
   const router = useRouter();
@@ -59,7 +60,9 @@ const Page = () => {
   // const { mutateAsync: sendPushToken } = useMutation({
   //   mutationFn: registerDeviceNotification,
   // });
-
+  const profilePictureSetting =  AsyncStorage.getItem('showProfilePicture');
+  const dateOfBirthSetting =  AsyncStorage.getItem('showDateOfBirth');
+  const areaSetting = AsyncStorage.getItem('showArea');
   const { currentLocation } = useLocationStore();
   const currentTime = moment().format("HH:mm:ss");
   const { data: user, isSuccess } = useQuery({
@@ -69,6 +72,7 @@ const Page = () => {
     },
     enabled: !!authState.userId,
   });
+
 
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
@@ -178,10 +182,10 @@ const Page = () => {
                       paddingRight: 32,
                     }}
                   >
-                    {user?.user?.email &&
+                    {
                     user?.user?.dateOfBirth &&
-                    user?.user?.nickname &&
-                    user?.user?.location
+                    user?.user?.location &&
+                    profilePictureSetting
                       ? null
                       : isQuickInfoVisible && (
                           <QuickInfo

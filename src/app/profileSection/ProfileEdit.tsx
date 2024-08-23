@@ -42,7 +42,7 @@ interface ProfilePictureData {
 const ProfileEdit: React.FC = () => {
   const { authState } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [showProfilePicture, setShowProfilePicture] = useState(false);
+  const [showProfilePicture, setShowProfilePicture] = useState(true);
   const [showArea, setShowArea] = useState(true);
   const [showDateOfBirth, setShowDateOfBirth] = useState(true);
   const [error, setError] = useState("");
@@ -53,8 +53,12 @@ const ProfileEdit: React.FC = () => {
   });
 
   const user = userResponse?.user || {};
+  const queryClient = useQueryClient();
 
   const handleNavigation = (field: keyof User, screenName: string) => {
+    if ((field === 'location' && !showArea) || (field === 'dateOfBirth' && !showDateOfBirth)) {
+      return; // Don't navigate if the field is disabled
+    }
     router.push({
       pathname: "/profileSection/UpdateScreen",
       params: {
@@ -66,7 +70,7 @@ const ProfileEdit: React.FC = () => {
   };
 
   const updateUserData = async (field: string, value: string | ProfilePictureData) => {
-    setLoading(true)
+    setLoading(true);
     const dataToUpdate = { [field]: value };
     try {
       await updateUserInfo({
@@ -74,7 +78,6 @@ const ProfileEdit: React.FC = () => {
         data: dataToUpdate
       });
       queryClient.invalidateQueries({ queryKey: userKeys.info });
-
     } catch (error) {
       console.error(`Error updating ${field}:`, error);
       setError(`File is too large`);
@@ -82,8 +85,6 @@ const ProfileEdit: React.FC = () => {
       setLoading(false);
     }
   };
-
-
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -102,71 +103,50 @@ const ProfileEdit: React.FC = () => {
       await updateUserData('profilePicture', profilePictureData);
     }
   };
-  const queryClient = useQueryClient()
+
   const removeProfilePicture = () => updateUserData('profilePicture', '');
 
   const formatDate = (dateString: string | undefined) => {
     if (!dateString) return "Not set";
     const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short' };
     return date.toLocaleDateString('en-US', options);
   };
 
-  console.log(user.profilePicture);
-
-  const saveProfilePictureSetting = async () => {
+  const loadPrivacySettings = async () => {
     try {
-      const data = await AsyncStorage.getItem('showProfilePicture');
-      // setShowProfilePicture(data);
+      const profilePictureSetting = await AsyncStorage.getItem('showProfilePicture');
+      const dateOfBirthSetting = await AsyncStorage.getItem('showDateOfBirth');
+      const areaSetting = await AsyncStorage.getItem('showArea');
+
+      setShowProfilePicture(profilePictureSetting !== 'false');
+      setShowDateOfBirth(dateOfBirthSetting !== 'false');
+      setShowArea(areaSetting !== 'false');
     } catch (error) {
-      console.error('Error saving profile picture setting:', error);
+      console.error('Error loading privacy settings:', error);
     }
   };
-
-  const saveDateOfBirthSetting = async () => {
-    try {
-      const data = await AsyncStorage.getItem('showDateOfBirth');
-      console.log(data)
-      setShowDateOfBirth(data === 'true');
-    } catch (error) {
-      console.error('Error saving date of birth setting:', error);
-    }
-  };
-
-  const saveAreaSetting = async () => {
-    try {
-      const data = await AsyncStorage.getItem('showArea');
-      setShowArea(data === 'true');
-    } catch (error) {
-      console.error('Error saving area setting:', error);
-    }
-  };
-
-
 
   useEffect(() => {
-    saveDateOfBirthSetting();
-    saveAreaSetting();
+    loadPrivacySettings();
   }, []);
-
 
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Account" />
-      <View style={styles.scrollView}>
+      <ScrollView style={styles.scrollView}>
         <LinearGradient
           style={styles.gradientContainer}
           colors={[Color.Brand.card.start, Color.Brand.card.end]}
           start={{ x: 1, y: 0 }}
           end={{ x: 1, y: 1 }}
         >
-
-          <Animated.View style={{ flexDirection: 'row', padding: 16, alignItems: 'center', gap: 24, alignContent: 'center' }}>
+          <Animated.View style={styles.profileContainer}>
             {loading ? (
-              <View style={{ justifyContent: 'center', width: 72, height: 72, alignItems: 'center', backgroundColor: Color.Gray.gray400, borderRadius: 100 }}>
+              <View style={styles.loadingContainer}>
                 <ActivityIndicator size="small" color={Color.base.White} />
               </View>
-            ) : user.profilePicture ? (
+            ) : showProfilePicture && user.profilePicture ? (
               <Image
                 source={{ uri: `${SERVER_SETTING.PROFILE_PIC_LINK}${user.profilePicture}` }}
                 style={styles.profilePicture}
@@ -176,25 +156,27 @@ const ProfileEdit: React.FC = () => {
                 <User size={30} color={Color.base.White} />
               </View>
             )}
-            <View>
-              <View style={{ flexDirection: 'row', gap: 12 }}>
-                <TouchableOpacity style={styles.changeButton} onPress={pickImage}>
-                  <Text style={styles.changeButtonText}>Change</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.changeButton, { borderWidth: 1, backgroundColor: "transparent", borderColor: Color.Gray.gray400 }]} onPress={removeProfilePicture}>
-                  <Text style={styles.changeButtonText}>Remove</Text>
-                </TouchableOpacity>
+            {showProfilePicture && (
+              <View>
+                <View style={styles.profileButtonContainer}>
+                  <TouchableOpacity style={styles.changeButton} onPress={pickImage}>
+                    <Text style={styles.changeButtonText}>Change</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    style={[styles.changeButton, styles.removeButton]} 
+                    onPress={removeProfilePicture}
+                  >
+                    <Text style={styles.changeButtonText}>Remove</Text>
+                  </TouchableOpacity>
+                </View>
+                {error && (
+                  <Animated.Text entering={FadeIn} style={styles.errorText}>
+                    {error}
+                  </Animated.Text>
+                )}
               </View>
-              {error && (
-                <Animated.Text entering={FadeIn} style={{ color: Color.System.systemError }}>
-                  {error}
-                </Animated.Text>
-              )}
-            </View>
-
-
+            )}
           </Animated.View>
-
 
           <FieldItem
             icon={<User color={Color.Gray.gray50} />}
@@ -218,7 +200,6 @@ const ProfileEdit: React.FC = () => {
             disabled={!showArea}
           />
 
-
           <FieldItem
             icon={<Cake color={Color.Gray.gray50} />}
             label="Birthday"
@@ -227,7 +208,7 @@ const ProfileEdit: React.FC = () => {
             disabled={!showDateOfBirth}
           />
         </LinearGradient>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -291,13 +272,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  cameraIconContainer: {
-    position: 'absolute',
-    bottom: 0,
-    right: '35%',
+  loadingContainer: {
+    justifyContent: 'center',
+    width: 72,
+    height: 72,
+    alignItems: 'center',
     backgroundColor: Color.Gray.gray400,
-    padding: 8,
-    borderRadius: 20,
+    borderRadius: 100,
   },
   fieldContainer: {
     marginBottom: 16,
@@ -326,38 +307,9 @@ const styles = StyleSheet.create({
     color: Color.base.White,
     marginLeft: 12,
   },
-  arrow: {
-    color: Color.Gray.gray200,
-    fontSize: 20,
-  },
-  content: {
-    padding: 16,
-  },
-  item: {
+  profileButtonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderColor: Color.Gray.gray300,
-  },
-  label: {
-    color: Color.base.White,
-    ...BODY_1_REGULAR,
-  },
-  valueContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flex: 1,
-    backgroundColor: Color.Gray.gray400,
-    padding: 16,
-    borderRadius: 16
-  },
-  value: {
-    color: Color.base.White,
-    ...BODY_2_BOLD,
-    marginRight: 8,
-    fontSize: 16
+    gap: 12,
   },
   changeButton: {
     backgroundColor: Color.Gray.gray300,
@@ -366,12 +318,18 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginVertical: 16,
   },
+  removeButton: {
+    borderWidth: 1,
+    backgroundColor: "transparent",
+    borderColor: Color.Gray.gray400,
+  },
   changeButtonText: {
     color: Color.base.White,
     ...BODY_2_MEDIUM,
   },
-  buttonContainer: {
-    padding: 16,
+  errorText: {
+    color: Color.System.systemError,
+    marginTop: 8,
   },
   disabledField: {
     backgroundColor: Color.Gray.gray500,
