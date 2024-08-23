@@ -193,7 +193,7 @@ const UpdateScreen: React.FC = () => {
           query={{
             key: "AIzaSyD6P0kwuwr_7RTb5_2UZLNteryotRLItCM",
             language: "en",
-            components: "country:cz",
+            types: "(regions)"
           }}
           fetchDetails={true}
           onFail={(error) => console.error(error)}
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   googlePlacesListView: {
-    backgroundColor: Color.Gray.gray500,
+    backgroundColor: Color.Gray.gray600,
   },
   googlePlacesRow: {
     backgroundColor: Color.Gray.gray500,

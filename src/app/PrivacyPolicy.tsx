@@ -1,25 +1,18 @@
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  Platform,
   ScrollView,
   TouchableOpacity,
   Modal,
-  ActivityIndicator,
   Switch,
+  ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 import Header from "@/components/layout/Header";
 import Color from "@/constants/Color";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as FileSystem from "expo-file-system";
-import * as Sharing from "expo-sharing";
-import { BODY_1_MEDIUM, BODY_1_REGULAR, H6 } from "@/constants/typography";
-import { userKeys } from "@/lib/service/keysHelper";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { getUserById } from "@/lib/service/queryHelper";
-import { useAuth } from "@/context/AuthContext";
+import { BODY_1_REGULAR, H6 } from "@/constants/typography";
 import Animated, {
   FadeIn,
   FadeOut,
@@ -29,28 +22,36 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { deleteUser } from "@/lib/service/mutationHelper";
-import { SERVER_SETTING } from "@/constants/serverSettings";
-import { CloseCircle, DocumentDownload } from "iconsax-react-native";
-import Button from "@/components/ui/Button";
-import Close from "@/components/icons/Close";
-import { height, width } from "@/lib/utils";
-import { router } from "expo-router";
-import Accordion from "@/components/ui/Accordion";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Accordion from "@/components/ui/Accordion";
+import { DocumentDownload, Warning2, CloseCircle } from "iconsax-react-native";
+import { height, width } from "@/lib/utils";
+import Close from "@/components/icons/Close";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
+import { useAuth } from "@/context/AuthContext";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteUser, updateUserInfo } from "@/lib/service/mutationHelper";
+import { getUserById } from "@/lib/service/queryHelper";
+import { router } from "expo-router";
+import { SERVER_SETTING } from "@/constants/serverSettings";
+import { userKeys } from "@/lib/service/keysHelper";
 
 const TermsAndCondo = () => {
-  const [loading, setLoading] = useState(false);
   const [showProfilePicture, setShowProfilePicture] = useState(true);
   const [showDateOfBirth, setShowDateOfBirth] = useState(true);
   const [showArea, setShowArea] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
-  const { authState } = useAuth();
-  const pressed = useSharedValue(false);
-  const { data: user = [] } = useQuery({
-    queryKey: userKeys.info,
-    queryFn: () => getUserById(authState.userId),
+  const [isBottomTabOpen, setIsBottomTabOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [currentSetting, setCurrentSetting] = useState('');
+  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: updateUserInfoMutation } = useMutation({
+    mutationFn: updateUserInfo,
   });
+  const pressed = useSharedValue(false);
+  const { authState } = useAuth();
 
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [
@@ -58,79 +59,105 @@ const TermsAndCondo = () => {
     ],
   }));
 
-  const saveProfilePictureSetting = async (value) => {
-    try {
-      await AsyncStorage.setItem('showProfilePicture', value.toString());
-      setShowProfilePicture(value);
-    } catch (error) {
-      console.error('Error saving profile picture setting:', error);
-    }
-  };
-
-  const saveDateOfBirthSetting = async (value) => {
-    try {
-      await AsyncStorage.setItem('showDateOfBirth', value.toString());
-      setShowDateOfBirth(value);
-    } catch (error) {
-      console.error('Error saving date of birth setting:', error);
-    }
-  };
-  const saveAreaSetting = async (value) => {
-    try {
-      await AsyncStorage.setItem('showArea', value.toString());
-      setShowArea(value);
-    } catch (error) {
-      console.error('Error saving area setting:', error);
-    }
-  };
-
-  const getAreaSetting = async () => {
-    try {
-      const data =  await AsyncStorage.getItem('showArea');
-
-      if(!data){
-        setShowArea(true)
-      }else{
-        setShowArea(data === 'true');
-      }
-     
-    } catch (error) {
-      console.error('Error saving area setting:', error);
-    }
-  };
-
-  const getProfilePictureSetting = async () => {
-    try {
-    const data =  await AsyncStorage.getItem('showProfilePicture');
-      setShowProfilePicture(data === 'true');
-    } catch (error) {
-      console.error('Error saving profile picture setting:', error);
-    }
-  };
-
-  const getDateOfBirthSetting = async () => {
-    try {
-      const data =  await AsyncStorage.getItem('showDateOfBirth');
-      if(!data){
-        setShowDateOfBirth(true)
-      }else{
-        setShowDateOfBirth(data === 'true');
-      }
-       console.log(data)
-    } catch (error) {
-      console.error('Error saving date of birth setting:', error);
-    }
-  };
-
-  useEffect(() =>  {
-    getProfilePictureSetting();
-    getDateOfBirthSetting();
-    getAreaSetting();
-  }, [])
+  const { data: user = [] } = useQuery({
+    queryKey: ["user", authState.userId],
+    queryFn: () => getUserById(authState.userId),
+  });
 
   const { mutateAsync: deleteUserMutation } = useMutation({
     mutationFn: deleteUser,
   });
+
+  const saveSetting = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value.toString());
+    } catch (error) {
+      console.error(`Error saving ${key} setting:`, error);
+    }
+  };
+
+  const getSetting = async (key, setter) => {
+    try {
+      const data = await AsyncStorage.getItem(key);
+      if (data === null) {
+        setter(true);
+      } else {
+        setter(data === 'true');
+      }
+    } catch (error) {
+      console.error(`Error getting ${key} setting:`, error);
+    }
+  };
+
+  useEffect(() => {
+    getSetting('showProfilePicture', setShowProfilePicture);
+    getSetting('showDateOfBirth', setShowDateOfBirth);
+    getSetting('showArea', setShowArea);
+  }, []);
+
+  const handleToggle = (setting, value) => {
+    if (value) {
+      // If turning on, just update the state and save the setting
+      switch (setting) {
+        case 'profilePicture':
+          setShowProfilePicture(true);
+          saveSetting('showProfilePicture', true);
+          break;
+        case 'dateOfBirth':
+          setShowDateOfBirth(true);
+          saveSetting('showDateOfBirth', true);
+          break;
+        case 'area':
+          setShowArea(true);
+          saveSetting('showArea', true);
+          break;
+      }
+    } else {
+      // If turning off, show the bottom tab
+      setCurrentSetting(setting);
+      setIsBottomTabOpen(true);
+    }
+  };
+
+  const confirmToggleOff = async () => {
+    setLoading(true);
+    try {
+      let dataToUpdate = {};
+      switch (currentSetting) {
+        case 'profilePicture':
+          setShowProfilePicture(false);
+          saveSetting('showProfilePicture', false);
+          dataToUpdate = { profilePicture: "" };
+          break;
+        case 'dateOfBirth':
+          setShowDateOfBirth(false);
+          saveSetting('showDateOfBirth', false);
+          dataToUpdate = { dateOfBirth: "" };
+          break;
+        case 'area':
+          setShowArea(false);
+          saveSetting('showArea', false);
+          dataToUpdate = { location: "" };
+          break;
+      }
+
+      await updateUserInfoMutation({
+        userId: authState.userId,
+        data: dataToUpdate
+      });
+
+      queryClient.invalidateQueries({ queryKey: userKeys.info });
+      saveSetting(currentSetting, false);
+    } catch (error) {
+      console.error(`Error updating ${currentSetting}:`, error);
+    } finally {
+      setLoading(false);
+      setIsBottomTabOpen(false);
+    }
+  };
+  const cancelToggleOff = () => {
+    setIsBottomTabOpen(false);
+  };
 
   const generateCSV = (userData) => {
     const headers = [
@@ -164,10 +191,6 @@ const TermsAndCondo = () => {
     return headers.join(",") + "\n" + data.map((item) => `"${item}"`).join(",");
   };
 
-  const toggleBottomSheet = () => {
-    setIsOpen(!isOpen);
-  };
-
   const exportUserData = async () => {
     try {
       const csvContent = generateCSV(user);
@@ -191,34 +214,57 @@ const TermsAndCondo = () => {
 
   const handleDeleteUser = async () => {
     setLoading(true);
-    await deleteUserMutation().then(() => {
-      toggleBottomSheet;
+    try {
+      await deleteUserMutation();
       setLoading(false);
+      setIsDeleteModalOpen(false);
       router.replace("/Login");
-    });
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      setLoading(false);
+      alert("Failed to delete user account");
+    }
   };
 
   const data = [
     {
       title: "Data Collection",
-      text: "The Platform collects two types of data from its users: necessary datacollection which cannot be disabled and optional data collection which may be enabled/disabled at your discretion.  i. Location:  We use location data to assist you in locating restaurants participating in a program on the Platform. We may store location data to improve and optimize the Platform. ii. Email:  We will store and use your email for account creation, user login, password management and Platform-to-user communications. c. Optional Data Collection i. Birthday: We use birthday data to allow us to offer you a special birthday promotion or reward. ii. Profile Picture: You may opt to add a profile picture in order to personalize your profile. If added, the Platform will automatically store the data.",
-
+      text: `The Platform collects two types of data from its users: necessary data collection which cannot be disabled and optional data collection which may be enabled/disabled at your discretion.  
+          I. Location: We use location data to assist you in locating restaurants participating in a program on the Platform. We may store location data to improve and optimize the Platform. 
+          II. Email: We will store and use your email for account creation, user login, password management, and Platform-to-user communications. 
+C. Optional Data Collection 
+          I. Birthday: We use birthday data to allow us to offer you a special birthday promotion or reward. 
+          II. Profile Picture: You may opt to add a profile picture in order to personalize your profile. If added, the Platform will automatically store the data.`,
     },
     {
       title: "General Data Protection Regulation",
-      text: "a. Our legal basis for collecting and using the data is for one or more of the following purposes: i. We need to perform a contract with you. ii. You have given us permission to do so. iii. The processing is in our legitimate interest, and it is not overridden by your rights. iv. It is necessary for payment processing purposes. v. It is necessary to comply with the law.",
+      text: `A. Our legal basis for collecting and using the data is for one or more of the following purposes: 
+          I. We need to perform a contract with you. 
+          II. You have given us permission to do so. 
+          III. The processing is in our legitimate interest, and it is not overridden by your rights. 
+          IV. It is necessary for payment processing purposes. 
+          V. It is necessary to comply with the law.`,
     },
     {
       title: "Data Retention and Disclosure",
-      text: "a. We will retain data only for as long as is necessary for the purposes as stated in this policy. b. Disclosure of your data may occur for one or more of the following reasons: i. The Platform is involved in a merger, acquisition or asset sale.  ii. We are required by law to disclose your data.  iii. We have a good faith belief that it is necessary to disclose your data in relation to the protection of the Platform and/or legal matters, both potential and active.",
+      text: `A. We will retain data only for as long as is necessary for the purposes as stated in this policy. 
+B. Disclosure of your data may occur for one or more of the following reasons: 
+          I. The Platform is involved in a merger, acquisition, or asset sale.  
+          II. We are required by law to disclose your data.  
+          III. We have a good faith belief that it is necessary to disclose your data in relation to the protection of the Platform and/or legal matters, both potential and active.`,
     },
     {
       title: "Data Protection",
-      text: "a. The security of your data is important to us, and we strive to use all commercially reasonable means to protect your data. However, we do not guarantee absolute security of your data.",
+      text: `A. The security of your data is important to us, and we strive to use all commercially reasonable means to protect your data. However, we do not guarantee absolute security of your data.`,
     },
     {
       title: "User Rights",
-      text: "a. You have the following rights regarding your data: i. Access: You can request access to the data of yours that we have collected.  ii. Rectification: You have the right to have your information corrected that information is inaccurate or incomplete.  iii. Objection: You have the right to request that we restrict the processing of your data.  iv. Portability: You have the right to be provided with a copy of your data that we have collected.  v. Withdraw Consent: You have the right to withdraw your consent at any time to the collection of your data.",
+      text: `A. You have the following rights regarding your data: 
+          I. Access: You can request access to the data of yours that we have collected.  
+          II. Rectification: You have the right to have your information corrected if it is inaccurate or incomplete.  
+          III. Objection: You have the right to request that we restrict the processing of your data.  
+          IV. Portability: You have the right to be provided with a copy of your data that we have collected.  
+          V. Withdraw Consent: You have the right to withdraw your consent at any time to the collection of your data.`,
     },
   ];
 
@@ -237,11 +283,11 @@ const TermsAndCondo = () => {
           </Text>
 
           {data.map((item, index) => (
-            <View style={{ marginVertical: 16 }}>
-              <Accordion key={index} title={item.title} text={item.text} />
+            <View key={index} style={{ marginVertical: 16 }}>
+              <Accordion title={item.title} text={item.text} />
             </View>
-
           ))}
+
           <Text style={[styles.header, { fontSize: 16 }]}>Optional Data</Text>
           <Text style={[styles.body, { fontSize: 12 }]}>
             To maintain data privacy, you have the option to disable specific fields.
@@ -253,9 +299,8 @@ const TermsAndCondo = () => {
               trackColor={{ false: Color.Gray.gray300, true: Color.System.systemSuccess }}
               thumbColor={showProfilePicture ? Color.base.White : Color.Gray.gray100}
               value={showProfilePicture}
-              onValueChange={saveProfilePictureSetting}
+              onValueChange={(value) => handleToggle('profilePicture', value)}
             />
-
           </View>
           <View style={styles.item}>
             <Text style={styles.label}>Date of birth</Text>
@@ -263,9 +308,8 @@ const TermsAndCondo = () => {
               trackColor={{ false: Color.Gray.gray300, true: Color.System.systemSuccess }}
               thumbColor={showDateOfBirth ? Color.base.White : Color.Gray.gray100}
               value={showDateOfBirth}
-              onValueChange={saveDateOfBirthSetting}
+              onValueChange={(value) => handleToggle('dateOfBirth', value)}
             />
-
           </View>
           <View style={styles.item}>
             <Text style={styles.label}>Area</Text>
@@ -273,9 +317,10 @@ const TermsAndCondo = () => {
               trackColor={{ false: Color.Gray.gray300, true: Color.System.systemSuccess }}
               thumbColor={showArea ? Color.base.White : Color.Gray.gray100}
               value={showArea}
-              onValueChange={saveAreaSetting}
+              onValueChange={(value) => handleToggle('area', value)}
             />
           </View>
+
           <TouchableOpacity
             style={{
               marginTop: 24,
@@ -307,11 +352,12 @@ const TermsAndCondo = () => {
               </Text>
             </View>
           </TouchableOpacity>
+          
           <TouchableOpacity
             style={{
               marginTop: 12,
             }}
-            onPress={toggleBottomSheet}
+            onPress={() => setIsDeleteModalOpen(true)}
           >
             <View
               style={{
@@ -326,7 +372,7 @@ const TermsAndCondo = () => {
                 marginBottom: 40,
               }}
             >
-              <DocumentDownload size={24} color={Color.System.systemError} />
+              <CloseCircle size={24} color={Color.System.systemError} />
               <Text
                 style={{
                   fontSize: 15,
@@ -341,182 +387,126 @@ const TermsAndCondo = () => {
           </TouchableOpacity>
         </ScrollView>
       </View>
-      {isOpen &&
-        (loading ? (
-          <View style={{ flex: 1 }}>
-            <ActivityIndicator />
-          </View>
-        ) : (
-          <Modal transparent={true}>
-            <Animated.View
-              entering={FadeIn}
-              exiting={FadeOut}
-              style={[
-                {
-                  position: "absolute",
-                  backgroundColor: "rgba(0, 0, 0, 0.25)",
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  zIndex: 98,
-                },
-                animatedStyles,
-              ]}
-            />
-            <Animated.View
-              entering={SlideInDown.springify().damping(18)}
-              exiting={SlideOutDown.springify()}
-              style={[
-                {
-                  backgroundColor: Color.Gray.gray600,
-                  height: height / 1.5,
-                  bottom: 0,
-                  width: width,
-                  zIndex: 99,
-                  position: "absolute",
-                  borderTopStartRadius: 32,
-                  borderTopEndRadius: 32,
-                  gap: 24,
-                  padding: 16,
-                },
-                animatedStyles,
-              ]}
-            >
-              <View
-                style={{
-                  paddingVertical: 8,
-                  justifyContent: "center",
-                  alignContent: "center",
-                  alignItems: "center",
-                  flexDirection: "row",
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 20,
-                    lineHeight: 24,
-                    color: Color.base.White,
-                    fontWeight: "bold",
-                  }}
-                >
-                  Delete account
+
+      {isBottomTabOpen && (
+        <Modal transparent={true}>
+          <Animated.View
+            entering={FadeIn}
+            exiting={FadeOut}
+            style={[
+              {
+                position: "absolute",
+                backgroundColor: "rgba(0, 0, 0, 0.25)",
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                zIndex: 98,
+              },
+              animatedStyles,
+            ]}
+          />
+          <Animated.View
+            entering={SlideInDown.springify().damping(18)}
+            exiting={SlideOutDown.springify()}
+            style={[
+              {
+                backgroundColor: Color.Gray.gray600,
+                bottom: 0,
+                width: width,
+                zIndex: 99,
+                position: "absolute",
+                borderTopStartRadius: 32,
+                borderTopEndRadius: 32,
+                gap: 24,
+                padding: 16,
+              },
+              animatedStyles,
+            ]}
+          >
+            <View style={styles.bottomTabContent}>
+              <Warning2 size={62} color={Color.System.systemWarning} />
+              <View style={{alignItems:'center', gap:8}}>
+                <Text style={styles.bottomTabTitle}>Are you sure?</Text>
+                <Text style={styles.bottomTabText}>
+                  This action will permanently delete the information you've provided.
                 </Text>
-                <TouchableOpacity onPress={toggleBottomSheet}>
-                  <View
-                    style={{
-                      backgroundColor: Color.Gray.gray400,
-                      borderRadius: 48,
-                      padding: 8,
-                      width: 32,
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      aspectRatio: 1,
-                      position: "absolute",
-                      left: 85,
-                      top: -18,
-                    }}
-                  >
-                    <Close />
-                  </View>
+              </View>
+              <View style={styles.bottomTabButtons}>
+                <TouchableOpacity style={styles.cancelButton} onPress={cancelToggleOff}>
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.confirmButton} onPress={confirmToggleOff}>
+                  <Text style={styles.buttonText}>Yes, Turn off</Text>
                 </TouchableOpacity>
               </View>
-              <View style={{ alignItems: "center", gap: 16, padding: 16 }}>
-                <CloseCircle size={96} color={Color.System.systemError} />
-                <Text
-                  style={{
-                    fontSize: 18,
-                    fontWeight: "bold",
-                    color: Color.System.systemError,
-                    marginBottom: 8,
-                    textAlign: "center",
-                  }}
-                >
-                  Are you sure you want to delete your account?
+            </View>
+          </Animated.View>
+        </Modal>
+      )}
+      {isDeleteModalOpen && (
+        <Modal transparent={true}>
+          <Animated.View
+            entering={FadeIn}
+            exiting={FadeOut}
+            style={[
+              {
+                position: "absolute",
+                backgroundColor: "rgba(0, 0, 0, 0.25)",
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                zIndex: 98,
+              },
+              animatedStyles,
+            ]}
+          />
+          <Animated.View
+            entering={SlideInDown.springify().damping(18)}
+            exiting={SlideOutDown.springify()}
+            style={[
+              {
+                backgroundColor: Color.Gray.gray600,
+                height: height / 2,
+                bottom: 0,
+                width: width,
+                zIndex: 99,
+                position: "absolute",
+                borderTopStartRadius: 32,
+                borderTopEndRadius: 32,
+                gap: 24,
+                padding: 16,
+              },
+              animatedStyles,
+            ]}
+          >
+            <View style={styles.bottomTabContent}>
+              <CloseCircle size={96} color={Color.System.systemError} />
+              <View style={{alignItems:'center', gap:8}}>
+                <Text style={styles.bottomTabTitle}>Delete Account</Text>
+                <Text style={styles.bottomTabText}>
+                  Are you sure you want to delete your account? This action cannot be undone.
                 </Text>
-                <Text
-                  style={{
-                    lineHeight: 20,
-                    fontSize: 14,
-                    color: Color.Gray.gray50,
-                    textAlign: "center",
-                  }}
-                >
-                  This action cannot be undone. You will lose:
-                </Text>
-                <View style={{ width: "100%" }}>
-                  <Text
-                    style={{
-                      lineHeight: 20,
-                      fontSize: 14,
-                      color: Color.Gray.gray50,
-                    }}
-                  >
-                    • All your personal data
-                  </Text>
-                  <Text
-                    style={{
-                      lineHeight: 20,
-                      fontSize: 14,
-                      color: Color.System.systemError,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    • Your entire in-app balance
-                  </Text>
-                  <Text
-                    style={{
-                      lineHeight: 20,
-                      fontSize: 14,
-                      color: Color.Gray.gray50,
-                    }}
-                  >
-                    • All associated content, history, and achievements
-                  </Text>
-                </View>
-                <Text
-                  style={{
-                    lineHeight: 20,
-                    fontSize: 14,
-                    color: Color.Gray.gray50,
-                    textAlign: "center",
-                    marginTop: 8,
-                  }}
-                >
-                  Please consider using your in-app balance before deleting your
-                  account.
-                </Text>
-
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginTop: 16,
-                    width: "100%",
-                  }}
-                >
-                  <Button
-                    variant="secondary"
-                    textStyle="secondary"
-                    onPress={toggleBottomSheet}
-                    style={{ flex: 1, marginRight: 8 }}
-                  >
-                    <Text style={{ color: Color.base.White }}>No</Text>
-                  </Button>
-                  <Button
-                    variant="primary"
-                    textStyle="primary"
-                    onPress={handleDeleteUser}
-                    style={{ flex: 1, marginLeft: 8 }}
-                  >
-                    <Text style={{ color: Color.base.White }}>Yes</Text>
-                  </Button>
-                </View>
               </View>
-            </Animated.View>
-          </Modal>
-        ))}
+              <View style={styles.bottomTabButtons}>
+                <TouchableOpacity style={styles.cancelButton} onPress={() => setIsDeleteModalOpen(false)}>
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.confirmButton} onPress={handleDeleteUser}>
+                  <Text style={styles.buttonText}>Yes, Delete</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Animated.View>
+        </Modal>
+      )}
+
+      {loading && (
+        <Modal style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color={Color.base.White} />
+        </Modal>
+      )}
     </>
   );
 };
@@ -544,10 +534,6 @@ const styles = StyleSheet.create({
     color: Color.base.White,
     marginTop: 20,
   },
-  subHeader: {
-    ...BODY_1_MEDIUM,
-    color: Color.base.White,
-  },
   body: {
     fontWeight: "400",
     fontFamily: "Sora",
@@ -565,5 +551,64 @@ const styles = StyleSheet.create({
   label: {
     color: Color.base.White,
     ...BODY_1_REGULAR,
+  },
+  bottomTabContent: {
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    gap: 32,
+  },
+  bottomTabTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Color.base.White,
+    marginBottom: 16,
+  },
+  bottomTabText: {
+    fontSize: 14,
+    lineHeight: 18,
+    textAlign: 'center',
+    color: Color.Gray.gray50,
+    marginBottom: 24,
+  },
+  bottomTabButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  cancelButton: {
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
+    paddingHorizontal: 24,
+    borderRadius: 48,
+    flex: 1,
+    marginRight: 8,
+    alignItems: 'center',
+  },
+  confirmButton: {
+    backgroundColor: Color.Gray.gray400,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 48,
+    flex: 1,
+    marginLeft: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: Color.base.White,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 1000,
   },
 });

@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { ActivityIndicator, Image, KeyboardAvoidingView } from "react-native";
-import React, { useState } from "react";
+import { ActivityIndicator, Image, KeyboardAvoidingView, Modal } from "react-native";
+import React, { useState, useEffect } from "react";
 import { ZodError } from "zod";
 import {
   Keyboard,
@@ -13,6 +13,7 @@ import {
   View,
   ScrollView,
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Divider from "@/components/atom/Divider";
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/context/AuthContext";
@@ -20,23 +21,72 @@ import Color from "@/constants/Color";
 import { LinearGradient } from "expo-linear-gradient";
 import LoginSchema from "@/validators/LoginSchema";
 import { BODY_1_REGULAR, BODY_2_REGULAR, BUTTON_48, H5 } from "@/constants/typography";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+  FadeIn,
+  FadeOut,
+} from 'react-native-reanimated';
+import { height } from "@/lib/utils";
+
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [focusedInput, setFocusedInput] = useState<"Email" | "Password" | null>(
-    null,
-  );
+  const [focusedInput, setFocusedInput] = useState<"Email" | "Password" | null>(null);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
+  const bottomTabHeight = useSharedValue(0);
   const { onLogin } = useAuth();
+
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      height: bottomTabHeight.value,
+    };
+  });
+
+  useEffect(() => {
+    checkWelcomeMessageStatus();
+  }, []);
+
+  const checkWelcomeMessageStatus = async () => {
+    try {
+      const hasSeenWelcome = await AsyncStorage.getItem('hasSeenWelcomeMessage');
+      if (hasSeenWelcome !== 'true') {
+        setShowWelcomeMessage(true);
+        bottomTabHeight.value = withTiming(height / 1.1, {
+          duration: 800,
+          easing: Easing.out(Easing.exp),
+        });
+      }
+    } catch (error) {
+      console.error('Error checking welcome message status:', error);
+    }
+  };
+
+  const dismissWelcomeMessage = async () => {
+    try {
+      await AsyncStorage.setItem('hasSeenWelcomeMessage', 'true');
+      bottomTabHeight.value = withTiming(0, {
+        duration: 500,
+        easing: Easing.in(Easing.exp),
+      });
+      setTimeout(() => setShowWelcomeMessage(false), 500);
+    } catch (error) {
+      console.error('Error saving welcome message status:', error);
+    }
+  };
+
+  const toggleBalanceBottomSheet = dismissWelcomeMessage;
 
   const handleLogin = async () => {
     try {
       setLoading(true);
-      // Parse the input with the schema
 
-      // If validation passes, proceed with login
+
       const response = await onLogin(email, password);
       if (response.success) {
         router.replace("/(tabs)");
@@ -324,6 +374,53 @@ function Login() {
             </TouchableOpacity>
           </View>
         </ScrollView>
+
+        {showWelcomeMessage && (
+          <Modal transparent={true}>
+            <Animated.View
+              entering={FadeIn}
+              exiting={FadeOut}
+              style={{
+                flex: 1,
+                backgroundColor: 'rgba(0, 0, 0, 0.25)',
+                justifyContent: 'flex-end',
+              }}>
+              <TouchableOpacity
+                style={{ flex: 1 }}
+                onPress={toggleBalanceBottomSheet}
+              />
+
+              <Animated.View
+                style={[
+                  {
+                    backgroundColor: Color.Gray.gray600,
+                    borderTopLeftRadius: 20,
+                    borderTopRightRadius: 20,
+                    padding: 20,
+                    zIndex: 1000,
+                    maxHeight: '80%',
+                  },
+                  animatedStyles,
+                ]}
+              >
+                <View style={{ flex: 1, justifyContent: 'space-between' }}>
+                  <ScrollView style={{ marginBottom: 20 }}>
+                    <Text style={{ color: Color.base.White, ...BODY_2_REGULAR, marginBottom: 10, fontSize: 24, lineHeight: 32, fontWeight: 'bold', textAlign: 'left' }}>
+                      Welcome to {"\n"}Amuse Bouche!
+                    </Text>
+                    <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray100, marginTop: 24 }}>
+                      We are excited to welcome you to our growing community!
+                      Here at Amuse Bouche, we value transparency with our users. So, please note that while using the Amuse Bouche Application, certain user data will be collected. To enable account creation and continued user access, it is necessary that user email data is collected. Additionally, user experience is unique to each location, which requires user location data to also be collected. Aside from user email and location data collection, the rest is up to you! You can opt to allow the collection of data such as your birthday and profile picture. Opting-in allows us here at Amuse Bouche to continue to improve the application so we can provide a more seamless and tailored user experience for you. Your privacy is important, and what data you choose to disclose is totally up to you! To change your data collection preferences, you can go to the privacy section of the settings menu and view the data collection options. Thank you for choosing Amuse Bouche!
+                    </Text>
+                  </ScrollView>
+                  <Button variant="tertiary" onPress={dismissWelcomeMessage}>
+                    <Text style={{ color: Color.base.White, ...BUTTON_48 }}>I understood</Text>
+                  </Button>
+                </View>
+              </Animated.View>
+            </Animated.View>
+          </Modal>
+        )}
       </View>
     </KeyboardAvoidingView>
   );
