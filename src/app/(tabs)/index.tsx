@@ -148,48 +148,48 @@ const Page = () => {
           )}
         </Animated.View>
 
-        <View style={{ marginTop: 16, gap: 12 }}>
-          <Text
-            style={{
-              ...BODY_2_MEDIUM,
-              color: Color.Gray.gray100,
-              paddingHorizontal: 16,
-            }}
-          >
-            Featured
-          </Text>
-          {restaurantsArray?.length > 0 && (
+        {filteredRestaurantsArray.length > 0 || 
+         (!user?.user?.email || !user?.user?.dateOfBirth || !user?.user?.nickname || !user?.user?.location) ? (
+          <View style={{ marginTop: 16, gap: 12 }}>
+            <Text
+              style={{
+                ...BODY_2_MEDIUM,
+                color: Color.Gray.gray100,
+                paddingHorizontal: 16,
+              }}
+            >
+              Featured
+            </Text>
             <View style={{ alignItems: "center", gap: 8, width }}>
-              {restaurantsArray?.length > 0 && (
-                <Animated.ScrollView
-                  snapToAlignment="center"
-                  entering={SlideInLeft}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  snapToInterval={width - 16}
-                  decelerationRate="fast"
+              <Animated.ScrollView
+                snapToAlignment="center"
+                entering={SlideInLeft}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                snapToInterval={width - 16}
+                decelerationRate="fast"
+              >
+                <Animated.View
+                  entering={SlideInLeft.springify().damping(15)}
+                  style={{
+                    flexDirection: "row",
+                    gap: 8,
+                    left: 16,
+                    paddingRight: 32,
+                  }}
                 >
-                  <Animated.View
-                    entering={SlideInLeft.springify().damping(15)}
-                    style={{
-                      flexDirection: "row",
-                      gap: 8,
-                      left: 16,
-                      paddingRight: 32,
-                    }}
-                  >
-                    {user?.user?.email &&
-                    user?.user?.dateOfBirth &&
-                    user?.user?.nickname &&
-                    user?.user?.location
-                      ? null
-                      : isQuickInfoVisible && (
-                          <QuickInfo
-                            onPress={() => setIsQuickInfoVisible(false)}
-                            user={user?.user}
-                          />
-                        )}
-
+                  {(!user?.user?.email ||
+                   !user?.user?.dateOfBirth ||
+                   !user?.user?.nickname ||
+                   !user?.user?.location) &&
+                   isQuickInfoVisible && (
+                    <QuickInfo
+                      onPress={() => setIsQuickInfoVisible(false)}
+                      user={user?.user}
+                    />
+                  )}
+        
+                  {filteredRestaurantsArray.length > 0 && (
                     <FlatList
                       style={{ gap: 10, flex: 1 }}
                       ItemSeparatorComponent={() => (
@@ -207,15 +207,12 @@ const Page = () => {
                         />
                       )}
                     />
-                    <DiscoverFloatRestCard
-                      onPress={() => setIsQuickInfoVisible(false)}
-                    />
-                  </Animated.View>
-                </Animated.ScrollView>
-              )}
+                  )}
+                </Animated.View>
+              </Animated.ScrollView>
             </View>
-          )}
-        </View>
+          </View>
+        ) : null}
         <View
           style={{
             flexDirection: "row",

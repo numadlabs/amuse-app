@@ -24,52 +24,53 @@ import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
 import { BUTTON_40, BUTTON_48, CAPTION_1_REGULAR, H5 } from "@/constants/typography";
 
 const Birthday = () => {
-  // State for managing button position based on keyboard visibility
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const router = useRouter();
-  // Custom hook to manage user information
   const { email, area, birthdate, setBirthdate } = useBoostInfoStore();
-  // States for date picker functionality
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [initialDate, setInitialDate] = useState(new Date());
-  const [temporaryDate, setTemporaryDate] = useState(new Date());
   const { authState } = useAuth();
 
   useEffect(() => {
-    // Add keyboard listeners to adjust button position
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
-      () => setButtonPosition("top"),
+      () => setButtonPosition("top")
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
-      () => setButtonPosition("bottom"),
+      () => setButtonPosition("bottom")
     );
 
-    // Clean up listeners on component unmount
     return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
+      // keyboardDidHideListener.remove();
     };
   }, []);
 
-  // Handler for date change in the picker
-  const onDateChange = (event, selectedDate) => {
+  const getMaxDate = () => {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - 18);
+    return date;
+  };
+  const [selectedDate, setSelectedDate] = useState(getMaxDate());
+  useEffect(() => {
     if (selectedDate) {
-      setTemporaryDate(selectedDate);
-      setInitialDate(selectedDate);
+      setBirthdate(selectedDate.toISOString().split("T")[0]);
+    }
+  }, [selectedDate, setBirthdate]);
+  
+  const handleDatePicker = (event, date) => {
+    if (date) {
+      const maxDate = getMaxDate();
+      if (date <= maxDate) {
+        setSelectedDate(date);
+      } else {
+        setSelectedDate(maxDate);
+      }
+      setShowDatePicker(false);
     }
   };
 
-  // Handler for confirming date selection
-  const handleDatePickerDone = () => {
-    setBirthdate(temporaryDate.toISOString().split("T")[0]);
-    setShowDatePicker(false);
-  };
-
-  // Mutation hook for updating user information
   const { mutateAsync: handleUpdateUser } = useMutation({
     mutationFn: updateUserInfo,
     onError: (error) => {
@@ -85,7 +86,6 @@ const Birthday = () => {
     },
   });
 
-  // Function to trigger user update
   const triggerUpdateUser = async () => {
     setLoading(true);
     const userData = {
@@ -107,21 +107,6 @@ const Birthday = () => {
     }
   };
 
-  // Helper function to format date
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    };
-    const formattedDate = date.toLocaleDateString(
-      Platform.OS === "ios" ? "en-US" : "en-GB",
-      options,
-    );
-    return formattedDate;
-  };
-
   return (
     <>
       <BoostSteps activeStep={2} />
@@ -132,7 +117,6 @@ const Birthday = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
             <View style={styles.body}>
-              {/* Gradient background for the main content area */}
               <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
                 style={{
@@ -149,18 +133,21 @@ const Birthday = () => {
                       Rewarding the wise, the reckless, and everyone in between.
                     </Text>
                   </View>
-                  {/* TouchableOpacity to open date picker */}
                   <TouchableOpacity onPress={() => setShowDatePicker(true)}>
                     <View style={styles.datePickerContainer}>
                       <Text style={styles.datePickerText}>
-                        {birthdate ? formatDate(birthdate) : "Select Date"}
+                        {selectedDate
+                          ? selectedDate.toLocaleDateString(
+                              Platform.OS === "ios" ? "en-US" : "en-GB",
+                              { month: "short", year: "numeric" }
+                            )
+                          : "Select Date"}
                       </Text>
                     </View>
                   </TouchableOpacity>
                 </View>
               </LinearGradient>
             </View>
-            {/* Button container with dynamic positioning */}
             <View
               style={[
                 styles.buttonContainer,
@@ -186,35 +173,36 @@ const Birthday = () => {
                 )}
               </Button>
             </View>
-            {/* Animated date picker overlay */}
             {showDatePicker && (
-              <Animated.View
-                style={styles.dateTimePickerOverlay}
-                entering={SlideInDown.springify().damping(20)}
-                exiting={SlideOutDown.springify().damping(10)}
-              >
-                <DateTimePicker
-                  value={initialDate}
-                  mode="date"
-                  display="spinner"
-                  onChange={onDateChange}
-                />
-                <Button
-                  variant="tertiary"
-                  onPress={handleDatePickerDone}
-                  style={{ bottom: 15 }}
-                >
-                  <Text
-                    style={{
-                      ...BUTTON_48,
-                      color: Color.base.White,
-                    }}
-                  >
-                    Done
-                  </Text>
-                </Button>
-              </Animated.View>
-            )}
+        <Animated.View
+          style={styles.dateTimePickerOverlay}
+          entering={SlideInDown.springify().damping(20)}
+          exiting={SlideOutDown.springify().damping(10)}
+        >
+          <DateTimePicker
+            value={selectedDate}
+            mode="date"
+            display="spinner"
+            onChange={handleDatePicker}
+            maximumDate={getMaxDate()}
+            textColor="black"
+          />
+          <Button
+            variant="tertiary"
+            onPress={() => setShowDatePicker(false)}
+            style={{ bottom: 15 }}
+          >
+            <Text
+              style={{
+                ...BUTTON_48,
+                color: Color.base.White,
+              }}
+            >
+              Done
+            </Text>
+          </Button>
+        </Animated.View>
+      )}
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
@@ -224,7 +212,6 @@ const Birthday = () => {
 
 export default Birthday;
 
-// StyleSheet for component styles
 const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 16,
