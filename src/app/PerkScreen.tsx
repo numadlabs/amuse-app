@@ -2,7 +2,7 @@ import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
 import React from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getRestaurantById } from "@/lib/service/queryHelper";
+import { getRestaurantId } from "@/lib/service/queryHelper";
 import Button from "@/components/ui/Button";
 import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
 import Animated, { SlideInDown } from "react-native-reanimated";
@@ -16,11 +16,12 @@ const PerkScreen = () => {
   const { restaurantId, powerUp, btcAmount } = useLocalSearchParams();
   const queryClient = useQueryClient();
   const currentTime = moment().format("HH:mm:ss");
+  const currentDayOfWeek = moment().isoWeekday();
 
   const { data: card = [], isLoading } = useQuery({
     queryKey: [restaurantKeys.detail(restaurantId as string)],
     queryFn: () => {
-      return getRestaurantById(restaurantId as string, currentTime);
+      return getRestaurantId(restaurantId as string, currentTime, currentDayOfWeek);
     },
     enabled: !!restaurantId,
   });
