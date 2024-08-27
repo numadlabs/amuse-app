@@ -8,7 +8,7 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Color from "@/constants/Color";
 import Balance from "@/components/sections/Balance";
 import QuickInfo from "@/components/sections/QuickInfo";
@@ -139,23 +139,6 @@ const Page = () => {
     (restaurant) => !restaurant.isOwned
   );
 
-  useEffect(() => {
-    const getAsyncStorageValues = async () => {
-      try {
-        const dateOfBirthSetting = await AsyncStorage.getItem('showDateOfBirth');
-        const areaSetting = await AsyncStorage.getItem('showArea');
-
-
-        setShowDateOfBirth(dateOfBirthSetting !== 'false');
-        setShowArea(areaSetting !== 'false');
-      } catch (error) {
-        console.error("Error fetching AsyncStorage values:", error);
-      }
-    };
-
-    getAsyncStorageValues();
-  }, [showDateOfBirth, showArea]);
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -202,15 +185,17 @@ const Page = () => {
                       paddingRight: 32,
                     }}
                   >
-                    { showDateOfBirth || showArea
-                      ? isQuickInfoVisible && (
-                        <QuickInfo
-                          onPress={() => setIsQuickInfoVisible(false)}
-                          user={user?.user}
-                        />
-                      )
-                      : null
-                    }
+                    {
+                      user?.user?.dateOfBirth &&
+                        user?.user?.location &&
+                        profilePictureSetting
+                        ? null
+                        : isQuickInfoVisible && (
+                          <QuickInfo
+                            onPress={() => setIsQuickInfoVisible(false)}
+                            user={user?.user}
+                          />
+                        )}
 
                     <FlatList
                       style={{ gap: 10, flex: 1 }}
