@@ -1,17 +1,5 @@
 import { axiosClient } from "../axios";
 
-export async function getRestaurantById(id: string, time: string) {
-  return axiosClient
-    .get(`/restaurants/${id}?dayNoOfTheWeek=7&time=${time}`)
-    .then((response) => {
-      if (response.data.success) {
-        return response?.data.restaurant;
-      } else {
-        throw new Error(response.data.error);
-      }
-    });
-}
-
 export async function getRestaurants({
   page,
   limit,
