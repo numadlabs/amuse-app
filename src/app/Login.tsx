@@ -410,24 +410,19 @@ function Login() {
                     </Text>
 
                     <Text style={styles.paragraph}>
-                      We are excited to welcome you to our growing community! Here at Amuse Bouche, we value transparency with our users. So, please note that while using the Amuse Bouche Application, certain user data will be collected.
+                      Here at Amuse Bouche, we value transparency with our users. So, please note that while using the Amuse Bouche Application, certain user data will be collected. To enable account creation and continued user access, it is necessary that user email data is collected. Additionally, user experience is unique to each location, which requires user location data to also be collected.
+                      Aside from user email and location data collection, the rest is up to you! You can opt to allow the collection of data such as your birthday and profile picture. Opting-in allows us here at Amuse Bouche to continue to improve the application so we can provide a more seamless and tailored user experience for you.
                     </Text>
 
                     <Text style={styles.paragraph}>
-                      To enable account creation and continued user access, it is necessary that user email data is collected. Additionally, user experience is unique to each location, which requires user location data to also be collected. Aside from user email and location data collection, the rest is up to you!
-                    </Text>
-
-                    <Text style={styles.paragraph}>
-                      You can opt to allow the collection of data such as your birthday and profile picture. Opting-in allows us here at Amuse Bouche to continue to improve the application so we can provide a more seamless and tailored user experience for you. Your privacy is important, and what data you choose to disclose is totally up to you!
-                    </Text>
-
-                    <Text style={styles.paragraph}>
-                      To change your data collection preferences, you can go to the privacy section of the settings menu and view the data collection options.
+                      Your privacy is important, and what data you choose to disclose is totally up to you! To change your data collection preferences, you can go to the privacy section of the settings menu and view the data collection options.
                     </Text>
 
                     <Text style={styles.paragraph}>
                       Thank you for choosing Amuse Bouche!
                     </Text>
+
+
 
                   </ScrollView>
                   <Button variant="primary" onPress={dismissWelcomeMessage}>
@@ -449,7 +444,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     fontSize: 14,
     marginTop: 24,
-    color: '#E1E1E1', // Assuming this is close to Color.Gray.gray100
+    color: Color.Gray.gray100, // Assuming this is close to Color.Gray.gray100
     marginBottom: 5, // Adding some space between paragraphs
   },
 })
