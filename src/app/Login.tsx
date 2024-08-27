@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { ActivityIndicator, Image, KeyboardAvoidingView, Modal } from "react-native";
+import { ActivityIndicator, Image, KeyboardAvoidingView, Modal, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
 import { ZodError } from "zod";
 import {
@@ -408,13 +408,30 @@ function Login() {
                     <Text style={{ color: Color.base.White, ...BODY_2_REGULAR, marginBottom: 10, fontSize: 24, lineHeight: 32, fontWeight: 'bold', textAlign: 'left' }}>
                       Welcome to {"\n"}Amuse Bouche!
                     </Text>
-                    <Text style={{ lineHeight: 18, fontSize: 14, color: Color.Gray.gray100, marginTop: 24 }}>
-                      We are excited to welcome you to our growing community!
-                      Here at Amuse Bouche, we value transparency with our users. So, please note that while using the Amuse Bouche Application, certain user data will be collected. To enable account creation and continued user access, it is necessary that user email data is collected. Additionally, user experience is unique to each location, which requires user location data to also be collected. Aside from user email and location data collection, the rest is up to you! You can opt to allow the collection of data such as your birthday and profile picture. Opting-in allows us here at Amuse Bouche to continue to improve the application so we can provide a more seamless and tailored user experience for you. Your privacy is important, and what data you choose to disclose is totally up to you! To change your data collection preferences, you can go to the privacy section of the settings menu and view the data collection options. Thank you for choosing Amuse Bouche!
+
+                    <Text style={styles.paragraph}>
+                      We are excited to welcome you to our growing community! Here at Amuse Bouche, we value transparency with our users. So, please note that while using the Amuse Bouche Application, certain user data will be collected.
                     </Text>
+
+                    <Text style={styles.paragraph}>
+                      To enable account creation and continued user access, it is necessary that user email data is collected. Additionally, user experience is unique to each location, which requires user location data to also be collected. Aside from user email and location data collection, the rest is up to you!
+                    </Text>
+
+                    <Text style={styles.paragraph}>
+                      You can opt to allow the collection of data such as your birthday and profile picture. Opting-in allows us here at Amuse Bouche to continue to improve the application so we can provide a more seamless and tailored user experience for you. Your privacy is important, and what data you choose to disclose is totally up to you!
+                    </Text>
+
+                    <Text style={styles.paragraph}>
+                      To change your data collection preferences, you can go to the privacy section of the settings menu and view the data collection options.
+                    </Text>
+
+                    <Text style={styles.paragraph}>
+                      Thank you for choosing Amuse Bouche!
+                    </Text>
+
                   </ScrollView>
-                  <Button variant="tertiary" onPress={dismissWelcomeMessage}>
-                    <Text style={{ color: Color.base.White, ...BUTTON_48 }}>I understood</Text>
+                  <Button variant="primary" onPress={dismissWelcomeMessage}>
+                    <Text style={{ color: Color.base.White, ...BUTTON_48 }}>I understand</Text>
                   </Button>
                 </View>
               </Animated.View>
@@ -425,5 +442,16 @@ function Login() {
     </KeyboardAvoidingView>
   );
 }
+
+
+const styles = StyleSheet.create({
+  paragraph: {
+    lineHeight: 18,
+    fontSize: 14,
+    marginTop: 24,
+    color: '#E1E1E1', // Assuming this is close to Color.Gray.gray100
+    marginBottom: 5, // Adding some space between paragraphs
+  },
+})
 
 export default Login;

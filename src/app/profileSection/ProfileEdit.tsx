@@ -162,12 +162,12 @@ const ProfileEdit: React.FC = () => {
                   <TouchableOpacity style={styles.changeButton} onPress={pickImage}>
                     <Text style={styles.changeButtonText}>Change</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity 
+                  {/* <TouchableOpacity 
                     style={[styles.changeButton, styles.removeButton]} 
                     onPress={removeProfilePicture}
                   >
                     <Text style={styles.changeButtonText}>Remove</Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
                 {error && (
                   <Animated.Text entering={FadeIn} style={styles.errorText}>
