@@ -8,7 +8,7 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Color from "@/constants/Color";
 import Balance from "@/components/sections/Balance";
 import QuickInfo from "@/components/sections/QuickInfo";
@@ -53,6 +53,9 @@ const Page = () => {
   const [isOpenBalance, setIsOpenBalance] = useState<boolean>(false);
   const [isQuickInfoVisible, setIsQuickInfoVisible] = useState(true);
   const pressed = useSharedValue(false);
+  const [showProfilePicture, setShowProfilePicture] = useState(true);
+  const [showDateOfBirth, setShowDateOfBirth] = useState(true);
+  const [showArea, setShowArea] = useState(true);
   const { authState } = useAuth();
   // const { expoPushToken, notification: pushNotification } =
   //   usePushNotifications();
@@ -60,8 +63,8 @@ const Page = () => {
   // const { mutateAsync: sendPushToken } = useMutation({
   //   mutationFn: registerDeviceNotification,
   // });
-  const profilePictureSetting =  AsyncStorage.getItem('showProfilePicture');
-  const dateOfBirthSetting =  AsyncStorage.getItem('showDateOfBirth');
+  const profilePictureSetting = AsyncStorage.getItem('showProfilePicture');
+  const dateOfBirthSetting = AsyncStorage.getItem('showDateOfBirth');
   const areaSetting = AsyncStorage.getItem('showArea');
   const { currentLocation } = useLocationStore();
   const currentTime = moment().format("HH:mm:ss");
@@ -136,6 +139,23 @@ const Page = () => {
     (restaurant) => !restaurant.isOwned
   );
 
+  useEffect(() => {
+    const getAsyncStorageValues = async () => {
+      try {
+        const dateOfBirthSetting = await AsyncStorage.getItem('showDateOfBirth');
+        const areaSetting = await AsyncStorage.getItem('showArea');
+
+
+        setShowDateOfBirth(dateOfBirthSetting !== 'false');
+        setShowArea(areaSetting !== 'false');
+      } catch (error) {
+        console.error("Error fetching AsyncStorage values:", error);
+      }
+    };
+
+    getAsyncStorageValues();
+  }, [showDateOfBirth, showArea]);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -182,17 +202,15 @@ const Page = () => {
                       paddingRight: 32,
                     }}
                   >
-                    {
-                    user?.user?.dateOfBirth &&
-                    user?.user?.location &&
-                    profilePictureSetting
-                      ? null
-                      : isQuickInfoVisible && (
-                          <QuickInfo
-                            onPress={() => setIsQuickInfoVisible(false)}
-                            user={user?.user}
-                          />
-                        )}
+                    { showDateOfBirth || showArea
+                      ? isQuickInfoVisible && (
+                        <QuickInfo
+                          onPress={() => setIsQuickInfoVisible(false)}
+                          user={user?.user}
+                        />
+                      )
+                      : null
+                    }
 
                     <FlatList
                       style={{ gap: 10, flex: 1 }}
