@@ -52,8 +52,6 @@ const Wallet = () => {
     enabled: !!authState.userId,
   });
 
-  console.log("userid", authState.userId);
-
   const { data: transaction = [], isLoading } = useQuery({
     queryKey: ["transactions"],
     queryFn: () => {
@@ -61,11 +59,9 @@ const Wallet = () => {
     },
   });
 
-
   const reversedTransactions = useMemo(() => {
     return [...transaction].reverse();
   }, [transaction]);
-
 
   const toggleBalanceBottomSheet = () => {
     setIsOpenBalance(!isOpenBalance);
@@ -82,7 +78,6 @@ const Wallet = () => {
       <GestureHandlerRootView>
         <Header title="Wallet" />
 
-      
         <View style={styles.body}>
           <Balance
             amount={user?.user?.balance}
@@ -119,38 +114,34 @@ const Wallet = () => {
             </Text>
 
             {isLoading ? (
-          <View>
-            <ActivityIndicator />
+              <View>
+                <ActivityIndicator />
+              </View>
+            ) : reversedTransactions.length > 0 ? (
+              <FlatList
+                style={{ marginTop: 16 }}
+                data={reversedTransactions}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <TransactionCard
+                    amount={item?.amount}
+                    type={item?.type}
+                    createdAt={item?.createdAt}
+                  />
+                )}
+              />
+            ) : (
+              <Text
+                style={{
+                  color: Color.Gray.gray100,
+                  marginHorizontal: 16,
+                  marginTop: 16,
+                }}
+              >
+                No transactions found
+              </Text>
+            )}
           </View>
-        ) : reversedTransactions.length > 0 ? (
-
-      
-
-            <FlatList
-              style={{marginTop:16}}
-              data={reversedTransactions}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <TransactionCard
-                  amount={item?.amount}
-                  type={item?.type}
-                  createdAt={item?.createdAt}
-                />
-              )}
-            />
-          ) : (
-            <Text
-              style={{
-                color: Color.Gray.gray100,
-                marginHorizontal: 16,
-                marginTop: 16,
-              }}
-            >
-              No transactions found
-            </Text>
-          )}
-          </View>
-      
         </View>
 
         {/* Tooltip */}
