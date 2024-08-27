@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import { WalletAdd } from "iconsax-react-native";
 import React, { useState } from "react";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ActivityIndicator,
   Image,
@@ -59,13 +59,12 @@ const Restaurant = () => {
   const { data: perks } = useQuery({
     queryKey: restaurantKeys.perks(id as string),
     queryFn: () => getPerksByRestaurant(id),
-    enabled: !! id,
+    enabled: !!id,
   });
 
   const toggleBottomSheet = () => {
     setBottomSheet(!bottomSheet);
   };
-  console.log("data: ", restaurantsData);
 
   const pressed = useSharedValue(false);
   const animatedStyles = useAnimatedStyle(() => ({
@@ -74,7 +73,10 @@ const Restaurant = () => {
     ],
   }));
 
-  const calculateTarget = (perkOccurence?: number, followingBonusCurrent?: number): number | undefined => {
+  const calculateTarget = (
+    perkOccurence?: number,
+    followingBonusCurrent?: number
+  ): number | undefined => {
     if (perkOccurence === undefined || followingBonusCurrent === undefined) {
       return undefined;
     }
@@ -123,7 +125,10 @@ const Restaurant = () => {
           hasBonus={false}
           visitCount={restaurantsData?.visitCount || 0}
           isLoading={isLoading}
-          target={calculateTarget(restaurantsData?.perkOccurence, perks?.followingBonus?.current)}
+          target={calculateTarget(
+            restaurantsData?.perkOccurence,
+            perks?.followingBonus?.current
+          )}
         />
 
         {isLoading ? (

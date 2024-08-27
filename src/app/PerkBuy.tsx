@@ -18,7 +18,12 @@ import { useAuth } from "@/context/AuthContext";
 import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { BODY_2_REGULAR, BUTTON_48, CAPTION_2_MEDIUM, H6 } from "@/constants/typography";
+import {
+  BODY_2_REGULAR,
+  BUTTON_48,
+  CAPTION_2_MEDIUM,
+  H6,
+} from "@/constants/typography";
 
 const PerkBuy = () => {
   const { name, id, price, restaurantId } = useLocalSearchParams();
@@ -39,14 +44,12 @@ const PerkBuy = () => {
   });
   const AnimatedText = Animated.createAnimatedComponent(Text);
   const handleGetAPerk = async (id: string) => {
-    console.log("🚀 ~ Purchase perk ~ aCardId:", id);
     setIsClaimLoading(true);
     setBalance("");
     if (authState.userId) {
       try {
         const data = await purchasePerkMutation(id);
         if (data.data.success) {
-          console.log("🚀 ~ Purchase successful", data.data.data);
           queryClient.invalidateQueries({ queryKey: userKeys.cards });
           queryClient.invalidateQueries({ queryKey: userKeys.info });
           queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
@@ -65,102 +68,100 @@ const PerkBuy = () => {
   };
 
   return (
-
+    <View
+      style={{
+        backgroundColor: Color.Gray.gray600,
+        flex: 1,
+        paddingHorizontal: 16,
+        marginTop: Platform.OS === "ios" ? -10 : 0,
+      }}
+      key={id as string}
+    >
+      <View style={styles.closeButtonContainer}>
+        <TouchableOpacity
+          style={[styles.button, styles.closeButton]}
+          onPress={() => {
+            router.back();
+          }}
+        >
+          <Close />
+        </TouchableOpacity>
+      </View>
       <View
         style={{
-          backgroundColor: Color.Gray.gray600,
-          flex: 1,
-          paddingHorizontal: 16,
-          marginTop: Platform.OS === "ios" ? -10 : 0,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "80%",
+          gap: 24,
         }}
-        key={id as string}
       >
-        <View style={styles.closeButtonContainer}>
-          <TouchableOpacity
-            style={[styles.button, styles.closeButton]}
-            onPress={() => {
-              router.back();
-            }}
-          >
-            <Close />
-          </TouchableOpacity>
+        <View
+          style={{
+            padding: 12,
+            backgroundColor: Color.Gray.gray400,
+            borderRadius: 12,
+            width: 56,
+            height: 56,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <PerkGradient />
         </View>
         <View
           style={{
             flexDirection: "column",
+            gap: 12,
             justifyContent: "center",
-            alignItems: "center",
-            height: "80%",
-            gap: 24,
           }}
         >
-          <View
+          <Text
             style={{
-              padding: 12,
-              backgroundColor: Color.Gray.gray400,
-              borderRadius: 12,
-              width: 56,
-              height: 56,
-              justifyContent: "center",
-              alignItems: "center",
+              textAlign: "center",
+              color: Color.base.White,
+              ...H6,
             }}
           >
-            <PerkGradient />
-          </View>
-          <View
+            {name}
+          </Text>
+          <Text
             style={{
-              flexDirection: "column",
-              gap: 12,
-              justifyContent: "center",
+              color: Color.Gray.gray100,
+              ...BODY_2_REGULAR,
+              textAlign: "center",
             }}
           >
-            <Text
-              style={{
-                textAlign: "center",
-                color: Color.base.White,
-                ...H6,
-              }}
+            Redeem with Bitcoin and use it {"\n"} on your next visit
+          </Text>
+          {balance && (
+            <AnimatedText
+              entering={FadeIn}
+              exiting={FadeOut}
+              style={{ color: Color.System.systemError, textAlign: "center" }}
             >
-              {name}
-            </Text>
-            <Text
-              style={{
-                color: Color.Gray.gray100,
-                ...BODY_2_REGULAR,
-                textAlign: "center",
-              }}
-            >
-              Redeem with Bitcoin and use it {"\n"} on your next visit
-            </Text>
-            {balance && (
-              <AnimatedText
-                entering={FadeIn}
-                exiting={FadeOut}
-                style={{ color: Color.System.systemError, textAlign: "center" }}
-              >
-                {balance}
-              </AnimatedText>
-            )}
-          </View>
-        </View>
-        <Button
-          variant={isClaimLoading ? "disabled" : "primary"}
-          size="large"
-          onPress={isClaimLoading ? null : () => handleGetAPerk(id as string)}
-        >
-          {isClaimLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <Text
-              style={{
-                ...BUTTON_48,
-                color: Color.base.White,
-              }}
-            >{`Redeem for ${price} Bitcoin`}</Text>
+              {balance}
+            </AnimatedText>
           )}
-        </Button>
+        </View>
       </View>
-
+      <Button
+        variant={isClaimLoading ? "disabled" : "primary"}
+        size="large"
+        onPress={isClaimLoading ? null : () => handleGetAPerk(id as string)}
+      >
+        {isClaimLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <Text
+            style={{
+              ...BUTTON_48,
+              color: Color.base.White,
+            }}
+          >{`Redeem for ${price} Bitcoin`}</Text>
+        )}
+      </Button>
+    </View>
   );
 };
 

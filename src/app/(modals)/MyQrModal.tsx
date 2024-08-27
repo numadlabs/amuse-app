@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   SafeAreaView,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Color from "@/constants/Color";
 import { useRouter } from "expo-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -23,53 +23,19 @@ import { useAuth } from "@/context/AuthContext";
 import QRCode from "react-native-qrcode-svg";
 import { BODY_2_REGULAR, H6 } from "@/constants/typography";
 
+const socket = io(SERVER_SETTING.API_URL, { transports: ["websocket"] });
 const { width } = Dimensions.get("window");
 const markerSize = 250;
 const halfMarkerSize = markerSize / 2;
 
 const MyQrModal = () => {
-  const [isPopupVisible, setPopupVisible] = useState(false);
-  const [isBtcPopupVisible, setBtcPopupVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const { authState } = useAuth();
   const [qrData, setQrdata] = useState("");
-
-  const socket = io(SERVER_SETTING.API_URL, { transports: ["websocket"] });
-  const userId = authState.userId;
-
-  socket.on("connect", () => {
-    console.log("Connected to server");
-    socket.emit("register", userId);
-  });
-
-  socket.on("tap-scan", (data) => {
-    console.log("Tap scan emitted: ", data);
-    const userCard = cards?.data?.cards.find(
-      (card) => card.restaurantId === data?.data?.restaurantId,
-    );
-    if (!userCard) {
-      router.back();
-      router.push({
-        pathname: `/restaurants/${data?.restaurantId}`,
-      });
-    } else {
-      router.back();
-      router.navigate({
-        pathname: "/PerkScreen",
-        params: {
-          restaurantId: data?.data?.restaurantId,
-          btcAmount: data.data?.increment,
-          powerUp: data.data?.bonus?.name,
-        },
-      });
-    }
-  });
-
-  socket.on("connect", () => {
-    console.log("socket connected: ", socket.connected); // true
-  });
-
+  const router = useRouter();
   const { currentLocation } = useLocationStore();
+
+  const userId = authState.userId;
 
   // Fetch user cards based on current location
   const { data: cards = [] } = useQuery({
@@ -83,13 +49,31 @@ const MyQrModal = () => {
     enabled: !!currentLocation,
   });
 
-  const router = useRouter();
-
-  // Set default values when component mounts
-  useEffect(() => {
-    setLoading(true);
-    createTapMutation();
-  }, []);
+  const handleTapScan = useCallback(
+    (data) => {
+      console.log("Tap scan emitted: ", data);
+      const userCard = cards?.data?.cards.find(
+        (card) => card.restaurantId === data?.data?.restaurantId
+      );
+      if (!userCard) {
+        router.back();
+        router.push({
+          pathname: `/restaurants/${data?.restaurantId}`,
+        });
+      } else {
+        router.back();
+        router.navigate({
+          pathname: "/PerkScreen",
+          params: {
+            restaurantId: data?.data?.restaurantId,
+            btcAmount: data.data?.increment,
+            powerUp: data.data?.bonus?.name,
+          },
+        });
+      }
+    },
+    [cards, router]
+  );
 
   // Mutation for creating a tap
   const { mutateAsync: createTapMutation } = useMutation({
@@ -100,8 +84,6 @@ const MyQrModal = () => {
         const newQrdata = data?.data?.data?.encryptedData;
         setQrdata(newQrdata);
 
-        // Log the new QR data immediately after setting it
-        console.log("QR Data from mutation:", qrData);
         setLoading(false);
       } catch (error) {
         console.error("Redeem mutation failed:", error);
@@ -109,102 +91,127 @@ const MyQrModal = () => {
     },
   });
 
+  useEffect(() => {
+    let isActive = true;
+    setLoading(true);
+
+    const setupSocket = () => {
+      if (!socket.connected) {
+        socket.connect();
+      }
+
+      const onConnect = () => {
+        console.log("Connected to server");
+        socket.emit("register", userId);
+      };
+
+      const onTapScan = (data) => {
+        if (isActive) {
+          console.log("Tap scan received:", data);
+          handleTapScan(data);
+        }
+      };
+
+      socket.on("connect", onConnect);
+      socket.on("tap-scan", onTapScan);
+
+      if (socket.connected) {
+        onConnect();
+      }
+
+      return () => {
+        socket.off("connect", onConnect);
+        socket.off("tap-scan", onTapScan);
+      };
+    };
+
+    const cleanupSocket = setupSocket();
+
+    createTapMutation();
+
+    return () => {
+      isActive = false;
+      cleanupSocket();
+    };
+  }, [userId, handleTapScan, createTapMutation]);
+
   return (
-    <>
-      <View style={{ flex: 1 }}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: Color.Gray.gray600,
-            alignItems: "center",
-          }}
-        >
-          {loading ? (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <ActivityIndicator />
-            </View>
-          ) : (
-            <View style={{ alignItems: "center", marginTop: 100, gap: 32 }}>
-              <Text
-                style={{
-                  ...H6,
-                  color: Color.base.White,
-                }}
-              >
-                My QR Code
-              </Text>
-              {/* <TouchableOpacity onPress={handleScanButtonPress}> */}
-              <LinearGradient
-                colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                style={[styles.button]}
-              >
-                {loading ? (
-                  <ActivityIndicator />
-                ) : (
-                  <QRCode
-                    backgroundColor="transparent"
-                    color={Color.base.White}
-                    size={width / 1.3}
-                    value={`data:image/png;base64,${qrData}`}
-                  />
-                )}
-              </LinearGradient>
-              {/* </TouchableOpacity> */}
-              <View style={{ marginHorizontal: 32 }}>
-                <Text
-                  style={{
-                    ...BODY_2_REGULAR,
-                    textAlign: "center",
-                    color: Color.Gray.gray100,
-                  }}
-                >
-                  Show this to your waiter to check-in.{"\n"} Do not worry, they
-                  are pros.
-                </Text>
-              </View>
-            </View>
-          )}
-          <TouchableOpacity
-            style={[
-              styles.closeButton,
-              {
-                backgroundColor: Color.Gray.gray400,
-                width: 48,
-                height: 48,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 100,
-              },
-            ]}
-            onPress={() => {
-              router.back();
+    <View style={styles.container}>
+      {loading ? (
+        <ActivityIndicator style={styles.loader} />
+      ) : (
+        <View style={styles.content}>
+          <Text
+            style={{
+              ...H6,
+              color: Color.base.White,
             }}
           >
-            <Close />
-          </TouchableOpacity>
+            My QR Code
+          </Text>
+          {/* <TouchableOpacity onPress={handleScanButtonPress}> */}
+          <LinearGradient
+            colors={[Color.Brand.card.start, Color.Brand.card.end]}
+            style={styles.qrContainer}
+          >
+            <QRCode
+              backgroundColor="transparent"
+              color={Color.base.White}
+              size={width / 1.3}
+              value={`data:image/png;base64,${qrData}`}
+            />
+          </LinearGradient>
+          {/* </TouchableOpacity> */}
+          <View style={{ marginHorizontal: 32 }}>
+            <Text style={styles.instruction}>
+              Show this to your waiter to check-in.{"\n"} Do not worry, they are
+              pros.
+            </Text>
+          </View>
         </View>
-      </View>
-    </>
+      )}
+      <TouchableOpacity
+        style={[
+          styles.closeButton,
+          {
+            backgroundColor: Color.Gray.gray400,
+            width: 48,
+            height: 48,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 100,
+          },
+        ]}
+        onPress={() => {
+          router.back();
+        }}
+      >
+        <Close />
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
+    backgroundColor: Color.Gray.gray600,
+    alignItems: "center",
     justifyContent: "center",
   },
   overlay: {
     position: "absolute",
     backgroundColor: "rgba(0, 0, 0, 0)",
   },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  content: {
+    alignItems: "center",
+    gap: 32,
+  },
+
   markerContainer: {
     position: "absolute",
     left: "50%",
@@ -231,6 +238,22 @@ const styles = StyleSheet.create({
     right: "0%",
     top: "0%",
     margin: 16,
+  },
+  instruction: {
+    ...BODY_2_REGULAR,
+    textAlign: "center",
+    color: Color.Gray.gray100,
+    marginHorizontal: 32,
+  },
+  qrContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 32,
+    borderRadius: 32,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
+    width: width - 64,
+    aspectRatio: 1,
   },
 });
 

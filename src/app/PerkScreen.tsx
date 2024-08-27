@@ -11,7 +11,6 @@ import PowerUpCard from "@/components/atom/cards/PowerUpCard";
 import { LinearGradient } from "expo-linear-gradient";
 import Color from "@/constants/Color";
 import moment from "moment";
-import APassCard from "@/components/atom/cards/APassCard";
 import { BODY_2_REGULAR, H5 } from "@/constants/typography";
 const PerkScreen = () => {
   const { restaurantId, powerUp, btcAmount } = useLocalSearchParams();
@@ -19,11 +18,11 @@ const PerkScreen = () => {
   const currentTime = moment().format("HH:mm:ss");
 
   const { data: card = [], isLoading } = useQuery({
-    queryKey: [restaurantKeys.detail],
+    queryKey: [restaurantKeys.detail(restaurantId as string)],
     queryFn: () => {
       return getRestaurantById(restaurantId as string, currentTime);
     },
-    enabled:!!restaurantId,
+    enabled: !!restaurantId,
   });
 
   const handleNavigation = async () => {

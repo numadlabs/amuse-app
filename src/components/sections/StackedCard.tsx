@@ -62,7 +62,6 @@ const StackedCard = () => {
     });
   };
 
-  console.log(cards?.data?.cards);
   return (
     <>
       {cards?.data?.cards.length === 0 ? (
@@ -116,7 +115,6 @@ const StackedCard = () => {
               ]}
             >
               <APassCard
-
                 name={card.name}
                 nftImage={card.nftImageUrl}
                 image={card.logo}
