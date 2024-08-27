@@ -232,12 +232,10 @@ const TermsAndCondo = () => {
       text: `a. The Platform collects two types of data from its users: necessary data collection which cannot be disabled and optional data collection which may be enabled/disabled at your discretion.  
 
 b. Necessary Data Collection 
-
 	I. Location: We use location data to assist you in locating restaurants participating in a program on the Platform. We may store location data to improve and optimize the Platform. 
 	II. Email: We will store and use your email for account creation, user login, password management and Platform-to-user communications.
 
 c. Optional Data Collection
-
 	I. Birthday: We use birthday data to allow us to offer you a special birthday promotion or reward. 
 	II. Profile Picture: You may opt to add a profile picture in order to personalize your profile. If added, the Platform will automatically store the data. `,
     },
