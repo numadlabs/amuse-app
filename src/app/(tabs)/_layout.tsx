@@ -17,15 +17,13 @@ import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 const Layout = ({ navigation }) => {
   const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState(false);
-  const { getLocation, currentLocation } = useLocationStore();
-  const { expoPushToken, notification: pushNotification } =
-  usePushNotifications();
-
+  const { getLocation } = useLocationStore();
+  const { expoPushToken } = usePushNotifications();
 
   const { mutateAsync: sendPushToken } = useMutation({
     mutationFn: registerDeviceNotification,
   });
-  
+
   const [fontsLoaded] = useFonts({
     Sora: require("@/public/fonts/Sora-Regular.otf"),
     SoraBold: require("@/public/fonts/Sora-Bold.otf"),
@@ -36,57 +34,59 @@ const Layout = ({ navigation }) => {
   useEffect(() => {
     const prepareApp = async () => {
       try {
-        if (!__DEV__) {
-          // Only check for updates in production mode
-          const updateAvailable = await Updates.checkForUpdateAsync();
+        // Start loading fonts and fetching location concurrently
+        const fontPromise = new Promise<void>((resolve) => {
+          if (fontsLoaded) resolve();
+        });
+        const locationPromise = getLocation();
 
-          if (updateAvailable.isAvailable) {
-            await Updates.fetchUpdateAsync();
-            await Updates.reloadAsync();
-          } else {
-            console.log("No update available");
-          }
-        } else {
-          console.log("Running in development mode");
-        }
+        // Wait for fonts to load and location to be fetched
+        await Promise.all([fontPromise, locationPromise]);
 
-        // Get notification data
-        const data = JSON.stringify(pushNotification, undefined, 2)
+        // Set app as ready
+        setAppIsReady(true);
 
-        if (expoPushToken?.data) {
-          console.log("Sending push token");
-
-          sendPushToken({
-            pushToken: expoPushToken?.data
-          })
-        }
-
-        // Get current location
-        if (currentLocation == null) {
-          await getLocation();
-        }
-        //TODO notifications fetch hj bgag ynzlah
+        // Perform non-critical tasks after initial render
+        setTimeout(() => {
+          checkForUpdates();
+          handlePushNotification();
+        }, 0);
       } catch (error) {
         console.error("Error preparing app:", error);
-      } finally {
-        if (!authState.loading && currentLocation !== null && fontsLoaded) {
-          setAppIsReady(true);
-        }
       }
     };
 
-    // Call prepareApp function on component mount
     prepareApp();
-  }, [currentLocation, authState?.loading, fontsLoaded]);
+  }, [fontsLoaded, getLocation]);
 
-  // Show loading screen if app is not ready
-  if (!appIsReady) {
+  const checkForUpdates = async () => {
+    if (!__DEV__) {
+      try {
+        const updateAvailable = await Updates.checkForUpdateAsync();
+        if (updateAvailable.isAvailable) {
+          await Updates.fetchUpdateAsync();
+          await Updates.reloadAsync();
+        }
+      } catch (error) {
+        console.error("Error checking for updates:", error);
+      }
+    }
+  };
+
+  const handlePushNotification = () => {
+    if (expoPushToken?.data) {
+      sendPushToken({ pushToken: expoPushToken.data }).catch(error => {
+        console.error("Error sending push token:", error);
+      });
+    }
+  };
+
+  if (!appIsReady || authState.loading) {
     return <SplashScreenAnimated />;
   }
 
-  // Redirect to login if user is not authenticated
   if (authState.authenticated === false) {
-    return <Redirect href={"/Login"} />;
+    return <Redirect href="/Login" />;
   }
 
   return (
@@ -99,23 +99,14 @@ const Layout = ({ navigation }) => {
             backgroundColor: Color.Gray.gray600,
           },
           headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => router.push("/profileSection/Profile")}
-            >
+            <TouchableOpacity onPress={() => router.push("/profileSection/Profile")}>
               <View style={{ paddingHorizontal: 20 }}>
                 <User color={Color.base.White} />
               </View>
             </TouchableOpacity>
           ),
-
           headerTitle: () => (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
               <Logo />
             </View>
           ),
