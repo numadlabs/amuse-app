@@ -73,17 +73,14 @@ const SplashScreenAnimated = () => {
   }));
 
   useEffect(() => {
-    async function prepareApp() {
       try {
-        await SplashScreen.preventAutoHideAsync();
         animated();
         const intervalId = setInterval(play, 1800);
         return () => clearInterval(intervalId);
       } catch (e) {
         console.warn(e);
       }
-    }
-    prepareApp().then(() => SplashScreen.hideAsync());
+    
   }, []);
 
   const runTypeMessage = Updates.isEmbeddedLaunch
