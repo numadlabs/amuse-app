@@ -414,7 +414,7 @@ function Login() {
                     <Text style={styles.paragraph}>
                       Welcome to Amuse Bouche! We are excited to welcome you to our growing community! {"\n"}
                     </Text>
-                    <Text style={[styles.paragraph, {marginTop:0}]}>
+                    <Text style={styles.paragraph}>
                       Here at Amuse Bouche, we value transparency with our users. So, please note that while
                       using the Amuse Bouche Application, certain user data will be collected. To enable
                       account creation and continued user access, it is necessary that user email data is
@@ -435,7 +435,7 @@ function Login() {
                       menu and view the data collection options.
                     </Text>
 
-                    <Text style={styles.paragraph}>
+                    <Text style={[styles.paragraph, {marginTop:44}]}>
                       Thank you for choosing Amuse Bouche!
                     </Text>
 
@@ -461,7 +461,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     fontSize: 14,
     marginTop: 24,
-    color: Color.Gray.gray50, // Assuming this is close to Color.Gray.gray100
+    color: Color.Gray.gray100, // Assuming this is close to Color.Gray.gray100
     marginBottom: 5, // Adding some space between paragraphs
   },
 })
