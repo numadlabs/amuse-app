@@ -1,7 +1,7 @@
 {
   "expo": {
-    "version": "0.5.9",
-    "runtimeVersion": "0.5.9",
+    "version": "0.6.0",
+    "runtimeVersion": "0.6.0",
     "scheme": "acme",
     "owner": "numad-labs",
     "userInterfaceStyle": "dark",
@@ -25,7 +25,7 @@
             "./src/public/fonts/Sora-Medium.otf",
             "./src/public/fonts/Sora-Bold.otf",
             "./src/public/fonts/Sora-ExtraBold.otf",
-            "./src/public/fonts/Sora-ExtraLight.otf",
+          "./src/public/fonts/Sora-ExtraLight.otf",
             "./src/public/fonts/Sora-Light.otf",
             "./src/public/fonts/Sora-Regular.otf",
             "./src/public/fonts/Sora-SemiBold.otf",
@@ -39,7 +39,8 @@
     "slug": "amuse-app",
     "ios": {
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "The app accesses your photos to let you share them with your friends."
+        "NSPhotoLibraryUsageDescription": "The app accesses your photos to let you share them with your friends.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "We use location data to assist you in locating restaurants participating in a program on the Platform."
       },
       
       "supportsTablet": false,
@@ -78,7 +79,7 @@
 
       "requestHeaders": {
         "expo-channel-name": "main",
-        "expo-runtime-version": "0.5.9",
+        "expo-runtime-version": "0.6.0",
         "expo-platform": "ios",
         "channel-name": "main"
       }
