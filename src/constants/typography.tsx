@@ -1,7 +1,5 @@
 // import { Utils } from "styles";
 // import Utils
-import { styledScaleSize } from "../lib/utils";
-import { isPlatformIOS } from "./layouts";
 // import { isPlatformIOS } from "appConstants/layouts";
 
 // const { styledScaleSize } = Utils;
