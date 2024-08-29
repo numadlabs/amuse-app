@@ -11,10 +11,6 @@
       "ios",
       "android"
     ],
-    "splash": {
-      "image": "./src/public/images/Logo.png",
-      "backgroundColor": "#1B2328"
-    },
     "plugins": [
       [
         "expo-router",
