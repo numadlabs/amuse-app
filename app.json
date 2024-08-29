@@ -82,7 +82,7 @@
       "enabled": true,
 
       "requestHeaders": {
-        "expo-channel-name": "main",
+        "expo-channel-name": "production",
         "expo-runtime-version": "0.6.1",
         "expo-platform": "ios",
         "channel-name": "main"
