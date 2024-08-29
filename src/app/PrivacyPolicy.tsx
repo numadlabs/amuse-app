@@ -273,7 +273,7 @@ that information is inaccurate or incomplete.
 `,
     },
   ];
-  
+
   return (
     <>
       <SafeAreaView style={{flex: 1}}>
@@ -514,6 +514,7 @@ that information is inaccurate or incomplete.
           <ActivityIndicator size="large" color={Color.base.White} />
         </Modal>
       )}
+      </SafeAreaView>
     </>
   );
 };
@@ -532,9 +533,9 @@ const styles = StyleSheet.create({
     paddingBottom: 60,
     paddingHorizontal: 16,
     overflow: "hidden",
-    // borderWidth: 1,
-    // backgroundColor: Color.Gray.gray500,
-    // borderColor: Color.Gray.gray300,
+    borderWidth: 1,
+    backgroundColor: Color.Gray.gray500,
+    borderColor: Color.Gray.gray300,
   },
   header: {
     ...H6,

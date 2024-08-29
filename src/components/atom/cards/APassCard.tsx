@@ -10,8 +10,6 @@ import APassStripes from "../../icons/APassStripes";
 import Animated, {
   FadeIn,
   FadeOut,
-  interpolate,
-  useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -25,6 +23,8 @@ import {
 import { SERVER_SETTING } from "@/constants/serverSettings";
 import { BODY_1_BOLD, BODY_2_BOLD, CAPTION_1_MEDIUM, CAPTION_1_REGULAR, H3, STYLIZED_UPPERCASE_REGULAR } from "@/constants/typography";
 
+const AnimatedText = Animated.createAnimatedComponent(Text);
+
 interface ApassProp {
   name: string;
   image: string;
@@ -36,10 +36,6 @@ interface ApassProp {
   target: number | undefined;
   isLoading: boolean;
 }
-
-
-const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
-
 const SkeletonLoader: React.FC = () => {
   const translateX = useSharedValue(-width);
 
@@ -79,11 +75,6 @@ const SkeletonLoader: React.FC = () => {
     </Animated.View>
   );
 };
-
-
-
-
-
 const APassCard: React.FC<ApassProp> = ({
   name,
   category,
@@ -96,8 +87,6 @@ const APassCard: React.FC<ApassProp> = ({
   isLoading = false,
 }) => {
   const pressed = useSharedValue(false);
-
-  const AnimatedText = Animated.createAnimatedComponent(Text);
 
   const tap = Gesture.Tap()
     .onBegin(() => {
@@ -127,36 +116,12 @@ const APassCard: React.FC<ApassProp> = ({
               style={[styles.aCardContainer]}
             >
               <View style={styles.blurContainer}>
-                <View
-                  style={{
-                    position: "absolute",
-                    top: 25,
-                    right: -120,
-                    transform: [{ rotate: "270deg" }],
-                  }}
-                >
+                <View style={styles.stripeContainer}>
                   <APassStripes />
                 </View>
 
-                <View
-                  style={{
-                    flexDirection: "row",
-                    width: "100%",
-                    gap: 12,
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    borderRadius: 16,
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 12,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      alignContent: "center",
-                    }}
-                  >
+                <View style={styles.headerContainer}>
+                  <View style={styles.headerContent}>
                     <Image
                       style={styles.logo}
                       source={{
@@ -176,135 +141,55 @@ const APassCard: React.FC<ApassProp> = ({
                       </Text>
                     </View>
                   </View>
-                  {hasBonus ? (
-                    <View
-                      style={{
-                        alignItems: "center",
-                        justifyContent: "center",
-                        backgroundColor: Color.Gray.gray400,
-                        padding: 8,
-                        borderRadius: 12,
-                      }}
-                    >
+                  {hasBonus && (
+                    <View style={styles.bonusContainer}>
                       <TicketStar size={24} color={Color.base.White} />
                     </View>
-                  ) : null}
+                  )}
                 </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    marginTop: 20,
-                    gap: 16,
-                    paddingHorizontal: 20,
-                  }}
-                >
+                
+                <View style={styles.contentContainer}>
                   <Image
-                    style={{
-                      minWidth: width / 2.1,
-                      aspectRatio: 1,
-                      borderRadius: 12,
-                    }}
+                    style={styles.nftImage}
                     source={{
                       uri: `${SERVER_SETTING.CDN_LINK}${nftImage}`,
                     }}
                   />
-                  <View
-                    style={{
-                      borderWidth: 1,
-                      backgroundColor: Color.Gray.gray500,
-                      borderColor: Color.Gray.gray400,
-                      borderRadius: 12,
-                      overflow: "hidden",
-                    }}
-                  >
-                    <BlurView>
-                      <LinearGradient
-                        colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                        start={{ x: 1, y: 0 }}
-                        end={{ x: 2, y: 1 }}
-                        style={{
-                          borderTopStartRadius: 12,
-                          borderTopEndRadius: 12,
-                        }}
-                      >
-                        <View
-                          style={{
-                            padding: 33,
-                            justifyContent: "center",
-                            alignContent: "center",
-                            alignItems: "center",
-                          }}
+                  <View style={styles.gradientBoxContainer}>
+                    <LinearGradient
+                      colors={[Color.Brand.card.start, Color.Brand.card.start]}
+                      start={{ x: 1, y: 0 }}
+                      end={{ x: 2, y: 1 }}
+                      style={styles.gradientBox}
+                    >
+                      <View style={styles.checkInsContainer}>
+                        <AnimatedText
+                          entering={FadeIn}
+                          exiting={FadeOut}
+                          style={styles.checkInsNumber}
                         >
+                          {visitCount < 10 ? `0${visitCount}` : visitCount}
+                        </AnimatedText>
+                        <Text style={styles.checkInsText}>
+                          Check-ins
+                        </Text>
+                      </View>
+                      
+                      {hasBonus && (
+                        <View style={styles.bonusInfoContainer}>
                           <AnimatedText
                             entering={FadeIn}
                             exiting={FadeOut}
-                            style={{
-                              ...H3,
-                              color: Color.base.White,
-                            }}
-                          >
-                            {visitCount < 10 ? `0${visitCount}` : visitCount}
-                          </AnimatedText>
-                          <Text
-                            style={{
-                              ...CAPTION_1_MEDIUM,
-                              color: Color.base.White,
-                            }}
-                          >
-                            Check-ins
-                          </Text>
-                        </View>
-                      </LinearGradient>
-                    </BlurView>
-                  
-                    {hasBonus && (
-                      <View
-                        style={{
-                          justifyContent: "center",
-                          alignContent: "center",
-                          alignItems: "center",
-                          flexDirection: "row",
-                          gap: 6,
-                          borderTopWidth: 1,
-                          borderColor: Color.Gray.gray400,
-                        }}
-                      >
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "center",
-                            alignContent: "center",
-                            alignItems: "center",
-                            gap: 6,
-                            paddingVertical: 10,
-                          }}
-                        >
-                          <AnimatedText
-                            entering={FadeIn}
-                            exiting={FadeOut}
-                            style={[
-                              {
-                                ...BODY_2_BOLD,
-                                color: Color.base.White,
-                              },
-                              animatedStyles,
-                            ]}
+                            style={[styles.bonusNumber, animatedStyles]}
                           >
                             {target}
                           </AnimatedText>
-
-                          <Text
-                            style={{
-                              ...CAPTION_1_REGULAR,
-                              color: Color.base.White,
-                            }}
-                          >
+                          <Text style={styles.bonusText}>
                             Until next perk
                           </Text>
                         </View>
-                      </View>
-                    )}
+                      )}
+                    </LinearGradient>
                   </View>
                 </View>
               </View>
@@ -327,13 +212,30 @@ const styles = StyleSheet.create({
   },
   blurContainer: {
     backgroundColor: Color.Gray.gray500,
-    columnGap: 20,
     width: "100%",
     flex: 1,
     padding: 20,
     borderRadius: 28,
     overflow: "hidden",
     height: "auto",
+  },
+  stripeContainer: {
+    position: "absolute",
+    top: 25,
+    right: -120,
+    transform: [{ rotate: "270deg" }],
+  },
+  headerContainer: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderRadius: 16,
+  },
+  headerContent: {
+    flexDirection: "row",
+    gap: 12,
+    alignItems: "center",
   },
   titleText: {
     color: Color.base.White,
@@ -349,6 +251,65 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 8,
+  },
+  bonusContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Color.Gray.gray400,
+    padding: 8,
+    borderRadius: 12,
+  },
+  contentContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 20,
+    gap: 16,
+  },
+  nftImage: {
+    width: width / 2.1,
+    aspectRatio: 1,
+    borderRadius: 12,
+  },
+  gradientBoxContainer: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
+    borderRadius: 12,
+    overflow: "hidden",
+  },
+  gradientBox: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  checkInsContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  checkInsNumber: {
+    ...H3,
+    color: Color.base.White,
+  },
+  checkInsText: {
+    ...CAPTION_1_MEDIUM,
+    color: Color.base.White,
+  },
+  bonusInfoContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 6,
+    borderTopWidth: 1,
+    borderColor: Color.Gray.gray400,
+    paddingVertical: 10,
+  },
+  bonusNumber: {
+    ...BODY_2_BOLD,
+    color: Color.base.White,
+  },
+  bonusText: {
+    ...CAPTION_1_REGULAR,
+    color: Color.base.White,
   },
   skeletonContainer: {
     backgroundColor: Color.Gray.gray500,

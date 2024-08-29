@@ -116,6 +116,7 @@ const HomeRestList: React.FC<ResListCardProp> = ({ marker, onPress }) => {
                   justifyContent: "center",
                   borderWidth: 1,
                   borderRadius: 16,
+                  paddingVertical: 0,
                   borderColor: Color.base.White,
                 }}
               >

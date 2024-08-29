@@ -183,6 +183,7 @@ const Wallet = () => {
                     gap: 24,
                     padding: 16,
                     alignItems: "center",
+                    justifyContent: "space-between",
                   },
                   animatedStyles,
                 ]}

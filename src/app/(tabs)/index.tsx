@@ -8,21 +8,19 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Color from "@/constants/Color";
 import Balance from "@/components/sections/Balance";
 import QuickInfo from "@/components/sections/QuickInfo";
-// import DiscoverFloatRestCard from "@/components/sections/DiscoverFloatRestCard";
 import StackedCard from "@/components/sections/StackedCard";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getUserById, getUserCard } from "@/lib/service/queryHelper";
+import { getUserById, getUserCard, getRestaurants } from "@/lib/service/queryHelper";
 import useLocationStore from "@/lib/store/userLocation";
 import { RestaurantType } from "@/lib/types";
 import { GetRestaurantsResponseType } from "@/lib/types/apiResponseType";
 import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
-import { getRestaurants } from "@/lib/service/queryHelper";
 import HomeRestList from "@/components/atom/cards/HomeRestList";
 import { InfoCircle } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -39,9 +37,7 @@ import Animated, {
 import { height, width } from "@/lib/utils";
 import Button from "@/components/ui/Button";
 import Close from "@/components/icons/Close";
-import { usePushNotifications } from "@/hooks/usePushNotification";
 import moment from "moment";
-import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 import { BODY_2_MEDIUM, BODY_2_REGULAR, BUTTON_40, H6 } from "@/constants/typography";
 import DiscoverFloatRestCard from "@/components/sections/DiscoverFloatRestCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -56,72 +52,50 @@ const Page = () => {
   const [showProfilePicture, setShowProfilePicture] = useState(true);
   const [showDateOfBirth, setShowDateOfBirth] = useState(true);
   const [showArea, setShowArea] = useState(true);
-  const { authState } = useAuth();
-  // const { expoPushToken, notification: pushNotification } =
-  //   usePushNotifications();
 
-  // const { mutateAsync: sendPushToken } = useMutation({
-  //   mutationFn: registerDeviceNotification,
-  // });
-  const profilePictureSetting = AsyncStorage.getItem('showProfilePicture');
-  const dateOfBirthSetting = AsyncStorage.getItem('showDateOfBirth');
-  const areaSetting = AsyncStorage.getItem('showArea');
+  const { authState } = useAuth();
   const { currentLocation } = useLocationStore();
   const currentTime = moment().format("HH:mm:ss");
+  const currentDayOfWeek = moment().isoWeekday();
+
+  // AsyncStorage settings
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const profilePicture = await AsyncStorage.getItem('showProfilePicture');
+      const dateOfBirth = await AsyncStorage.getItem('showDateOfBirth');
+      const area = await AsyncStorage.getItem('showArea');
+
+      setShowProfilePicture(profilePicture === 'true');
+      setShowDateOfBirth(dateOfBirth === 'true');
+      setShowArea(area === 'true');
+    };
+
+    fetchSettings();
+  }, []);
+
   const { data: user, isSuccess } = useQuery({
     queryKey: userKeys.info,
-    queryFn: () => {
-      return getUserById(authState.userId);
-    },
+    queryFn: () => getUserById(authState.userId),
     enabled: !!authState.userId,
   });
 
-
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
-    queryFn: () => {
-      return getUserCard({
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
-      });
-    },
+    queryFn: () => getUserCard({
+      latitude: currentLocation.latitude,
+      longitude: currentLocation.longitude,
+    }),
     enabled: !!currentLocation,
   });
 
-  // const data = JSON.stringify(pushNotification, undefined, 2)
-
-  // if (expoPushToken?.data) {
-  //   console.log("Sending push token");
-
-  //   sendPushToken({
-  //     pushToken: expoPushToken?.data
-  //   })
-  // }
-
-  const toggleBottomSheet = () => {
-    setIsOpen(!isOpen);
-  };
-  const toggleBalanceBottomSheet = () => {
-    setIsOpenBalance(!isOpenBalance);
-  };
-  const animatedStyles = useAnimatedStyle(() => ({
-    transform: [
-      { scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) },
-    ],
-  }));
-  const currentDayOfWeek = moment().isoWeekday();
-
   const { data: restaurantsData } = useQuery<GetRestaurantsResponseType>({
     queryKey: restaurantKeys.all,
-    queryFn: () => {
-      return getRestaurants({
-        page: 1,
-        limit: 10,
-        time: currentTime,
-        dayNoOfTheWeek: currentDayOfWeek,
-      });
-    },
-
+    queryFn: () => getRestaurants({
+      page: 1,
+      limit: 10,
+      time: currentTime,
+      dayNoOfTheWeek: currentDayOfWeek,
+    }),
     enabled: !!currentLocation,
   });
 
@@ -139,9 +113,16 @@ const Page = () => {
     (restaurant) => !restaurant.isOwned
   );
 
+  const toggleBottomSheet = () => setIsOpen(!isOpen);
+  const toggleBalanceBottomSheet = () => setIsOpenBalance(!isOpenBalance);
+
+  const animatedStyles = useAnimatedStyle(() => ({
+    transform: [{ scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) }],
+  }));
+
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <GestureHandlerRootView style={styles.container}>
+      <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         <Animated.View entering={SlideOutDown}>
           {user && (
             <TouchableOpacity onPress={() => router.push('/Wallet')}>
@@ -149,26 +130,17 @@ const Page = () => {
                 amount={user?.user?.balance}
                 convertedAmount={user?.convertedBalance}
                 currencyName="EUR"
-                handleToggle={() => toggleBalanceBottomSheet()}
+                handleToggle={toggleBalanceBottomSheet}
               />
             </TouchableOpacity>
           )}
         </Animated.View>
 
-        {filteredRestaurantsArray.length > 0 || 
-         (!user?.user?.email || !user?.user?.dateOfBirth || !user?.user?.nickname || !user?.user?.location) ? (
-          <View style={{ marginTop: 16, gap: 12 }}>
-            <Text
-              style={{
-                ...BODY_2_MEDIUM,
-                color: Color.Gray.gray100,
-                paddingHorizontal: 16,
-              }}
-            >
-              Featured
-            </Text>
-            <View style={{ alignItems: "center", gap: 8, width }}>
-              {restaurantsArray?.length > 0 && (
+        {(filteredRestaurantsArray.length > 0 || !user?.user?.email || !user?.user?.dateOfBirth || !user?.user?.nickname || !user?.user?.location) && (
+          <View style={styles.featuredContainer}>
+            <Text style={styles.featuredText}>Featured</Text>
+            <View style={styles.scrollViewContainer}>
+              {restaurantsArray.length > 0 && (
                 <Animated.ScrollView
                   snapToAlignment="center"
                   entering={SlideInLeft}
@@ -179,192 +151,84 @@ const Page = () => {
                 >
                   <Animated.View
                     entering={SlideInLeft.springify().damping(15)}
-                    style={{
-                      flexDirection: "row",
-                      gap: 8,
-                      left: 16,
-                      paddingRight: 32,
-                    }}
+                    style={styles.scrollViewContent}
                   >
-                    {
-                      user?.user?.dateOfBirth &&
-                        user?.user?.location &&
-                        profilePictureSetting
-                        ? null
-                        : isQuickInfoVisible && (
-                          <QuickInfo
-                            onPress={() => setIsQuickInfoVisible(false)}
-                            user={user?.user}
-                          />
-                        )}
+                    {user?.user?.dateOfBirth && user?.user?.location && showProfilePicture ? null : isQuickInfoVisible && (
+                      <QuickInfo
+                        onPress={() => setIsQuickInfoVisible(false)}
+                        user={user?.user}
+                      />
+                    )}
 
                     <FlatList
-                      style={{ gap: 10, flex: 1 }}
-                      ItemSeparatorComponent={() => (
-                        <View style={{ width: 8 }} />
-                      )}
+                      style={styles.flatList}
+                      ItemSeparatorComponent={() => <View style={styles.separator} />}
                       data={filteredRestaurantsArray}
                       horizontal
-                      keyExtractor={(item, index) => index.toString()}
+                      keyExtractor={(item) => item.id.toString()}
                       renderItem={({ item }) => (
                         <HomeRestList
                           isClaimLoading={true}
                           marker={item}
-                          key={item.id as string}
                           onPress={() => handleNavigation(item)}
                         />
                       )}
                     />
-                  )}
-                </Animated.View>
-              </Animated.ScrollView>
+                  </Animated.View>
+                </Animated.ScrollView>
+              )}
             </View>
           </View>
-        ) : null}
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginTop: 24,
-            marginBottom: 12,
-            justifyContent: "space-between",
-            paddingHorizontal: 16,
-          }}
-        >
-          <Text
-            style={{
-              ...BODY_2_MEDIUM,
-              color: Color.Gray.gray100,
-            }}
-          >
-            Memberships
-          </Text>
+        )}
+
+        <View style={styles.membershipsContainer}>
+          <Text style={styles.membershipsText}>Memberships</Text>
           <TouchableOpacity onPress={toggleBottomSheet}>
             <InfoCircle size={18} color={Color.Gray.gray100} />
           </TouchableOpacity>
         </View>
-        <View style={{ paddingHorizontal: 16 }}>
+
+        <View style={styles.stackedCardContainer}>
           <StackedCard key={refreshPage.toString()} />
         </View>
-        {cards?.data?.cards.length === 0 ? (
-          ""
-        ) : (
-          <View
-            style={{ width: "100%", alignItems: "center", marginBottom: 120 }}
-          >
+
+        {cards?.data?.cards.length > 0 && (
+          <View style={styles.seeAllContainer}>
             <TouchableOpacity onPress={() => router.push("/MyAcards")}>
-              <View
-                style={{
-                  backgroundColor: Color.Gray.gray300,
-                  marginTop: 16,
-                  paddingVertical: 12,
-                  paddingHorizontal: 16,
-                  borderRadius: 32,
-                }}
-              >
-                <Text
-                  style={{
-                    color: Color.base.White,
-                    ...BUTTON_40,
-                  }}
-                >
-                  See all
-                </Text>
+              <View style={styles.seeAllButton}>
+                <Text style={styles.seeAllText}>See all</Text>
               </View>
             </TouchableOpacity>
           </View>
         )}
       </ScrollView>
+
       {isOpenBalance && (
         <Modal transparent={true}>
-          <TouchableOpacity
-            style={{ flex: 1 }}
-            onPress={toggleBalanceBottomSheet}
-          >
+          <TouchableOpacity style={styles.modalBackground} onPress={toggleBalanceBottomSheet}>
             <Animated.View
               entering={FadeIn}
               exiting={FadeOut}
-              style={[
-                {
-                  position: "absolute",
-                  backgroundColor: "rgba(0, 0, 0, 0.25)",
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  zIndex: 98,
-                },
-                animatedStyles,
-              ]}
+              style={[styles.modalOverlay, animatedStyles]}
             />
             <Animated.View
               entering={SlideInDown.springify().damping(18)}
               exiting={SlideOutDown.springify()}
-              style={[
-                {
-                  backgroundColor: Color.Gray.gray600,
-                  height: height / 2.38,
-                  bottom: 0,
-                  width: width,
-                  zIndex: 99,
-                  position: "absolute",
-                  borderTopStartRadius: 32,
-                  borderTopEndRadius: 32,
-                  gap: 24,
-                  padding: 16,
-                  alignItems: "center",
-                },
-                animatedStyles,
-              ]}
+              style={[styles.modalContent, animatedStyles]}
             >
-              <View
-                style={{
-                  paddingVertical: 8,
-                  justifyContent: "center",
-                  alignContent: "center",
-                  alignItems: "center",
-                  flexDirection: "row",
-                }}
-              >
-                <Text
-                  style={{
-                    ...H6,
-                    color: Color.base.White,
-                  }}
-                >
-                  About your Balance
-                </Text>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>About your Balance</Text>
                 <TouchableOpacity onPress={toggleBalanceBottomSheet}>
-                  <View
-                    style={{
-                      backgroundColor: Color.Gray.gray400,
-                      borderRadius: 48,
-                      padding: 8,
-                      width: 32,
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      aspectRatio: 1,
-                      position: "absolute",
-                      left: 55,
-                      top: -18,
-                    }}
-                  >
+                  <View style={styles.closeButton}>
                     <Close />
                   </View>
                 </TouchableOpacity>
               </View>
               <Image
                 source={require("../../public/images/balanceInfo.png")}
-                style={{ height: 64, width: 204 }}
+                style={styles.balanceImage}
               />
-              <Text
-                style={{
-                  ...BODY_2_REGULAR,
-                  textAlign: "center",
-                  color: Color.Gray.gray50,
-                }}
-              >
+              <Text style={styles.modalDescription}>
                 You earned ALYS Bitcoin, which is faster and cheaper to use but
                 still pegged 1:1 with mainchain Bitcoin. Use your balance to
                 redeem perks at restaurants. Withdrawals to external crypto
@@ -374,7 +238,7 @@ const Page = () => {
                 variant="primary"
                 textStyle="primary"
                 onPress={toggleBalanceBottomSheet}
-                style={{ width: "100%" }}
+                style={styles.modalButton}
               >
                 <Text>Got it</Text>
               </Button>
@@ -382,94 +246,35 @@ const Page = () => {
           </TouchableOpacity>
         </Modal>
       )}
+
       {isOpen && (
         <Modal transparent={true}>
-          <TouchableOpacity style={{ flex: 1 }} onPress={toggleBottomSheet}>
+          <TouchableOpacity style={styles.modalBackground} onPress={toggleBottomSheet}>
             <Animated.View
               entering={FadeIn}
               exiting={FadeOut}
-              style={[
-                {
-                  position: "absolute",
-                  backgroundColor: "rgba(0, 0, 0, 0.25)",
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  zIndex: 98,
-                },
-                animatedStyles,
-              ]}
+              style={[styles.modalOverlay, animatedStyles]}
             />
             <Animated.View
               entering={SlideInDown.springify().damping(18)}
               exiting={SlideOutDown.springify()}
-              style={[
-                {
-                  backgroundColor: Color.Gray.gray600,
-                  height: height / 2,
-                  bottom: 0,
-                  width: width,
-                  zIndex: 99,
-                  position: "absolute",
-                  borderTopStartRadius: 32,
-                  borderTopEndRadius: 32,
-                  gap: 24,
-                  padding: 16,
-                },
-                animatedStyles,
-              ]}
+              style={[styles.modalContent, animatedStyles]}
             >
-              <View
-                style={{
-                  paddingVertical: 8,
-                  justifyContent: "center",
-                  alignContent: "center",
-                  alignItems: "center",
-                  flexDirection: "row",
-                }}
-              >
-                <Text
-                  style={{
-                    ...H6,
-                    color: Color.base.White,
-                  }}
-                >
-                  Membership
-                </Text>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Membership</Text>
                 <TouchableOpacity onPress={toggleBottomSheet}>
-                  <View
-                    style={{
-                      backgroundColor: Color.Gray.gray400,
-                      borderRadius: 48,
-                      padding: 8,
-                      width: 32,
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      aspectRatio: 1,
-                      position: "absolute",
-                      left: 85,
-                      top: -18,
-                    }}
-                  >
+                  <View style={styles.closeButton}>
                     <Close />
                   </View>
                 </TouchableOpacity>
               </View>
-              <View style={{ alignItems: "center", gap: 16 }}>
+              <View style={styles.membershipInfo}>
                 <Image
                   source={require("../../public/images/membership.png")}
-                  style={{ width: width / 1.8, height: 166 }}
+                  style={styles.membershipImage}
                   resizeMode="contain"
                 />
-                <Text
-                  style={{
-                    ...BODY_2_REGULAR,
-                    color: Color.Gray.gray50,
-                    textAlign: "center",
-                  }}
-                >
+                <Text style={styles.membershipDescription}>
                   Earn Bitcoin and other rewards simply by using our membership
                   cards when you visit your favorite restaurants.
                 </Text>
@@ -478,6 +283,7 @@ const Page = () => {
                 variant="primary"
                 textStyle="primary"
                 onPress={toggleBottomSheet}
+                style={styles.modalButton}
               >
                 <Text>Got it</Text>
               </Button>
@@ -495,5 +301,141 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  featuredContainer: {
+    marginTop: 16,
+    gap: 12,
+  },
+  featuredText: {
+    ...BODY_2_MEDIUM,
+    color: Color.Gray.gray100,
+    paddingHorizontal: 16,
+  },
+  scrollViewContainer: {
+    alignItems: "center",
+    gap: 8,
+    width,
+  },
+  scrollViewContent: {
+    flexDirection: "row",
+    gap: 8,
+    left: 16,
+    paddingRight: 32,
+  },
+  flatList: {
+    gap: 10,
+    flex: 1,
+  },
+  separator: {
+    width: 8,
+  },
+  membershipsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 24,
+    marginBottom: 12,
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+  },
+  membershipsText: {
+    ...BODY_2_MEDIUM,
+    color: Color.Gray.gray100,
+  },
+  stackedCardContainer: {
+    paddingHorizontal: 16,
+  },
+  seeAllContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 120,
+  },
+  seeAllButton: {
+    backgroundColor: Color.Gray.gray300,
+    marginTop: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 32,
+  },
+  seeAllText: {
+    color: Color.base.White,
+    ...BUTTON_40,
+  },
+  modalBackground: {
+    flex: 1,
+  },
+  modalOverlay: {
+    position: "absolute",
+    backgroundColor: "rgba(0, 0, 0, 0.25)",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 98,
+  },
+  modalContent: {
+    backgroundColor: Color.Gray.gray600,
+    height: height / 2.20,
+    bottom: 0,
+    width: width,
+    zIndex: 99,
+    position: "absolute",
+    borderTopStartRadius: 32,
+    borderTopEndRadius: 32,
+    gap: 24,
+    padding: 16,
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  modalHeader: {
+    paddingVertical: 8,
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  modalTitle: {
+    ...H6,
+    color: Color.base.White,
+  },
+  closeButton: {
+    backgroundColor: Color.Gray.gray400,
+    borderRadius: 48,
+    padding: 8,
+    width: 32,
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    aspectRatio: 1,
+    position: "absolute",
+    left: 55,
+    top: -18,
+  },
+  balanceImage: {
+    height: 64,
+    width: 204,
+  },
+  modalDescription: {
+    ...BODY_2_REGULAR,
+    textAlign: "center",
+    color: Color.Gray.gray50,
+  },
+  modalButton: {
+    width: "100%",
+ },
+  membershipInfo: {
+    alignItems: "center",
+    gap: 16,
+  },
+  membershipImage: {
+    width: width / 1.8,
+    height: 166,
+  },
+  membershipDescription: {
+    ...BODY_2_REGULAR,
+    color: Color.Gray.gray50,
+    textAlign: "center",
   },
 });

@@ -136,6 +136,7 @@ const MyQrModal = () => {
   }, [userId, handleTapScan, createTapMutation]);
 
   return (
+    <SafeAreaView style={{flex: 1}}>
     <View style={styles.container}>
       {loading ? (
         <ActivityIndicator style={styles.loader} />
@@ -189,6 +190,7 @@ const MyQrModal = () => {
         <Close />
       </TouchableOpacity>
     </View>
+    </SafeAreaView>
   );
 };
 
