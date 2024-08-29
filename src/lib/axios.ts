@@ -3,6 +3,7 @@ import Constants from "expo-constants";
 import { SERVER_SETTING } from "../constants/serverSettings";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import Config from "config";
 
 // Constants.manifest2.
 const isRunningInExpoGo = Constants.appOwnership === "expo";
@@ -14,7 +15,7 @@ const isRunningInExpoGo = Constants.appOwnership === "expo";
 //       .concat(`:3001/api`)}`
 //   : `https://amuse-backend-feb14ba0a8da.herokuapp.com/api`;
 
-const uri = `${SERVER_SETTING.API_URL}/api`;
+const uri = `${Config.apiUrl}/api`;
 
 export const baseUrl = uri;
 

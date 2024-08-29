@@ -2,8 +2,9 @@ export const SERVER_SETTING = {
   TOKEN_KEY: "JWT",
   REFRESH_TOKEN_KEY: "REFRESH_TOKEN_KEY",
   USER_ID: "USER_ID",
-  API_URL: "https://amuse-backend-feb14ba0a8da.herokuapp.com",
+  API_URL: "https://amuse-backend-staging-478fc2297634.herokuapp.com",
   PERK_FREQUENCY: 3,
+  API_URL_PROD: "https://api.amusebouche.io",
   CDN_LINK: "https://d2fovtzya8mbko.cloudfront.net/restaurant/",
   PROFILE_PIC_LINK: "https://d2fovtzya8mbko.cloudfront.net/user/"
 };

@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   Dimensions,
   ActivityIndicator,
-  SafeAreaView,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import Color from "@/constants/Color";
@@ -15,15 +14,15 @@ import { generateTap } from "@/lib/service/mutationHelper";
 import { getUserCard } from "@/lib/service/queryHelper";
 import useLocationStore from "@/lib/store/userLocation";
 import { userKeys } from "@/lib/service/keysHelper";
-import { SERVER_SETTING } from "@/constants/serverSettings";
 import { LinearGradient } from "expo-linear-gradient";
 import Close from "@/components/icons/Close";
 import { io } from "socket.io-client";
 import { useAuth } from "@/context/AuthContext";
 import QRCode from "react-native-qrcode-svg";
 import { BODY_2_REGULAR, H6 } from "@/constants/typography";
+import Config from "config";
 
-const socket = io(SERVER_SETTING.API_URL, { transports: ["websocket"] });
+const socket = io(Config.apiUrl, { transports: ["websocket"] });
 const { width } = Dimensions.get("window");
 const markerSize = 250;
 const halfMarkerSize = markerSize / 2;
@@ -34,10 +33,7 @@ const MyQrModal = () => {
   const [qrData, setQrdata] = useState("");
   const router = useRouter();
   const { currentLocation } = useLocationStore();
-
   const userId = authState.userId;
-
-  // Fetch user cards based on current location
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
     queryFn: () => {
