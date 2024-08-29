@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Redirect, Tabs, router } from "expo-router";
 import { View, TouchableOpacity } from "react-native";
 import Footer from "@/components/layout/Footer";
@@ -14,8 +14,21 @@ import { usePushNotifications } from "@/hooks/usePushNotification";
 import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 
+// Define types for props and state
 type LayoutProps = {
   navigation: any; // Replace 'any' with the correct type from your navigation library
+};
+
+type AuthState = {
+  loading: boolean;
+  authenticated: boolean;
+};
+
+type Location = {
+  // Define the structure of your location object
+  latitude: number;
+  longitude: number;
+  // Add other relevant fields
 };
 
 const Layout: React.FC<LayoutProps> = ({ navigation }) => {
@@ -28,10 +41,6 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     mutationFn: registerDeviceNotification,
   });
 
-  const [fontsLoaded] = useFonts({
-    // Add your custom fonts here
-    // 'CustomFont-Regular': require('./assets/fonts/CustomFont-Regular.ttf'),
-  });
 
   const prepareApp = useCallback(async () => {
     try {
@@ -43,9 +52,10 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         }
       }
 
-      if (expoPushToken?.data) {
-        await sendPushToken({ pushToken: expoPushToken.data });
-      }
+      // Uncomment and implement token sending logic if needed
+      // if (expoPushToken?.data) {
+      //   await sendPushToken({ pushToken: expoPushToken.data });
+      // }
 
       if (currentLocation === null) {
         await getLocation();
@@ -60,34 +70,10 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   }, [prepareApp]);
 
   useEffect(() => {
-    if (!authState.loading && currentLocation !== null && fontsLoaded) {
+    if (!authState.loading && currentLocation !== null) {
       setAppIsReady(true);
     }
-  }, [authState.loading, currentLocation, fontsLoaded]);
-
-  const memoizedHeaderLeft = useMemo(() => (
-    <TouchableOpacity
-      onPress={() => router.push("/profileSection/Profile")}
-    >
-      <View style={{ paddingHorizontal: 20 }}>
-        <User color={Color.base.White} />
-      </View>
-    </TouchableOpacity>
-  ), []);
-
-  const memoizedHeaderTitle = useMemo(() => (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Logo />
-    </View>
-  ), []);
-
-  const memoizedHeaderRight = useMemo(() => (
-    <TouchableOpacity onPress={() => router.push("/Notification")}>
-      <View style={{ paddingHorizontal: 20 }}>
-        <Notification color={Color.base.White} />
-      </View>
-    </TouchableOpacity>
-  ), []);
+  }, [authState.loading, currentLocation]);
 
   if (!appIsReady) {
     return <SplashScreenAnimated />;
@@ -106,9 +92,27 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
             shadowOpacity: 0,
             backgroundColor: Color.Gray.gray600,
           },
-          headerLeft: () => memoizedHeaderLeft,
-          headerTitle: () => memoizedHeaderTitle,
-          headerRight: () => memoizedHeaderRight,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.push("/profileSection/Profile")}
+            >
+              <View style={{ paddingHorizontal: 20 }}>
+                <User color={Color.base.White} />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerTitle: () => (
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+              <Logo />
+            </View>
+          ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/Notification")}>
+              <View style={{ paddingHorizontal: 20 }}>
+                <Notification color={Color.base.White} />
+              </View>
+            </TouchableOpacity>
+          ),
           headerTitleAlign: "center",
         }}
       />
