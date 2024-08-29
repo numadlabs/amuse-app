@@ -1,7 +1,8 @@
 {
   "expo": {
-    "version": "0.6.0",
-    "runtimeVersion": "0.6.0",
+    "version": "0.6.1",
+    "runtimeVersion": "0.6.1",
+    "jsEngine": "hermes",
     "scheme": "acme",
     "owner": "numad-labs",
     "userInterfaceStyle": "dark",
@@ -40,7 +41,10 @@
     "ios": {
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "The app accesses your photos to let you share them with your friends.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "We use location data to assist you in locating restaurants participating in a program on the Platform."
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "We use location data to assist you in locating restaurants participating in a program on the Platform.",
+        "NSLocationWhenInUseUsageDescription": "We use location data to assist you in locating restaurants participating in a program on the Platform.",
+        "NSLocationAlwaysUsageDescription": "We use location data to assist you in locating restaurants participating in a program on the Platform.",
+        "NSUserNotificationUsageDescription": "We'd like to send you notifications for important updates and new offers."
       },
       
       "supportsTablet": false,
@@ -79,7 +83,7 @@
 
       "requestHeaders": {
         "expo-channel-name": "main",
-        "expo-runtime-version": "0.6.0",
+        "expo-runtime-version": "0.6.1",
         "expo-platform": "ios",
         "channel-name": "main"
       }
