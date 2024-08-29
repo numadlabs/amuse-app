@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Redirect, Tabs, router } from "expo-router";
 import { View, TouchableOpacity } from "react-native";
 import Footer from "@/components/layout/Footer";
@@ -14,18 +14,33 @@ import { usePushNotifications } from "@/hooks/usePushNotification";
 import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 
-const Layout = ({ navigation }) => {
-  const { authState } = useAuth();
-  const [appIsReady, setAppIsReady] = useState(false);
-  const { getLocation, currentLocation } = useLocationStore();
-  const { expoPushToken, notification: pushNotification } =
-  usePushNotifications();
+// Define types for props and state
+type LayoutProps = {
+  navigation: any; // Replace 'any' with the correct type from your navigation library
+};
 
+type AuthState = {
+  loading: boolean;
+  authenticated: boolean;
+};
+
+type Location = {
+  // Define the structure of your location object
+  latitude: number;
+  longitude: number;
+  // Add other relevant fields
+};
+
+const Layout: React.FC<LayoutProps> = ({ navigation }) => {
+  const { authState } = useAuth();
+  const [appIsReady, setAppIsReady] = useState<boolean>(false);
+  const { getLocation, currentLocation } = useLocationStore();
+  const { expoPushToken } = usePushNotifications();
 
   const { mutateAsync: sendPushToken } = useMutation({
     mutationFn: registerDeviceNotification,
   });
-  
+
   const [fontsLoaded] = useFonts({
     Sora: require("@/public/fonts/Sora-Regular.otf"),
     SoraBold: require("@/public/fonts/Sora-Bold.otf"),
@@ -33,60 +48,45 @@ const Layout = ({ navigation }) => {
     SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),   
   });
 
-  useEffect(() => {
-    const prepareApp = async () => {
-      try {
-        if (!__DEV__) {
-          // Only check for updates in production mode
-          const updateAvailable = await Updates.checkForUpdateAsync();
-
-          if (updateAvailable.isAvailable) {
-            await Updates.fetchUpdateAsync();
-            await Updates.reloadAsync();
-          } else {
-            console.log("No update available");
-          }
-        } else {
-          console.log("Running in development mode");
-        }
-
-        // Get notification data
-        const data = JSON.stringify(pushNotification, undefined, 2)
-
-        if (expoPushToken?.data) {
-          console.log("Sending push token");
-
-          sendPushToken({
-            pushToken: expoPushToken?.data
-          })
-        }
-
-        // Get current location
-        if (currentLocation == null) {
-          await getLocation();
-        }
-        //TODO notifications fetch hj bgag ynzlah
-      } catch (error) {
-        console.error("Error preparing app:", error);
-      } finally {
-        if (!authState.loading && currentLocation !== null && fontsLoaded) {
-          setAppIsReady(true);
+  const prepareApp = useCallback(async () => {
+    try {
+      if (!__DEV__) {
+        const updateAvailable = await Updates.checkForUpdateAsync();
+        if (updateAvailable.isAvailable) {
+          await Updates.fetchUpdateAsync();
+          await Updates.reloadAsync();
         }
       }
-    };
 
-    // Call prepareApp function on component mount
+      // Uncomment and implement token sending logic if needed
+      // if (expoPushToken?.data) {
+      //   await sendPushToken({ pushToken: expoPushToken.data });
+      // }
+
+      if (currentLocation === null) {
+        await getLocation();
+      }
+    } catch (error) {
+      console.error("Error preparing app:", error);
+    }
+  }, [currentLocation, getLocation, sendPushToken, expoPushToken]);
+
+  useEffect(() => {
     prepareApp();
-  }, [currentLocation, authState?.loading, fontsLoaded]);
+  }, [prepareApp]);
 
-  // Show loading screen if app is not ready
+  useEffect(() => {
+    if (!authState.loading && currentLocation !== null && fontsLoaded) {
+      setAppIsReady(true);
+    }
+  }, [authState.loading, currentLocation, fontsLoaded]);
+
   if (!appIsReady) {
     return <SplashScreenAnimated />;
   }
 
-  // Redirect to login if user is not authenticated
   if (authState.authenticated === false) {
-    return <Redirect href={"/Login"} />;
+    return <Redirect href="/Login" />;
   }
 
   return (
@@ -107,15 +107,8 @@ const Layout = ({ navigation }) => {
               </View>
             </TouchableOpacity>
           ),
-
           headerTitle: () => (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
               <Logo />
             </View>
           ),

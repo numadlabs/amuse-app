@@ -26,10 +26,12 @@ import { BODY_2_REGULAR, H6 } from "@/constants/typography";
 
 const { width } = Dimensions.get("window");
 
+const socket = io(SERVER_SETTING.API_URL, { transports: ["websocket"] });
+
 const PowerUp = () => {
+  console.log("component rendered");
   const { authState } = useAuth();
 
-  const socket = io(SERVER_SETTING.API_URL, { transports: ["websocket"] });
   const userId = authState.userId;
 
   // const showToast = () => {
@@ -46,21 +48,21 @@ const PowerUp = () => {
   const [qrData, setQrdata] = useState("");
   const queryClient = useQueryClient();
 
-  socket.on("connect", () => {
-    console.log("Connected to server");
-    socket.emit("register", userId);
-  });
+  // socket.on("connect", () => {
+  //   console.log("Connected to server");
+  //   socket.emit("register", userId);
+  // });
 
-  socket.on("bonus-scan", (data) => {
-    console.log("Tapscan: ", data);
-    if (data) {
-      handleNavigation();
-    }
-  });
+  // socket.on("bonus-scan", (data) => {
+  //   console.log("Tapscan: ", data);
+  //   if (data) {
+  //     handleNavigation();
+  //   }
+  // });
 
-  socket.on("connect", () => {
-    console.log("socket connected: ", socket.connected); // true
-  });
+  // socket.on("connect", () => {
+  //   console.log("socket connected: ", socket.connected); // true
+  // });
 
   const { mutateAsync: createBonusQrMutation } = useMutation({
     mutationFn: generatePerkQr,
@@ -84,6 +86,50 @@ const PowerUp = () => {
       id: id as string,
     });
   }, []);
+
+  useEffect(() => {
+    let isActive = true;
+
+    const setupSocket = () => {
+      if (!socket.connected) {
+        socket.connect();
+      }
+
+      const onConnect = () => {
+        console.log("Connected to server");
+        socket.emit("register", userId);
+      };
+
+      const onTapScan = (data) => {
+        if (isActive && data) {
+          handleNavigation();
+        }
+      };
+
+      socket.on("connect", onConnect);
+      socket.on("tap-scan", onTapScan);
+
+      if (socket.connected) {
+        onConnect();
+      }
+
+      return () => {
+        socket.off("connect", onConnect);
+        socket.off("tap-scan", onTapScan);
+      };
+    };
+
+    const cleanupSocket = setupSocket();
+
+    createBonusQrMutation({
+      id: id as string,
+    });
+
+    return () => {
+      isActive = false;
+      cleanupSocket();
+    };
+  }, [userId, createBonusQrMutation]);
 
   const handleNavigation = () => {
     queryClient.invalidateQueries({ queryKey: restaurantKeys.all });

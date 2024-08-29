@@ -36,6 +36,7 @@ export default {
   System: {
     systemSuccess: '#2CB59E',
     systemSuccessBg: '#2CB59E/20',
+    systemWarning: '#EDC843',
     systemError: '#FF5C69',
     systemErrorBg: '#FF5C69/20',
     systemInformation: '#007FFF'

@@ -44,6 +44,7 @@ import moment from "moment";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 import { BODY_2_MEDIUM, BODY_2_REGULAR, BUTTON_40, H6 } from "@/constants/typography";
 import DiscoverFloatRestCard from "@/components/sections/DiscoverFloatRestCard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Page = () => {
   const router = useRouter();
@@ -52,6 +53,9 @@ const Page = () => {
   const [isOpenBalance, setIsOpenBalance] = useState<boolean>(false);
   const [isQuickInfoVisible, setIsQuickInfoVisible] = useState(true);
   const pressed = useSharedValue(false);
+  const [showProfilePicture, setShowProfilePicture] = useState(true);
+  const [showDateOfBirth, setShowDateOfBirth] = useState(true);
+  const [showArea, setShowArea] = useState(true);
   const { authState } = useAuth();
   // const { expoPushToken, notification: pushNotification } =
   //   usePushNotifications();
@@ -59,7 +63,9 @@ const Page = () => {
   // const { mutateAsync: sendPushToken } = useMutation({
   //   mutationFn: registerDeviceNotification,
   // });
-
+  const profilePictureSetting = AsyncStorage.getItem('showProfilePicture');
+  const dateOfBirthSetting = AsyncStorage.getItem('showDateOfBirth');
+  const areaSetting = AsyncStorage.getItem('showArea');
   const { currentLocation } = useLocationStore();
   const currentTime = moment().format("HH:mm:ss");
   const { data: user, isSuccess } = useQuery({
@@ -69,6 +75,7 @@ const Page = () => {
     },
     enabled: !!authState.userId,
   });
+
 
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
@@ -161,35 +168,36 @@ const Page = () => {
               Featured
             </Text>
             <View style={{ alignItems: "center", gap: 8, width }}>
-              <Animated.ScrollView
-                snapToAlignment="center"
-                entering={SlideInLeft}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                snapToInterval={width - 16}
-                decelerationRate="fast"
-              >
-                <Animated.View
-                  entering={SlideInLeft.springify().damping(15)}
-                  style={{
-                    flexDirection: "row",
-                    gap: 8,
-                    left: 16,
-                    paddingRight: 32,
-                  }}
+              {restaurantsArray?.length > 0 && (
+                <Animated.ScrollView
+                  snapToAlignment="center"
+                  entering={SlideInLeft}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  snapToInterval={width - 16}
+                  decelerationRate="fast"
                 >
-                  {(!user?.user?.email ||
-                   !user?.user?.dateOfBirth ||
-                   !user?.user?.nickname ||
-                   !user?.user?.location) &&
-                   isQuickInfoVisible && (
-                    <QuickInfo
-                      onPress={() => setIsQuickInfoVisible(false)}
-                      user={user?.user}
-                    />
-                  )}
-        
-                  {filteredRestaurantsArray.length > 0 && (
+                  <Animated.View
+                    entering={SlideInLeft.springify().damping(15)}
+                    style={{
+                      flexDirection: "row",
+                      gap: 8,
+                      left: 16,
+                      paddingRight: 32,
+                    }}
+                  >
+                    {
+                      user?.user?.dateOfBirth &&
+                        user?.user?.location &&
+                        profilePictureSetting
+                        ? null
+                        : isQuickInfoVisible && (
+                          <QuickInfo
+                            onPress={() => setIsQuickInfoVisible(false)}
+                            user={user?.user}
+                          />
+                        )}
+
                     <FlatList
                       style={{ gap: 10, flex: 1 }}
                       ItemSeparatorComponent={() => (

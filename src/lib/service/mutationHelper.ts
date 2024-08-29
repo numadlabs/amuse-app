@@ -1,7 +1,4 @@
 import { axiosClient } from "../axios";
-import { UserBoostRequestData } from "../types";
-import { createBoostFormData } from "./formHelper";
-import { AxiosRequestConfig } from "axios";
 
 export function generateTap() {
   return axiosClient.post("/taps/generate").then((response) => {
@@ -61,29 +58,29 @@ export function purchasePerk(bonusId) {
   });
 }
 
-
 export async function updateUserEmail({
   email,
-  verificationCode
+  verificationCode,
 }: {
   email: string;
   verificationCode: number;
-}){
-  const response = await axiosClient.put(`/users/updateEmail`, { email, verificationCode });
-  if(response.data.success){
+}) {
+  const response = await axiosClient.put(`/users/updateEmail`, {
+    email,
+    verificationCode,
+  });
+  if (response.data.success) {
     return response.data.data;
-  }else{
+  } else {
     console.log(response.data.error);
   }
-  
-
 }
 export async function updateUserInfo({ userId, data }) {
   const formData = new FormData();
 
-  Object.keys(data).forEach(key => {
-    if (key === 'profilePicture' && data[key]) {
-      formData.append('profilePicture', data[key]);
+  Object.keys(data).forEach((key) => {
+    if (key === "profilePicture" && data[key]) {
+      formData.append("profilePicture", data[key]);
     } else {
       formData.append(key, data[key]);
     }

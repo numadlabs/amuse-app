@@ -33,7 +33,13 @@ import { userKeys } from "@/lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SERVER_SETTING } from "@/constants/serverSettings";
-import { BODY_1_REGULAR, BODY_2_REGULAR, BUTTON_48, H5, H6 } from "@/constants/typography";
+import {
+  BODY_1_REGULAR,
+  BODY_2_REGULAR,
+  BUTTON_48,
+  H5,
+  H6,
+} from "@/constants/typography";
 
 const Profile = () => {
   const { currentLocation } = useLocationStore();
@@ -71,9 +77,8 @@ const Profile = () => {
   });
 
   const userTierData = userTier.find(
-    (tier) => tier.id === user?.user?.userTierId,
+    (tier) => tier.id === user?.user?.userTierId
   );
-  console.log(userTier);
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
@@ -162,7 +167,9 @@ const Profile = () => {
                       paddingHorizontal: 10,
                     }}
                   >
-                    <Text style={{ color: Color.Gray.gray100, ...BODY_2_REGULAR}}>
+                    <Text
+                      style={{ color: Color.Gray.gray100, ...BODY_2_REGULAR }}
+                    >
                       Check-ins
                     </Text>
                     <Text
@@ -192,12 +199,14 @@ const Profile = () => {
                       paddingHorizontal: 10,
                     }}
                   >
-                    <Text style={{ color: Color.Gray.gray100, ...BODY_2_REGULAR }}>
+                    <Text
+                      style={{ color: Color.Gray.gray100, ...BODY_2_REGULAR }}
+                    >
                       Memberships
                     </Text>
                     <Text
                       style={{
-                        color: Color.Gray.gray50, 
+                        color: Color.Gray.gray50,
                         ...H5,
                       }}
                     >
@@ -229,7 +238,9 @@ const Profile = () => {
                     }}
                   >
                     <User size={24} color={Color.Gray.gray100} />
-                    <Text style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}>
+                    <Text
+                      style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}
+                    >
                       Account
                     </Text>
                   </View>
@@ -256,7 +267,9 @@ const Profile = () => {
                     }}
                   >
                     <Sms size={24} color={Color.Gray.gray100} />
-                    <Text style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}>
+                    <Text
+                      style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}
+                    >
                       Contact
                     </Text>
                   </View>
@@ -281,7 +294,9 @@ const Profile = () => {
                     }}
                   >
                     <MessageQuestion size={24} color={Color.Gray.gray100} />
-                    <Text style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}>
+                    <Text
+                      style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}
+                    >
                       FAQ
                     </Text>
                   </View>
@@ -306,7 +321,9 @@ const Profile = () => {
                     }}
                   >
                     <NoteText size={24} color={Color.Gray.gray100} />
-                    <Text style={{  ...BODY_1_REGULAR, color: Color.Gray.gray50 }}>
+                    <Text
+                      style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}
+                    >
                       Terms and Conditions
                     </Text>
                   </View>
@@ -331,7 +348,9 @@ const Profile = () => {
                     }}
                   >
                     <Lock size={24} color={Color.Gray.gray100} />
-                    <Text style={{  ...BODY_1_REGULAR, color: Color.Gray.gray50 }}>
+                    <Text
+                      style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}
+                    >
                       Privacy
                     </Text>
                   </View>

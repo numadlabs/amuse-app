@@ -41,6 +41,7 @@
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "The app accesses your photos to let you share them with your friends."
       },
+      
       "supportsTablet": false,
       "bundleIdentifier": "com.numadLabs.amuseApp",
       "config": {

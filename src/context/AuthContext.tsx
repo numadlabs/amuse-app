@@ -9,6 +9,7 @@ import {
   loadUserId,
   saveUserId,
 } from "../lib/service/asyncStorageHelper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 interface AuthProps {
   authState?: {
     token: string | null;
@@ -220,10 +221,10 @@ export const AuthProvider = ({ children }: any) => {
     // Delete token from storage
     await SecureStore.deleteItemAsync(SERVER_SETTING.TOKEN_KEY);
     await SecureStore.deleteItemAsync(SERVER_SETTING.REFRESH_TOKEN_KEY);
-
+    await AsyncStorage.removeItem('hasSeenWelcomeMessage');
     // Update HTTP Headers
     axiosClient.defaults.headers.common["Authorization"] = "";
-
+   
     // Reset auth state
     setAuthState({
       token: null,

@@ -160,7 +160,6 @@ export default function RestaurantMapView() {
 
   useEffect(() => {
     if (!scrollViewHidden && cardIndexToScroll !== null) {
-      console.log("useEffect triggered");
       // Set a timeout to wait for 0.1 second
       const timeoutId = setTimeout(() => {
         scrollToCardIndex(cardIndexToScroll);
@@ -173,11 +172,8 @@ export default function RestaurantMapView() {
   }, [scrollViewHidden, cardIndexToScroll]);
 
   const handleMarkerPress = (marker) => {
-    console.log("🚀 ~ handleMarkerPress ~ marker:", marker.name);
-
     setActiveMarker(marker);
     const cardIndex = findMarkerIndex(marker);
-    console.log("🚀 ~ handleMarkerPress ~ cardIndex:", cardIndex);
     setScrollViewHidden(false);
     if (cardIndex !== undefined) {
       scrollToCardIndex(cardIndex);
@@ -188,9 +184,7 @@ export default function RestaurantMapView() {
   };
 
   const scrollToCardIndex = (index) => {
-    console.log("🚀 ~ scrollToCardIndex ~ index:", index);
     if (scrollViewRef.current) {
-      console.log("🚀 ~ scrollToCardIndex ~ scrollViewRef.current:");
       const x = index * (CARD_WIDTH + 20);
       scrollViewRef.current.scrollTo({ x, animated: true });
     }
@@ -198,7 +192,6 @@ export default function RestaurantMapView() {
 
   const throttledCenter = useMemo(() => {
     return throttle((marker) => {
-      console.log("🚀 ~ returnthrottle ~ cardIndex:", marker.name);
       if (marker !== null) {
         const region = {
           latitude: marker.latitude,
@@ -223,20 +216,14 @@ export default function RestaurantMapView() {
       const marker = restaurantsData?.data?.restaurants[index];
 
       if (marker && marker.id !== activeMarker?.id) {
-        console.log("cond 1", activeMarker?.id !== marker?.id);
-        console.log("cond 2", isScrollViewDragging == false);
-
         if (
           isScrollViewDragging == false &&
           activeMarker &&
           marker?.id == activeMarker?.id
         ) {
-          console.log("cond3:", isScrollViewDragging);
           setActiveMarker(marker);
           centerMapOnMarker(marker);
         } else if (isScrollViewDragging && marker) {
-          console.log("cond4", isScrollViewDragging);
-
           setActiveMarker(marker);
           centerMapOnMarker(marker);
         }
@@ -246,7 +233,6 @@ export default function RestaurantMapView() {
     }
   };
   const centerMapOnMarker = (marker) => {
-    console.log(marker.name);
     if (mapRef.current) {
       const region = {
         latitude: marker.latitude,
@@ -254,7 +240,6 @@ export default function RestaurantMapView() {
         latitudeDelta: mapLatitudeDelta,
         longitudeDelta: mapLongitudeDelta,
       };
-      console.log("🚀 ~ centerMapOnMarker ~ region:", region);
       mapRef.current.animateToRegion(region, 150);
     }
   };

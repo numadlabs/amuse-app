@@ -1,18 +1,5 @@
 import { axiosClient } from "../axios";
 
-export async function getRestaurantById(id: string, time: string) {
-  return axiosClient
-    .get(`/restaurants/${id}?dayNoOfTheWeek=7&time=${time}`)
-    .then((response) => {
-      console.log("🚀 ~ returnaxiosClient.get ~ response:", response.data);
-      if (response.data.success) {
-        return response?.data.restaurant;
-      } else {
-        throw new Error(response.data.error);
-      }
-    });
-}
-
 export async function getRestaurants({
   page,
   limit,
@@ -49,11 +36,10 @@ export async function getUserCard({ latitude, longitude }) {
     });
 }
 
-
-export async function getUserNotification(){
-  const response = await axiosClient.get('/notifications/user')
-  if(response){
-    return response.data.data
+export async function getUserNotification() {
+  const response = await axiosClient.get("/notifications/user");
+  if (response) {
+    return response.data.data;
   }
 }
 
@@ -68,17 +54,13 @@ export async function getUserPowerUps(id) {
 }
 
 export async function getUserTransaction(id) {
-  return axiosClient.get(`/transactions/${id}/user`)
-  .then((response) => {
+  return axiosClient.get(`/transactions/${id}/user`).then((response) => {
     if (response.data.success) {
-      console.log(response?.data.data.transaction);
       return response?.data.data.transaction;
-     
-      
     } else {
       throw new Error(response.data.error);
     }
-  })
+  });
 }
 
 export async function getPerksByRestaurant(id) {
