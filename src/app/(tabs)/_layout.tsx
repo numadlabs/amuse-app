@@ -57,11 +57,9 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
           await Updates.reloadAsync();
         }
       }
-
-      // Uncomment and implement token sending logic if needed
-      // if (expoPushToken?.data) {
-      //   await sendPushToken({ pushToken: expoPushToken.data });
-      // }
+      if (expoPushToken?.data) {
+        await sendPushToken({ pushToken: expoPushToken.data });
+      }
 
       if (currentLocation === null) {
         await getLocation();
