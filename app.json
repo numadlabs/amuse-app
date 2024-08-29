@@ -7,10 +7,10 @@
     "owner": "numad-labs",
     "userInterfaceStyle": "dark",
     "orientation": "portrait",
-    "web": {
-      "output": "static",
-      "bundler": "metro"
-    },
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "plugins": [
       [
         "expo-router",
