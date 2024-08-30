@@ -9,7 +9,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
   ScrollView,
 } from "react-native";
@@ -41,11 +40,6 @@ function Login() {
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
   const bottomTabHeight = useSharedValue(0);
   const { onLogin } = useAuth();
-  const [throwError, setThrowError] = useState(false);
-
-  if (throwError) {
-    throw new Error("Test error");
-  }
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
@@ -327,21 +321,6 @@ function Login() {
                       }}
                     >
                       Forgot password?
-                    </Text>
-                  </Button>
-                  <Button
-                    style={{ zIndex: 0 }}
-                    variant="text"
-                    onPress={ () => setThrowError(true)}
-                  >
-                    <Text
-                      style={{
-                        color: Color.base.White,
-                        ...BUTTON_48,
-                        marginTop: 12,
-                      }}
-                    >
-                     Error test
                     </Text>
                   </Button>
                   <Divider />
