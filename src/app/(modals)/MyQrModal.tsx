@@ -22,6 +22,7 @@ import QRCode from "react-native-qrcode-svg";
 import { BODY_2_REGULAR, H6 } from "@/constants/typography";
 import Config from "config";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const socket = io(Config.apiUrl, { transports: ["websocket"] });
 const { width } = Dimensions.get("window");
@@ -130,61 +131,90 @@ const MyQrModal = () => {
   }, [userId, handleTapScan, createTapMutation]);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-    <View style={styles.container}>
-      {loading ? (
-        <ActivityIndicator style={styles.loader} />
-      ) : (
-        <View style={styles.content}>
-          <Text
-            style={{
-              ...H6,
-              color: Color.base.White,
+    <>
+      <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Color.Gray.gray600,
+            alignItems: "center",
+          }}
+        >
+          {loading ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <ActivityIndicator />
+            </View>
+          ) : (
+            <View style={{ alignItems: "center", marginTop: 100, gap: 32 }}>
+              <Text
+                style={{
+                  ...H6,
+                  color: Color.base.White,
+                }}
+              >
+                My QR Code
+              </Text>
+              {/* <TouchableOpacity onPress={handleScanButtonPress}> */}
+              <LinearGradient
+                colors={[Color.Brand.card.start, Color.Brand.card.end]}
+                style={[styles.button]}
+              >
+                {loading ? (
+                  <ActivityIndicator />
+                ) : (
+                  <QRCode
+                    backgroundColor="transparent"
+                    color={Color.base.White}
+                    size={width / 1.3}
+                    value={`data:image/png;base64,${qrData}`}
+                  />
+                )}
+              </LinearGradient>
+              {/* </TouchableOpacity> */}
+              <View style={{ marginHorizontal: 32 }}>
+                <Text
+                  style={{
+                    ...BODY_2_REGULAR,
+                    textAlign: "center",
+                    color: Color.Gray.gray100,
+                  }}
+                >
+                  Show this to your waiter to check-in.{"\n"} Do not worry, they
+                  are pros.
+                </Text>
+              </View>
+            </View>
+          )}
+          <TouchableOpacity
+            style={[
+              styles.closeButton,
+              {
+                backgroundColor: Color.Gray.gray400,
+                width: 48,
+                height: 48,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 100,
+              },
+            ]}
+            onPress={() => {
+              router.back();
             }}
           >
-            My QR Code
-          </Text>
-          {/* <TouchableOpacity onPress={handleScanButtonPress}> */}
-          <LinearGradient
-            colors={[Color.Brand.card.start, Color.Brand.card.end]}
-            style={styles.qrContainer}
-          >
-            <QRCode
-              backgroundColor="transparent"
-              color={Color.base.White}
-              size={width / 1.3}
-              value={`data:image/png;base64,${qrData}`}
-            />
-          </LinearGradient>
-          {/* </TouchableOpacity> */}
-          <View style={{ marginHorizontal: 32 }}>
-            <Text style={styles.instruction}>
-              Show this to your waiter to check-in.{"\n"} Do not worry, they are
-              pros.
-            </Text>
-          </View>
+            <Close />
+          </TouchableOpacity>
         </View>
-      )}
-      <TouchableOpacity
-        style={[
-          styles.closeButton,
-          {
-            backgroundColor: Color.Gray.gray400,
-            width: 48,
-            height: 48,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 100,
-          },
-        ]}
-        onPress={() => {
-          router.back();
-        }}
-      >
-        <Close />
-      </TouchableOpacity>
-    </View>
-    </SafeAreaView>
+      </View>
+      </SafeAreaView>
+    </>
   );
 };
 
