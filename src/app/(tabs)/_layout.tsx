@@ -14,21 +14,15 @@ import { usePushNotifications } from "@/hooks/usePushNotification";
 import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 
-// Define types for props and state
 type LayoutProps = {
-  navigation: any; // Replace 'any' with the correct type from your navigation library
+  navigation: any;
 };
 
-type AuthState = {
-  loading: boolean;
-  authenticated: boolean;
-};
-
-type Location = {
-  // Define the structure of your location object
-  latitude: number;
-  longitude: number;
-  // Add other relevant fields
+type LoadingStates = {
+  updates: boolean;
+  pushNotification: boolean;
+  location: boolean;
+  fonts: boolean;
 };
 
 const Layout: React.FC<LayoutProps> = ({ navigation }) => {
@@ -36,46 +30,81 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   const [appIsReady, setAppIsReady] = useState<boolean>(false);
   const { getLocation, currentLocation } = useLocationStore();
   const { expoPushToken } = usePushNotifications();
+  const [loadingStates, setLoadingStates] = useState<LoadingStates>({
+    updates: false,
+    pushNotification: false,
+    location: false,
+    fonts: false,
+  });
 
   const { mutateAsync: sendPushToken } = useMutation({
     mutationFn: registerDeviceNotification,
   });
 
+  const [fontsLoaded] = useFonts({
+    Sora: require("@/public/fonts/Sora-Regular.otf"),
+    SoraBold: require("@/public/fonts/Sora-Bold.otf"),
+    SoraMedium: require("@/public/fonts/Sora-Medium.otf"),    
+    SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),   
+  });
+
   const prepareApp = useCallback(async () => {
     try {
       if (!__DEV__) {
-        const updateAvailable = await Updates.checkForUpdateAsync();
-        if (updateAvailable.isAvailable) {
-          await Updates.fetchUpdateAsync();
-          await Updates.reloadAsync();
+        setLoadingStates(prev => ({ ...prev, updates: true }));
+        try {
+          const updateCheck = await Promise.race([
+            Updates.checkForUpdateAsync(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Update check timed out')), 5000))
+          ]);
+
+          if (updateCheck && typeof updateCheck === 'object' && 'isAvailable' in updateCheck) {
+            if (updateCheck.isAvailable) {
+              await Updates.fetchUpdateAsync();
+              await Updates.reloadAsync();
+            }
+          } else {
+            console.log("Update check returned an unexpected result");
+          }
+        } catch (error) {
+          console.error("Error checking for updates:", error);
+        } finally {
+          setLoadingStates(prev => ({ ...prev, updates: false }));
         }
       }
 
-      // Uncomment and implement token sending logic if needed
-      // if (expoPushToken?.data) {
-      //   await sendPushToken({ pushToken: expoPushToken.data });
-      // }
+      if (expoPushToken?.data) {
+        setLoadingStates(prev => ({ ...prev, pushNotification: true }));
+        await sendPushToken({ pushToken: expoPushToken.data });
+        setLoadingStates(prev => ({ ...prev, pushNotification: false }));
+      }
 
-      if (currentLocation === null) {
+      if (currentLocation == null) {
+        setLoadingStates(prev => ({ ...prev, location: true }));
         await getLocation();
+        setLoadingStates(prev => ({ ...prev, location: false }));
       }
     } catch (error) {
       console.error("Error preparing app:", error);
     }
-  }, [currentLocation, getLocation, sendPushToken, expoPushToken]);
+  }, [expoPushToken, currentLocation, getLocation, sendPushToken]);
 
   useEffect(() => {
     prepareApp();
   }, [prepareApp]);
 
   useEffect(() => {
-    if (!authState.loading && currentLocation !== null) {
+    setLoadingStates(prev => ({ ...prev, fonts: !fontsLoaded }));
+  }, [fontsLoaded]);
+
+  useEffect(() => {
+    if (!authState.loading && currentLocation !== null && fontsLoaded) {
       setAppIsReady(true);
     }
-  }, [authState.loading, currentLocation]);
+  }, [authState.loading, currentLocation, fontsLoaded]);
 
   if (!appIsReady) {
-    return <SplashScreenAnimated />;
+    return <SplashScreenAnimated loadingStates={loadingStates} />;
   }
 
   if (authState.authenticated === false) {
