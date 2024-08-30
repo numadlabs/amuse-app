@@ -8,27 +8,17 @@ import Color from "@/constants/Color";
 import { useAuth } from "@/context/AuthContext";
 import useLocationStore from "@/lib/store/userLocation";
 import * as Updates from "expo-updates";
-import { useFonts } from "expo-font";
-import SplashScreenAnimated from "../SplashScreenAnimated";
+import * as SplashScreen from 'expo-splash-screen';
 import { usePushNotifications } from "@/hooks/usePushNotification";
 import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
+import SplashScreenAnimated from "../SplashScreenAnimated";
 
-// Define types for props and state
+// Keep splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
+
 type LayoutProps = {
   navigation: any; // Replace 'any' with the correct type from your navigation library
-};
-
-type AuthState = {
-  loading: boolean;
-  authenticated: boolean;
-};
-
-type Location = {
-  // Define the structure of your location object
-  latitude: number;
-  longitude: number;
-  // Add other relevant fields
 };
 
 const Layout: React.FC<LayoutProps> = ({ navigation }) => {
@@ -41,13 +31,6 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     mutationFn: registerDeviceNotification,
   });
 
-  const [fontsLoaded] = useFonts({
-    Sora: require("@/public/fonts/Sora-Regular.otf"),
-    SoraBold: require("@/public/fonts/Sora-Bold.otf"),
-    SoraMedium: require("@/public/fonts/Sora-Medium.otf"),    
-    SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),   
-  });
-
   const prepareApp = useCallback(async () => {
     try {
       if (!__DEV__) {
@@ -57,6 +40,8 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
           await Updates.reloadAsync();
         }
       }
+
+      // Uncomment and implement token sending logic if needed
       if (expoPushToken?.data) {
         await sendPushToken({ pushToken: expoPushToken.data });
       }
@@ -66,6 +51,8 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
       }
     } catch (error) {
       console.error("Error preparing app:", error);
+    } finally {
+      setAppIsReady(true);
     }
   }, [currentLocation, getLocation, sendPushToken, expoPushToken]);
 
@@ -74,13 +61,14 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   }, [prepareApp]);
 
   useEffect(() => {
-    if (!authState.loading && currentLocation !== null && fontsLoaded) {
+    if (!authState.loading && currentLocation !== null) {
       setAppIsReady(true);
     }
-  }, [authState.loading, currentLocation, fontsLoaded]);
+  }, [authState.loading, currentLocation]);
 
-  if (!appIsReady) {
-    return <SplashScreenAnimated />;
+  if (!appIsReady || authState.loading || currentLocation === null) {
+    <SplashScreenAnimated/>
+    return null;
   }
 
   if (authState.authenticated === false) {

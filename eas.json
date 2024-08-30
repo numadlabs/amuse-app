@@ -31,8 +31,14 @@
       }
     },
     "production": {
-      "channel": "main",
+      "channel": "production",
       "env": {
+        "EXPO_IOS_GOOGLE_API_KEY": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
+      }
+    },
+    "staging": {
+       "channel": "main",
+       "env": {
         "EXPO_IOS_GOOGLE_API_KEY": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
       }
     }

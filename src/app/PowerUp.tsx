@@ -21,12 +21,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { io } from "socket.io-client";
 import { useAuth } from "@/context/AuthContext";
 import QRCode from "react-native-qrcode-svg";
-import { SERVER_SETTING } from "@/constants/serverSettings";
 import { BODY_2_REGULAR, H6 } from "@/constants/typography";
+import Config from "config";
 
 const { width } = Dimensions.get("window");
 
-const socket = io(SERVER_SETTING.API_URL, { transports: ["websocket"] });
+const socket = io(Config.apiUrl, { transports: ["websocket"] });
 
 const PowerUp = () => {
   console.log("component rendered");

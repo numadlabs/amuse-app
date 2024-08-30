@@ -19,7 +19,7 @@ const INITIAL_TRANSLATE_X = -width / 8;
 const INITIAL_TRANSLATE_Y = height / 32;
 const INITIAL_TRANSLATE_X2 = width / 2.8;
 const INITIAL_TRANSLATE_Y2 = height / 32;
-const ANIMATION_DURATION = 600;
+const ANIMATION_DURATION = 300;
 
 const SplashScreenAnimated = () => {
   const translateX = useSharedValue(INITIAL_TRANSLATE_X);
