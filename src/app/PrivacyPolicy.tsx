@@ -273,7 +273,7 @@ that information is inaccurate or incomplete.
 `,
     },
   ];
-
+  
   return (
     <>
       <SafeAreaView style={{flex: 1}}>
@@ -291,8 +291,8 @@ that information is inaccurate or incomplete.
           </Text>
 
           {data.map((item, index) => (
-            <View key={index} style={{ marginVertical: 16 }}>
-              <Accordion title={item.title} text={item.text} />
+            <View style={{ marginVertical: 16, backgroundColor: Color.Gray.gray600}}>
+              <Accordion key={index} title={item.title} text={item.text} />
             </View>
           ))}
 
@@ -534,9 +534,9 @@ const styles = StyleSheet.create({
     paddingBottom: 60,
     paddingHorizontal: 16,
     overflow: "hidden",
-    borderWidth: 1,
-    backgroundColor: Color.Gray.gray500,
-    borderColor: Color.Gray.gray300,
+    // borderWidth: 1,
+    // backgroundColor: Color.Gray.gray500,
+    // borderColor: Color.Gray.gray300,
   },
   header: {
     ...H6,

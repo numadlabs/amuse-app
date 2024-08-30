@@ -123,11 +123,20 @@ const Page = () => {
           )}
         </Animated.View>
 
-        {(filteredRestaurantsArray.length > 0 || !user?.user?.email || !user?.user?.dateOfBirth || !user?.user?.nickname || !user?.user?.location) && (
-          <View style={styles.featuredContainer}>
-            <Text style={styles.featuredText}>Featured</Text>
-            <View style={styles.scrollViewContainer}>
-              {restaurantsArray.length > 0 && (
+        {filteredRestaurantsArray.length > 0 || 
+         (!user?.user?.email || !user?.user?.dateOfBirth || !user?.user?.nickname || !user?.user?.location) ? (
+          <View style={{ marginTop: 16, gap: 12 }}>
+            <Text
+              style={{
+                ...BODY_2_MEDIUM,
+                color: Color.Gray.gray100,
+                paddingHorizontal: 16,
+              }}
+            >
+              Featured
+            </Text>
+            <View style={{ alignItems: "center", gap: 8, width }}>
+              {restaurantsArray?.length > 0 && (
                 <Animated.ScrollView
                   snapToAlignment="center"
                   entering={SlideInLeft}
@@ -161,15 +170,30 @@ const Page = () => {
                         />
                       )}
                     />
-                  </Animated.View>
-                </Animated.ScrollView>
-              )}
+                  )}
+                </Animated.View>
+              </Animated.ScrollView>
             </View>
           </View>
-        )}
-
-        <View style={styles.membershipsContainer}>
-          <Text style={styles.membershipsText}>Memberships</Text>
+        ) : null}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginTop: 24,
+            marginBottom: 12,
+            justifyContent: "space-between",
+            paddingHorizontal: 16,
+          }}
+        >
+          <Text
+            style={{
+              ...BODY_2_MEDIUM,
+              color: Color.Gray.gray100,
+            }}
+          >
+            Memberships
+          </Text>
           <TouchableOpacity onPress={toggleBottomSheet}>
             <InfoCircle size={18} color={Color.Gray.gray100} />
           </TouchableOpacity>
