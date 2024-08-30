@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, Platform } from "react-native";
+import { View, StyleSheet, Platform, Text } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Updates from "expo-updates";
 import Color from "@/constants/Color";
@@ -21,7 +21,17 @@ const INITIAL_TRANSLATE_X2 = width / 2.8;
 const INITIAL_TRANSLATE_Y2 = height / 32;
 const ANIMATION_DURATION = 300;
 
-const SplashScreenAnimated = () => {
+const SplashScreenAnimated = ({ loadingStates }) => {
+
+  const getLoadingMessage = () => {
+    if (loadingStates.updates) return "Checking for updates...";
+    if (loadingStates.pushNotification) return "Setting up notifications...";
+    if (loadingStates.location) return "Getting your location...";
+    if (loadingStates.fonts) return "Loading fonts...";
+    return "Preparing your experience...";
+  };
+
+
   const translateX = useSharedValue(INITIAL_TRANSLATE_X);
   const translateY = useSharedValue(INITIAL_TRANSLATE_Y);
   const translateX2 = useSharedValue(INITIAL_TRANSLATE_X2);
@@ -73,14 +83,14 @@ const SplashScreenAnimated = () => {
   }));
 
   useEffect(() => {
-      try {
-        animated();
-        const intervalId = setInterval(play, 1800);
-        return () => clearInterval(intervalId);
-      } catch (e) {
-        console.warn(e);
-      }
-    
+    try {
+      animated();
+      const intervalId = setInterval(play, 1800);
+      return () => clearInterval(intervalId);
+    } catch (e) {
+      console.warn(e);
+    }
+
   }, []);
 
   const runTypeMessage = Updates.isEmbeddedLaunch
@@ -126,9 +136,12 @@ const SplashScreenAnimated = () => {
               <AmuseBoucheLogo />
             </BlurView>
           )}
+
         </View>
       </View>
+      <Text style={styles.loadingText}>{getLoadingMessage()}</Text>
     </View>
+
   );
 };
 
@@ -190,6 +203,14 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "black",
+  },
+  loadingText: {
+    position: 'absolute',
+    bottom: 50,
+    color: Color.base.White,
+    fontSize: 16,
+    fontFamily: 'Sora',
+    textAlign: 'center',
   },
 });
 
