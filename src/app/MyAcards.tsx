@@ -16,10 +16,7 @@ const MyAcards = () => {
   const { data: cards = [], isLoading } = useQuery({
     queryKey: userKeys.cards,
     queryFn: () => {
-      return getUserCard({
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
-      });
+      return getUserCard();
     },
     enabled: !!currentLocation,
   });
