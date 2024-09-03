@@ -1,7 +1,7 @@
 {
   "expo": {
-    "version": "0.6.6",
-    "runtimeVersion": "0.6.6",
+    "version": "0.6.5",
+    "runtimeVersion": "0.6.5",
     "jsEngine": "hermes",
     "scheme": "acme",
     "owner": "numad-labs",
@@ -83,7 +83,7 @@
 
       "requestHeaders": {
         "expo-channel-name": "production",
-        "expo-runtime-version": "0.6.4",
+        "expo-runtime-version": "0.6.5",
         "expo-platform": "ios",
         "channel-name": "production"
       },
