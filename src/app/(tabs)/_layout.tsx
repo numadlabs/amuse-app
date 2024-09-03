@@ -22,7 +22,6 @@ type LayoutProps = {
 type LoadingStates = {
   updates: boolean;
   pushNotification: boolean;
-  location: boolean;
   fonts: boolean;
 };
 
@@ -31,12 +30,11 @@ const PUSH_TOKEN_KEY = '@PushToken';
 const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState<boolean>(false);
-  const { getLocation, currentLocation } = useLocationStore();
+  const { getLocation, isLoading, error } = useLocationStore();
   const { expoPushToken } = usePushNotifications();
   const [loadingStates, setLoadingStates] = useState<LoadingStates>({
     updates: false,
     pushNotification: false,
-    location: false,
     fonts: false,
   });
 
@@ -85,16 +83,10 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         }
         setLoadingStates(prev => ({ ...prev, pushNotification: false }));
       }
-
-      if (currentLocation == null) {
-        setLoadingStates(prev => ({ ...prev, location: true }));
-        await getLocation();
-        setLoadingStates(prev => ({ ...prev, location: false }));
-      }
     } catch (error) {
       console.error("Error preparing app:", error);
     }
-  }, [expoPushToken, currentLocation, getLocation, sendPushToken]);
+  }, [expoPushToken, sendPushToken]);
 
   useEffect(() => {
     prepareApp();
@@ -105,10 +97,36 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   }, [fontsLoaded]);
 
   useEffect(() => {
-    if (!authState.loading && currentLocation !== null && fontsLoaded) {
+    if (!authState.loading && fontsLoaded) {
       setAppIsReady(true);
     }
-  }, [authState.loading, currentLocation, fontsLoaded]);
+  }, [authState.loading, fontsLoaded]);
+
+  // Background location fetching
+  useEffect(() => {
+    let isMounted = true;
+    const fetchLocationInBackground = async () => {
+      if (!isLoading && isMounted) {
+        await getLocation();
+      }
+    };
+
+    if (appIsReady) {
+      fetchLocationInBackground();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [appIsReady, getLocation, isLoading]);
+
+  // Handle location errors
+  useEffect(() => {
+    if (error) {
+      console.error("Location error:", error);
+      // You can add additional error handling here, such as showing a notification to the user
+    }
+  }, [error]);
 
   if (!appIsReady) {
     return <SplashScreenAnimated loadingStates={loadingStates} />;

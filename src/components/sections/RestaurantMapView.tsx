@@ -21,6 +21,7 @@ import SvgMarker from "../atom/svgMarker";
 import Color from "@/constants/Color";
 import { mapStyle, SERVER_SETTING } from "@/constants/serverSettings";
 import moment from "moment";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
@@ -29,6 +30,8 @@ const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
 const mapLatitudeDelta = 0.1;
 const mapLongitudeDelta = 0.1;
+
+const MAP_STATE_KEY = 'RESTAURANT_MAP_STATE';
 
 const throttle = (func, delay) => {
   let throttling = false;
@@ -51,77 +54,91 @@ const throttle = (func, delay) => {
 export default function RestaurantMapView() {
   const router = useRouter();
   const currentDayOfWeek = moment().isoWeekday();
-  const { currentLocation } = useLocationStore();
+  const { currentLocation, isLoading: locationLoading, error: locationError } = useLocationStore();
   const [selectedLocation, setSelectedLocation] = useState("current");
   const mapRef = useRef(null);
   const scrollViewRef = useRef(null);
   const [initialRegion, setInitialRegion] = useState(null);
   const [scrollViewHidden, setScrollViewHidden] = useState(true);
   const currentTime = moment().format("HH:mm:ss");
-  const [cardIndexToScroll, setCardIndexToScroll] = useState<number | null>(
-    null
-  );
+  const [cardIndexToScroll, setCardIndexToScroll] = useState<number | null>(null);
+  const [mapState, setMapState] = useState(null);
 
   let mapAnimation = new Animated.Value(0);
 
   const [isScrollViewDragging, setIsScrollViewDragging] = useState(false);
-
   const [activeMarker, setActiveMarker] = useState(null);
+
+  // Load saved map state on component mount
+  useEffect(() => {
+    const loadMapState = async () => {
+      try {
+        const savedState = await AsyncStorage.getItem(MAP_STATE_KEY);
+        if (savedState) {
+          const parsedState = JSON.parse(savedState);
+          setMapState(parsedState);
+          setInitialRegion(parsedState.region);
+        }
+      } catch (error) {
+        console.error('Error loading map state:', error);
+      }
+    };
+    loadMapState();
+  }, []);
+
+  // Save map state on component unmount
+  useEffect(() => {
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.getMapBoundaries().then(async (bounds) => {
+          const stateToSave = {
+            region: {
+              latitude: (bounds.northEast.latitude + bounds.southWest.latitude) / 2,
+              longitude: (bounds.northEast.longitude + bounds.southWest.longitude) / 2,
+              latitudeDelta: bounds.northEast.latitude - bounds.southWest.latitude,
+              longitudeDelta: bounds.northEast.longitude - bounds.southWest.longitude,
+            },
+            // Add any other state you want to preserve
+          };
+          try {
+            await AsyncStorage.setItem(MAP_STATE_KEY, JSON.stringify(stateToSave));
+          } catch (error) {
+            console.error('Error saving map state:', error);
+          }
+        });
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (selectedLocation === "current" && currentLocation) {
       setInitialRegion({
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
+        latitude: currentLocation.coords.latitude,
+        longitude: currentLocation.coords.longitude,
         latitudeDelta: mapLatitudeDelta,
         longitudeDelta: mapLongitudeDelta,
       });
     } else if (selectedLocation === "dubai") {
       setInitialRegion({
-        latitude: 25.276987,
-        longitude: 55.296249,
-        latitudeDelta: mapLatitudeDelta,
-        longitudeDelta: mapLongitudeDelta,
+        latitude: 50.0755, 
+        longitude: 14.4378, 
+        latitudeDelta: 0.1, 
+        longitudeDelta: 0.1,
       });
     }
   }, [currentLocation, selectedLocation]);
 
-  const findMarkerIndex = (marker) => {
-    return restaurantsData?.data?.restaurants.findIndex(
-      (restaurant) => restaurant.id === marker.id
-    );
-  };
-
-  const toggleLocation = () => {
-    setSelectedLocation((prevLocation) =>
-      prevLocation === "current" ? "dubai" : "current"
-    );
-
-    const coordinates = getLocationCoordinates();
-    setInitialRegion({
-      latitude: coordinates.latitude,
-      longitude: coordinates.longitude,
-      latitudeDelta: mapLatitudeDelta,
-      longitudeDelta: mapLongitudeDelta,
-    });
-  };
-
-  const getLocationCoordinates = () => {
-    if (selectedLocation === "current") {
-      return {
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
-      };
-    } else {
-      // Return the coordinates of Dubai
-      return {
-        latitude: 25.276987,
-        longitude: 55.296249,
-      };
+  useEffect(() => {
+    if (!scrollViewHidden && cardIndexToScroll !== null) {
+      const timeoutId = setTimeout(() => {
+        scrollToCardIndex(cardIndexToScroll);
+        setCardIndexToScroll(null);
+      }, 100);
+      return () => clearTimeout(timeoutId);
     }
-  };
+  }, [scrollViewHidden, cardIndexToScroll]);
 
-  const { data: restaurantsData } = useQuery<GetRestaurantsResponseType>({
+  const { data: restaurantsData, isLoading: restaurantsLoading, error: restaurantsError } = useQuery<GetRestaurantsResponseType>({
     queryKey: restaurantKeys.all,
     queryFn: () => {
       return getRestaurants({
@@ -131,45 +148,14 @@ export default function RestaurantMapView() {
         dayNoOfTheWeek: currentDayOfWeek,
       });
     },
-    // onError(error):{
-    //   console.log(error)
-    // }
-
     enabled: !!currentLocation,
   });
 
-  // const handleMapAnimation = ({ value }) => {
-  //   let index = Math.floor(value / CARD_WIDTH + 0.3);
-  //   if (index >= restaurantsData?.data?.restaurants.length) {
-  //     index = restaurantsData?.data?.restaurants.length - 1;
-  //   }
-  //   if (index <= 0) {
-  //     index = 0;
-  //   }
-  //   const marker = restaurantsData?.data?.restaurants[index];
-  //   // setMarkerForMapCenter(marker);
-  // };
-
-  // useEffect(() => {
-  //   const listener = mapAnimation.addListener(handleMapAnimation);
-
-  //   return () => {
-  //     mapAnimation.removeListener(listener);
-  //   };
-  // }, [mapAnimation]); // Added mapAnimation as a dependency
-
-  useEffect(() => {
-    if (!scrollViewHidden && cardIndexToScroll !== null) {
-      // Set a timeout to wait for 0.1 second
-      const timeoutId = setTimeout(() => {
-        scrollToCardIndex(cardIndexToScroll);
-        setCardIndexToScroll(null);
-      }, 100); // 100 milliseconds delay
-
-      // Clear the timeout if the component unmounts or variables change
-      return () => clearTimeout(timeoutId);
-    }
-  }, [scrollViewHidden, cardIndexToScroll]);
+  const findMarkerIndex = (marker) => {
+    return restaurantsData?.data?.restaurants.findIndex(
+      (restaurant) => restaurant.id === marker.id
+    );
+  };
 
   const handleMarkerPress = (marker) => {
     setActiveMarker(marker);
@@ -211,7 +197,6 @@ export default function RestaurantMapView() {
     const addedPadding = positiveNumber + width * 0.1;
     const index = Math.floor(addedPadding / (CARD_WIDTH + 20));
 
-    // Check if the index is within the valid range of the restaurants array
     if (index >= 0 && index < restaurantsData?.data?.restaurants.length) {
       const marker = restaurantsData?.data?.restaurants[index];
 
@@ -232,6 +217,7 @@ export default function RestaurantMapView() {
       console.log("Index out of bounds");
     }
   };
+
   const centerMapOnMarker = (marker) => {
     if (mapRef.current) {
       const region = {
@@ -253,84 +239,65 @@ export default function RestaurantMapView() {
     });
   };
 
+  // Memoize the MapView to prevent unnecessary re-renders
+  const memoizedMapView = useMemo(() => (
+    <MapView
+      ref={mapRef}
+      style={styles.map}
+      provider={PROVIDER_GOOGLE}
+      initialRegion={initialRegion || {
+        latitude: 50.0755,
+        longitude: 14.4378,
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.1,
+      }}
+      customMapStyle={mapStyle}
+      scrollEnabled={true}
+      zoomEnabled={true}
+      pitchEnabled={true}
+      rotateEnabled={true}
+    >
+      {currentLocation && (
+        <Marker
+          coordinate={{
+            latitude: currentLocation.coords.latitude,
+            longitude: currentLocation.coords.longitude,
+          }}
+          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+        >
+          <Image source={require("@/public/images/locationPin.png")} />
+        </Marker>
+      )}
+      {restaurantsData?.data?.restaurants.map((restaurant, index) => (
+        <Marker
+          key={`marker-${index}`}
+          coordinate={{
+            latitude: restaurant.latitude,
+            longitude: restaurant.longitude,
+          }}
+          onPress={() => handleMarkerPress(restaurant)}
+          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+        >
+          <View style={styles.markerContainer}>
+            {activeMarker?.id === restaurant.id ? (
+              <SvgMarker
+                key={restaurant.id as string}
+                imageUrl={
+                  `${SERVER_SETTING.CDN_LINK}${restaurant?.logo}` as string
+                }
+              />
+            ) : (
+              <View style={styles.inactiveMarker} />
+            )}
+          </View>
+        </Marker>
+      ))}
+    </MapView>
+  ), [initialRegion, currentLocation, restaurantsData, activeMarker]);
+
   return (
     <View style={styles.container}>
-      <MapView
-        ref={mapRef}
-        style={styles.map}
-        provider={PROVIDER_GOOGLE}
-        initialRegion={{
-          latitude: 50.0755, // Latitude for Prague
-          longitude: 14.4378, // Longitude for Prague
-          latitudeDelta: 0.1, // Adjust the delta values for desired zoom level
-          longitudeDelta: 0.1,
-        }} // Pass the initialRegion prop here
-        customMapStyle={mapStyle}
-        // cacheEnabled={true}
-        scrollEnabled={true}
-        zoomEnabled={true}
-        pitchEnabled={true}
-        rotateEnabled={true}
-        // onPress={toggleLocation} // Add this onPress handler
-      >
-        {/* <View style={styles.locationToggleContainer}>
-          <TouchableOpacity onPress={toggleLocation} style={styles.locationToggle}>
-            <Text style={styles.locationToggleText}>
-              {selectedLocation === "current" ? "Dubai" : "Current Location"}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.gpsButton}>
-          <TouchableOpacity >
-            <Gps size={24} color={Color.Gray.gray600} style={{ zIndex: 10 }} />
-          </TouchableOpacity>
-        </View> */}
-
-        {currentLocation && (
-          <Marker
-            coordinate={{
-              latitude: currentLocation.latitude,
-              longitude: currentLocation.longitude,
-            }}
-            // title="Your Location"
-          >
-            <Image source={require("@/public/images/locationPin.png")} />
-          </Marker>
-        )}
-        {restaurantsData?.data?.restaurants.map((restaurant, index) => {
-          return (
-            <Marker
-              key={`marker-${index}`}
-              hitSlop={{ top: 40, bottom: 40, left: 40, right: 40 }}
-              coordinate={{
-                latitude: restaurant.latitude,
-                longitude: restaurant.longitude,
-              }}
-              onPress={() => handleMarkerPress(restaurant)}
-            >
-              {activeMarker?.id === restaurant.id ? (
-                <SvgMarker
-                  key={restaurant.id as string}
-                  imageUrl={
-                    `${SERVER_SETTING.CDN_LINK}${restaurant?.logo}` as string
-                  }
-                />
-              ) : (
-                <View
-                  style={{
-                    width: 8,
-                    height: 8,
-                    padding: 4,
-                    backgroundColor: Color.base.White,
-                    borderRadius: 48,
-                  }}
-                />
-              )}
-            </Marker>
-          );
-        })}
-      </MapView>
-      {/* {!scrollViewHidden && ( */}
+      {memoizedMapView}
       <Animated.ScrollView
         ref={scrollViewRef}
         horizontal
@@ -348,7 +315,6 @@ export default function RestaurantMapView() {
         }}
         onMomentumScrollEnd={() => setIsScrollViewDragging(false)}
         onScrollBeginDrag={() => setIsScrollViewDragging(true)}
-        // onScrollEndDrag={() => setIsScrollViewDragging(false)}
         contentContainerStyle={{
           paddingHorizontal:
             Platform.OS === "android" ? SPACING_FOR_CARD_INSET : 0,
@@ -374,16 +340,6 @@ export default function RestaurantMapView() {
             </TouchableOpacity>
           ))}
       </Animated.ScrollView>
-      {/* )} */}
-
-      {/* <View style={styles.absoluteBox}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.buttonText}>Confirm</Text>
-        </TouchableOpacity>
-      </View> */}
     </View>
   );
 }
@@ -402,5 +358,17 @@ const styles = StyleSheet.create({
     right: 0,
     paddingVertical: 10,
     marginBottom: 36,
+  },
+  markerContainer: {
+    width: 40,  // Increased width for larger touch area
+    height: 40, // Increased height for larger touch area
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inactiveMarker: {
+    width: 8,
+    height: 8,
+    backgroundColor: Color.base.White,
+    borderRadius: 4,
   },
 });
