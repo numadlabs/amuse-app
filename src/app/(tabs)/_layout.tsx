@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Redirect, Tabs, router } from "expo-router";
 import { View, TouchableOpacity } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Footer from "@/components/layout/Footer";
 import { Notification, User } from "iconsax-react-native";
 import Logo from "@/components/icons/Logo";
@@ -24,6 +25,8 @@ type LoadingStates = {
   location: boolean;
   fonts: boolean;
 };
+
+const PUSH_TOKEN_KEY = '@PushToken';
 
 const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   const { authState } = useAuth();
@@ -75,7 +78,11 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
 
       if (expoPushToken?.data) {
         setLoadingStates(prev => ({ ...prev, pushNotification: true }));
-        await sendPushToken({ pushToken: expoPushToken.data });
+        const storedToken = await AsyncStorage.getItem(PUSH_TOKEN_KEY);
+        if (storedToken !== expoPushToken.data) {
+          await sendPushToken({ pushToken: expoPushToken.data });
+          await AsyncStorage.setItem(PUSH_TOKEN_KEY, expoPushToken.data);
+        }
         setLoadingStates(prev => ({ ...prev, pushNotification: false }));
       }
 
