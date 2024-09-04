@@ -33,6 +33,13 @@ const mapLongitudeDelta = 0.1;
 
 const MAP_STATE_KEY = 'RESTAURANT_MAP_STATE';
 
+const PRAGUE_COORDINATES = {
+  latitude: 50.0755,
+  longitude: 14.4378,
+  latitudeDelta: 0.1,
+  longitudeDelta: 0.1,
+};
+
 const throttle = (func, delay) => {
   let throttling = false;
 
@@ -58,7 +65,7 @@ export default function RestaurantMapView() {
   const [selectedLocation, setSelectedLocation] = useState("current");
   const mapRef = useRef(null);
   const scrollViewRef = useRef(null);
-  const [initialRegion, setInitialRegion] = useState(null);
+  const [initialRegion, setInitialRegion] = useState(PRAGUE_COORDINATES);
   const [scrollViewHidden, setScrollViewHidden] = useState(true);
   const currentTime = moment().format("HH:mm:ss");
   const [cardIndexToScroll, setCardIndexToScroll] = useState<number | null>(null);
@@ -78,13 +85,20 @@ export default function RestaurantMapView() {
           const parsedState = JSON.parse(savedState);
           setMapState(parsedState);
           setInitialRegion(parsedState.region);
+        } else if (currentLocation) {
+          setInitialRegion({
+            latitude: currentLocation.coords.latitude,
+            longitude: currentLocation.coords.longitude,
+            latitudeDelta: mapLatitudeDelta,
+            longitudeDelta: mapLongitudeDelta,
+          });
         }
       } catch (error) {
         console.error('Error loading map state:', error);
       }
     };
     loadMapState();
-  }, []);
+  }, [currentLocation]);
 
   // Save map state on component unmount
   useEffect(() => {
@@ -98,7 +112,6 @@ export default function RestaurantMapView() {
               latitudeDelta: bounds.northEast.latitude - bounds.southWest.latitude,
               longitudeDelta: bounds.northEast.longitude - bounds.southWest.longitude,
             },
-            // Add any other state you want to preserve
           };
           try {
             await AsyncStorage.setItem(MAP_STATE_KEY, JSON.stringify(stateToSave));
@@ -109,24 +122,6 @@ export default function RestaurantMapView() {
       }
     };
   }, []);
-
-  useEffect(() => {
-    if (selectedLocation === "current" && currentLocation) {
-      setInitialRegion({
-        latitude: currentLocation.coords.latitude,
-        longitude: currentLocation.coords.longitude,
-        latitudeDelta: mapLatitudeDelta,
-        longitudeDelta: mapLongitudeDelta,
-      });
-    } else if (selectedLocation === "dubai") {
-      setInitialRegion({
-        latitude: 50.0755, 
-        longitude: 14.4378, 
-        latitudeDelta: 0.1, 
-        longitudeDelta: 0.1,
-      });
-    }
-  }, [currentLocation, selectedLocation]);
 
   useEffect(() => {
     if (!scrollViewHidden && cardIndexToScroll !== null) {
@@ -148,7 +143,7 @@ export default function RestaurantMapView() {
         dayNoOfTheWeek: currentDayOfWeek,
       });
     },
-    enabled: !!currentLocation,
+    enabled: true,
   });
 
   const findMarkerIndex = (marker) => {
@@ -245,12 +240,7 @@ export default function RestaurantMapView() {
       ref={mapRef}
       style={styles.map}
       provider={PROVIDER_GOOGLE}
-      initialRegion={initialRegion || {
-        latitude: 50.0755,
-        longitude: 14.4378,
-        latitudeDelta: 0.1,
-        longitudeDelta: 0.1,
-      }}
+      initialRegion={initialRegion}
       customMapStyle={mapStyle}
       scrollEnabled={true}
       zoomEnabled={true}
@@ -360,8 +350,8 @@ const styles = StyleSheet.create({
     marginBottom: 36,
   },
   markerContainer: {
-    width: 40,  // Increased width for larger touch area
-    height: 40, // Increased height for larger touch area
+    width: 40,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
   },
