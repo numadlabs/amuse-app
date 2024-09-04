@@ -53,19 +53,8 @@ const Page = () => {
   const [isOpenBalance, setIsOpenBalance] = useState<boolean>(false);
   const [isQuickInfoVisible, setIsQuickInfoVisible] = useState(true);
   const pressed = useSharedValue(false);
-  const [showProfilePicture, setShowProfilePicture] = useState(true);
-  const [showDateOfBirth, setShowDateOfBirth] = useState(true);
-  const [showArea, setShowArea] = useState(true);
   const { authState } = useAuth();
-  // const { expoPushToken, notification: pushNotification } =
-  //   usePushNotifications();
-
-  // const { mutateAsync: sendPushToken } = useMutation({
-  //   mutationFn: registerDeviceNotification,
-  // });
   const profilePictureSetting = AsyncStorage.getItem('showProfilePicture');
-  const dateOfBirthSetting = AsyncStorage.getItem('showDateOfBirth');
-  const areaSetting = AsyncStorage.getItem('showArea');
   const { currentLocation } = useLocationStore();
   const currentTime = moment().format("HH:mm:ss");
   const { data: user, isSuccess } = useQuery({
@@ -80,23 +69,9 @@ const Page = () => {
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
     queryFn: () => {
-      return getUserCard({
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
-      });
+      return getUserCard();
     },
-    enabled: !!currentLocation,
   });
-
-  // const data = JSON.stringify(pushNotification, undefined, 2)
-
-  // if (expoPushToken?.data) {
-  //   console.log("Sending push token");
-
-  //   sendPushToken({
-  //     pushToken: expoPushToken?.data
-  //   })
-  // }
 
   const toggleBottomSheet = () => {
     setIsOpen(!isOpen);
@@ -121,8 +96,6 @@ const Page = () => {
         dayNoOfTheWeek: currentDayOfWeek,
       });
     },
-
-    enabled: !!currentLocation,
   });
 
   const handleNavigation = (restaurant: RestaurantType) => {

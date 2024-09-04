@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Redirect, Tabs, router } from "expo-router";
 import { View, TouchableOpacity } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import NetInfo from "@react-native-community/netinfo";
 import Footer from "@/components/layout/Footer";
 import { Notification, User } from "iconsax-react-native";
 import Logo from "@/components/icons/Logo";
@@ -30,82 +29,80 @@ type LoadingStates = {
 const PUSH_TOKEN_KEY = '@PushToken';
 
 const Layout: React.FC<LayoutProps> = ({ navigation }) => {
-  // const { authState } = useAuth();
-  // const [appIsReady, setAppIsReady] = useState<boolean>(false);
-  // const { getLocation, isLoading, error } = useLocationStore();
-  // const { expoPushToken } = usePushNotifications();
-  // const [loadingStates, setLoadingStates] = useState<LoadingStates>({
-  //   updates: false,
-  //   pushNotification: false,
-  //   fonts: false,
-  // });
-  // const [isConnected, setIsConnected] = useState<boolean | null>(null);
+  const { authState } = useAuth();
+  const [appIsReady, setAppIsReady] = useState<boolean>(false);
+  const { expoPushToken } = usePushNotifications();
+  const [loadingStates, setLoadingStates] = useState<LoadingStates>({
+    updates: false,
+    pushNotification: false,
+    fonts: false,
+  });
 
-  // const { mutateAsync: sendPushToken } = useMutation({
-  //   mutationFn: registerDeviceNotification,
-  // });
+  const { mutateAsync: sendPushToken } = useMutation({
+    mutationFn: registerDeviceNotification,
+  });
 
-  // const [fontsLoaded] = useFonts({
-  //   Sora: require("@/public/fonts/Sora-Regular.otf"),
-  //   SoraBold: require("@/public/fonts/Sora-Bold.otf"),
-  //   SoraMedium: require("@/public/fonts/Sora-Medium.otf"),    
-  //   SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),   
-  // });
+  const [fontsLoaded] = useFonts({
+    Sora: require("@/public/fonts/Sora-Regular.otf"),
+    SoraBold: require("@/public/fonts/Sora-Bold.otf"),
+    SoraMedium: require("@/public/fonts/Sora-Medium.otf"),
+    SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),
+  });
 
-  // const prepareApp = useCallback(async () => {
-  //   try {
-  //     if (!__DEV__) {
-  //       setLoadingStates(prev => ({ ...prev, updates: true }));
-  //       try {
-  //         const updateCheck = await Promise.race([
-  //           Updates.checkForUpdateAsync(),
-  //           new Promise((_, reject) => setTimeout(() => reject(new Error('Update check timed out')), 5000))
-  //         ]);
+  const prepareApp = useCallback(async () => {
+    try {
+      if (!__DEV__) {
+        setLoadingStates(prev => ({ ...prev, updates: true }));
+        try {
+          const updateCheck = await Promise.race([
+            Updates.checkForUpdateAsync(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Update check timed out')), 5000))
+          ]);
 
-  //         if (updateCheck && typeof updateCheck === 'object' && 'isAvailable' in updateCheck) {
-  //           if (updateCheck.isAvailable) {
-  //             await Updates.fetchUpdateAsync();
-  //             await Updates.reloadAsync();
-  //           }
-  //         } else {
-  //           console.log("Update check returned an unexpected result");
-  //         }
-  //       } catch (error) {
-  //         console.error("Error checking for updates:", error);
-  //       } finally {
-  //         setLoadingStates(prev => ({ ...prev, updates: false }));
-  //       }
-  //     }
+          if (updateCheck && typeof updateCheck === 'object' && 'isAvailable' in updateCheck) {
+            if (updateCheck.isAvailable) {
+              await Updates.fetchUpdateAsync();
+              await Updates.reloadAsync();
+            }
+          } else {
+            console.log("Update check returned an unexpected result");
+          }
+        } catch (error) {
+          console.error("Error checking for updates:", error);
+        } finally {
+          setLoadingStates(prev => ({ ...prev, updates: false }));
+        }
+      }
 
-  //     if (expoPushToken?.data) {
-  //       setLoadingStates(prev => ({ ...prev, pushNotification: true }));
-  //       const storedToken = await AsyncStorage.getItem(PUSH_TOKEN_KEY);
-  //       if (storedToken !== expoPushToken.data) {
-  //         await sendPushToken({ pushToken: expoPushToken.data });
-  //         await AsyncStorage.setItem(PUSH_TOKEN_KEY, expoPushToken.data);
-  //       }
-  //       setLoadingStates(prev => ({ ...prev, pushNotification: false }));
-  //     }
-  //   } catch (error) {
-  //     console.error("Error preparing app:", error);
-  //   }
-  // }, [expoPushToken, sendPushToken]);
+      if (expoPushToken?.data) {
+        setLoadingStates(prev => ({ ...prev, pushNotification: true }));
+        const storedToken = await AsyncStorage.getItem(PUSH_TOKEN_KEY);
+        if (storedToken !== expoPushToken.data) {
+          await sendPushToken({ pushToken: expoPushToken.data });
+          await AsyncStorage.setItem(PUSH_TOKEN_KEY, expoPushToken.data);
+        }
+        setLoadingStates(prev => ({ ...prev, pushNotification: false }));
+      }
+    } catch (error) {
+      console.error("Error preparing app:", error);
+    }
+  }, [expoPushToken, sendPushToken]);
 
-  // useEffect(() => {
-  //   prepareApp();
-  // }, [prepareApp]);
+  useEffect(() => {
+    prepareApp();
+  }, [prepareApp]);
 
-  // useEffect(() => {
-  //   setLoadingStates(prev => ({ ...prev, fonts: !fontsLoaded }));
-  // }, [fontsLoaded]);
+  useEffect(() => {
+    setLoadingStates(prev => ({ ...prev, fonts: !fontsLoaded }));
+  }, [fontsLoaded]);
 
-  // useEffect(() => {
-  //   if (!authState.loading && fontsLoaded) {
-  //     setAppIsReady(true);
-  //   }
-  // }, [authState.loading, fontsLoaded]);
+  useEffect(() => {
+    if (!authState.loading && fontsLoaded) {
+      setAppIsReady(true);
+    }
+  }, [authState.loading, fontsLoaded]);
 
-  // // Background location fetching
+  // Background location fetching
   // useEffect(() => {
   //   let isMounted = true;
   //   const fetchLocationInBackground = async () => {
@@ -123,69 +120,53 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   //   };
   // }, [appIsReady, getLocation, isLoading]);
 
-  // // Handle location errors
-  // useEffect(() => {
-  //   if (error) {
-  //     throw new Error("Location error: " + error);
-  //   }
-  // }, [error]);
 
-  // // Check internet connection
-  // useEffect(() => {
-  //   const unsubscribe = NetInfo.addEventListener(state => {
-  //     setIsConnected(state.isConnected);
-  //   });
 
-  //   return () => unsubscribe();
-  // }, []);
+  if (!appIsReady) {
+    return <SplashScreenAnimated loadingStates={loadingStates} />;
+  }
 
-  // if (!appIsReady) {
-  //   return <SplashScreenAnimated loadingStates={loadingStates} />;
-  // }
-
-  // if (authState.authenticated === false) {
-  //   return <Redirect href="/Login" />;
-  // }
-
-  // if (isConnected === false) {
-  //   return <ErrorBoundary />;
-  // }
+  if (authState.authenticated === false) {
+    return <Redirect href="/Login" />;
+  }
 
   return (
-    <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          headerStyle: {
-            shadowOpacity: 0,
-            backgroundColor: Color.Gray.gray600,
-          },
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => router.push("/profileSection/Profile")}
-            >
-              <View style={{ paddingHorizontal: 20 }}>
-                <User color={Color.base.White} />
+    <ErrorBoundary>
+      <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
+        <Tabs.Screen
+          name="index"
+          options={{
+            headerStyle: {
+              shadowOpacity: 0,
+              backgroundColor: Color.Gray.gray600,
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => router.push("/profileSection/Profile")}
+              >
+                <View style={{ paddingHorizontal: 20 }}>
+                  <User color={Color.base.White} />
+                </View>
+              </TouchableOpacity>
+            ),
+            headerTitle: () => (
+              <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                <Logo />
               </View>
-            </TouchableOpacity>
-          ),
-          headerTitle: () => (
-            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-              <Logo />
-            </View>
-          ),
-          headerRight: () => (
-            <TouchableOpacity onPress={() => router.push("/Notification")}>
-              <View style={{ paddingHorizontal: 20 }}>
-                <Notification color={Color.base.White} />
-              </View>
-            </TouchableOpacity>
-          ),
-          headerTitleAlign: "center",
-        }}
-      />
-      <Tabs.Screen name="Acards" options={{ headerShown: false }} />
-    </Tabs>
+            ),
+            headerRight: () => (
+              <TouchableOpacity onPress={() => router.push("/Notification")}>
+                <View style={{ paddingHorizontal: 20 }}>
+                  <Notification color={Color.base.White} />
+                </View>
+              </TouchableOpacity>
+            ),
+            headerTitleAlign: "center",
+          }}
+        />
+        <Tabs.Screen name="Acards" options={{ headerShown: false }} />
+      </Tabs>
+    </ErrorBoundary>
   );
 };
 

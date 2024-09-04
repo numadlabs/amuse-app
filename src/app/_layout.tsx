@@ -1,24 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/context/AuthContext";
 import { StatusBar } from "expo-status-bar";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "@/constants/ToasterConfig";
-import * as Updates from 'expo-updates';
-import * as SplashScreen from 'expo-splash-screen';
+import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import { useFonts } from 'expo-font';
-import { usePushNotifications } from "@/hooks/usePushNotification";
-import { useMutation } from "@tanstack/react-query";
-import { registerDeviceNotification } from "@/lib/service/mutationHelper";
+import * as SplashScreen from 'expo-splash-screen';
 import ErrorBoundary from './ErrorBoundary';
 import NetInfo from "@react-native-community/netinfo";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Prevent the splash screen from auto-hiding
-SplashScreen.preventAutoHideAsync();
 
+
+// Create QueryClient outside of the component to avoid recreating it on each render
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -28,16 +23,10 @@ const queryClient = new QueryClient({
   },
 });
 
-const PUSH_TOKEN_KEY = '@PushToken';
+// Keep SplashScreen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
-  const [appIsReady, setAppIsReady] = useState(false);
-  const [isConnected, setIsConnected] = useState<boolean | null>(null);
-  const { expoPushToken } = usePushNotifications();
-  const { mutateAsync: sendPushToken } = useMutation({
-    mutationFn: registerDeviceNotification,
-  });
-
+export default function Layout() {
   const [fontsLoaded] = useFonts({
     Sora: require("@/public/fonts/Sora-Regular.otf"),
     SoraBold: require("@/public/fonts/Sora-Bold.otf"),
@@ -45,146 +34,106 @@ export default function RootLayout() {
     SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),
   });
 
-  const checkConnection = useCallback(async () => {
-    const netInfoState = await NetInfo.fetch();
-    setIsConnected(netInfoState.isConnected);
+
+  const [isConnected, setIsConnected] = useState<boolean | null>(null);
+
+  const checkInternetConnection = useCallback(async () => {
+    const netInfo = await NetInfo.fetch();
+    setIsConnected(netInfo.isConnected);
   }, []);
 
-  const OfflineScreen = () => (
-    <View style={styles.offlineContainer}>
-      <Text style={styles.offlineText}>
-        No internet connection. Please check your internet settings and try again.
-      </Text>
-      <TouchableOpacity style={styles.retryButton} onPress={checkConnection}>
-        <Text style={styles.retryText}>Retry</Text>
-      </TouchableOpacity>
-    </View>
-  );
-
   useEffect(() => {
-    async function prepareApp() {
-      try {
-        // Check for updates
-        if (!__DEV__) {
-          const update = await Updates.checkForUpdateAsync();
-          if (update.isAvailable) {
-            await Updates.fetchUpdateAsync();
-            await Updates.reloadAsync();
-          }
-        }
+    checkInternetConnection();
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setIsConnected(state.isConnected);
+    });
 
-        // Handle push notifications
-        if (expoPushToken?.data) {
-          const storedToken = await AsyncStorage.getItem(PUSH_TOKEN_KEY);
-          if (storedToken !== expoPushToken.data) {
-            await sendPushToken({ pushToken: expoPushToken.data });
-            await AsyncStorage.setItem(PUSH_TOKEN_KEY, expoPushToken.data);
-          }
-        }
+    return () => unsubscribe();
+  }, [checkInternetConnection]);
 
-        // Check internet connectivity
-        await checkConnection();
+  if (isConnected === false) {
+    return (
+      <View style={styles.offlineContainer}>
+        <Text style={styles.offlineText}>No internet connection</Text>
+        <TouchableOpacity style={styles.retryButton} onPress={checkInternetConnection}>
+          <Text style={styles.retryText}>Retry</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
-        // Subscribe to network state updates
-        const unsubscribe = NetInfo.addEventListener(state => {
-          setIsConnected(state.isConnected);
-        });
-
-        // Simulate a delay to show splash screen
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        setAppIsReady(true);
-
-        return () => {
-          unsubscribe();
-        };
-      } catch (e) {
-        console.warn(e);
-      }
-    }
-
-    prepareApp();
-  }, [expoPushToken, sendPushToken, checkConnection]);
-
-  useEffect(() => {
-    if (appIsReady) {
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [appIsReady]);
+  }, [fontsLoaded]);
 
-  if (!appIsReady || !fontsLoaded) {
-    return null; // This will keep the splash screen visible
+  if (!fontsLoaded) {
+    return null;
   }
 
   return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <View style={{ flex: 1 }}>
-            <StatusBar style="light" />
-            {isConnected === false ? (
-              <ErrorBoundary>
-                <OfflineScreen />
-              </ErrorBoundary>
-            ) : (
-              <Stack
-                screenOptions={{
-                  headerShown: false,
-                  contentStyle: {
-                    backgroundColor: "transparent",
-                  },
-                }}
-              >
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="restaurants/[id]"
-                  options={{ presentation: "modal" }}
-                />
-                <Stack.Screen
-                  name="(modals)/MyQrModal"
-                  options={{ presentation: "modal" }}
-                />
-                <Stack.Screen name="PrivacyPolicy" />
-                <Stack.Screen name="profileSection/UpdateScreen" />
-                <Stack.Screen name="MyAcards" />
-                <Stack.Screen name="Wallet" />
-                <Stack.Screen name="TermsAndCondo" />
-                <Stack.Screen name="Faq" />
-                <Stack.Screen name="Tier" />
-                <Stack.Screen name="PerkScreen" />
-                <Stack.Screen
-                  name="PerkMarket"
-                  options={{ presentation: "modal" }} />
-                <Stack.Screen
-                  name="PowerUp"
-                  options={{ presentation: "modal" }} />
-                <Stack.Screen
-                  name="FollowingPerk"
-                  options={{ presentation: "modal" }}
-                />
-                <Stack.Screen
-                  name="PerkBuy"
-                  options={{ presentation: "modal" }} />
-              </Stack>
-            )}
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
+          <StatusBar style="light" />
+          <ErrorBoundary>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: {
+                  backgroundColor: "transparent",
+                },
+              }}
+            >
+              <Stack.Screen
+                name="restaurants/[id]"
+                options={{ presentation: "modal" }}
+              />
+              <Stack.Screen
+                name="(modals)/MyQrModal"
+                options={{ presentation: "modal" }}
+              />
+              <Stack.Screen name="PrivacyPolicy" />
+              <Stack.Screen name="profileSection/UpdateScreen" />
+              <Stack.Screen name="MyAcards" />
+              <Stack.Screen name="Wallet" />
+              <Stack.Screen name="TermsAndCondo" />
+              <Stack.Screen name="Faq" />
+              <Stack.Screen name="Tier" />
+              <Stack.Screen name="PerkScreen" />
+              <Stack.Screen
+                name="PerkMarket"
+                options={{ presentation: "modal" }} />
+              <Stack.Screen
+                name="PowerUp"
+                options={{ presentation: "modal" }} />
+              <Stack.Screen
+                name="FollowingPerk"
+                options={{ presentation: "modal" }}
+              />
+              <Stack.Screen
+                name="PerkBuy"
+                options={{ presentation: "modal" }} />
+            </Stack>
             <Toast config={toastConfig} />
-          </View>
-        </AuthProvider>
-      </QueryClientProvider>
-    </ErrorBoundary>
+          </ErrorBoundary>
+        </View>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
+
 
 const styles = StyleSheet.create({
   offlineContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    backgroundColor: '#f8f8f8',
   },
   offlineText: {
-    fontSize: 16,
-    textAlign: 'center',
+    fontSize: 18,
     marginBottom: 20,
   },
   retryButton: {
