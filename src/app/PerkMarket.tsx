@@ -38,7 +38,7 @@ const PerkMarket = () => {
   } = useQuery({
     queryKey: purchaseablePerkKeys.all,
     queryFn: () => getPurchaseablePerks(id),
-    enabled: !!currentLocation,
+    enabled: !! id,
   });
 
   const handleNavigation = (perkId, perkName, perkPrice) => {
