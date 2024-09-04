@@ -49,54 +49,49 @@ const Page = () => {
   const [isOpenBalance, setIsOpenBalance] = useState<boolean>(false);
   const [isQuickInfoVisible, setIsQuickInfoVisible] = useState(true);
   const pressed = useSharedValue(false);
-  const [showProfilePicture, setShowProfilePicture] = useState(true);
-  const [showDateOfBirth, setShowDateOfBirth] = useState(true);
-  const [showArea, setShowArea] = useState(true);
-
   const { authState } = useAuth();
+  const profilePictureSetting = AsyncStorage.getItem('showProfilePicture');
   const { currentLocation } = useLocationStore();
   const currentTime = moment().format("HH:mm:ss");
-  const currentDayOfWeek = moment().isoWeekday();
-
-  // AsyncStorage settings
-  useEffect(() => {
-    const fetchSettings = async () => {
-      const profilePicture = await AsyncStorage.getItem('showProfilePicture');
-      const dateOfBirth = await AsyncStorage.getItem('showDateOfBirth');
-      const area = await AsyncStorage.getItem('showArea');
-
-      setShowProfilePicture(profilePicture === 'true');
-      setShowDateOfBirth(dateOfBirth === 'true');
-      setShowArea(area === 'true');
-    };
-
-    fetchSettings();
-  }, []);
 
   const { data: user, isSuccess } = useQuery({
     queryKey: userKeys.info,
-    queryFn: () => getUserById(authState.userId),
+    queryFn: () => {
+      return getUserById(authState.userId);
+    },
     enabled: !!authState.userId,
   });
 
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
-    queryFn: () => getUserCard({
-      latitude: currentLocation.latitude,
-      longitude: currentLocation.longitude,
-    }),
-    enabled: !!currentLocation,
+    queryFn: () => {
+      return getUserCard();
+    },
   });
+
+  const toggleBottomSheet = () => {
+    setIsOpen(!isOpen);
+  };
+  const toggleBalanceBottomSheet = () => {
+    setIsOpenBalance(!isOpenBalance);
+  };
+  const animatedStyles = useAnimatedStyle(() => ({
+    transform: [
+      { scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) },
+    ],
+  }));
+  const currentDayOfWeek = moment().isoWeekday();
 
   const { data: restaurantsData } = useQuery<GetRestaurantsResponseType>({
     queryKey: restaurantKeys.all,
-    queryFn: () => getRestaurants({
-      page: 1,
-      limit: 10,
-      time: currentTime,
-      dayNoOfTheWeek: currentDayOfWeek,
-    }),
-    enabled: !!currentLocation,
+    queryFn: () => {
+      return getRestaurants({
+        page: 1,
+        limit: 10,
+        time: currentTime,
+        dayNoOfTheWeek: currentDayOfWeek,
+      });
+    },
   });
 
   const handleNavigation = (restaurant: RestaurantType) => {
@@ -112,14 +107,6 @@ const Page = () => {
   const filteredRestaurantsArray = restaurantsArray.filter(
     (restaurant) => !restaurant.isOwned
   );
-
-  const toggleBottomSheet = () => setIsOpen(!isOpen);
-  const toggleBalanceBottomSheet = () => setIsOpenBalance(!isOpenBalance);
-
-  const animatedStyles = useAnimatedStyle(() => ({
-    transform: [{ scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) }],
-  }));
-
   return (
     <GestureHandlerRootView style={styles.container}>
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
@@ -153,7 +140,7 @@ const Page = () => {
                     entering={SlideInLeft.springify().damping(15)}
                     style={styles.scrollViewContent}
                   >
-                    {user?.user?.dateOfBirth && user?.user?.location && showProfilePicture ? null : isQuickInfoVisible && (
+                    {user?.user?.dateOfBirth && user?.user?.location && profilePictureSetting ? null : isQuickInfoVisible && (
                       <QuickInfo
                         onPress={() => setIsQuickInfoVisible(false)}
                         user={user?.user}

@@ -54,7 +54,7 @@ const Restaurant = () => {
   const { data: restaurantsData, isLoading } = useQuery({
     queryKey: restaurantKeys.detail(id as string),
     queryFn: () => getRestaurantId(id, currentTime, currentDayOfWeek),
-    enabled: !!currentLocation && !!id,
+    enabled: !!id,
   });
 
   const { data: perks } = useQuery({
