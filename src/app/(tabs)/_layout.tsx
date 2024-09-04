@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Redirect, Tabs, router } from "expo-router";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from "@react-native-community/netinfo";
 import Footer from "@/components/layout/Footer";
@@ -16,15 +16,13 @@ import { usePushNotifications } from "@/hooks/usePushNotification";
 import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 import ErrorBoundary from "../ErrorBoundary";
-import { BODY_1_REGULAR, BUTTON_48 } from "@/constants/typography";
 
 type LayoutProps = {
   navigation: any;
 };
 
 type LoadingStates = {
-  internetCheck: boolean;
-  updateCheck: boolean;
+  updates: boolean;
   pushNotification: boolean;
   fonts: boolean;
 };
@@ -32,153 +30,126 @@ type LoadingStates = {
 const PUSH_TOKEN_KEY = '@PushToken';
 
 const Layout: React.FC<LayoutProps> = ({ navigation }) => {
-  const { authState } = useAuth();
-  const [appIsReady, setAppIsReady] = useState<boolean>(false);
-  const { getLocation, isLoading, error } = useLocationStore();
-  const { expoPushToken } = usePushNotifications();
-  const [loadingStates, setLoadingStates] = useState<LoadingStates>({
-    internetCheck: true,
-    updateCheck: false,
-    pushNotification: false,
-    fonts: true,
-  });
-  const [isConnected, setIsConnected] = useState<boolean | null>(null);
+  // const { authState } = useAuth();
+  // const [appIsReady, setAppIsReady] = useState<boolean>(false);
+  // const { getLocation, isLoading, error } = useLocationStore();
+  // const { expoPushToken } = usePushNotifications();
+  // const [loadingStates, setLoadingStates] = useState<LoadingStates>({
+  //   updates: false,
+  //   pushNotification: false,
+  //   fonts: false,
+  // });
+  // const [isConnected, setIsConnected] = useState<boolean | null>(null);
 
-  const { mutateAsync: sendPushToken } = useMutation({
-    mutationFn: registerDeviceNotification,
-  });
+  // const { mutateAsync: sendPushToken } = useMutation({
+  //   mutationFn: registerDeviceNotification,
+  // });
 
-  const [fontsLoaded] = useFonts({
-    Sora: require("@/public/fonts/Sora-Regular.otf"),
-    SoraBold: require("@/public/fonts/Sora-Bold.otf"),
-    SoraMedium: require("@/public/fonts/Sora-Medium.otf"),    
-    SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),   
-  });
+  // const [fontsLoaded] = useFonts({
+  //   Sora: require("@/public/fonts/Sora-Regular.otf"),
+  //   SoraBold: require("@/public/fonts/Sora-Bold.otf"),
+  //   SoraMedium: require("@/public/fonts/Sora-Medium.otf"),    
+  //   SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),   
+  // });
 
-  const checkInternetConnection = useCallback(async () => {
-    setLoadingStates(prev => ({ ...prev, internetCheck: true }));
-    try {
-      const netInfo = await NetInfo.fetch();
-      setIsConnected(netInfo.isConnected);
-      return netInfo.isConnected;
-    } catch (error) {
-      console.error("Error checking internet connection:", error);
-      return false;
-    } finally {
-      setLoadingStates(prev => ({ ...prev, internetCheck: false }));
-    }
-  }, []);
+  // const prepareApp = useCallback(async () => {
+  //   try {
+  //     if (!__DEV__) {
+  //       setLoadingStates(prev => ({ ...prev, updates: true }));
+  //       try {
+  //         const updateCheck = await Promise.race([
+  //           Updates.checkForUpdateAsync(),
+  //           new Promise((_, reject) => setTimeout(() => reject(new Error('Update check timed out')), 5000))
+  //         ]);
 
-  const checkForUpdates = useCallback(async () => {
-    if (__DEV__) return false;
+  //         if (updateCheck && typeof updateCheck === 'object' && 'isAvailable' in updateCheck) {
+  //           if (updateCheck.isAvailable) {
+  //             await Updates.fetchUpdateAsync();
+  //             await Updates.reloadAsync();
+  //           }
+  //         } else {
+  //           console.log("Update check returned an unexpected result");
+  //         }
+  //       } catch (error) {
+  //         console.error("Error checking for updates:", error);
+  //       } finally {
+  //         setLoadingStates(prev => ({ ...prev, updates: false }));
+  //       }
+  //     }
 
-    setLoadingStates(prev => ({ ...prev, updateCheck: true }));
-    try {
-      const updateCheck = await Promise.race([
-        Updates.checkForUpdateAsync(),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Update check timed out')), 5000))
-      ]);
+  //     if (expoPushToken?.data) {
+  //       setLoadingStates(prev => ({ ...prev, pushNotification: true }));
+  //       const storedToken = await AsyncStorage.getItem(PUSH_TOKEN_KEY);
+  //       if (storedToken !== expoPushToken.data) {
+  //         await sendPushToken({ pushToken: expoPushToken.data });
+  //         await AsyncStorage.setItem(PUSH_TOKEN_KEY, expoPushToken.data);
+  //       }
+  //       setLoadingStates(prev => ({ ...prev, pushNotification: false }));
+  //     }
+  //   } catch (error) {
+  //     console.error("Error preparing app:", error);
+  //   }
+  // }, [expoPushToken, sendPushToken]);
 
-      if (updateCheck && typeof updateCheck === 'object' && 'isAvailable' in updateCheck) {
-        if (updateCheck.isAvailable) {
-          await Updates.fetchUpdateAsync();
-          await Updates.reloadAsync();
-          return true;
-        }
-      } else {
-        console.log("Update check returned an unexpected result");
-      }
-      return false;
-    } catch (error) {
-      console.error("Error checking for updates:", error);
-      return false;
-    } finally {
-      setLoadingStates(prev => ({ ...prev, updateCheck: false }));
-    }
-  }, []);
+  // useEffect(() => {
+  //   prepareApp();
+  // }, [prepareApp]);
 
-  const registerPushNotification = useCallback(async () => {
-    if (!expoPushToken?.data) return;
+  // useEffect(() => {
+  //   setLoadingStates(prev => ({ ...prev, fonts: !fontsLoaded }));
+  // }, [fontsLoaded]);
 
-    setLoadingStates(prev => ({ ...prev, pushNotification: true }));
-    try {
-      const storedToken = await AsyncStorage.getItem(PUSH_TOKEN_KEY);
-      if (storedToken !== expoPushToken.data) {
-        await sendPushToken({ pushToken: expoPushToken.data });
-        await AsyncStorage.setItem(PUSH_TOKEN_KEY, expoPushToken.data);
-      }
-    } catch (error) {
-      console.error("Error registering push notification:", error);
-    } finally {
-      setLoadingStates(prev => ({ ...prev, pushNotification: false }));
-    }
-  }, [expoPushToken, sendPushToken]);
+  // useEffect(() => {
+  //   if (!authState.loading && fontsLoaded) {
+  //     setAppIsReady(true);
+  //   }
+  // }, [authState.loading, fontsLoaded]);
 
-  const prepareApp = useCallback(async () => {
-    const isConnected = await checkInternetConnection();
-    if (!isConnected) {
-      return;
-    }
+  // // Background location fetching
+  // useEffect(() => {
+  //   let isMounted = true;
+  //   const fetchLocationInBackground = async () => {
+  //     if (!isLoading && isMounted) {
+  //       await getLocation();
+  //     }
+  //   };
 
-    const updateAvailable = await checkForUpdates();
-    if (!updateAvailable) {
-      await registerPushNotification();
-      setAppIsReady(true);
-    }
-  }, [checkInternetConnection, checkForUpdates, registerPushNotification]);
+  //   if (appIsReady) {
+  //     fetchLocationInBackground();
+  //   }
 
-  useEffect(() => {
-    prepareApp();
-  }, [prepareApp]);
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, [appIsReady, getLocation, isLoading]);
 
-  useEffect(() => {
-    setLoadingStates(prev => ({ ...prev, fonts: !fontsLoaded }));
-  }, [fontsLoaded]);
+  // // Handle location errors
+  // useEffect(() => {
+  //   if (error) {
+  //     throw new Error("Location error: " + error);
+  //   }
+  // }, [error]);
 
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      setIsConnected(state.isConnected);
-      if (!state.isConnected) {
-        setAppIsReady(false);
-      } else if (state.isConnected && !appIsReady) {
-        prepareApp();
-      }
-    });
+  // // Check internet connection
+  // useEffect(() => {
+  //   const unsubscribe = NetInfo.addEventListener(state => {
+  //     setIsConnected(state.isConnected);
+  //   });
 
-    return () => unsubscribe();
-  }, [appIsReady, prepareApp]);
+  //   return () => unsubscribe();
+  // }, []);
 
-  const handleRetry = useCallback(async () => {
-    setAppIsReady(false);
-    await prepareApp();
-  }, [prepareApp]);
+  // if (!appIsReady) {
+  //   return <SplashScreenAnimated loadingStates={loadingStates} />;
+  // }
 
-  if (isConnected === false) {
-    return (
-      <ErrorBoundary>
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>
-            No internet connection. Please check your network settings and try again.
-          </Text>
-          <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
-            <Text style={styles.retryButtonText}>Retry</Text>
-          </TouchableOpacity>
-        </View>
-      </ErrorBoundary>
-    );
-  }
+  // if (authState.authenticated === false) {
+  //   return <Redirect href="/Login" />;
+  // }
 
-  if (loadingStates.internetCheck || loadingStates.updateCheck || loadingStates.pushNotification || !fontsLoaded) {
-    return <SplashScreenAnimated loadingStates={loadingStates} />;
-  }
-
-  if (authState.authenticated === false) {
-    return <Redirect href="/Login" />;
-  }
-
-  if (!appIsReady) {
-    return <SplashScreenAnimated loadingStates={loadingStates} />;
-  }
+  // if (isConnected === false) {
+  //   return <ErrorBoundary />;
+  // }
 
   return (
     <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
@@ -217,30 +188,5 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     </Tabs>
   );
 };
-
-const styles = StyleSheet.create({
-  errorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: Color.Gray.gray600,
-    padding: 20,
-  },
-  errorText: {
-    ...BODY_1_REGULAR,
-    color: Color.base.White,
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  retryButton: {
-    backgroundColor: Color.Gray.gray300,
-    padding: 12,
-    borderRadius: 8,
-  },
-  retryButtonText: {
-    ...BUTTON_48,
-    color: Color.base.White,
-  },
-});
 
 export default Layout;
