@@ -23,10 +23,10 @@ type LayoutProps = {
 };
 
 type LoadingStates = {
-  updates: boolean;
+  internetCheck: boolean;
+  updateCheck: boolean;
   pushNotification: boolean;
   fonts: boolean;
-  connection: boolean;
 };
 
 const PUSH_TOKEN_KEY = '@PushToken';
@@ -37,10 +37,10 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   const { getLocation, isLoading, error } = useLocationStore();
   const { expoPushToken } = usePushNotifications();
   const [loadingStates, setLoadingStates] = useState<LoadingStates>({
-    updates: false,
+    internetCheck: true,
+    updateCheck: false,
     pushNotification: false,
-    fonts: false,
-    connection: true,
+    fonts: true,
   });
   const [isConnected, setIsConnected] = useState<boolean | null>(null);
 
@@ -55,69 +55,80 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),   
   });
 
-  const prepareApp = useCallback(async () => {
-    if (!isConnected) {
-      throw new Error("No internet connection");
-    }
-
+  const checkInternetConnection = useCallback(async () => {
+    setLoadingStates(prev => ({ ...prev, internetCheck: true }));
     try {
-      if (!__DEV__) {
-        setLoadingStates(prev => ({ ...prev, updates: true }));
-        try {
-          const updateCheck = await Promise.race([
-            Updates.checkForUpdateAsync(),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('Update check timed out')), 5000))
-          ]);
-
-          if (updateCheck && typeof updateCheck === 'object' && 'isAvailable' in updateCheck) {
-            if (updateCheck.isAvailable) {
-              await Updates.fetchUpdateAsync();
-              await Updates.reloadAsync();
-            }
-          } else {
-            console.log("Update check returned an unexpected result");
-          }
-        } catch (error) {
-          console.error("Error checking for updates:", error);
-        } finally {
-          setLoadingStates(prev => ({ ...prev, updates: false }));
-        }
-      }
-
-      if (expoPushToken?.data) {
-        setLoadingStates(prev => ({ ...prev, pushNotification: true }));
-        const storedToken = await AsyncStorage.getItem(PUSH_TOKEN_KEY);
-        if (storedToken !== expoPushToken.data) {
-          await sendPushToken({ pushToken: expoPushToken.data });
-          await AsyncStorage.setItem(PUSH_TOKEN_KEY, expoPushToken.data);
-        }
-        setLoadingStates(prev => ({ ...prev, pushNotification: false }));
-      }
-
-      setAppIsReady(true);
-    } catch (error) {
-      console.error("Error preparing app:", error);
-      throw error;
-    }
-  }, [isConnected, expoPushToken, sendPushToken]);
-
-  useEffect(() => {
-    const checkConnectionAndPrepare = async () => {
-      setLoadingStates(prev => ({ ...prev, connection: true }));
       const netInfo = await NetInfo.fetch();
       setIsConnected(netInfo.isConnected);
-      setLoadingStates(prev => ({ ...prev, connection: false }));
-      
-      if (netInfo.isConnected) {
-        try {
-          await prepareApp();
-        } catch (error) {
-          console.error("Failed to prepare app:", error);
-        }
-      }
-    };
+      return netInfo.isConnected;
+    } catch (error) {
+      console.error("Error checking internet connection:", error);
+      return false;
+    } finally {
+      setLoadingStates(prev => ({ ...prev, internetCheck: false }));
+    }
+  }, []);
 
-    checkConnectionAndPrepare();
+  const checkForUpdates = useCallback(async () => {
+    if (__DEV__) return false;
+
+    setLoadingStates(prev => ({ ...prev, updateCheck: true }));
+    try {
+      const updateCheck = await Promise.race([
+        Updates.checkForUpdateAsync(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Update check timed out')), 5000))
+      ]);
+
+      if (updateCheck && typeof updateCheck === 'object' && 'isAvailable' in updateCheck) {
+        if (updateCheck.isAvailable) {
+          await Updates.fetchUpdateAsync();
+          await Updates.reloadAsync();
+          return true;
+        }
+      } else {
+        console.log("Update check returned an unexpected result");
+      }
+      return false;
+    } catch (error) {
+      console.error("Error checking for updates:", error);
+      return false;
+    } finally {
+      setLoadingStates(prev => ({ ...prev, updateCheck: false }));
+    }
+  }, []);
+
+  const registerPushNotification = useCallback(async () => {
+    if (!expoPushToken?.data) return;
+
+    setLoadingStates(prev => ({ ...prev, pushNotification: true }));
+    try {
+      const storedToken = await AsyncStorage.getItem(PUSH_TOKEN_KEY);
+      if (storedToken !== expoPushToken.data) {
+        await sendPushToken({ pushToken: expoPushToken.data });
+        await AsyncStorage.setItem(PUSH_TOKEN_KEY, expoPushToken.data);
+      }
+    } catch (error) {
+      console.error("Error registering push notification:", error);
+    } finally {
+      setLoadingStates(prev => ({ ...prev, pushNotification: false }));
+    }
+  }, [expoPushToken, sendPushToken]);
+
+  const prepareApp = useCallback(async () => {
+    const isConnected = await checkInternetConnection();
+    if (!isConnected) {
+      return;
+    }
+
+    const updateAvailable = await checkForUpdates();
+    if (!updateAvailable) {
+      await registerPushNotification();
+      setAppIsReady(true);
+    }
+  }, [checkInternetConnection, checkForUpdates, registerPushNotification]);
+
+  useEffect(() => {
+    prepareApp();
   }, [prepareApp]);
 
   useEffect(() => {
@@ -129,35 +140,20 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
       setIsConnected(state.isConnected);
       if (!state.isConnected) {
         setAppIsReady(false);
+      } else if (state.isConnected && !appIsReady) {
+        prepareApp();
       }
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [appIsReady, prepareApp]);
 
   const handleRetry = useCallback(async () => {
-    setLoadingStates(prev => ({ ...prev, connection: true }));
-    try {
-      const netInfo = await NetInfo.fetch();
-      setIsConnected(netInfo.isConnected);
-      if (netInfo.isConnected) {
-        await prepareApp();
-      } else {
-        throw new Error("No internet connection");
-      }
-    } catch (error) {
-      console.error("Error during retry:", error);
-      throw error;
-    } finally {
-      setLoadingStates(prev => ({ ...prev, connection: false }));
-    }
+    setAppIsReady(false);
+    await prepareApp();
   }, [prepareApp]);
 
-  if (loadingStates.connection || loadingStates.updates || loadingStates.pushNotification || !fontsLoaded) {
-    return <SplashScreenAnimated loadingStates={loadingStates} />;
-  }
-
-  if (!isConnected || !appIsReady) {
+  if (isConnected === false) {
     return (
       <ErrorBoundary>
         <View style={styles.errorContainer}>
@@ -172,8 +168,16 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     );
   }
 
+  if (loadingStates.internetCheck || loadingStates.updateCheck || loadingStates.pushNotification || !fontsLoaded) {
+    return <SplashScreenAnimated loadingStates={loadingStates} />;
+  }
+
   if (authState.authenticated === false) {
     return <Redirect href="/Login" />;
+  }
+
+  if (!appIsReady) {
+    return <SplashScreenAnimated loadingStates={loadingStates} />;
   }
 
   return (
