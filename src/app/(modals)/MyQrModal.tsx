@@ -21,6 +21,7 @@ import { useAuth } from "@/context/AuthContext";
 import QRCode from "react-native-qrcode-svg";
 import { BODY_2_REGULAR, H6 } from "@/constants/typography";
 import Config from "config";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const socket = io(Config.apiUrl, { transports: ["websocket"] });
 const { width } = Dimensions.get("window");
@@ -37,10 +38,7 @@ const MyQrModal = () => {
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
     queryFn: () => {
-      return getUserCard({
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
-      });
+      return getUserCard();
     },
     enabled: !!currentLocation,
   });

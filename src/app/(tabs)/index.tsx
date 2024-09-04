@@ -204,6 +204,7 @@ const Page = () => {
               style={[styles.modalContent, animatedStyles]}
             >
               <View style={styles.modalHeader}>
+                <View style={styles.filler}></View>
                 <Text style={styles.modalTitle}>About your Balance</Text>
                 <TouchableOpacity onPress={toggleBalanceBottomSheet}>
                   <View style={styles.closeButton}>
@@ -248,6 +249,7 @@ const Page = () => {
               style={[styles.modalContent, animatedStyles]}
             >
               <View style={styles.modalHeader}>
+                <View style={styles.filler}></View>
                 <Text style={styles.modalTitle}>Membership</Text>
                 <TouchableOpacity onPress={toggleBottomSheet}>
                   <View style={styles.closeButton}>
@@ -377,28 +379,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalHeader: {
-    paddingVertical: 8,
-    justifyContent: "center",
-    alignContent: "center",
-    alignItems: "center",
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  filler: {
+    flex: 1,
   },
   modalTitle: {
     ...H6,
     color: Color.base.White,
+    textAlign: "center",
+    flex: 8,
+  },
+  closeButtonContainer: {
+    flex: 1,
+    alignItems: "flex-end",
   },
   closeButton: {
     backgroundColor: Color.Gray.gray400,
     borderRadius: 48,
     padding: 8,
     width: 32,
-    alignContent: "center",
     alignItems: "center",
     justifyContent: "center",
     aspectRatio: 1,
-    position: "absolute",
-    left: 55,
-    top: -18,
   },
   balanceImage: {
     height: 64,
