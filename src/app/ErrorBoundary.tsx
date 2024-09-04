@@ -6,7 +6,8 @@ import { type ErrorBoundaryProps } from 'expo-router';
 import * as Updates from 'expo-updates';
 
 interface ErrorBoundaryComponentProps {
-  children: ReactNode;
+  children?: ReactNode;
+  fallback?: ReactNode;
 }
 
 interface ErrorBoundaryState {
@@ -36,19 +37,26 @@ class ErrorBoundary extends Component<ErrorBoundaryComponentProps, ErrorBoundary
   }
 
   render() {
-    if (this.state.hasError) {
-      return (
-        <View style={styles.container}>
-          <Text style={styles.heading}>Oops! Something went wrong.</Text>
-          <Text style={styles.message}>We're sorry for the inconvenience. Please try reloading the app.</Text>
-          <TouchableOpacity style={styles.reloadButton} onPress={this.handleReload}>
-            <Text style={styles.reloadButtonText}>Reload App</Text>
-          </TouchableOpacity>
-        </View>
-      );
+    if (this.state.hasError || !this.props.children) {
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
+      return this.renderDefaultErrorView();
     }
 
     return this.props.children;
+  }
+
+  renderDefaultErrorView() {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.heading}>Oops! Something went wrong.</Text>
+        <Text style={styles.message}>We're sorry for the inconvenience. Please try reloading the app.</Text>
+        <TouchableOpacity style={styles.reloadButton} onPress={this.handleReload}>
+          <Text style={styles.reloadButtonText}>Reload App</Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
 }
 

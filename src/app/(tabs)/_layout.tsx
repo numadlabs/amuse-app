@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Redirect, Tabs, router } from "expo-router";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NetInfo from "@react-native-community/netinfo";
 import Footer from "@/components/layout/Footer";
 import { Notification, User } from "iconsax-react-native";
 import Logo from "@/components/icons/Logo";
@@ -14,6 +15,8 @@ import SplashScreenAnimated from "../SplashScreenAnimated";
 import { usePushNotifications } from "@/hooks/usePushNotification";
 import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
+import ErrorBoundary from "../ErrorBoundary";
+import { BODY_1_REGULAR, BUTTON_48 } from "@/constants/typography";
 
 type LayoutProps = {
   navigation: any;
@@ -23,6 +26,7 @@ type LoadingStates = {
   updates: boolean;
   pushNotification: boolean;
   fonts: boolean;
+  connection: boolean;
 };
 
 const PUSH_TOKEN_KEY = '@PushToken';
@@ -36,7 +40,9 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     updates: false,
     pushNotification: false,
     fonts: false,
+    connection: true,
   });
+  const [isConnected, setIsConnected] = useState<boolean | null>(null);
 
   const { mutateAsync: sendPushToken } = useMutation({
     mutationFn: registerDeviceNotification,
@@ -50,6 +56,10 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   });
 
   const prepareApp = useCallback(async () => {
+    if (!isConnected) {
+      throw new Error("No internet connection");
+    }
+
     try {
       if (!__DEV__) {
         setLoadingStates(prev => ({ ...prev, updates: true }));
@@ -83,13 +93,31 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         }
         setLoadingStates(prev => ({ ...prev, pushNotification: false }));
       }
+
+      setAppIsReady(true);
     } catch (error) {
       console.error("Error preparing app:", error);
+      throw error;
     }
-  }, [expoPushToken, sendPushToken]);
+  }, [isConnected, expoPushToken, sendPushToken]);
 
   useEffect(() => {
-    prepareApp();
+    const checkConnectionAndPrepare = async () => {
+      setLoadingStates(prev => ({ ...prev, connection: true }));
+      const netInfo = await NetInfo.fetch();
+      setIsConnected(netInfo.isConnected);
+      setLoadingStates(prev => ({ ...prev, connection: false }));
+      
+      if (netInfo.isConnected) {
+        try {
+          await prepareApp();
+        } catch (error) {
+          console.error("Failed to prepare app:", error);
+        }
+      }
+    };
+
+    checkConnectionAndPrepare();
   }, [prepareApp]);
 
   useEffect(() => {
@@ -97,40 +125,51 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   }, [fontsLoaded]);
 
   useEffect(() => {
-    if (!authState.loading && fontsLoaded) {
-      setAppIsReady(true);
-    }
-  }, [authState.loading, fontsLoaded]);
-
-  // Background location fetching
-  useEffect(() => {
-    let isMounted = true;
-    const fetchLocationInBackground = async () => {
-      if (!isLoading && isMounted) {
-        await getLocation();
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setIsConnected(state.isConnected);
+      if (!state.isConnected) {
+        setAppIsReady(false);
       }
-    };
+    });
 
-    if (appIsReady) {
-      fetchLocationInBackground();
+    return () => unsubscribe();
+  }, []);
+
+  const handleRetry = useCallback(async () => {
+    setLoadingStates(prev => ({ ...prev, connection: true }));
+    try {
+      const netInfo = await NetInfo.fetch();
+      setIsConnected(netInfo.isConnected);
+      if (netInfo.isConnected) {
+        await prepareApp();
+      } else {
+        throw new Error("No internet connection");
+      }
+    } catch (error) {
+      console.error("Error during retry:", error);
+      throw error;
+    } finally {
+      setLoadingStates(prev => ({ ...prev, connection: false }));
     }
+  }, [prepareApp]);
 
-    return () => {
-      isMounted = false;
-    };
-  }, [appIsReady, getLocation, isLoading]);
-
-  // Handle location errors
-  useEffect(() => {
-    if (error) {
-      throw new Error("Location error: " + error);
-      
-      // You can add additional error handling here, such as showing a notification to the user
-    }
-  }, [error]);
-
-  if (!appIsReady) {
+  if (loadingStates.connection || loadingStates.updates || loadingStates.pushNotification || !fontsLoaded) {
     return <SplashScreenAnimated loadingStates={loadingStates} />;
+  }
+
+  if (!isConnected || !appIsReady) {
+    return (
+      <ErrorBoundary>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>
+            No internet connection. Please check your network settings and try again.
+          </Text>
+          <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
+            <Text style={styles.retryButtonText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      </ErrorBoundary>
+    );
   }
 
   if (authState.authenticated === false) {
@@ -174,5 +213,30 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     </Tabs>
   );
 };
+
+const styles = StyleSheet.create({
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Color.Gray.gray600,
+    padding: 20,
+  },
+  errorText: {
+    ...BODY_1_REGULAR,
+    color: Color.base.White,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: Color.Gray.gray300,
+    padding: 12,
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    ...BUTTON_48,
+    color: Color.base.White,
+  },
+});
 
 export default Layout;
