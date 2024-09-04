@@ -18,7 +18,7 @@ interface SvgMarkerProps {
 
 const SvgMarker: React.FC<SvgMarkerProps> = ({ imageUrl }) => {
   return (
-    <Svg width="32" height="48" viewBox="0 0 32 48" fill="none">
+    <Svg width="48" height="48" viewBox="0 0 32 48" fill="none">
       <Defs>
         <LinearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
           <Stop offset="0" stopColor={Color.Brand.main.start} />

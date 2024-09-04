@@ -24,9 +24,9 @@ export async function getRestaurants({
     });
 }
 
-export async function getUserCard({ latitude, longitude }) {
+export async function getUserCard() {
   return axiosClient
-    .get(`/users/cards?latitude=${latitude}&longitude=${longitude}`)
+    .get(`/users/cards`)
     .then((response) => {
       if (response.data.success) {
         return response?.data;
