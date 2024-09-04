@@ -7,7 +7,6 @@ import { Notification, User } from "iconsax-react-native";
 import Logo from "@/components/icons/Logo";
 import Color from "@/constants/Color";
 import { useAuth } from "@/context/AuthContext";
-import useLocationStore from "@/lib/store/userLocation";
 import * as Updates from "expo-updates";
 import { useFonts } from "expo-font";
 import SplashScreenAnimated from "../SplashScreenAnimated";

@@ -33,13 +33,6 @@ const mapLongitudeDelta = 0.1;
 
 const MAP_STATE_KEY = 'RESTAURANT_MAP_STATE';
 
-const PRAGUE_COORDINATES = {
-  latitude: 50.0755,
-  longitude: 14.4378,
-  latitudeDelta: 0.1,
-  longitudeDelta: 0.1,
-};
-
 const throttle = (func, delay) => {
   let throttling = false;
 
@@ -61,11 +54,10 @@ const throttle = (func, delay) => {
 export default function RestaurantMapView() {
   const router = useRouter();
   const currentDayOfWeek = moment().isoWeekday();
-  const { currentLocation, isLoading: locationLoading, error: locationError } = useLocationStore();
-  const [selectedLocation, setSelectedLocation] = useState("current");
+  const { currentLocation, isLoading: locationLoading, getLocation } = useLocationStore();
   const mapRef = useRef(null);
   const scrollViewRef = useRef(null);
-  const [initialRegion, setInitialRegion] = useState(PRAGUE_COORDINATES);
+  const [initialRegion, setInitialRegion] = useState(null);
   const [scrollViewHidden, setScrollViewHidden] = useState(true);
   const currentTime = moment().format("HH:mm:ss");
   const [cardIndexToScroll, setCardIndexToScroll] = useState<number | null>(null);
@@ -76,7 +68,10 @@ export default function RestaurantMapView() {
   const [isScrollViewDragging, setIsScrollViewDragging] = useState(false);
   const [activeMarker, setActiveMarker] = useState(null);
 
-  // Load saved map state on component mount
+  useEffect(() => {
+    getLocation();
+  }, []);
+
   useEffect(() => {
     const loadMapState = async () => {
       try {
@@ -85,7 +80,7 @@ export default function RestaurantMapView() {
           const parsedState = JSON.parse(savedState);
           setMapState(parsedState);
           setInitialRegion(parsedState.region);
-        } else if (currentLocation) {
+        } else {
           setInitialRegion({
             latitude: currentLocation.coords.latitude,
             longitude: currentLocation.coords.longitude,
@@ -100,7 +95,6 @@ export default function RestaurantMapView() {
     loadMapState();
   }, [currentLocation]);
 
-  // Save map state on component unmount
   useEffect(() => {
     return () => {
       if (mapRef.current) {
@@ -133,7 +127,7 @@ export default function RestaurantMapView() {
     }
   }, [scrollViewHidden, cardIndexToScroll]);
 
-  const { data: restaurantsData, isLoading: restaurantsLoading, error: restaurantsError } = useQuery<GetRestaurantsResponseType>({
+  const { data: restaurantsData, isLoading: restaurantsLoading } = useQuery<GetRestaurantsResponseType>({
     queryKey: restaurantKeys.all,
     queryFn: () => {
       return getRestaurants({
@@ -141,9 +135,10 @@ export default function RestaurantMapView() {
         limit: 10,
         time: currentTime,
         dayNoOfTheWeek: currentDayOfWeek,
+
       });
     },
-    enabled: true,
+    enabled: !locationLoading,
   });
 
   const findMarkerIndex = (marker) => {
@@ -234,30 +229,32 @@ export default function RestaurantMapView() {
     });
   };
 
-  // Memoize the MapView to prevent unnecessary re-renders
   const memoizedMapView = useMemo(() => (
     <MapView
       ref={mapRef}
       style={styles.map}
       provider={PROVIDER_GOOGLE}
-      initialRegion={initialRegion}
+      initialRegion={initialRegion || {
+        latitude: currentLocation.coords.latitude,
+        longitude: currentLocation.coords.longitude,
+        latitudeDelta: mapLatitudeDelta,
+        longitudeDelta: mapLongitudeDelta,
+      }}
       customMapStyle={mapStyle}
       scrollEnabled={true}
       zoomEnabled={true}
       pitchEnabled={true}
       rotateEnabled={true}
     >
-      {currentLocation && (
-        <Marker
-          coordinate={{
-            latitude: currentLocation.coords.latitude,
-            longitude: currentLocation.coords.longitude,
-          }}
-          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-        >
-          <Image source={require("@/public/images/locationPin.png")} />
-        </Marker>
-      )}
+      <Marker
+        coordinate={{
+          latitude: currentLocation.coords.latitude,
+          longitude: currentLocation.coords.longitude,
+        }}
+        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+      >
+        <Image source={require("@/public/images/locationPin.png")} />
+      </Marker>
       {restaurantsData?.data?.restaurants.map((restaurant, index) => (
         <Marker
           key={`marker-${index}`}

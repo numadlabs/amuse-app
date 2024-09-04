@@ -10,15 +10,17 @@ import useLocationStore from "@/lib/store/userLocation";
 import { RestaurantType } from "@/lib/types";
 import { userKeys } from "@/lib/service/keysHelper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuth } from "@/context/AuthContext";
 
 const MyAcards = () => {
-  const { currentLocation } = useLocationStore();
+
+  const {authState} = useAuth()
   const { data: cards = [], isLoading } = useQuery({
     queryKey: userKeys.cards,
     queryFn: () => {
       return getUserCard();
     },
-    enabled: !!currentLocation,
+    enabled: !! authState.userId
   });
 
   const router = useRouter();
