@@ -123,7 +123,8 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   // Handle location errors
   useEffect(() => {
     if (error) {
-      console.error("Location error:", error);
+      throw new Error("Location error: " + error);
+      
       // You can add additional error handling here, such as showing a notification to the user
     }
   }, [error]);
