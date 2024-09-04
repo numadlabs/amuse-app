@@ -36,7 +36,6 @@ const useLocationStore = create<LocationState>((set) => ({
         set({ currentLocation: PRAGUE_LOCATION, isLoading: false });
       }
     } catch (error) {
-      console.error("Error fetching location:", error);
       // Silently default to Prague on any error
       set({ currentLocation: PRAGUE_LOCATION, isLoading: false });
     }
