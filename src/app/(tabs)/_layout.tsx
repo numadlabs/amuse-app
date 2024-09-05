@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Redirect, Tabs, router } from "expo-router";
-import { View, TouchableOpacity, Text } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from "@react-native-community/netinfo";
 import Footer from "@/components/layout/Footer";
@@ -16,7 +16,6 @@ import { usePushNotifications } from "@/hooks/usePushNotification";
 import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 import ErrorBoundary from "../ErrorBoundary";
-import * as Location from "expo-location";
 
 type LayoutProps = {
   navigation: any;
@@ -26,6 +25,7 @@ type LoadingStates = {
   updates: boolean;
   pushNotification: boolean;
   fonts: boolean;
+  internetCheck: boolean;
 };
 
 const PUSH_TOKEN_KEY = '@PushToken';
@@ -39,6 +39,7 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     updates: false,
     pushNotification: false,
     fonts: false,
+    internetCheck: true,
   });
   const [isConnected, setIsConnected] = useState<boolean | null>(null);
 
@@ -53,30 +54,37 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),
   });
 
+  const checkForUpdates = useCallback(async () => {
+    if (__DEV__) return;
+
+    setLoadingStates(prev => ({ ...prev, updates: true }));
+    try {
+      const update = await Updates.checkForUpdateAsync();
+      if (update.isAvailable) {
+        await Updates.fetchUpdateAsync();
+        await Updates.reloadAsync();
+      }
+    } catch (error) {
+      console.error('Error checking for updates:', error);
+    } finally {
+      setLoadingStates(prev => ({ ...prev, updates: false }));
+    }
+  }, []);
+
+  const checkInternetAndUpdate = useCallback(async () => {
+    setLoadingStates(prev => ({ ...prev, internetCheck: true }));
+    const netInfo = await NetInfo.fetch();
+    setIsConnected(netInfo.isConnected);
+
+    if (netInfo.isConnected) {
+      await checkForUpdates();
+    }
+    setLoadingStates(prev => ({ ...prev, internetCheck: false }));
+  }, [checkForUpdates]);
+
   const prepareApp = useCallback(async () => {
     try {
-      if (!__DEV__) {
-        setLoadingStates(prev => ({ ...prev, updates: true }));
-        try {
-          const updateCheck = await Promise.race([
-            Updates.checkForUpdateAsync(),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('Update check timed out')), 5000))
-          ]);
-
-          if (updateCheck && typeof updateCheck === 'object' && 'isAvailable' in updateCheck) {
-            if (updateCheck.isAvailable) {
-              await Updates.fetchUpdateAsync();
-              await Updates.reloadAsync();
-            }
-          } else {
-            console.log("Update check returned an unexpected result");
-          }
-        } catch (error) {
-          console.error("Error checking for updates:", error);
-        } finally {
-          setLoadingStates(prev => ({ ...prev, updates: false }));
-        }
-      }
+      await checkInternetAndUpdate();
 
       if (expoPushToken?.data) {
         setLoadingStates(prev => ({ ...prev, pushNotification: true }));
@@ -88,12 +96,11 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         setLoadingStates(prev => ({ ...prev, pushNotification: false }));
       }
 
-      // Request location permission and get location
       await getLocation();
     } catch (error) {
       console.error("Error preparing app:", error);
     }
-  }, [expoPushToken, sendPushToken, getLocation]);
+  }, [expoPushToken, sendPushToken, getLocation, checkInternetAndUpdate]);
 
   useEffect(() => {
     prepareApp();
@@ -104,12 +111,11 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   }, [fontsLoaded]);
 
   useEffect(() => {
-    if (!authState.loading && fontsLoaded) {
+    if (!authState.loading && fontsLoaded && !loadingStates.internetCheck && !loadingStates.updates) {
       setAppIsReady(true);
     }
-  }, [authState.loading, fontsLoaded]);
+  }, [authState.loading, fontsLoaded, loadingStates.internetCheck, loadingStates.updates]);
 
-  // Check internet connection
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       setIsConnected(state.isConnected);
@@ -132,13 +138,6 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
 
   return (
     <ErrorBoundary>
-      {permissionStatus === Location.PermissionStatus.DENIED && (
-        <View style={{ padding: 10, backgroundColor: Color.Gray.gray300 }}>
-          <Text style={{ color: Color.base.White }}>
-            Location access denied. Some features may be limited.
-          </Text>
-        </View>
-      )}
       <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
         <Tabs.Screen
           name="index"
