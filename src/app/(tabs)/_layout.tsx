@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Redirect, Tabs, router } from "expo-router";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NetInfo from "@react-native-community/netinfo";
 import Footer from "@/components/layout/Footer";
 import { Notification, User } from "iconsax-react-native";
 import Logo from "@/components/icons/Logo";
 import Color from "@/constants/Color";
 import { useAuth } from "@/context/AuthContext";
+import useLocationStore from "@/lib/store/userLocation";
 import * as Updates from "expo-updates";
 import { useFonts } from "expo-font";
 import SplashScreenAnimated from "../SplashScreenAnimated";
@@ -14,6 +16,7 @@ import { usePushNotifications } from "@/hooks/usePushNotification";
 import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 import ErrorBoundary from "../ErrorBoundary";
+import * as Location from "expo-location";
 
 type LayoutProps = {
   navigation: any;
@@ -30,12 +33,14 @@ const PUSH_TOKEN_KEY = '@PushToken';
 const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState<boolean>(false);
+  const { currentLocation, permissionStatus, getLocation } = useLocationStore();
   const { expoPushToken } = usePushNotifications();
   const [loadingStates, setLoadingStates] = useState<LoadingStates>({
     updates: false,
     pushNotification: false,
     fonts: false,
   });
+  const [isConnected, setIsConnected] = useState<boolean | null>(null);
 
   const { mutateAsync: sendPushToken } = useMutation({
     mutationFn: registerDeviceNotification,
@@ -82,10 +87,13 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         }
         setLoadingStates(prev => ({ ...prev, pushNotification: false }));
       }
+
+      // Request location permission and get location
+      await getLocation();
     } catch (error) {
       console.error("Error preparing app:", error);
     }
-  }, [expoPushToken, sendPushToken]);
+  }, [expoPushToken, sendPushToken, getLocation]);
 
   useEffect(() => {
     prepareApp();
@@ -101,25 +109,14 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     }
   }, [authState.loading, fontsLoaded]);
 
-  // Background location fetching
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   const fetchLocationInBackground = async () => {
-  //     if (!isLoading && isMounted) {
-  //       await getLocation();
-  //     }
-  //   };
+  // Check internet connection
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setIsConnected(state.isConnected);
+    });
 
-  //   if (appIsReady) {
-  //     fetchLocationInBackground();
-  //   }
-
-  //   return () => {
-  //     isMounted = false;
-  //   };
-  // }, [appIsReady, getLocation, isLoading]);
-
-
+    return () => unsubscribe();
+  }, []);
 
   if (!appIsReady) {
     return <SplashScreenAnimated loadingStates={loadingStates} />;
@@ -129,8 +126,19 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     return <Redirect href="/Login" />;
   }
 
+  if (isConnected === false) {
+    return <ErrorBoundary />;
+  }
+
   return (
     <ErrorBoundary>
+      {permissionStatus === Location.PermissionStatus.DENIED && (
+        <View style={{ padding: 10, backgroundColor: Color.Gray.gray300 }}>
+          <Text style={{ color: Color.base.White }}>
+            Location access denied. Some features may be limited.
+          </Text>
+        </View>
+      )}
       <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
         <Tabs.Screen
           name="index"
