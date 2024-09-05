@@ -215,9 +215,6 @@ export default function RestaurantMapView() {
   if (permissionStatus === Location.PermissionStatus.DENIED) {
     return (
       <View style={styles.container}>
-        <Text style={styles.warningText}>
-          Location access denied. Map centered on Prague, Czechia.
-        </Text>
         <MapView
           style={styles.map}
           provider={PROVIDER_GOOGLE}
