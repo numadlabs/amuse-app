@@ -12,6 +12,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  Text,
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery } from "@tanstack/react-query";
@@ -21,7 +22,7 @@ import SvgMarker from "../atom/svgMarker";
 import Color from "@/constants/Color";
 import { mapStyle, SERVER_SETTING } from "@/constants/serverSettings";
 import moment from "moment";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from "expo-location";
 
 const { width } = Dimensions.get("window");
 const CARD_HEIGHT = 150;
@@ -30,8 +31,6 @@ const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
 const mapLatitudeDelta = 0.1;
 const mapLongitudeDelta = 0.1;
-
-const MAP_STATE_KEY = 'RESTAURANT_MAP_STATE';
 
 const throttle = (func, delay) => {
   let throttling = false;
@@ -54,18 +53,21 @@ const throttle = (func, delay) => {
 export default function RestaurantMapView() {
   const router = useRouter();
   const currentDayOfWeek = moment().isoWeekday();
-  const { currentLocation, isLoading: locationLoading, getLocation } = useLocationStore();
+  const { currentLocation, permissionStatus, getLocation } = useLocationStore();
+  const [selectedLocation, setSelectedLocation] = useState("current");
   const mapRef = useRef(null);
   const scrollViewRef = useRef(null);
   const [initialRegion, setInitialRegion] = useState(null);
   const [scrollViewHidden, setScrollViewHidden] = useState(true);
   const currentTime = moment().format("HH:mm:ss");
-  const [cardIndexToScroll, setCardIndexToScroll] = useState<number | null>(null);
-  const [mapState, setMapState] = useState(null);
+  const [cardIndexToScroll, setCardIndexToScroll] = useState<number | null>(
+    null
+  );
 
   let mapAnimation = new Animated.Value(0);
 
   const [isScrollViewDragging, setIsScrollViewDragging] = useState(false);
+
   const [activeMarker, setActiveMarker] = useState(null);
 
   useEffect(() => {
@@ -73,61 +75,32 @@ export default function RestaurantMapView() {
   }, []);
 
   useEffect(() => {
-    const loadMapState = async () => {
-      try {
-        const savedState = await AsyncStorage.getItem(MAP_STATE_KEY);
-        if (savedState) {
-          const parsedState = JSON.parse(savedState);
-          setMapState(parsedState);
-          setInitialRegion(parsedState.region);
-        } else {
-          setInitialRegion({
-            latitude: currentLocation.coords.latitude,
-            longitude: currentLocation.coords.longitude,
-            latitudeDelta: mapLatitudeDelta,
-            longitudeDelta: mapLongitudeDelta,
-          });
-        }
-      } catch (error) {
-        console.error('Error loading map state:', error);
-      }
-    };
-    loadMapState();
-  }, [currentLocation]);
-
-  useEffect(() => {
-    return () => {
-      if (mapRef.current) {
-        mapRef.current.getMapBoundaries().then(async (bounds) => {
-          const stateToSave = {
-            region: {
-              latitude: (bounds.northEast.latitude + bounds.southWest.latitude) / 2,
-              longitude: (bounds.northEast.longitude + bounds.southWest.longitude) / 2,
-              latitudeDelta: bounds.northEast.latitude - bounds.southWest.latitude,
-              longitudeDelta: bounds.northEast.longitude - bounds.southWest.longitude,
-            },
-          };
-          try {
-            await AsyncStorage.setItem(MAP_STATE_KEY, JSON.stringify(stateToSave));
-          } catch (error) {
-            console.error('Error saving map state:', error);
-          }
-        });
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!scrollViewHidden && cardIndexToScroll !== null) {
-      const timeoutId = setTimeout(() => {
-        scrollToCardIndex(cardIndexToScroll);
-        setCardIndexToScroll(null);
-      }, 100);
-      return () => clearTimeout(timeoutId);
+    if (selectedLocation === "current" && currentLocation) {
+      setInitialRegion({
+        latitude: currentLocation.coords.latitude,
+        longitude: currentLocation.coords.longitude,
+        latitudeDelta: mapLatitudeDelta,
+        longitudeDelta: mapLongitudeDelta,
+      });
+    } else if (selectedLocation === "dubai") {
+      setInitialRegion({
+        latitude: 50.0755, 
+        longitude: 14.4378, 
+        latitudeDelta: 0.1, 
+        longitudeDelta: 0.1,
+      });
+    } else if (permissionStatus === Location.PermissionStatus.DENIED) {
+      // Set location to Prague, Czechia if permission is denied
+      setInitialRegion({
+        latitude: 50.0755,
+        longitude: 14.4378,
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.1,
+      });
     }
-  }, [scrollViewHidden, cardIndexToScroll]);
+  }, [currentLocation, selectedLocation, permissionStatus]);
 
-  const { data: restaurantsData, isLoading: restaurantsLoading } = useQuery<GetRestaurantsResponseType>({
+  const { data: restaurantsData, isLoading: restaurantsLoading, error: restaurantsError } = useQuery<GetRestaurantsResponseType>({
     queryKey: restaurantKeys.all,
     queryFn: () => {
       return getRestaurants({
@@ -135,11 +108,21 @@ export default function RestaurantMapView() {
         limit: 10,
         time: currentTime,
         dayNoOfTheWeek: currentDayOfWeek,
-
       });
     },
-    enabled: !locationLoading,
+    enabled: !!currentLocation,
   });
+
+  useEffect(() => {
+    if (!scrollViewHidden && cardIndexToScroll !== null) {
+      const timeoutId = setTimeout(() => {
+        scrollToCardIndex(cardIndexToScroll);
+        setCardIndexToScroll(null);
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [scrollViewHidden, cardIndexToScroll]);
 
   const findMarkerIndex = (marker) => {
     return restaurantsData?.data?.restaurants.findIndex(
@@ -229,62 +212,85 @@ export default function RestaurantMapView() {
     });
   };
 
-  const memoizedMapView = useMemo(() => (
-    <MapView
-      ref={mapRef}
-      style={styles.map}
-      provider={PROVIDER_GOOGLE}
-      initialRegion={initialRegion || {
-        latitude: currentLocation.coords.latitude,
-        longitude: currentLocation.coords.longitude,
-        latitudeDelta: mapLatitudeDelta,
-        longitudeDelta: mapLongitudeDelta,
-      }}
-      customMapStyle={mapStyle}
-      scrollEnabled={true}
-      zoomEnabled={true}
-      pitchEnabled={true}
-      rotateEnabled={true}
-    >
-      <Marker
-        coordinate={{
-          latitude: currentLocation.coords.latitude,
-          longitude: currentLocation.coords.longitude,
-        }}
-        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-      >
-        <Image source={require("@/public/images/locationPin.png")} />
-      </Marker>
-      {restaurantsData?.data?.restaurants.map((restaurant, index) => (
-        <Marker
-          key={`marker-${index}`}
-          coordinate={{
-            latitude: restaurant.latitude,
-            longitude: restaurant.longitude,
+  if (permissionStatus === Location.PermissionStatus.DENIED) {
+    return (
+      <View style={styles.container}>
+        <MapView
+          style={styles.map}
+          provider={PROVIDER_GOOGLE}
+          initialRegion={{
+            latitude: 50.0755,
+            longitude: 14.4378,
+            latitudeDelta: 0.1,
+            longitudeDelta: 0.1,
           }}
-          onPress={() => handleMarkerPress(restaurant)}
-          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-        >
-          <View style={styles.markerContainer}>
-            {activeMarker?.id === restaurant.id ? (
-              <SvgMarker
-                key={restaurant.id as string}
-                imageUrl={
-                  `${SERVER_SETTING.CDN_LINK}${restaurant?.logo}` as string
-                }
-              />
-            ) : (
-              <View style={styles.inactiveMarker} />
-            )}
-          </View>
-        </Marker>
-      ))}
-    </MapView>
-  ), [initialRegion, currentLocation, restaurantsData, activeMarker]);
+          customMapStyle={mapStyle}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      {memoizedMapView}
+      <MapView
+        ref={mapRef}
+        style={styles.map}
+        provider={PROVIDER_GOOGLE}
+        initialRegion={initialRegion || {
+          latitude: 50.0755,
+          longitude: 14.4378,
+          latitudeDelta: 0.1,
+          longitudeDelta: 0.1,
+        }}
+        customMapStyle={mapStyle}
+        scrollEnabled={true}
+        zoomEnabled={true}
+        pitchEnabled={true}
+        rotateEnabled={true}
+      >
+        {currentLocation && (
+          <Marker
+            coordinate={{
+              latitude: currentLocation.coords.latitude,
+              longitude: currentLocation.coords.longitude,
+            }}
+          >
+            <Image source={require("@/public/images/locationPin.png")} />
+          </Marker>
+        )}
+        {restaurantsData?.data?.restaurants.map((restaurant, index) => {
+          return (
+            <Marker
+              key={`marker-${index}`}
+              hitSlop={{ top: 40, bottom: 40, left: 40, right: 40 }}
+              coordinate={{
+                latitude: restaurant.latitude,
+                longitude: restaurant.longitude,
+              }}
+              onPress={() => handleMarkerPress(restaurant)}
+            >
+              {activeMarker?.id === restaurant.id ? (
+                <SvgMarker
+                  key={restaurant.id as string}
+                  imageUrl={
+                    `${SERVER_SETTING.CDN_LINK}${restaurant?.logo}` as string
+                  }
+                />
+              ) : (
+                <View
+                  style={{
+                    width: 8,
+                    height: 8,
+                    padding: 4,
+                    backgroundColor: Color.base.White,
+                    borderRadius: 48,
+                  }}
+                />
+              )}
+            </Marker>
+          );
+        })}
+      </MapView>
       <Animated.ScrollView
         ref={scrollViewRef}
         horizontal
@@ -346,16 +352,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginBottom: 36,
   },
-  markerContainer: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  inactiveMarker: {
-    width: 8,
-    height: 8,
-    backgroundColor: Color.base.White,
-    borderRadius: 4,
+  warningText: {
+    color: Color.System.systemError,
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 10,
+    padding: 10,
+    backgroundColor: Color.Gray.gray300,
   },
 });
