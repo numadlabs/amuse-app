@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/context/AuthContext";
@@ -9,9 +9,7 @@ import { View } from 'react-native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import ErrorBoundary from './ErrorBoundary';
-import NetInfo from "@react-native-community/netinfo";
-import SplashScreenAnimated from './SplashScreenAnimated';
-import * as Updates from "expo-updates";
+
 
 // Create QueryClient outside of the component to avoid recreating it on each render
 const queryClient = new QueryClient({
@@ -34,14 +32,15 @@ export default function Layout() {
     SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),
   });
 
-
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
-      await SplashScreen.hideAsync();
+      SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
 
-
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
