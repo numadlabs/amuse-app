@@ -22,7 +22,7 @@ const TermsAndCondo = () => {
   ];
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1,  backgroundColor: Color.Gray.gray600}}>
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
       <Header title="Terms and Conditions" />
       <ScrollView style={styles.container}>
