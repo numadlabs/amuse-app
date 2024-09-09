@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Dimensions,
   Platform,
+
 } from "react-native";
 import Header from "@/components/layout/Header";
 import Color from "@/constants/Color";
@@ -35,6 +36,7 @@ import { getUserById } from "@/lib/service/queryHelper";
 import { router } from "expo-router";
 import { SERVER_SETTING } from "@/constants/serverSettings";
 import { userKeys } from "@/lib/service/keysHelper";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width, height } = Dimensions.get('window');
 
@@ -279,13 +281,10 @@ that information is inaccurate or incomplete.
   ];
 
   return (
-    <>
-      <SafeAreaView style={{flex: 1}}>
-      <Header
-        title="Privacy policy & Settings"
-        titleStyle={{ fontFamily: "Sora", fontWeight: 600 }}
-      />
-      <View style={styles.container}>
+    <SafeAreaView style={{flex: 1,  backgroundColor: Color.Gray.gray600}}>
+    <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
+      <Header title="Terms and Conditions" />
+    
         <ScrollView style={styles.scrollViewContainer}>
           <Text style={styles.sectionHeader}>Disclaimer</Text>
           <Text style={styles.sectionBody}>
@@ -386,7 +385,7 @@ that information is inaccurate or incomplete.
         </View>
       )}
         </SafeAreaView>
-    </>
+
   );
 };
 
