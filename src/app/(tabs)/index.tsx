@@ -9,15 +9,13 @@ import {
   FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import React, { useState, useEffect } from "react";
 import Color from "@/constants/Color";
 import Balance from "@/components/sections/Balance";
 import QuickInfo from "@/components/sections/QuickInfo";
 import StackedCard from "@/components/sections/StackedCard";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { getUserById, getUserCard, getRestaurants } from "@/lib/service/queryHelper";
+import { useQuery } from "@tanstack/react-query";
 import { getUserById, getUserCard, getRestaurants } from "@/lib/service/queryHelper";
 import useLocationStore from "@/lib/store/userLocation";
 import { RestaurantType } from "@/lib/types";
@@ -41,7 +39,6 @@ import Button from "@/components/ui/Button";
 import Close from "@/components/icons/Close";
 import moment from "moment";
 import { BODY_2_MEDIUM, BODY_2_REGULAR, BUTTON_40, H6 } from "@/constants/typography";
-import DiscoverFloatRestCard from "@/components/sections/DiscoverFloatRestCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Page = () => {
@@ -56,12 +53,10 @@ const Page = () => {
   const [showArea, setShowArea] = useState(true);
 
   const { authState } = useAuth();
-  const profilePictureSetting = AsyncStorage.getItem('showProfilePicture');
   const { currentLocation } = useLocationStore();
   const currentTime = moment().format("HH:mm:ss");
   const currentDayOfWeek = moment().isoWeekday();
 
-  // AsyncStorage settings
   useEffect(() => {
     const fetchSettings = async () => {
       const profilePicture = await AsyncStorage.getItem('showProfilePicture');
@@ -76,8 +71,7 @@ const Page = () => {
     fetchSettings();
   }, []);
 
-
-  const { data: user, isSuccess } = useQuery({
+  const { data: user } = useQuery({
     queryKey: userKeys.info,
     queryFn: () => getUserById(authState.userId),
     enabled: !!authState.userId,
@@ -85,28 +79,9 @@ const Page = () => {
 
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
-    queryFn: () => getUserCard({
-      latitude: currentLocation.latitude,
-      longitude: currentLocation.longitude,
-    }),
+    queryFn: () => getUserCard(),
     enabled: !!currentLocation,
-    queryFn: () => {
-      return getUserCard();
-    },
   });
-
-  const toggleBottomSheet = () => {
-    setIsOpen(!isOpen);
-  };
-  const toggleBalanceBottomSheet = () => {
-    setIsOpenBalance(!isOpenBalance);
-  };
-  const animatedStyles = useAnimatedStyle(() => ({
-    transform: [
-      { scale: withTiming(pressed.value ? 0.95 : 1, { duration: 100 }) },
-    ],
-  }));
-  const currentDayOfWeek = moment().isoWeekday();
 
   const { data: restaurantsData } = useQuery<GetRestaurantsResponseType>({
     queryKey: restaurantKeys.all,
@@ -117,14 +92,6 @@ const Page = () => {
       dayNoOfTheWeek: currentDayOfWeek,
     }),
     enabled: !!currentLocation,
-    queryFn: () => {
-      return getRestaurants({
-        page: 1,
-        limit: 10,
-        time: currentTime,
-        dayNoOfTheWeek: currentDayOfWeek,
-      });
-    },
   });
 
   const handleNavigation = (restaurant: RestaurantType) => {
@@ -151,8 +118,6 @@ const Page = () => {
   return (
     <GestureHandlerRootView style={styles.container}>
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-    <GestureHandlerRootView style={styles.container}>
-      <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         <Animated.View entering={SlideOutDown}>
           {user && (
             <TouchableOpacity onPress={() => router.push('/Wallet')}>
@@ -160,7 +125,6 @@ const Page = () => {
                 amount={user?.user?.balance}
                 convertedAmount={user?.convertedBalance}
                 currencyName="EUR"
-                handleToggle={toggleBalanceBottomSheet}
                 handleToggle={toggleBalanceBottomSheet}
               />
             </TouchableOpacity>
@@ -183,15 +147,8 @@ const Page = () => {
                   <Animated.View
                     entering={SlideInLeft.springify().damping(15)}
                     style={styles.scrollViewContent}
-                    style={styles.scrollViewContent}
                   >
-                    {user?.user?.dateOfBirth && user?.user?.location && showProfilePicture ? null : isQuickInfoVisible && (
-                      <QuickInfo
-                        onPress={() => setIsQuickInfoVisible(false)}
-                        user={user?.user}
-                      />
-                    )}
-                    {user?.user?.dateOfBirth && user?.user?.location && profilePictureSetting ? null : isQuickInfoVisible && (
+                    {(!user?.user?.dateOfBirth || !user?.user?.location || !showProfilePicture) && isQuickInfoVisible && (
                       <QuickInfo
                         onPress={() => setIsQuickInfoVisible(false)}
                         user={user?.user}
@@ -201,11 +158,8 @@ const Page = () => {
                     <FlatList
                       style={styles.flatList}
                       ItemSeparatorComponent={() => <View style={styles.separator} />}
-                      style={styles.flatList}
-                      ItemSeparatorComponent={() => <View style={styles.separator} />}
                       data={filteredRestaurantsArray}
                       horizontal
-                      keyExtractor={(item) => item.id.toString()}
                       keyExtractor={(item) => item.id.toString()}
                       renderItem={({ item }) => (
                         <HomeRestList
@@ -230,19 +184,12 @@ const Page = () => {
         </View>
 
         <View style={styles.stackedCardContainer}>
-
-        <View style={styles.stackedCardContainer}>
           <StackedCard key={refreshPage.toString()} />
         </View>
 
         {cards?.data?.cards.length > 0 && (
           <View style={styles.seeAllContainer}>
-
-        {cards?.data?.cards.length > 0 && (
-          <View style={styles.seeAllContainer}>
             <TouchableOpacity onPress={() => router.push("/MyAcards")}>
-              <View style={styles.seeAllButton}>
-                <Text style={styles.seeAllText}>See all</Text>
               <View style={styles.seeAllButton}>
                 <Text style={styles.seeAllText}>See all</Text>
               </View>
@@ -251,30 +198,23 @@ const Page = () => {
         )}
       </ScrollView>
 
-
       {isOpenBalance && (
         <Modal transparent={true}>
-          <TouchableOpacity style={styles.modalBackground} onPress={toggleBalanceBottomSheet}>
           <TouchableOpacity style={styles.modalBackground} onPress={toggleBalanceBottomSheet}>
             <Animated.View
               entering={FadeIn}
               exiting={FadeOut}
-              style={[styles.modalOverlay, animatedStyles]}
               style={[styles.modalOverlay, animatedStyles]}
             />
             <Animated.View
               entering={SlideInDown.springify().damping(18)}
               exiting={SlideOutDown.springify()}
               style={[styles.modalContent, animatedStyles]}
-              style={[styles.modalContent, animatedStyles]}
             >
               <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>About your Balance</Text>
-              <View style={styles.modalHeader}>
-                <View style={styles.filler}></View>
+                <View style={styles.filler} />
                 <Text style={styles.modalTitle}>About your Balance</Text>
                 <TouchableOpacity onPress={toggleBalanceBottomSheet}>
-                  <View style={styles.closeButton}>
                   <View style={styles.closeButton}>
                     <Close />
                   </View>
@@ -283,9 +223,7 @@ const Page = () => {
               <Image
                 source={require("../../public/images/balanceInfo.png")}
                 style={styles.balanceImage}
-                style={styles.balanceImage}
               />
-              <Text style={styles.modalDescription}>
               <Text style={styles.modalDescription}>
                 You earned ALYS Bitcoin, which is faster and cheaper to use but
                 still pegged 1:1 with mainchain Bitcoin. Use your balance to
@@ -297,7 +235,6 @@ const Page = () => {
                 textStyle="primary"
                 onPress={toggleBalanceBottomSheet}
                 style={styles.modalButton}
-                style={styles.modalButton}
               >
                 <Text>Got it</Text>
               </Button>
@@ -306,44 +243,34 @@ const Page = () => {
         </Modal>
       )}
 
-
       {isOpen && (
         <Modal transparent={true}>
-          <TouchableOpacity style={styles.modalBackground} onPress={toggleBottomSheet}>
           <TouchableOpacity style={styles.modalBackground} onPress={toggleBottomSheet}>
             <Animated.View
               entering={FadeIn}
               exiting={FadeOut}
-              style={[styles.modalOverlay, animatedStyles]}
               style={[styles.modalOverlay, animatedStyles]}
             />
             <Animated.View
               entering={SlideInDown.springify().damping(18)}
               exiting={SlideOutDown.springify()}
               style={[styles.modalContent, animatedStyles]}
-              style={[styles.modalContent, animatedStyles]}
             >
               <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>Membership</Text>
-              <View style={styles.modalHeader}>
-                <View style={styles.filler}></View>
+                <View style={styles.filler} />
                 <Text style={styles.modalTitle}>Membership</Text>
                 <TouchableOpacity onPress={toggleBottomSheet}>
-                  <View style={styles.closeButton}>
                   <View style={styles.closeButton}>
                     <Close />
                   </View>
                 </TouchableOpacity>
               </View>
               <View style={styles.membershipInfo}>
-              <View style={styles.membershipInfo}>
                 <Image
                   source={require("../../public/images/membership.png")}
                   style={styles.membershipImage}
-                  style={styles.membershipImage}
                   resizeMode="contain"
                 />
-                <Text style={styles.membershipDescription}>
                 <Text style={styles.membershipDescription}>
                   Earn Bitcoin and other rewards simply by using our membership
                   cards when you visit your favorite restaurants.
@@ -353,7 +280,6 @@ const Page = () => {
                 variant="primary"
                 textStyle="primary"
                 onPress={toggleBottomSheet}
-                style={styles.modalButton}
                 style={styles.modalButton}
               >
                 <Text>Got it</Text>
@@ -461,147 +387,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalHeader: {
-    paddingVertical: 8,
-    justifyContent: "center",
-    alignContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  modalTitle: {
-    ...H6,
-    color: Color.base.White,
-  },
-  closeButton: {
-    backgroundColor: Color.Gray.gray400,
-    borderRadius: 48,
-    padding: 8,
-    width: 32,
-    alignContent: "center",
-    alignItems: "center",
-    justifyContent: "center",
-    aspectRatio: 1,
-    position: "absolute",
-    left: 55,
-    top: -18,
-  },
-  balanceImage: {
-    height: 64,
-    width: 204,
-  },
-  modalDescription: {
-    ...BODY_2_REGULAR,
-    textAlign: "center",
-    color: Color.Gray.gray50,
-  },
-  modalButton: {
-    width: "100%",
- },
-  membershipInfo: {
-    alignItems: "center",
-    gap: 16,
-  },
-  membershipImage: {
-    width: width / 1.8,
-    height: 166,
-  },
-  membershipDescription: {
-    ...BODY_2_REGULAR,
-    color: Color.Gray.gray50,
-    textAlign: "center",
-  },
-  scrollContainer: {
-    flex: 1,
-  },
-  featuredContainer: {
-    marginTop: 16,
-    gap: 12,
-  },
-  featuredText: {
-    ...BODY_2_MEDIUM,
-    color: Color.Gray.gray100,
-    paddingHorizontal: 16,
-  },
-  scrollViewContainer: {
-    alignItems: "center",
-    gap: 8,
-    width,
-  },
-  scrollViewContent: {
-    flexDirection: "row",
-    gap: 8,
-    left: 16,
-    paddingRight: 32,
-  },
-  flatList: {
-    gap: 10,
-    flex: 1,
-  },
-  separator: {
-    width: 8,
-  },
-  membershipsContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 24,
-    marginBottom: 12,
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-  },
-  membershipsText: {
-    ...BODY_2_MEDIUM,
-    color: Color.Gray.gray100,
-  },
-  stackedCardContainer: {
-    paddingHorizontal: 16,
-  },
-  seeAllContainer: {
-    width: "100%",
-    alignItems: "center",
-    marginBottom: 120,
-  },
-  seeAllButton: {
-    backgroundColor: Color.Gray.gray300,
-    marginTop: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 32,
-  },
-  seeAllText: {
-    color: Color.base.White,
-    ...BUTTON_40,
-  },
-  modalBackground: {
-    flex: 1,
-  },
-  modalOverlay: {
-    position: "absolute",
-    backgroundColor: "rgba(0, 0, 0, 0.25)",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: 98,
-  },
-  modalContent: {
-    backgroundColor: Color.Gray.gray600,
-    height: height / 2.20,
-    bottom: 0,
-    width: width,
-    zIndex: 99,
-    position: "absolute",
-    borderTopStartRadius: 32,
-    borderTopEndRadius: 32,
-    gap: 24,
-    padding: 16,
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  modalHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingVertical: 8,
     paddingHorizontal: 16,
+    width: "100%",
   },
   filler: {
     flex: 1,
@@ -612,10 +403,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     flex: 8,
   },
-  closeButtonContainer: {
-    flex: 1,
-    alignItems: "flex-end",
-  },
   closeButton: {
     backgroundColor: Color.Gray.gray400,
     borderRadius: 48,
@@ -636,7 +423,7 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     width: "100%",
- },
+  },
   membershipInfo: {
     alignItems: "center",
     gap: 16,

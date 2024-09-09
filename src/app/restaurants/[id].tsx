@@ -40,7 +40,6 @@ import { height, width } from "@/lib/utils";
 import moment from "moment";
 import { BODY_2_REGULAR, BUTTON_48, H6 } from "@/constants/typography";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const Restaurant = () => {
   const { id } = useLocalSearchParams();

@@ -277,7 +277,6 @@ that information is inaccurate or incomplete.
   return (
     <>
       <SafeAreaView style={{flex: 1}}>
-      <SafeAreaView style={{flex: 1}}>
       <Header
         title="Privacy policy & Settings"
         titleStyle={{ fontFamily: "Sora", fontWeight: 600 }}

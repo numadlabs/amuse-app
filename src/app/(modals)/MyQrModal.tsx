@@ -22,7 +22,6 @@ import QRCode from "react-native-qrcode-svg";
 import { BODY_2_REGULAR, H6 } from "@/constants/typography";
 import Config from "config";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const socket = io(Config.apiUrl, { transports: ["websocket"] });
 const { width } = Dimensions.get("window");
@@ -86,49 +85,49 @@ const MyQrModal = () => {
     },
   });
 
-  useEffect(() => {
-    let isActive = true;
-    setLoading(true);
+  // useEffect(() => {
+  //   let isActive = true;
+  //   setLoading(true);
 
-    const setupSocket = () => {
-      if (!socket.connected) {
-        socket.connect();
-      }
+  //   const setupSocket = () => {
+  //     if (!socket.connected) {
+  //       socket.connect();
+  //     }
 
-      const onConnect = () => {
-        console.log("Connected to server");
-        socket.emit("register", userId);
-      };
+  //     const onConnect = () => {
+  //       console.log("Connected to server");
+  //       socket.emit("register", userId);
+  //     };
 
-      const onTapScan = (data) => {
-        if (isActive) {
-          console.log("Tap scan received:", data);
-          handleTapScan(data);
-        }
-      };
+  //     const onTapScan = (data) => {
+  //       if (isActive) {
+  //         console.log("Tap scan received:", data);
+  //         handleTapScan(data);
+  //       }
+  //     };
 
-      socket.on("connect", onConnect);
-      socket.on("tap-scan", onTapScan);
+  //     socket.on("connect", onConnect);
+  //     socket.on("tap-scan", onTapScan);
 
-      if (socket.connected) {
-        onConnect();
-      }
+  //     if (socket.connected) {
+  //       onConnect();
+  //     }
 
-      return () => {
-        socket.off("connect", onConnect);
-        socket.off("tap-scan", onTapScan);
-      };
-    };
+  //     return () => {
+  //       socket.off("connect", onConnect);
+  //       socket.off("tap-scan", onTapScan);
+  //     };
+  //   };
 
-    const cleanupSocket = setupSocket();
+  //   const cleanupSocket = setupSocket();
 
-    createTapMutation();
+  //   createTapMutation();
 
-    return () => {
-      isActive = false;
-      cleanupSocket();
-    };
-  }, [userId, handleTapScan, createTapMutation]);
+  //   return () => {
+  //     isActive = false;
+  //     cleanupSocket();
+  //   };
+  // }, [userId, handleTapScan, createTapMutation]);
 
   return (
     <>
