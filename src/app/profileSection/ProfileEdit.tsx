@@ -29,6 +29,8 @@ interface User {
   nickname?: string;
   email?: string;
   location?: string;
+  birthMonth?: number;
+  birthYear?: number;
   countryName?: string;
   profilePicture?: string;
   dateOfBirth?: string;
@@ -55,6 +57,12 @@ const ProfileEdit: React.FC = () => {
 
   const user = userResponse?.user || {};
   const queryClient = useQueryClient();
+
+  const formatBirthday = (month?: number, year?: number) => {
+    if (!month || !year) return "Not set";
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return `${monthNames[month - 1]} ${year}`;
+  };
 
   const handleNavigation = (field: keyof User, screenName: string) => {
     if ((field === 'location' && !showArea) || (field === 'dateOfBirth' && !showDateOfBirth)) {
@@ -204,7 +212,7 @@ const ProfileEdit: React.FC = () => {
           <FieldItem
             icon={<Cake color={Color.Gray.gray50} />}
             label="Birthday"
-            value={formatDate(user.dateOfBirth)}
+            value={formatBirthday(user.birthMonth, user.birthYear)}
             onPress={() => handleNavigation('dateOfBirth', 'Birthday')}
             disabled={!showDateOfBirth}
           />
