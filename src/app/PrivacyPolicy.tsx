@@ -123,7 +123,7 @@ const TermsAndConditions = () => {
           break;
         case "dateOfBirth":
           setShowDateOfBirth(false);
-          dataToUpdate = { dateOfBirth: "" };
+          dataToUpdate = { birthYear: "", birthMonth: "" };
           break;
         case "area":
           setShowArea(false);

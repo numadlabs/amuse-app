@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Platform } from "react-native";
+import { View, Text, StyleSheet, Platform, ScrollView } from "react-native";
 import React from "react";
 import Header from "@/components/layout/Header";
 import Color from "@/constants/Color";
@@ -25,22 +25,57 @@ const TermsAndCondo = () => {
     <SafeAreaView style={{flex: 1}}>
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
       <Header title="Terms and Conditions" />
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         {/* {data.map((item, index) => (
           <Accordion key={index} title={item.title} text={item.text} />
         ))} */}
-        <Text
-          style={{ color: Color.Gray.gray50, ...BODY_2_REGULAR, marginTop: 16 }}
-        >
-          This app is a proof of concept. Any images, locations, rewards, and
-          offers are purely for demonstration purposes and do not construe any
-          sort of commitment. No Bitcoin, rewards, or perks listed in this app
-          are redeemable in any physical location.{"\n"}
-          {"\n"}
-          This proof of concept app is confidential. Reproduction, publication,
-          or dissemination is strictly prohibited.
-        </Text>
-      </View>
+          <Text style={styles.paragraph}>
+                      Welcome to Amuse Bouche! We are excited to welcome you to our growing community! {"\n"}
+                    </Text>
+                    <Text style={styles.paragraph}>
+                      We’re thrilled to have you join our Pilot Program, and we greatly
+                      appreciate your participation. This program allows us to refine Amuse
+                      Bouche’s features, ensuring it becomes the best experience possible
+                      for our entire community, including you!
+                    </Text>
+
+                    <Text style={styles.paragraph}>
+                      Here at Amuse Bouche, we value transparency with our users. So,
+                      please note that while using the Amuse Bouche Application, certain
+                      user data will be collected. To enable account creation and continued
+                      user access, it is necessary that user email data is collected.
+                      Additionally, user experience is unique to each location, which
+                      requires user location data to also be collected.
+                    </Text>
+
+                    <Text style={styles.paragraph}>
+                      Aside from user email and location data collection, the rest is up to
+                      you! You can opt to allow the collection of data such as your birthday
+                      and profile picture. Opting-in allows us here at Amuse Bouche to
+                      continue to improve the Application so we can provide a more
+                      seamless and tailored user experience for you.
+                    </Text>
+
+                    <Text style={styles.paragraph}>
+                      Your privacy is important, and what data you choose to disclose is
+                      totally up to you! To change your data collection preferences, you can
+                      go to the privacy section of the settings menu and view the data
+                      collection options.
+                    </Text>
+
+                    <Text style={styles.paragraph}>
+                      One final note, to ensure security and smooth operations during the
+                      Pilot Program, some features will be limited. Specifically, you won’t be
+                      able to withdraw or transfer any bitcoin earned until the Pilot Program
+                      ends. We’ll notify all users via email and app notification as soon as
+                      the Pilot Program is completed.
+                    </Text>
+
+                    <Text style={[styles.paragraph, { marginTop: 44 }]}>
+                      We are excited to have you as a part of our growing community!
+                    </Text>
+
+      </ScrollView>
     </View>
     </SafeAreaView>
   );
@@ -55,5 +90,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     flexDirection: "column",
     gap: 16,
+  },
+  paragraph: {
+    lineHeight: 18,
+    fontSize: 14,
+    marginTop: 24,
+    color: Color.Gray.gray100, // Assuming this is close to Color.Gray.gray100
+    marginBottom: 5, // Adding some space between paragraphs
   },
 });
