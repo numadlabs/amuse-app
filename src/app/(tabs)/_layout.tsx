@@ -40,14 +40,7 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   const { mutateAsync: sendPushToken } = useMutation({
     mutationFn: registerDeviceNotification,
   });
-
-  // const [fontsLoaded] = useFonts({
-  //   Sora: require("@/public/fonts/Sora-Regular.otf"),
-  //   SoraBold: require("@/public/fonts/Sora-Bold.otf"),
-  //   SoraMedium: require("@/public/fonts/Sora-Medium.otf"),    
-  //   SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),   
-  // });
-
+  
   const prepareApp = useCallback(async () => {
     try {
       if (!__DEV__) {
@@ -83,13 +76,6 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
       await getLocation();
       setLoadingStates(prev => ({ ...prev, location: false }));
 
-      if (isLocationPermissionDenied) {
-        Alert.alert(
-          "Location Permission Denied",
-          "Location access is not available. The app will use a default location in Prague, Czechia. Some features may be limited.",
-          [{ text: "OK" }]
-        );
-      }
     } catch (error) {
       console.error("Error preparing app:", error);
     }

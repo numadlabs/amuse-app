@@ -216,51 +216,86 @@ export default function RestaurantMapView() {
     return (
       <View style={styles.container}>
         <MapView
+          ref={mapRef}
           style={styles.map}
           provider={PROVIDER_GOOGLE}
-          initialRegion={{
-            latitude: 50.0755,
-            longitude: 14.4378,
-            latitudeDelta: 0.1,
-            longitudeDelta: 0.1,
-          }}
+          initialRegion={initialRegion}
           customMapStyle={mapStyle}
         >
-          {restaurantsData?.data?.restaurants.map((restaurant, index) => {
-            return (
-              <Marker
-                key={`marker-${index}`}
-                hitSlop={{ top: 40, bottom: 40, left: 40, right: 40 }}
-                coordinate={{
-                  latitude: restaurant.latitude,
-                  longitude: restaurant.longitude,
-                }}
-                onPress={() => handleMarkerPress(restaurant)}
-              >
-                {activeMarker?.id === restaurant.id ? (
-                  <SvgMarker
-                    key={restaurant.id as string}
-                    imageUrl={
-                      `${SERVER_SETTING.CDN_LINK}${restaurant?.logo}` as string
-                    }
-                  />
-                ) : (
-                  <View
-                    style={{
-                      width: 8,
-                      height: 8,
-                      padding: 4,
-                      backgroundColor: Color.base.White,
-                      borderRadius: 48,
-                    }}
-                  />
-                )}
-              </Marker>
-            );
-          })}
-
-
+          {restaurantsData?.data?.restaurants.map((restaurant, index) => (
+            <Marker
+              key={`marker-${index}`}
+              hitSlop={{ top: 40, bottom: 40, left: 40, right: 40 }}
+              coordinate={{
+                latitude: restaurant.latitude,
+                longitude: restaurant.longitude,
+              }}
+              onPress={() => handleMarkerPress(restaurant)}
+            >
+              {activeMarker?.id === restaurant.id ? (
+                <SvgMarker
+                  key={restaurant.id as string}
+                  imageUrl={
+                    `${SERVER_SETTING.CDN_LINK}${restaurant?.logo}` as string
+                  }
+                />
+              ) : (
+                <View
+                  style={{
+                    width: 8,
+                    height: 8,
+                    padding: 4,
+                    backgroundColor: Color.base.White,
+                    borderRadius: 48,
+                  }}
+                />
+              )}
+            </Marker>
+          ))}
         </MapView>
+
+        <Animated.ScrollView
+          ref={scrollViewRef}
+          horizontal
+          pagingEnabled
+          scrollEventThrottle={400}
+          showsHorizontalScrollIndicator={false}
+          snapToInterval={CARD_WIDTH + 20}
+          snapToAlignment="center"
+          style={styles.scrollView}
+          contentInset={{
+            top: 0,
+            left: SPACING_FOR_CARD_INSET,
+            bottom: 10,
+            right: SPACING_FOR_CARD_INSET,
+          }}
+          onMomentumScrollEnd={() => setIsScrollViewDragging(false)}
+          onScrollBeginDrag={() => setIsScrollViewDragging(true)}
+          contentContainerStyle={{
+            paddingHorizontal:
+              Platform.OS === "android" ? SPACING_FOR_CARD_INSET : 0,
+          }}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { x: mapAnimation } } }],
+            { useNativeDriver: true, listener: handleScrollViewScroll }
+          )}
+          decelerationRate={0.1}
+        >
+          {!scrollViewHidden &&
+            restaurantsData?.data?.restaurants &&
+            restaurantsData.data.restaurants.map((marker, index) => (
+              <TouchableOpacity
+                key={`card-${marker.id}`}
+                onPress={() => handleNavigation(marker)}
+              >
+                <FloatingRestaurantCard
+                  key={marker.id as string}
+                  marker={marker}
+                  onPress={() => handleNavigation(marker)}
+                />
+              </TouchableOpacity>
+            ))}
+        </Animated.ScrollView>
       </View>
     );
   }
