@@ -29,6 +29,7 @@ interface User {
   nickname?: string;
   email?: string;
   location?: string;
+  countryName?: string;
   profilePicture?: string;
   dateOfBirth?: string;
 }
@@ -195,7 +196,7 @@ const ProfileEdit: React.FC = () => {
           <FieldItem
             icon={<Location color={Color.Gray.gray50} />}
             label="Area"
-            value={user.location || "Not set"}
+            value={user.countryName || "Not set"}
             onPress={() => handleNavigation('location', 'Area')}
             disabled={!showArea}
           />
