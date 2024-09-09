@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Redirect, Tabs, router } from "expo-router";
-import { View, TouchableOpacity } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, TouchableOpacity, Alert } from "react-native";
 import Footer from "@/components/layout/Footer";
 import { Notification, User } from "iconsax-react-native";
 import Logo from "@/components/icons/Logo";
@@ -9,12 +8,10 @@ import Color from "@/constants/Color";
 import { useAuth } from "@/context/AuthContext";
 import useLocationStore from "@/lib/store/userLocation";
 import * as Updates from "expo-updates";
-import { useFonts } from "expo-font";
 import SplashScreenAnimated from "../SplashScreenAnimated";
 import { usePushNotifications } from "@/hooks/usePushNotification";
 import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
-import * as Location from "expo-location";
 
 type LayoutProps = {
   navigation: any;
@@ -27,12 +24,10 @@ type LoadingStates = {
   fonts: boolean;
 };
 
-const PUSH_TOKEN_KEY = '@PushToken';
-
 const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState<boolean>(false);
-  const { currentLocation, permissionStatus, getLocation } = useLocationStore();
+  const { getLocation, currentLocation, isLocationPermissionDenied } = useLocationStore();
   const { expoPushToken } = usePushNotifications();
   const [loadingStates, setLoadingStates] = useState<LoadingStates>({
     updates: false,
@@ -72,25 +67,18 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
 
       if (expoPushToken?.data) {
         setLoadingStates(prev => ({ ...prev, pushNotification: true }));
-        const storedToken = await AsyncStorage.getItem(PUSH_TOKEN_KEY);
-        if (storedToken !== expoPushToken.data) {
-          await sendPushToken({ pushToken: expoPushToken.data });
-          await AsyncStorage.setItem(PUSH_TOKEN_KEY, expoPushToken.data);
-        }
+        await sendPushToken({ pushToken: expoPushToken.data });
         setLoadingStates(prev => ({ ...prev, pushNotification: false }));
       }
 
-      if (currentLocation == null) {
-        setLoadingStates(prev => ({ ...prev, location: true }));
-        await getLocation();
-        if(permissionStatus === Location.PermissionStatus.DENIED)
-       
-        setLoadingStates(prev => ({ ...prev, location: false }));
-      }
+      setLoadingStates(prev => ({ ...prev, location: true }));
+      await getLocation();
+      setLoadingStates(prev => ({ ...prev, location: false }));
+
     } catch (error) {
       console.error("Error preparing app:", error);
     }
-  }, [expoPushToken, currentLocation, getLocation, sendPushToken]);
+  }, [expoPushToken, getLocation, sendPushToken, isLocationPermissionDenied]);
 
   useEffect(() => {
     prepareApp();
@@ -101,10 +89,10 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    if (!authState.loading && currentLocation !== null) {
+    if (!authState.loading) {
       setAppIsReady(true);
     }
-  }, [authState.loading, currentLocation]);
+  }, [authState.loading]);
 
   if (!appIsReady) {
     return <SplashScreenAnimated loadingStates={loadingStates} />;

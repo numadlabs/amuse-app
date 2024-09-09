@@ -8,10 +8,11 @@ import {
   Modal,
   Switch,
   ActivityIndicator,
+  Dimensions,
+  Platform,
 } from "react-native";
 import Header from "@/components/layout/Header";
 import Color from "@/constants/Color";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { BODY_1_REGULAR, H6 } from "@/constants/typography";
 import Animated, {
   FadeIn,
@@ -25,8 +26,6 @@ import Animated, {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Accordion from "@/components/ui/Accordion";
 import { DocumentDownload, Warning2, CloseCircle } from "iconsax-react-native";
-import { height, width } from "@/lib/utils";
-import Close from "@/components/icons/Close";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { useAuth } from "@/context/AuthContext";
@@ -37,7 +36,9 @@ import { router } from "expo-router";
 import { SERVER_SETTING } from "@/constants/serverSettings";
 import { userKeys } from "@/lib/service/keysHelper";
 
-const TermsAndCondo = () => {
+const { width, height } = Dimensions.get('window');
+
+const TermsAndConditions = () => {
   const [showProfilePicture, setShowProfilePicture] = useState(true);
   const [showDateOfBirth, setShowDateOfBirth] = useState(true);
   const [showArea, setShowArea] = useState(true);
@@ -79,11 +80,7 @@ const TermsAndCondo = () => {
   const getSetting = async (key, setter) => {
     try {
       const data = await AsyncStorage.getItem(key);
-      if (data === null) {
-        setter(true);
-      } else {
-        setter(data === "true");
-      }
+      setter(data === null ? true : data === "true");
     } catch (error) {
       console.error(`Error getting ${key} setting:`, error);
     }
@@ -97,23 +94,19 @@ const TermsAndCondo = () => {
 
   const handleToggle = (setting, value) => {
     if (value) {
-      // If turning on, just update the state and save the setting
+      saveSetting(`show${setting.charAt(0).toUpperCase() + setting.slice(1)}`, true);
       switch (setting) {
         case "profilePicture":
           setShowProfilePicture(true);
-          saveSetting("showProfilePicture", true);
           break;
         case "dateOfBirth":
           setShowDateOfBirth(true);
-          saveSetting("showDateOfBirth", true);
           break;
         case "area":
           setShowArea(true);
-          saveSetting("showArea", true);
           break;
       }
     } else {
-      // If turning off, show the bottom tab
       setCurrentSetting(setting);
       setIsBottomTabOpen(true);
     }
@@ -126,17 +119,14 @@ const TermsAndCondo = () => {
       switch (currentSetting) {
         case "profilePicture":
           setShowProfilePicture(false);
-          saveSetting("showProfilePicture", false);
           dataToUpdate = { profilePicture: "" };
           break;
         case "dateOfBirth":
           setShowDateOfBirth(false);
-          saveSetting("showDateOfBirth", false);
           dataToUpdate = { dateOfBirth: "" };
           break;
         case "area":
           setShowArea(false);
-          saveSetting("showArea", false);
           dataToUpdate = { location: "" };
           break;
       }
@@ -146,7 +136,7 @@ const TermsAndCondo = () => {
       });
 
       queryClient.invalidateQueries({ queryKey: userKeys.info });
-      saveSetting(currentSetting, false);
+      saveSetting(`show${currentSetting.charAt(0).toUpperCase() + currentSetting.slice(1)}`, false);
     } catch (error) {
       console.error(`Error updating ${currentSetting}:`, error);
     } finally {
@@ -154,21 +144,15 @@ const TermsAndCondo = () => {
       setIsBottomTabOpen(false);
     }
   };
+
   const cancelToggleOff = () => {
     setIsBottomTabOpen(false);
   };
 
   const generateCSV = (userData) => {
     const headers = [
-      "Nickname",
-      "Email",
-      "Location",
-      "Date of Birth",
-      "Balance",
-      "Converted Balance",
-      "Created At",
-      "Visit Count",
-      "Profile Picture Link",
+      "Nickname", "Email", "Location", "Date of Birth", "Balance",
+      "Converted Balance", "Created At", "Visit Count", "Profile Picture Link"
     ];
 
     const profilePicLink = userData.user.profilePicture
@@ -215,15 +199,36 @@ const TermsAndCondo = () => {
     setLoading(true);
     try {
       await deleteUserMutation();
-      setLoading(false);
-      setIsDeleteModalOpen(false);
       router.replace("/Login");
     } catch (error) {
       console.error("Error deleting user:", error);
-      setLoading(false);
       alert("Failed to delete user account");
+    } finally {
+      setLoading(false);
+      setIsDeleteModalOpen(false);
     }
   };
+
+  const renderToggleItem = (label, value, onValueChange) => (
+    <View style={styles.item}>
+      <Text style={styles.label}>{label}</Text>
+      <Switch
+        trackColor={{ false: Color.Gray.gray300, true: Color.System.systemSuccess }}
+        thumbColor={value ? Color.base.White : Color.Gray.gray100}
+        value={value}
+        onValueChange={onValueChange}
+      />
+    </View>
+  );
+
+  const renderButton = (onPress, icon, text, style) => (
+    <TouchableOpacity style={style} onPress={onPress}>
+      <View style={styles.buttonContent}>
+        {icon}
+        <Text style={styles.buttonText}>{text}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   const data = [
     {
@@ -281,8 +286,8 @@ that information is inaccurate or incomplete.
       />
       <View style={styles.container}>
         <ScrollView style={styles.scrollViewContainer}>
-          <Text style={[styles.header, { fontSize: 16 }]}>Disclaimer</Text>
-          <Text style={[styles.body, { fontSize: 12 }]}>
+          <Text style={styles.sectionHeader}>Disclaimer</Text>
+          <Text style={styles.sectionBody}>
             By using the Amuse Bouche application platform ("Platform"), you agree to the collection
             and use of information in accordance with this policy.
           </Text>
@@ -293,230 +298,97 @@ that information is inaccurate or incomplete.
             </View>
           ))}
 
-          <Text style={[styles.header, { fontSize: 16 }]}>Optional Data</Text>
-          <Text style={[styles.body, { fontSize: 12 }]}>
+          <Text style={styles.sectionHeader}>Optional Data</Text>
+          <Text style={styles.sectionBody}>
             To maintain data privacy, you have the option to disable specific fields.
           </Text>
 
-          <View style={styles.item}>
-            <Text style={styles.label}>Profile picture</Text>
-            <Switch
-              trackColor={{ false: Color.Gray.gray300, true: Color.System.systemSuccess }}
-              thumbColor={showProfilePicture ? Color.base.White : Color.Gray.gray100}
-              value={showProfilePicture}
-              onValueChange={(value) => handleToggle('profilePicture', value)}
-            />
-          </View>
-          <View style={styles.item}>
-            <Text style={styles.label}>Date of birth</Text>
-            <Switch
-              trackColor={{ false: Color.Gray.gray300, true: Color.System.systemSuccess }}
-              thumbColor={showDateOfBirth ? Color.base.White : Color.Gray.gray100}
-              value={showDateOfBirth}
-              onValueChange={(value) => handleToggle('dateOfBirth', value)}
-            />
-          </View>
-          <View style={styles.item}>
-            <Text style={styles.label}>Area</Text>
-            <Switch
-              trackColor={{ false: Color.Gray.gray300, true: Color.System.systemSuccess }}
-              thumbColor={showArea ? Color.base.White : Color.Gray.gray100}
-              value={showArea}
-              onValueChange={(value) => handleToggle('area', value)}
-            />
-          </View>
+          {renderToggleItem("Profile picture", showProfilePicture, (value) => handleToggle('profilePicture', value))}
+          {renderToggleItem("Date of birth", showDateOfBirth, (value) => handleToggle('dateOfBirth', value))}
+          {renderToggleItem("Area", showArea, (value) => handleToggle('area', value))}
 
-          <TouchableOpacity
-            style={{
-              marginTop: 24,
-            }}
-            onPress={() => exportUserData()}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                paddingVertical: 12,
-                borderWidth: 1,
-                borderColor: Color.Gray.gray400,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 48,
-                gap: 12,
-              }}
-            >
-              <DocumentDownload size={24} color={Color.base.White} />
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontWeight: "600",
-                  lineHeight: 24,
-                  color: Color.base.White,
-                }}
-              >
-                Download Data
-              </Text>
-            </View>
-          </TouchableOpacity>
-          
-          <TouchableOpacity
-            style={{
-              marginTop: 12,
-            }}
-            onPress={() => setIsDeleteModalOpen(true)}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                paddingVertical: 12,
-                borderWidth: 1,
-                borderColor: Color.System.systemError,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 48,
-                gap: 12,
-                marginBottom: 40,
-              }}
-            >
-              <CloseCircle size={24} color={Color.System.systemError} />
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontWeight: "600",
-                  lineHeight: 24,
-                  color: Color.System.systemError,
-                }}
-              >
-                Delete Account
-              </Text>
-            </View>
-          </TouchableOpacity>
+          {renderButton(
+            exportUserData,
+            <DocumentDownload size={24} color={Color.base.White} />,
+            "Download Data",
+            styles.downloadButton
+          )}
+
+          {renderButton(
+            () => setIsDeleteModalOpen(true),
+            <CloseCircle size={24} color={Color.System.systemError} />,
+            "Delete Account",
+            styles.deleteButton
+          )}
         </ScrollView>
       </View>
 
-      {isBottomTabOpen && (
-        <Modal transparent={true}>
-          <Animated.View
-            entering={FadeIn}
-            exiting={FadeOut}
-            style={[
-              {
-                position: "absolute",
-                backgroundColor: "rgba(0, 0, 0, 0.25)",
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                zIndex: 98,
-              },
-              animatedStyles,
-            ]}
-          />
-          <Animated.View
-            entering={SlideInDown.springify().damping(18)}
-            exiting={SlideOutDown.springify()}
-            style={[
-              {
-                backgroundColor: Color.Gray.gray600,
-                bottom: 0,
-                width: width,
-                zIndex: 99,
-                position: "absolute",
-                borderTopStartRadius: 32,
-                borderTopEndRadius: 32,
-                gap: 24,
-                padding: 16,
-              },
-              animatedStyles,
-            ]}
-          >
-            <View style={styles.bottomTabContent}>
-              <Warning2 size={62} color={Color.System.systemWarning} />
-              <View style={{alignItems:'center', gap:8}}>
-                <Text style={styles.bottomTabTitle}>Are you sure?</Text>
-                <Text style={styles.bottomTabText}>
-                  This action will permanently delete the information you've provided.
-                </Text>
-              </View>
-              <View style={styles.bottomTabButtons}>
-                <TouchableOpacity style={styles.cancelButton} onPress={cancelToggleOff}>
-                  <Text style={styles.buttonText}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.confirmButton} onPress={confirmToggleOff}>
-                  <Text style={styles.buttonText}>Yes, Turn off</Text>
-                </TouchableOpacity>
-              </View>
+      <Modal transparent={true} visible={isBottomTabOpen}>
+        <Animated.View
+          entering={FadeIn}
+          exiting={FadeOut}
+          style={[styles.modalOverlay, animatedStyles]}
+        />
+        <Animated.View
+          entering={SlideInDown.springify().damping(18)}
+          exiting={SlideOutDown.springify()}
+          style={[styles.bottomTab, animatedStyles]}
+        >
+          <View style={styles.bottomTabContent}>
+            <Warning2 size={62} color={Color.System.systemWarning} />
+            <View style={{ alignItems: 'center', gap: 8 }}>
+              <Text style={styles.bottomTabTitle}>Are you sure?</Text>
+              <Text style={styles.bottomTabText}>
+                This action will permanently delete the information you've provided.
+              </Text>
             </View>
-          </Animated.View>
-        </Modal>
-      )}
-      {isDeleteModalOpen && (
-        <Modal transparent={true}>
-          <Animated.View
-            entering={FadeIn}
-            exiting={FadeOut}
-            style={[
-              {
-                position: "absolute",
-                backgroundColor: "rgba(0, 0, 0, 0.25)",
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                zIndex: 98,
-              },
-              animatedStyles,
-            ]}
-          />
-          <Animated.View
-            entering={SlideInDown.springify().damping(18)}
-            exiting={SlideOutDown.springify()}
-            style={[
-              {
-                backgroundColor: Color.Gray.gray600,
-                height: height / 2,
-                bottom: 0,
-                width: width,
-                zIndex: 99,
-                position: "absolute",
-                borderTopStartRadius: 32,
-                borderTopEndRadius: 32,
-                gap: 24,
-                padding: 16,
-              },
-              animatedStyles,
-            ]}
-          >
-            <View style={styles.bottomTabContent}>
-              <CloseCircle size={96} color={Color.System.systemError} />
-              <View style={{alignItems:'center', gap:8}}>
-                <Text style={styles.bottomTabTitle}>Delete Account</Text>
-                <Text style={styles.bottomTabText}>
-                  Are you sure you want to delete your account? This action cannot be undone.
-                </Text>
-              </View>
-              <View style={styles.bottomTabButtons}>
-                <TouchableOpacity style={styles.cancelButton} onPress={() => setIsDeleteModalOpen(false)}>
-                  <Text style={styles.buttonText}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.confirmButton} onPress={handleDeleteUser}>
-                  <Text style={styles.buttonText}>Yes, Delete</Text>
-                </TouchableOpacity>
-              </View>
+            <View style={styles.bottomTabButtons}>
+              {renderButton(cancelToggleOff, null, "Cancel", styles.cancelButton)}
+              {renderButton(confirmToggleOff, null, "Yes, Turn off", styles.confirmButton)}
             </View>
+          </View>
+        </Animated.View>
+      </Modal>
+
+      <Modal transparent={true} visible={isDeleteModalOpen}>
+        <Animated.View
+          entering={FadeIn}
+          exiting={FadeOut}
+          style={[StyleSheet.absoluteFill, styles.modalOverlay]}
+        />
+        <Animated.View
+          entering={SlideInDown.springify().damping(18)}
+          exiting={SlideOutDown.springify()}
+          style={[styles.modalContent, { width: width }]}
+        >
+          <View style={styles.iconContainer}>
+            <CloseCircle size={96} color={Color.System.systemError} />
+          </View>
+          <Text style={styles.bottomTabTitle}>IMPORTANT NOTICE</Text>
+
+            <Text style={styles.bottomTabText}>
+              The Pilot Program for Amuse Bouche is still ongoing. If you proceed with deleting your account, you will forfeit all bitcoin accumulated in your Amuse Bouche account. Once deleted, you will not be able to recover or transfer your bitcoin.
+            </Text>
+            <Text style={styles.bottomTabText}>
+              However, your bitcoin will not be forfeited if you maintain your account until the completion of the Pilot Program and the full launch of the Application. You will then be able to transfer your bitcoin at your discretion. Please note that deleting your account will also result in the permanent erasure of all your data. By deleting your account, you acknowledge and accept these terms.
+            </Text>
+          <View style={styles.bottomTabButtons}>
+            {renderButton(() => setIsDeleteModalOpen(false), null, "Cancel", styles.cancelButton)}
+            {renderButton(handleDeleteUser, null, "Delete My Account", styles.confirmButton)}
+          </View>
           </Animated.View>
-        </Modal>
-      )}
+      </Modal>
 
       {loading && (
-        <Modal style={styles.loadingOverlay}>
+        <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color={Color.base.White} />
-        </Modal>
+        </View>
       )}
     </>
   );
 };
 
-export default TermsAndCondo;
+export default TermsAndConditions;
 
 const styles = StyleSheet.create({
   container: {
@@ -526,25 +398,28 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   scrollViewContainer: {
+    flex: 1,
     borderRadius: 16,
-    paddingBottom: 60,
+    paddingVertical: 16,
     paddingHorizontal: 16,
-    overflow: "hidden",
-    borderWidth: 1,
+    marginBottom: 16,
     backgroundColor: Color.Gray.gray500,
     borderColor: Color.Gray.gray300,
+    borderWidth: 1,
   },
-  header: {
+  sectionHeader: {
     ...H6,
     color: Color.base.White,
     marginTop: 20,
+    fontSize: 16,
   },
-  body: {
+  sectionBody: {
     fontWeight: "400",
     fontFamily: "Sora",
     color: Color.Gray.gray50,
     lineHeight: 20,
     marginTop: 20,
+    fontSize: 12,
   },
   item: {
     flexDirection: 'row',
@@ -557,11 +432,50 @@ const styles = StyleSheet.create({
     color: Color.base.White,
     ...BODY_1_REGULAR,
   },
+  buttonContent: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 12,
+  },
+  buttonText: {
+    fontSize: Platform.OS === "ios" ? 13 : 15,
+    fontWeight: "600",
+    lineHeight: 24,
+    color: Color.base.White,
+  },
+  downloadButton: {
+    marginTop: 24,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
+    borderRadius: 48,
+  },
+  deleteButton: {
+    marginTop: 12,
+    marginBottom: 40,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: Color.System.systemError,
+    borderRadius: 48,
+  },
+  modalOverlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.25)",
+    zIndex: 98,
+  },
+  bottomTab: {
+    backgroundColor: Color.Gray.gray600,
+    bottom: 0,
+    width: width,
+    zIndex: 99,
+    position: "absolute",
+    borderTopStartRadius: 32,
+    borderTopEndRadius: 32,
+    padding: 16,
+  },
   bottomTabContent: {
-    flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
     gap: 32,
   },
   bottomTabTitle: {
@@ -569,6 +483,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: Color.base.White,
     marginBottom: 16,
+    textAlign: 'center',
   },
   bottomTabText: {
     fontSize: 14,
@@ -580,6 +495,7 @@ const styles = StyleSheet.create({
   bottomTabButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    width: '100%',
   },
   cancelButton: {
     paddingVertical: 12,
@@ -600,10 +516,19 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     alignItems: 'center',
   },
-  buttonText: {
-    color: Color.base.White,
-    fontSize: 16,
-    fontWeight: 'bold',
+  modalContent: {
+    backgroundColor: Color.Gray.gray600,
+    position: "absolute",
+    bottom: 0,
+    zIndex: 99,
+    borderTopStartRadius: 32,
+    borderTopEndRadius: 32,
+    padding: 16,
+    maxHeight: height * 0.9,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    marginBottom: 16,
   },
   loadingOverlay: {
     position: 'absolute',
