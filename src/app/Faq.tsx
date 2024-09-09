@@ -29,7 +29,6 @@ const Faq = () => {
   ];
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
     <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <Header title="FAQ" />
       <View style={styles.container}>
@@ -38,7 +37,6 @@ const Faq = () => {
         ))}
       </View>
     </View>
-    </SafeAreaView>
   );
 };
 
