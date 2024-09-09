@@ -397,45 +397,63 @@ function Login() {
                     borderTopRightRadius: 20,
                     padding: 20,
                     zIndex: 1000,
-                    marginTop:25,
+                    marginTop: 25,
                     flexGrow: 1
                   },
                   animatedStyles,
                 ]}
               >
-                <View style={{ flex: 1, justifyContent: 'space-between',  }}>
+                <View style={{ flex: 1, justifyContent: 'space-between', }}>
                   <ScrollView style={{ marginBottom: 20 }}>
                     <Text style={{ color: Color.base.White, ...BODY_2_REGULAR, fontSize: 24, lineHeight: 32, fontWeight: 'bold', textAlign: 'left' }}>
                       Welcome to {"\n"}Amuse Bouche!
                     </Text>
 
-                  
+
                     <Text style={styles.paragraph}>
                       Welcome to Amuse Bouche! We are excited to welcome you to our growing community! {"\n"}
                     </Text>
                     <Text style={styles.paragraph}>
-                      Here at Amuse Bouche, we value transparency with our users. So, please note that while
-                      using the Amuse Bouche Application, certain user data will be collected. To enable
-                      account creation and continued user access, it is necessary that user email data is
-                      collected. Additionally, user experience is unique to each location, which requires user
-                      location data to also be collected.
+                      We’re thrilled to have you join our Pilot Program, and we greatly
+                      appreciate your participation. This program allows us to refine Amuse
+                      Bouche’s features, ensuring it becomes the best experience possible
+                      for our entire community, including you!
                     </Text>
 
                     <Text style={styles.paragraph}>
-                      Aside from user email and location data collection, the rest is up to you! You can opt to
-                      allow the collection of data such as your birthday and profile picture. Opting-in allows us
-                      here at Amuse Bouche to continue to improve the application so we can provide a more
+                      Here at Amuse Bouche, we value transparency with our users. So,
+                      please note that while using the Amuse Bouche Application, certain
+                      user data will be collected. To enable account creation and continued
+                      user access, it is necessary that user email data is collected.
+                      Additionally, user experience is unique to each location, which
+                      requires user location data to also be collected.
+                    </Text>
+
+                    <Text style={styles.paragraph}>
+                      Aside from user email and location data collection, the rest is up to
+                      you! You can opt to allow the collection of data such as your birthday
+                      and profile picture. Opting-in allows us here at Amuse Bouche to
+                      continue to improve the Application so we can provide a more
                       seamless and tailored user experience for you.
                     </Text>
 
                     <Text style={styles.paragraph}>
-                      Your privacy is important, and what data you choose to disclose is totally up to you! To
-                      change your data collection preferences, you can go to the privacy section of the settings
-                      menu and view the data collection options.
+                      Your privacy is important, and what data you choose to disclose is
+                      totally up to you! To change your data collection preferences, you can
+                      go to the privacy section of the settings menu and view the data
+                      collection options.
                     </Text>
 
-                    <Text style={[styles.paragraph, {marginTop:44}]}>
-                      Thank you for choosing Amuse Bouche!
+                    <Text style={styles.paragraph}>
+                      One final note, to ensure security and smooth operations during the
+                      Pilot Program, some features will be limited. Specifically, you won’t be
+                      able to withdraw or transfer any bitcoin earned until the Pilot Program
+                      ends. We’ll notify all users via email and app notification as soon as
+                      the Pilot Program is completed.
+                    </Text>
+
+                    <Text style={[styles.paragraph, { marginTop: 44 }]}>
+                      We are excited to have you as a part of our growing community!
                     </Text>
 
 

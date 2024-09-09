@@ -107,7 +107,7 @@ const Restaurant = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <><SafeAreaView style={{ flex: 1 }}>
     <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <View style={styles.closeButtonContainer}>
         <TouchableOpacity
@@ -148,8 +148,7 @@ const Restaurant = () => {
                   isOpen={restaurantsData.isOpen}
                   isLoading={isLoading}
                   data={restaurantsData}
-                  marker={restaurantsData?.isOwned}
-                />
+                  marker={restaurantsData?.isOwned} />
               </Animated.View>
             ) : (
               <Animated.View
@@ -213,8 +212,7 @@ const Restaurant = () => {
                   zIndex: 98,
                 },
                 animatedStyles,
-              ]}
-            />
+              ]} />
             <Animated.View
               entering={SlideInDown.springify().damping(18)}
               exiting={SlideOutDown.springify()}
@@ -274,8 +272,7 @@ const Restaurant = () => {
                 <Image
                   source={require("@/public/images/perk.png")}
                   style={{ width: width / 1.2, height: 58 }}
-                  resizeMode="contain"
-                />
+                  resizeMode="contain" />
                 <Text
                   style={{
                     ...BODY_2_REGULAR,
@@ -300,6 +297,7 @@ const Restaurant = () => {
       )}
     </View>
     </SafeAreaView>
+    </>
   );
 };
 

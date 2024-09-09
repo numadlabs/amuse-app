@@ -61,10 +61,7 @@ const Profile = () => {
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
     queryFn: () => {
-      return getUserCard({
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
-      });
+      return getUserCard();
     },
     enabled: !!currentLocation,
   });
@@ -256,7 +253,7 @@ const Profile = () => {
                 <TouchableOpacity
                   style={styles.configContainer}
                   onPress={() =>
-                    Linking.openURL("mailto:itnumadlabs@gmail.com")
+                    Linking.openURL("mailto:info@amusebouche.io")
                   }
                 >
                   <View

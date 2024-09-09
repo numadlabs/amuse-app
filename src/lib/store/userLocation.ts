@@ -2,15 +2,17 @@ import { create } from "zustand";
 import * as Location from "expo-location";
 
 interface LocationState {
-  currentLocation: Location.LocationObject;
-  isLoading: boolean;
+  currentLocation: Location.LocationObject | null;
+  permissionStatus: Location.PermissionStatus | null;
+  isLocationPermissionDenied: boolean;
   getLocation: () => Promise<void>;
+  setLocationPermissionDenied: (denied: boolean) => void;
 }
 
-const PRAGUE_LOCATION: Location.LocationObject = {
+const DEFAULT_LOCATION: Location.LocationObject = {
   coords: {
-    latitude: 50.0755,
-    longitude: 14.4378,
+    latitude: 50.0755,  // Prague latitude
+    longitude: 14.4378, // Prague longitude
     altitude: null,
     accuracy: null,
     altitudeAccuracy: null,
@@ -21,25 +23,43 @@ const PRAGUE_LOCATION: Location.LocationObject = {
 };
 
 const useLocationStore = create<LocationState>((set) => ({
-  currentLocation: PRAGUE_LOCATION,
-  isLoading: false,
+  currentLocation: null,
+  permissionStatus: null,
+  isLocationPermissionDenied: false,
 
   getLocation: async () => {
-    set({ isLoading: true });
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === "granted") {
-        const location = await Location.getCurrentPositionAsync({});
-        set({ currentLocation: location, isLoading: false });
-      } else {
-        // Silently default to Prague if permission is denied
-        set({ currentLocation: PRAGUE_LOCATION, isLoading: false });
+      set({ permissionStatus: status });
+
+      if (status !== Location.PermissionStatus.GRANTED) {
+        console.log("Permission to access location was denied");
+        set({ 
+          isLocationPermissionDenied: true,
+          currentLocation: DEFAULT_LOCATION
+        });
+        return;
       }
+
+      const location = await Location.getCurrentPositionAsync({});
+      set({ 
+        currentLocation: location, 
+        isLocationPermissionDenied: false 
+      });
     } catch (error) {
       console.error("Error fetching location:", error);
-      // Silently default to Prague on any error
-      set({ currentLocation: PRAGUE_LOCATION, isLoading: false });
+      set({ 
+        isLocationPermissionDenied: true,
+        currentLocation: DEFAULT_LOCATION
+      });
     }
+  },
+
+  setLocationPermissionDenied: (denied: boolean) => {
+    set({ 
+      isLocationPermissionDenied: denied,
+      currentLocation: denied ? DEFAULT_LOCATION : null
+    });
   },
 }));
 

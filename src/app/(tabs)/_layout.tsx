@@ -7,13 +7,14 @@ import { Notification, User } from "iconsax-react-native";
 import Logo from "@/components/icons/Logo";
 import Color from "@/constants/Color";
 import { useAuth } from "@/context/AuthContext";
+import useLocationStore from "@/lib/store/userLocation";
 import * as Updates from "expo-updates";
 import { useFonts } from "expo-font";
 import SplashScreenAnimated from "../SplashScreenAnimated";
 import { usePushNotifications } from "@/hooks/usePushNotification";
 import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
-import ErrorBoundary from "../ErrorBoundary";
+import * as Location from "expo-location";
 
 type LayoutProps = {
   navigation: any;
@@ -22,6 +23,7 @@ type LayoutProps = {
 type LoadingStates = {
   updates: boolean;
   pushNotification: boolean;
+  location: boolean;
   fonts: boolean;
 };
 
@@ -30,10 +32,12 @@ const PUSH_TOKEN_KEY = '@PushToken';
 const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState<boolean>(false);
+  const { currentLocation, permissionStatus, getLocation } = useLocationStore();
   const { expoPushToken } = usePushNotifications();
   const [loadingStates, setLoadingStates] = useState<LoadingStates>({
     updates: false,
     pushNotification: false,
+    location: false,
     fonts: false,
   });
 
@@ -41,12 +45,12 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     mutationFn: registerDeviceNotification,
   });
 
-  const [fontsLoaded] = useFonts({
-    Sora: require("@/public/fonts/Sora-Regular.otf"),
-    SoraBold: require("@/public/fonts/Sora-Bold.otf"),
-    SoraMedium: require("@/public/fonts/Sora-Medium.otf"),
-    SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),
-  });
+  // const [fontsLoaded] = useFonts({
+  //   Sora: require("@/public/fonts/Sora-Regular.otf"),
+  //   SoraBold: require("@/public/fonts/Sora-Bold.otf"),
+  //   SoraMedium: require("@/public/fonts/Sora-Medium.otf"),    
+  //   SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),   
+  // });
 
   const prepareApp = useCallback(async () => {
     try {
@@ -82,44 +86,32 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         }
         setLoadingStates(prev => ({ ...prev, pushNotification: false }));
       }
+
+      if (currentLocation == null) {
+        setLoadingStates(prev => ({ ...prev, location: true }));
+        await getLocation();
+        if(permissionStatus === Location.PermissionStatus.DENIED)
+       
+        setLoadingStates(prev => ({ ...prev, location: false }));
+      }
     } catch (error) {
       console.error("Error preparing app:", error);
     }
-  }, [expoPushToken, sendPushToken]);
+  }, [expoPushToken, currentLocation, getLocation, sendPushToken]);
 
   useEffect(() => {
     prepareApp();
   }, [prepareApp]);
 
   useEffect(() => {
-    setLoadingStates(prev => ({ ...prev, fonts: !fontsLoaded }));
-  }, [fontsLoaded]);
+    setLoadingStates(prev => ({ ...prev }));
+  }, []);
 
   useEffect(() => {
-    if (!authState.loading && fontsLoaded) {
+    if (!authState.loading && currentLocation !== null) {
       setAppIsReady(true);
     }
-  }, [authState.loading, fontsLoaded]);
-
-  // Background location fetching
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   const fetchLocationInBackground = async () => {
-  //     if (!isLoading && isMounted) {
-  //       await getLocation();
-  //     }
-  //   };
-
-  //   if (appIsReady) {
-  //     fetchLocationInBackground();
-  //   }
-
-  //   return () => {
-  //     isMounted = false;
-  //   };
-  // }, [appIsReady, getLocation, isLoading]);
-
-
+  }, [authState.loading, currentLocation]);
 
   if (!appIsReady) {
     return <SplashScreenAnimated loadingStates={loadingStates} />;
@@ -130,42 +122,40 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   }
 
   return (
-    <ErrorBoundary>
-      <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
-        <Tabs.Screen
-          name="index"
-          options={{
-            headerStyle: {
-              shadowOpacity: 0,
-              backgroundColor: Color.Gray.gray600,
-            },
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => router.push("/profileSection/Profile")}
-              >
-                <View style={{ paddingHorizontal: 20 }}>
-                  <User color={Color.base.White} />
-                </View>
-              </TouchableOpacity>
-            ),
-            headerTitle: () => (
-              <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                <Logo />
+    <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
+      <Tabs.Screen
+        name="index"
+        options={{
+          headerStyle: {
+            shadowOpacity: 0,
+            backgroundColor: Color.Gray.gray600,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.push("/profileSection/Profile")}
+            >
+              <View style={{ paddingHorizontal: 20 }}>
+                <User color={Color.base.White} />
               </View>
-            ),
-            headerRight: () => (
-              <TouchableOpacity onPress={() => router.push("/Notification")}>
-                <View style={{ paddingHorizontal: 20 }}>
-                  <Notification color={Color.base.White} />
-                </View>
-              </TouchableOpacity>
-            ),
-            headerTitleAlign: "center",
-          }}
-        />
-        <Tabs.Screen name="Acards" options={{ headerShown: false }} />
-      </Tabs>
-    </ErrorBoundary>
+            </TouchableOpacity>
+          ),
+          headerTitle: () => (
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+              <Logo />
+            </View>
+          ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/Notification")}>
+              <View style={{ paddingHorizontal: 20 }}>
+                <Notification color={Color.base.White} />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerTitleAlign: "center",
+        }}
+      />
+      <Tabs.Screen name="Acards" options={{ headerShown: false }} />
+    </Tabs>
   );
 };
 
