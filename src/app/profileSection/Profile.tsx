@@ -253,7 +253,7 @@ const Profile = () => {
                 <TouchableOpacity
                   style={styles.configContainer}
                   onPress={() =>
-                    Linking.openURL("mailto:itnumadlabs@gmail.com")
+                    Linking.openURL("mailto:info@amusebouche.io")
                   }
                 >
                   <View

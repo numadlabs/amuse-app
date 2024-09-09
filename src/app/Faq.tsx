@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 import React from "react";
 import Header from "@/components/layout/Header";
 import Color from "@/constants/Color";
@@ -29,6 +29,7 @@ const Faq = () => {
   ];
 
   return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
     <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <Header title="FAQ" />
       <View style={styles.container}>
@@ -37,6 +38,7 @@ const Faq = () => {
         ))}
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 
