@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Platform, KeyboardAvoidingView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Platform, KeyboardAvoidingView, ActivityIndicator, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router } from 'expo-router';
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { sendOtp, updateUserEmail, updateUserInfo } from "@/lib/service/mutationHelper";
+import { getCountries } from "@/lib/service/queryHelper";
 import { useAuth } from "@/context/AuthContext";
 import { userKeys } from "@/lib/service/keysHelper";
 import Color from "@/constants/Color";
@@ -11,10 +12,16 @@ import { BODY_1_REGULAR, BODY_2_MEDIUM, BUTTON_48 } from "@/constants/typography
 import Header from '@/components/layout/Header';
 import Button from "@/components/ui/Button";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { useUpdateEmailStore } from '@/lib/store/emailStore';
-import OtpInputEmail from '@/components/atom/OtpInputEmail';  // Adjust the import path as needed
-import Animated, { FadeInLeft, SlideInDown } from 'react-native-reanimated';
+import OtpInputEmail from '@/components/atom/OtpInputEmail';
+import Animated, { FadeInLeft } from 'react-native-reanimated';
+
+interface Country {
+  id: string;
+  name: string;
+  alpha3: string;
+  countryCode: string;
+}
 
 type UpdateScreenParams = {
   screenName: string;
@@ -36,6 +43,15 @@ const UpdateScreen: React.FC = () => {
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 18);
 
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);
+  const [showCountryList, setShowCountryList] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState<{ id: string; name: string } | null>(null);
+
+  const { data: countriesData } = useQuery({
+    queryKey: ['countries'],
+    queryFn: getCountries,
+  });
 
   const { mutateAsync: sendOtpMutation } = useMutation({
     mutationFn: sendOtp,
@@ -62,6 +78,13 @@ const UpdateScreen: React.FC = () => {
   });
 
   useEffect(() => {
+    if (countriesData) {
+      setCountries(countriesData);
+      setFilteredCountries(countriesData);
+    }
+  }, [countriesData]);
+
+  useEffect(() => {
     if (field === 'dateOfBirth' && value) {
       const initialDate = new Date(value);
       setDate(initialDate > maxDate ? maxDate : initialDate);
@@ -69,7 +92,13 @@ const UpdateScreen: React.FC = () => {
     if (field === 'email') {
       setEmail(value);
     }
-  }, [field, value, setEmail]);
+    if (field === 'location' && value && countries.length > 0) {
+      const country = countries.find(c => c.id === value);
+      if (country) {
+        setSelectedCountry({ id: country.id, name: country.name });
+      }
+    }
+  }, [field, value, setEmail, countries]);
 
   useEffect(() => {
     const code = parseInt(otpValue);
@@ -77,6 +106,13 @@ const UpdateScreen: React.FC = () => {
       setVerificationCode(code);
     }
   }, [otpValue, setVerificationCode]);
+
+  const filterCountries = (text: string) => {
+    const filtered = countries.filter(country =>
+      country.name.toLowerCase().includes(text.toLowerCase())
+    );
+    setFilteredCountries(filtered);
+  };
 
   const handleSave = async () => {
     try {
@@ -93,13 +129,27 @@ const UpdateScreen: React.FC = () => {
         }
       } else if (field === 'dateOfBirth') {
         if (date > maxDate) {
-         
           return;
         }
         setLoading(true);
         const dataToUpdate = { 
-          [field]: date.toISOString().split('T')[0] 
+          birthYear: date.getFullYear(),
+          birthMonth: date.getMonth() + 1 // Adding 1 because getMonth() returns 0-11
         };
+        await updateUserInfo({
+          userId: authState.userId,
+          data: dataToUpdate
+        });
+        queryClient.invalidateQueries({ queryKey: userKeys.info });
+        setLoading(false);
+        router.back();
+      } else if (field === 'location') {
+        if (!selectedCountry) {
+          console.error('No country selected');
+          return;
+        }
+        setLoading(true);
+        const dataToUpdate = { countryId: selectedCountry.id };
         await updateUserInfo({
           userId: authState.userId,
           data: dataToUpdate
@@ -120,6 +170,7 @@ const UpdateScreen: React.FC = () => {
       }
     } catch (error) {
       console.error('Error updating field:', error);
+      setLoading(false);
     }
   };
 
@@ -129,12 +180,14 @@ const UpdateScreen: React.FC = () => {
     if (currentDate > maxDate) {
       setDate(maxDate);
     } else {
-      setDate(currentDate);
+      // Set the day to 1 to ensure we only care about month and year
+      const adjustedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      setDate(adjustedDate);
     }
   };
 
   const formatDate = (date: Date): string => {
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
   };
 
   const renderOtpInputs = () => {
@@ -172,7 +225,7 @@ const UpdateScreen: React.FC = () => {
             <DateTimePicker
               value={date}
               mode="date"
-              display={Platform.OS === 'ios' ? "spinner" : "default"}
+              display="spinner"
               onChange={onDateChange}
               maximumDate={maxDate}
             />
@@ -181,37 +234,42 @@ const UpdateScreen: React.FC = () => {
       );
     } else if (field === 'location') {
       return (
-        <GooglePlacesAutocomplete
-          placeholder="Area (ex. Prague)"
-          onPress={(data, details = null) => {
-            setNewValue(data.description);
-          }}
-          textInputProps={{
-            placeholderTextColor: Color.Gray.gray100,
-            returnKeyType: "search"
-          }}
-          query={{
-            key: "AIzaSyD6P0kwuwr_7RTb5_2UZLNteryotRLItCM",
-            language: "en",
-            types: "(regions)"
-          }}
-          fetchDetails={true}
-          onFail={(error) => console.error(error)}
-          styles={{
-            container: styles.googlePlacesContainer,
-            textInput: styles.googlePlacesTextInput,
-            listView: styles.googlePlacesListView,
-            row: styles.googlePlacesRow,
-            poweredContainer: styles.googlePlacesPoweredContainer,
-          }}
-          renderRow={(rowData) => (
-            <Text style={styles.googlePlacesSuggestion}>
-              {rowData.description}
+        <View>
+          <TouchableOpacity
+            style={styles.input}
+            onPress={() => setShowCountryList(!showCountryList)}
+          >
+            <Text style={styles.inputText}>
+              {selectedCountry ? selectedCountry.name : 'Select a country'}
             </Text>
+          </TouchableOpacity>
+          {showCountryList && (
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="Search countries"
+                placeholderTextColor={Color.Gray.gray200}
+                onChangeText={filterCountries}
+              />
+              <FlatList
+                data={filteredCountries}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.countryItem}
+                    onPress={() => {
+                      setSelectedCountry({ id: item.id, name: item.name });
+                      setShowCountryList(false);
+                    }}
+                  >
+                    <Text style={styles.countryItemText}>{item.name}</Text>
+                  </TouchableOpacity>
+                )}
+                style={styles.countryList}
+              />
+            </>
           )}
-          listViewDisplayed="auto"
-          renderDescription={(rowData) => rowData.description}
-        />
+        </View>
       );
     } else {
       return (
@@ -244,9 +302,9 @@ const UpdateScreen: React.FC = () => {
             onPress={handleSave}
           >
             {loading ? (
-              <ActivityIndicator />
+              <ActivityIndicator color={Color.base.White} />
             ) : (
-              <Text style={{ ...BUTTON_48 }}>
+              <Text style={{ ...BUTTON_48, color: Color.base.White }}>
                 {field === 'email' && !showVerificationInput ? 'Send OTP' : 'Save changes'}
               </Text>
             )}
@@ -277,6 +335,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 16,
   },
+  inputText: {
+    color: Color.base.White,
+    ...BODY_1_REGULAR,
+  },
   dateButton: {
     backgroundColor: Color.Gray.gray500,
     padding: 12,
@@ -291,29 +353,18 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: Color.Gray.gray600,
   },
-  googlePlacesContainer: {
-    flex: 1,
-  },
-  googlePlacesTextInput: {
+  countryList: {
+    maxHeight: 200,
     backgroundColor: Color.Gray.gray500,
-    color: Color.base.White,
-    ...BODY_1_REGULAR,
-    padding: 12,
     borderRadius: 8,
+    marginTop: 8,
   },
-  googlePlacesListView: {
-    backgroundColor: Color.Gray.gray600,
+  countryItem: {
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Color.Gray.gray400,
   },
-  googlePlacesRow: {
-    backgroundColor: Color.Gray.gray500,
-    padding: 13,
-    height: 44,
-    flexDirection: 'row',
-  },
-  googlePlacesPoweredContainer: {
-    display: 'none',
-  },
-  googlePlacesSuggestion: {
+  countryItemText: {
     color: Color.base.White,
     ...BODY_2_MEDIUM,
   },

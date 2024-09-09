@@ -43,15 +43,6 @@ export async function getUserNotification() {
   }
 }
 
-export async function getUserPowerUps(id) {
-  return axiosClient.get(`/userBonus/${id}/userCard`).then((response) => {
-    if (response.data.success) {
-      return response?.data.data;
-    } else {
-      throw new Error(response.data.error);
-    }
-  });
-}
 
 export async function getUserTransaction(id) {
   return axiosClient.get(`/transactions/${id}/user`).then((response) => {
@@ -131,6 +122,16 @@ export async function getUserTiers() {
   return axiosClient.get("/userTiers").then((response) => {
     if (response.data.success) {
       return response?.data.data;
+    } else {
+      throw new Error(response.data.error);
+    }
+  });
+}
+
+export async function getCountries(){
+  return axiosClient.get("/countries").then((response) => {
+    if (response.data.success) {
+      return response?.data.data.countries;
     } else {
       throw new Error(response.data.error);
     }
