@@ -133,7 +133,8 @@ const UpdateScreen: React.FC = () => {
         }
         setLoading(true);
         const dataToUpdate = { 
-          [field]: date.toISOString().split('T')[0] 
+          birthYear: date.getFullYear(),
+          birthMonth: date.getMonth() + 1 // Adding 1 because getMonth() returns 0-11
         };
         await updateUserInfo({
           userId: authState.userId,
@@ -179,12 +180,14 @@ const UpdateScreen: React.FC = () => {
     if (currentDate > maxDate) {
       setDate(maxDate);
     } else {
-      setDate(currentDate);
+      // Set the day to 1 to ensure we only care about month and year
+      const adjustedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      setDate(adjustedDate);
     }
   };
 
   const formatDate = (date: Date): string => {
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
   };
 
   const renderOtpInputs = () => {
@@ -222,7 +225,7 @@ const UpdateScreen: React.FC = () => {
             <DateTimePicker
               value={date}
               mode="date"
-              display={Platform.OS === 'ios' ? "spinner" : "default"}
+              display="spinner"
               onChange={onDateChange}
               maximumDate={maxDate}
             />

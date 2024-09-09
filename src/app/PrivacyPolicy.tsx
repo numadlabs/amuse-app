@@ -127,7 +127,7 @@ const TermsAndConditions = () => {
           break;
         case "area":
           setShowArea(false);
-          dataToUpdate = { location: "" };
+          dataToUpdate = { countryId: "" };
           break;
       }
       await updateUserInfoMutation({
@@ -305,7 +305,7 @@ that information is inaccurate or incomplete.
 
           {renderToggleItem("Profile picture", showProfilePicture, (value) => handleToggle('profilePicture', value))}
           {renderToggleItem("Date of birth", showDateOfBirth, (value) => handleToggle('dateOfBirth', value))}
-          {renderToggleItem("Area", showArea, (value) => handleToggle('area', value))}
+          {renderToggleItem("Country", showArea, (value) => handleToggle('area', value))}
 
           {renderButton(
             exportUserData,
@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   buttonText: {
-    fontSize: Platform.OS === "ios" ? 13 : 15,
+    fontSize: Platform.OS === "ios" ? 12 : 15,
     fontWeight: "600",
     lineHeight: 24,
     color: Color.base.White,
