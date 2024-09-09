@@ -84,9 +84,9 @@ export default function RestaurantMapView() {
       });
     } else if (selectedLocation === "dubai") {
       setInitialRegion({
-        latitude: 50.0755, 
-        longitude: 14.4378, 
-        latitudeDelta: 0.1, 
+        latitude: 50.0755,
+        longitude: 14.4378,
+        latitudeDelta: 0.1,
         longitudeDelta: 0.1,
       });
     } else if (permissionStatus === Location.PermissionStatus.DENIED) {
@@ -225,7 +225,42 @@ export default function RestaurantMapView() {
             longitudeDelta: 0.1,
           }}
           customMapStyle={mapStyle}
-        />
+        >
+          {restaurantsData?.data?.restaurants.map((restaurant, index) => {
+            return (
+              <Marker
+                key={`marker-${index}`}
+                hitSlop={{ top: 40, bottom: 40, left: 40, right: 40 }}
+                coordinate={{
+                  latitude: restaurant.latitude,
+                  longitude: restaurant.longitude,
+                }}
+                onPress={() => handleMarkerPress(restaurant)}
+              >
+                {activeMarker?.id === restaurant.id ? (
+                  <SvgMarker
+                    key={restaurant.id as string}
+                    imageUrl={
+                      `${SERVER_SETTING.CDN_LINK}${restaurant?.logo}` as string
+                    }
+                  />
+                ) : (
+                  <View
+                    style={{
+                      width: 8,
+                      height: 8,
+                      padding: 4,
+                      backgroundColor: Color.base.White,
+                      borderRadius: 48,
+                    }}
+                  />
+                )}
+              </Marker>
+            );
+          })}
+
+
+        </MapView>
       </View>
     );
   }

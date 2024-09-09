@@ -41,12 +41,12 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     mutationFn: registerDeviceNotification,
   });
 
-  const [fontsLoaded] = useFonts({
-    Sora: require("@/public/fonts/Sora-Regular.otf"),
-    SoraBold: require("@/public/fonts/Sora-Bold.otf"),
-    SoraMedium: require("@/public/fonts/Sora-Medium.otf"),    
-    SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),   
-  });
+  // const [fontsLoaded] = useFonts({
+  //   Sora: require("@/public/fonts/Sora-Regular.otf"),
+  //   SoraBold: require("@/public/fonts/Sora-Bold.otf"),
+  //   SoraMedium: require("@/public/fonts/Sora-Medium.otf"),    
+  //   SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),   
+  // });
 
   const prepareApp = useCallback(async () => {
     try {
@@ -100,14 +100,14 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   }, [prepareApp]);
 
   useEffect(() => {
-    setLoadingStates(prev => ({ ...prev, fonts: !fontsLoaded }));
-  }, [fontsLoaded]);
+    setLoadingStates(prev => ({ ...prev }));
+  }, []);
 
   useEffect(() => {
-    if (!authState.loading && fontsLoaded) {
+    if (!authState.loading) {
       setAppIsReady(true);
     }
-  }, [authState.loading, fontsLoaded]);
+  }, [authState.loading]);
 
   if (!appIsReady) {
     return <SplashScreenAnimated loadingStates={loadingStates} />;
