@@ -12,6 +12,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import Color from "@/constants/Color";
 import moment from "moment";
 import { BODY_2_REGULAR, H5 } from "@/constants/typography";
+
+
 const PerkScreen = () => {
   const { restaurantId, powerUp, btcAmount } = useLocalSearchParams();
   const queryClient = useQueryClient();
@@ -30,6 +32,7 @@ const PerkScreen = () => {
     router.back();
     queryClient.invalidateQueries({ queryKey: userKeys.info });
     queryClient.invalidateQueries({ queryKey: userKeys.cards });
+    queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
     queryClient.invalidateQueries({ queryKey: userKeys.notifications });
   };
 

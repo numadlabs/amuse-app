@@ -10,6 +10,7 @@ import {
   saveUserId,
 } from "../lib/service/asyncStorageHelper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 interface AuthProps {
   authState?: {
     token: string | null;
@@ -56,8 +57,7 @@ export const AuthProvider = ({ children }: any) => {
         const token = await SecureStore.getItemAsync(SERVER_SETTING.TOKEN_KEY);
         if (token) {
           const userId = await loadUserId();
-          axiosClient.defaults.headers.common["Authorization"] =
-            `Bearer ${token}`;
+          axiosClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
           setAuthState({
             token: token,
             authenticated: true,
@@ -65,7 +65,6 @@ export const AuthProvider = ({ children }: any) => {
             userId: userId,
           });
         } else {
-          // Reset auth state
           setAuthState({
             token: null,
             authenticated: false,
@@ -100,17 +99,16 @@ export const AuthProvider = ({ children }: any) => {
         nickname,
         verificationCode,
       });
-      if (result && result.data.data && result.data.data.auth) {
-        // Successful Register
+
+      if (result.data.success && result.data.data && result.data.data.auth) {
         setAuthState({
-          token: result.data.data.auth,
+          token: result.data.data.auth.accessToken,
           authenticated: true,
           loading: false,
           userId: result.data.data.user.id,
         });
 
-        axiosClient.defaults.headers.common["Authorization"] =
-          `Bearer ${result.data.data.auth.accessToken}`;
+        axiosClient.defaults.headers.common["Authorization"] = `Bearer ${result.data.data.auth.accessToken}`;
 
         await SecureStore.setItemAsync(
           SERVER_SETTING.TOKEN_KEY,
@@ -121,61 +119,54 @@ export const AuthProvider = ({ children }: any) => {
           result.data.data.auth.refreshToken,
         );
         await saveUserId(result.data.data.user.id);
-        return result.data;
-      } else if (
-        result.data.success === false &&
-        result.data.error === "User already exists with this phone number"
-      ) {
-        return {
-          error: true,
-          msg: "User already exists with this email",
-        };
+
+        return { success: true, data: result.data.data };
       } else {
-        // Register failed
-        return { error: true, msg: "Invalid response from server" };
+        return { 
+          success: false, 
+          error: result.data.error || "Registration failed. Please try again." 
+        };
       }
     } catch (error) {
-      // Network error or other exception
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
         console.error(
           "Server responded with error status:",
           error.response.status,
+          error.response.data
         );
-        return { error: true, msg: "Server error. Please try again later." };
+        return { 
+          success: false, 
+          error: error.response.data.error || "Server error. Please try again later." 
+        };
       } else if (error.request) {
-        // The request was made but no response was received
         console.error("No response received from server.");
-        return { error: true, msg: "No response received from server." };
+        return { success: false, error: "No response received from server." };
       } else {
-        // Other errors
         console.error("An error occurred:", error.message);
         return {
-          error: true,
-          msg: "An error occurred. Please try again later.",
+          success: false,
+          error: "An error occurred. Please try again later.",
         };
       }
     }
   };
 
-  const login = async (email, password: string) => {
+  const login = async (email: string, password: string) => {
     try {
       const result = await axiosClient.post(`/auth/login`, {
         email,
         password,
       });
-      if (result && result.data.data && result.data.data.auth) {
-        // Successful login
+
+      if (result.data.success && result.data.data && result.data.data.auth) {
         setAuthState({
-          token: result.data.data.auth,
+          token: result.data.data.auth.accessToken,
           authenticated: true,
           loading: false,
           userId: result.data.data.user.id,
         });
 
-        axiosClient.defaults.headers.common["Authorization"] =
-          `Bearer ${result.data.data.auth.accessToken}`;
+        axiosClient.defaults.headers.common["Authorization"] = `Bearer ${result.data.data.auth.accessToken}`;
 
         await SecureStore.setItemAsync(
           SERVER_SETTING.TOKEN_KEY,
@@ -187,55 +178,63 @@ export const AuthProvider = ({ children }: any) => {
         );
         await saveUserId(result.data.data.user.id);
 
-        return result.data;
+        return { success: true, data: result.data.data };
       } else {
-        // Login failed
-        return { error: true, msg: "Invalid response from server" };
+        return { 
+          success: false, 
+          error: result.data.error || "Login failed. Please try again." 
+        };
       }
     } catch (error) {
-      // Network error or other exception
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
         console.error(
           "Server responded with error status:",
           error.response.status,
+          error.response.data
         );
-        return { error: true, msg: "Server error. Please try again later." };
+        return { 
+          success: false, 
+          error: error.response.data.error || "Server error. Please try again later." 
+        };
       } else if (error.request) {
-        // The request was made but no response was received
         console.error("No response received from server.");
-        return { error: true, msg: "No response received from server." };
+        return { success: false, error: "No response received from server." };
       } else {
-        // Other errors
         console.error("An error occurred:", error.message);
         return {
-          error: true,
-          msg: "An error occurred. Please try again later.",
+          success: false,
+          error: "An error occurred. Please try again later.",
         };
       }
     }
   };
 
   const logout = async () => {
-    // Delete token from storage
-    await SecureStore.deleteItemAsync(SERVER_SETTING.TOKEN_KEY);
-    await SecureStore.deleteItemAsync(SERVER_SETTING.REFRESH_TOKEN_KEY);
-    await AsyncStorage.removeItem('hasSeenWelcomeMessage');
-    // Update HTTP Headers
-    axiosClient.defaults.headers.common["Authorization"] = "";
-   
-    // Reset auth state
-    setAuthState({
-      token: null,
-      authenticated: false,
-      loading: false,
-      userId: null,
-    });
+    try {
+      await SecureStore.deleteItemAsync(SERVER_SETTING.TOKEN_KEY);
+      await SecureStore.deleteItemAsync(SERVER_SETTING.REFRESH_TOKEN_KEY);
+      
+      axiosClient.defaults.headers.common["Authorization"] = "";
+      
+      setAuthState({
+        token: null,
+        authenticated: false,
+        loading: false,
+        userId: null,
+      });
 
-    await deleteUserId();
-    queryCache.clear();
-    router.replace("/Login");
+      await deleteUserId();
+      queryCache.clear();
+      router.replace("/Login");
+
+      return { success: true };
+    } catch (error) {
+      console.error("Error during logout:", error);
+      return {
+        success: false,
+        error: "An error occurred during logout. Please try again.",
+      };
+    }
   };
 
   const value = {

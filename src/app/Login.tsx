@@ -84,25 +84,17 @@ function Login() {
   const handleLogin = async () => {
     try {
       setLoading(true);
+      setError("");
 
-
-      const response = await onLogin(email, password);
-      if (response.success) {
+      const result = await onLogin(email, password);
+      if (result.success) {
         router.replace("/(tabs)");
       } else {
-        console.log("Login failed:", response.data);
-        setError("Email and/or password do not match our records");
+        setError(result.error);
       }
     } catch (err) {
-      if (err instanceof ZodError) {
-        const formattedErrors = err.issues.map((issue) => {
-          return `${issue.path[0]}: ${issue.message}`;
-        });
-        setError(formattedErrors.join("\n"));
-      } else {
-        console.error("Error during login:", err);
-        setError("Login Error. Please try again later.");
-      }
+      console.error("Error during login:", err);
+      setError("An unexpected error occurred. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -222,19 +214,24 @@ function Login() {
                         }}
                         autoCapitalize="none"
                         value={email}
-                        onChangeText={setEmail}
+                        onChangeText={(text) =>{
+                          setEmail(text)
+                          setError("")
+                        }}
                       />
                     </View>
                   </LinearGradient>
                   {error && (
-                    <Text
-                      style={{
-                        color: Color.System.systemError,
-                        paddingHorizontal: 16,
-                      }}
-                    >
-                      {error}
-                    </Text>
+                    <Animated.View entering={FadeIn} exiting={FadeOut} style={{flex:1,}}>
+                      <Text
+                        style={{
+                          color: Color.System.systemError,
+                          paddingHorizontal: 16,
+                        }}
+                      >
+                        {error}
+                      </Text>
+                    </Animated.View>
                   )}
                   <LinearGradient
                     colors={

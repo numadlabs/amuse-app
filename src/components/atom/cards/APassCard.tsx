@@ -33,7 +33,7 @@ interface ApassProp {
   category: string;
   hasBonus: boolean;
   visitCount: number | undefined;
-  target: number | undefined;
+  target?: number | undefined;
   isLoading: boolean;
 }
 
