@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import { WalletAdd } from "iconsax-react-native";
 import React, { useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ActivityIndicator,
   Image,
@@ -32,10 +31,8 @@ import { useAuth } from "@/context/AuthContext";
 import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
 import { getAcard } from "@/lib/service/mutationHelper";
 import {
-  getPerksByRestaurant,
   getRestaurantId,
 } from "@/lib/service/queryHelper";
-import useLocationStore from "@/lib/store/userLocation";
 import { height, width } from "@/lib/utils";
 import moment from "moment";
 import { BODY_2_REGULAR, BUTTON_48, H6 } from "@/constants/typography";
@@ -47,21 +44,23 @@ const Restaurant = () => {
   const { authState } = useAuth();
   const [bottomSheet, setBottomSheet] = useState(false);
   const queryClient = useQueryClient();
-  const { currentLocation } = useLocationStore();
   const [perkId, setPerkId] = useState<string>("");
   const currentTime = moment().format("HH:mm:ss");
   const currentDayOfWeek = moment().isoWeekday();
+
+
   const { data: restaurantsData, isLoading } = useQuery({
     queryKey: restaurantKeys.detail(id as string),
     queryFn: () => getRestaurantId(id, currentTime, currentDayOfWeek),
     enabled: !!id,
   });
 
-  const { data: perks } = useQuery({
-    queryKey: restaurantKeys.perks(id as string),
-    queryFn: () => getPerksByRestaurant(id),
-    enabled: !!id,
-  });
+  //Fetching perk
+  // const { data: perks } = useQuery({
+  //   queryKey: restaurantKeys.perks(id as string),
+  //   queryFn: () => getPerksByRestaurant(id),
+  //   enabled: !!id,
+  // });
 
   const toggleBottomSheet = () => {
     setBottomSheet(!bottomSheet);
@@ -74,15 +73,17 @@ const Restaurant = () => {
     ],
   }));
 
-  const calculateTarget = (
-    perkOccurence?: number,
-    followingBonusCurrent?: number
-  ): number | undefined => {
-    if (perkOccurence === undefined || followingBonusCurrent === undefined) {
-      return undefined;
-    }
-    return perkOccurence - followingBonusCurrent;
-  };
+
+  // This is for perks if they return
+  // const calculateTarget = (
+  //   perkOccurence?: number,
+  //   followingBonusCurrent?: number
+  // ): number | undefined => {
+  //   if (perkOccurence === undefined || followingBonusCurrent === undefined) {
+  //     return undefined;
+  //   }
+  //   return perkOccurence - followingBonusCurrent;
+  // };
 
   const { mutateAsync: createGetAcardMutation } = useMutation({
     mutationFn: getAcard,
@@ -108,198 +109,202 @@ const Restaurant = () => {
 
   return (
     <><SafeAreaView style={{ flex: 1 }}>
-    <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
-      <View style={styles.closeButtonContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.closeButton]}
-          onPress={() => router.back()}
-        >
-          <Close />
-        </TouchableOpacity>
-      </View>
-      <ScrollView style={styles.container}>
-        <APassCard
-          name={restaurantsData?.name}
-          image={restaurantsData?.logo}
-          onPress={() => ""}
-          nftImage={restaurantsData?.nftImageUrl}
-          category={restaurantsData?.categoryName}
-          hasBonus={false}
-          visitCount={restaurantsData?.visitCount || 0}
-          isLoading={isLoading}
-          target={calculateTarget(
-            restaurantsData?.perkOccurence,
-            perks?.followingBonus?.current
-          )}
-        />
-
-        {isLoading ? (
-          <View style={{ flex: 1, justifyContent: "center", marginTop: 40 }}>
-            <ActivityIndicator />
-          </View>
-        ) : (
-          <>
-            {restaurantsData?.isOwned ? (
-              <Animated.View
-                style={{ paddingBottom: 100 }}
-                entering={SlideInDown.springify().damping(20).delay(200)}
-              >
-                <Owned
-                  // userCardId={perks?.userBonuses?.[0]?.userCardId}
-                  // followingPerk={perks?.followingBonus?.name}
-                  onPress={toggleBottomSheet}
-                  cardId={perkId}
-                  isOpen={restaurantsData.isOpen}
-                  isLoading={isLoading}
-                  data={restaurantsData}
-                  marker={restaurantsData?.isOwned} />
-              </Animated.View>
-            ) : (
-              <Animated.View
-                entering={SlideInDown.springify().damping(20).delay(200)}
-              >
-                <UnOwned restaurant={restaurantsData} />
-              </Animated.View>
-            )}
-          </>
-        )}
-      </ScrollView>
-      {restaurantsData?.isOwned ? null : (
-        <View style={styles.buttonContainer}>
-          <Button
-            onPress={handleGetAcard}
-            size="small"
-            variant="tertiary"
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              height: 48,
-            }}
+      <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+        <View style={styles.closeButtonContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.closeButton]}
+            onPress={() => router.back()}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 12,
-                top: 2,
-              }}
-            >
-              <WalletAdd color={Color.base.White} />
-              <Text
-                style={{
-                  color: Color.base.White,
-                  ...BUTTON_48,
-                  top: 2,
-                }}
-              >
-                {isClaimLoading ? <ActivityIndicator /> : "Add membership card"}
-              </Text>
-            </View>
-          </Button>
+            <Close />
+          </TouchableOpacity>
         </View>
-      )}
-      {bottomSheet && (
-        <Modal transparent={true}>
-          <TouchableOpacity style={{ flex: 1 }} onPress={toggleBottomSheet}>
-            <Animated.View
-              entering={FadeIn}
-              exiting={FadeOut}
-              style={[
-                {
-                  position: "absolute",
-                  backgroundColor: "rgba(0, 0, 0, 0.2)",
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  zIndex: 98,
-                },
-                animatedStyles,
-              ]} />
-            <Animated.View
-              entering={SlideInDown.springify().damping(18)}
-              exiting={SlideOutDown.springify()}
-              style={[
-                {
-                  backgroundColor: Color.Gray.gray600,
-                  height: height / 3, //to do 2.8 prev version(original height)
-                  bottom: 0,
-                  width: width,
-                  zIndex: 99,
-                  position: "absolute",
-                  borderTopStartRadius: 32,
-                  borderTopEndRadius: 32,
-                  gap: 24,
-                  padding: 16,
-                },
-                animatedStyles,
-              ]}
+        <ScrollView style={styles.container}>
+          <APassCard
+            name={restaurantsData?.name}
+            image={restaurantsData?.logo}
+            onPress={() => ""}
+            nftImage={restaurantsData?.nftImageUrl}
+            category={restaurantsData?.categoryName}
+            hasBonus={false}
+            visitCount={restaurantsData?.visitCount ? restaurantsData?.visitCount : 0}
+            isLoading={isLoading}
+          // target={calculateTarget(
+          //   restaurantsData?.perkOccurence,
+          //   perks?.followingBonus?.current
+          // )}
+          />
+
+          {isLoading ? (
+            <View style={{ flex: 1, justifyContent: "center", marginTop: 40 }}>
+              <ActivityIndicator />
+            </View>
+          ) : (
+            <>
+              {restaurantsData?.isOwned ? (
+                <Animated.View
+                  style={{ paddingBottom: 100 }}
+                  entering={SlideInDown.springify().damping(20).delay(200)}
+                >
+                  <Owned
+                    // userCardId={perks?.userBonuses?.[0]?.userCardId}
+                    // followingPerk={perks?.followingBonus?.name}
+                    onPress={toggleBottomSheet}
+                    cardId={perkId}
+                    isOpen={restaurantsData.isOpen}
+                    isLoading={isLoading}
+                    data={restaurantsData}
+                    marker={restaurantsData?.isOwned} />
+                </Animated.View>
+              ) : (
+                <Animated.View
+                  entering={SlideInDown.springify().damping(20).delay(200)}
+                >
+                  <UnOwned restaurant={restaurantsData} />
+                </Animated.View>
+              )}
+            </>
+          )}
+        </ScrollView>
+        {restaurantsData?.isOwned ? null : (
+          <View style={styles.buttonContainer}>
+            <Button
+              onPress={handleGetAcard}
+              size="small"
+              variant="tertiary"
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                height: 48,
+              }}
             >
               <View
                 style={{
-                  paddingVertical: 8,
+                  flexDirection: "row",
                   justifyContent: "center",
                   alignItems: "center",
-                  flexDirection: "row",
+                  gap: 12,
+                  top: 2,
                 }}
               >
-                <Text
+                {isClaimLoading ? <ActivityIndicator /> : (
+                  <>
+                    <WalletAdd color={Color.base.White} />
+                    <Text
+                      style={{
+                        color: Color.base.White,
+                        ...BUTTON_48,
+                        top: 2,
+                      }}
+                    >
+                      {"Add membership card"}
+                    </Text>
+                  </>
+                )}
+              </View>
+            </Button>
+          </View>
+        )}
+        {bottomSheet && (
+          <Modal transparent={true}>
+            <TouchableOpacity style={{ flex: 1 }} onPress={toggleBottomSheet}>
+              <Animated.View
+                entering={FadeIn}
+                exiting={FadeOut}
+                style={[
+                  {
+                    position: "absolute",
+                    backgroundColor: "rgba(0, 0, 0, 0.2)",
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    zIndex: 98,
+                  },
+                  animatedStyles,
+                ]} />
+              <Animated.View
+                entering={SlideInDown.springify().damping(18)}
+                exiting={SlideOutDown.springify()}
+                style={[
+                  {
+                    backgroundColor: Color.Gray.gray600,
+                    height: height / 3, //to do 2.8 prev version(original height)
+                    bottom: 0,
+                    width: width,
+                    zIndex: 99,
+                    position: "absolute",
+                    borderTopStartRadius: 32,
+                    borderTopEndRadius: 32,
+                    gap: 24,
+                    padding: 16,
+                  },
+                  animatedStyles,
+                ]}
+              >
+                <View
                   style={{
-                    color: Color.base.White,
-                    ...H6,
+                    paddingVertical: 8,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
                   }}
                 >
-                  Perk
-                </Text>
-                <TouchableOpacity onPress={toggleBottomSheet}>
-                  <View
+                  <Text
                     style={{
-                      backgroundColor: Color.Gray.gray400,
-                      borderRadius: 48,
-                      padding: 8,
-                      width: 32,
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      aspectRatio: 1,
-                      position: "absolute",
-                      left: 115,
-                      top: -18,
+                      color: Color.base.White,
+                      ...H6,
                     }}
                   >
-                    <Close />
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View style={{ alignItems: "center", gap: 16 }}>
-                <Image
-                  source={require("@/public/images/perk.png")}
-                  style={{ width: width / 1.2, height: 58 }}
-                  resizeMode="contain" />
-                <Text
-                  style={{
-                    ...BODY_2_REGULAR,
-                    color: Color.Gray.gray50,
-                    textAlign: "center",
-                  }}
+                    Perk
+                  </Text>
+                  <TouchableOpacity onPress={toggleBottomSheet}>
+                    <View
+                      style={{
+                        backgroundColor: Color.Gray.gray400,
+                        borderRadius: 48,
+                        padding: 8,
+                        width: 32,
+                        alignContent: "center",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        aspectRatio: 1,
+                        position: "absolute",
+                        left: 115,
+                        top: -18,
+                      }}
+                    >
+                      <Close />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ alignItems: "center", gap: 16 }}>
+                  <Image
+                    source={require("@/public/images/perk.png")}
+                    style={{ width: width / 1.2, height: 58 }}
+                    resizeMode="contain" />
+                  <Text
+                    style={{
+                      ...BODY_2_REGULAR,
+                      color: Color.Gray.gray50,
+                      textAlign: "center",
+                    }}
+                  >
+                    Earn perks after every 3 check-ins. Keep visiting your
+                    favorite spots and multiply your rewards!
+                  </Text>
+                </View>
+                <Button
+                  variant="primary"
+                  textStyle="primary"
+                  onPress={toggleBottomSheet}
                 >
-                  Earn perks after every 3 check-ins. Keep visiting your
-                  favorite spots and multiply your rewards!
-                </Text>
-              </View>
-              <Button
-                variant="primary"
-                textStyle="primary"
-                onPress={toggleBottomSheet}
-              >
-                <Text>Got it</Text>
-              </Button>
-            </Animated.View>
-          </TouchableOpacity>
-        </Modal>
-      )}
-    </View>
+                  <Text>Got it</Text>
+                </Button>
+              </Animated.View>
+            </TouchableOpacity>
+          </Modal>
+        )}
+      </View>
     </SafeAreaView>
     </>
   );

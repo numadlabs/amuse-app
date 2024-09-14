@@ -47,7 +47,7 @@ const TermsAndConditions = () => {
   const [currentSetting, setCurrentSetting] = useState('');
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
-
+  const { onLogout } = useAuth();
   const { mutateAsync: updateUserInfoMutation } = useMutation({
     mutationFn: updateUserInfo,
   });
@@ -199,15 +199,39 @@ const TermsAndConditions = () => {
     setLoading(true);
     try {
       await deleteUserMutation();
-      router.replace("/Login");
+      
+      // Show success message
+      alert("Your account has been successfully deleted.");
+      
+      // Slight delay before logout
+      setTimeout(async () => {
+        try {
+          const logoutResult = await onLogout();
+          if (!logoutResult.success) {
+            console.error("Logout failed:", logoutResult.error);
+            // If logout fails, attempt to clear data manually
+            await AsyncStorage.clear();
+            queryClient.clear();
+            router.replace("/Login");
+          }
+          // No need to call router.replace here as onLogout already does it if successful
+        } catch (logoutError) {
+          console.error("Error during logout:", logoutError);
+          // If an exception occurs during logout, attempt to clear data manually
+          await AsyncStorage.clear();
+          queryClient.clear();
+          router.replace("/Login");
+        }
+      }, 1000);
     } catch (error) {
       console.error("Error deleting user:", error);
-      alert("Failed to delete user account");
+      alert(`Failed to delete user account: ${error.message}`);
     } finally {
       setLoading(false);
       setIsDeleteModalOpen(false);
     }
   };
+
 
   const renderToggleItem = (label, value, onValueChange) => (
     <View style={styles.item}>
@@ -366,17 +390,17 @@ that information is inaccurate or incomplete.
           </View>
           <Text style={styles.bottomTabTitle}>IMPORTANT NOTICE</Text>
 
-            <Text style={styles.bottomTabText}>
-              The Pilot Program for Amuse Bouche is still ongoing. If you proceed with deleting your account, you will forfeit all bitcoin accumulated in your Amuse Bouche account. Once deleted, you will not be able to recover or transfer your bitcoin.
-            </Text>
-            <Text style={styles.bottomTabText}>
-              However, your bitcoin will not be forfeited if you maintain your account until the completion of the Pilot Program and the full launch of the Application. You will then be able to transfer your bitcoin at your discretion. Please note that deleting your account will also result in the permanent erasure of all your data. By deleting your account, you acknowledge and accept these terms.
-            </Text>
+          <Text style={styles.bottomTabText}>
+            The Pilot Program for Amuse Bouche is still ongoing. If you proceed with deleting your account, you will forfeit all bitcoin accumulated in your Amuse Bouche account. Once deleted, you will not be able to recover or transfer your bitcoin.
+          </Text>
+          <Text style={styles.bottomTabText}>
+            However, your bitcoin will not be forfeited if you maintain your account until the completion of the Pilot Program and the full launch of the Application. You will then be able to transfer your bitcoin at your discretion. Please note that deleting your account will also result in the permanent erasure of all your data. By deleting your account, you acknowledge and accept these terms.
+          </Text>
           <View style={styles.bottomTabButtons}>
             {renderButton(() => setIsDeleteModalOpen(false), null, "Cancel", styles.cancelButton)}
             {renderButton(handleDeleteUser, null, "Delete My Account", styles.confirmButton)}
           </View>
-          </Animated.View>
+        </Animated.View>
       </Modal>
 
       {loading && (

@@ -6,6 +6,9 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
+  TouchableOpacity,
+  TextInput,
+  FlatList,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import BoostSteps from "@/components/atom/BoostSteps";
@@ -16,13 +19,31 @@ import useBoostInfoStore from "@/lib/store/boostInfoStore";
 import { LinearGradient } from "expo-linear-gradient";
 import { height, width } from "@/lib/utils";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { BODY_1_BOLD, BODY_1_REGULAR, CAPTION_1_REGULAR, H4, H5 } from "@/constants/typography";
+import { BODY_1_BOLD, BODY_1_REGULAR, BODY_2_MEDIUM, CAPTION_1_REGULAR, H4, H5 } from "@/constants/typography";
+import { useQuery } from "@tanstack/react-query";
+import { getCountries } from "@/lib/service/queryHelper";
+
+interface Country {
+  id: string;
+  name: string;
+  alpha3: string;
+  countryCode: string;
+}
+
 
 const Area = () => {
   const [buttonPosition, setButtonPosition] = useState("bottom");
   const [isFocused, setIsFocused] = useState(false);
   const router = useRouter();
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [showCountryList, setShowCountryList] = useState(false);
   const { area, setArea } = useBoostInfoStore();
+  const [selectedCountry, setSelectedCountry] = useState<{ id: string; name: string } | null>(null);
+  const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);
+  const { data: countriesData } = useQuery({
+    queryKey: ['countries'],
+    queryFn: getCountries,
+  });
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -35,11 +56,24 @@ const Area = () => {
       () => setButtonPosition("bottom")
     );
 
+    if (countriesData) {
+      setCountries(countriesData);
+      setFilteredCountries(countriesData);
+    }
+
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-  }, []);
+  }, [countriesData]);
+
+  const filterCountries = (text: string) => {
+    const filtered = countries.filter(country =>
+      country.name.toLowerCase().includes(text.toLowerCase())
+    );
+    setFilteredCountries(filtered);
+  };
+
 
   return (
     <>
@@ -54,7 +88,7 @@ const Area = () => {
               >
                 <View style={styles.textContainer}>
                   <View style={styles.textWrapper}>
-                    <Text style={styles.topText}>Area</Text>
+                    <Text style={styles.topText}>Country</Text>
                     <Text style={styles.bottomText}>
                       Restaurants love locals. Get rewarded extra for {"\n"}{" "}
                       staying close to home.
@@ -70,7 +104,7 @@ const Area = () => {
                     end={[1, 0]}
                     style={styles.inputGradient}
                   >
-                    <View style={styles.inputWrapper}>
+                    {/* <View style={styles.inputWrapper}>
                       <GooglePlacesAutocomplete
                         placeholder="Area (ex. Prague)"
                         // placeholderTextColor="white"
@@ -103,6 +137,42 @@ const Area = () => {
                         listViewDisplayed="auto"
                         renderDescription={(rowData) => rowData.description}
                       />
+                    </View> */}
+                    <View>
+                      <TouchableOpacity
+                        style={styles.input}
+                        onPress={() => setShowCountryList(!showCountryList)}
+                      >
+                        <Text style={styles.inputText}>
+                          {selectedCountry ? selectedCountry.name : 'Select a country'}
+                        </Text>
+                      </TouchableOpacity>
+                      {showCountryList && (
+                        <>
+                          <TextInput
+                            style={styles.input}
+                            placeholder="Search countries"
+                            placeholderTextColor={Color.Gray.gray200}
+                            onChangeText={filterCountries}
+                          />
+                          <FlatList
+                            data={filteredCountries}
+                            keyExtractor={(item) => item.id}
+                            renderItem={({ item }) => (
+                              <TouchableOpacity
+                                style={styles.countryItem}
+                                onPress={() => {
+                                  setSelectedCountry({ id: item.id, name: item.name });
+                                  setShowCountryList(false);
+                                }}
+                              >
+                                <Text style={styles.countryItemText}>{item.name}</Text>
+                              </TouchableOpacity>
+                            )}
+                            style={styles.countryList}
+                          />
+                        </>
+                      )}
                     </View>
                   </LinearGradient>
                 </View>
@@ -179,6 +249,10 @@ const styles = StyleSheet.create({
     padding: 1,
     zIndex: 9,
   },
+  countryItemText: {
+    color: Color.base.White,
+    ...BODY_2_MEDIUM,
+  },
   inputWrapper: {
     alignItems: "center",
     gap: 12,
@@ -208,6 +282,12 @@ const styles = StyleSheet.create({
   },
   poweredContainer: {
     display: "none",
+  },
+  countryList: {
+    maxHeight: 200,
+    backgroundColor: Color.Gray.gray500,
+    borderRadius: 8,
+    marginTop: 8,
   },
   suggestion: {
     ...BODY_1_REGULAR,
@@ -242,5 +322,22 @@ const styles = StyleSheet.create({
         marginBottom: 20,
       },
     }),
+  },
+  input: {
+    backgroundColor: Color.Gray.gray500,
+    color: Color.base.White,
+    ...BODY_1_REGULAR,
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  inputText: {
+    color: Color.base.White,
+    ...BODY_1_REGULAR,
+  },
+  countryItem: {
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Color.Gray.gray400,
   },
 });
