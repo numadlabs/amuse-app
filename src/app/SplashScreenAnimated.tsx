@@ -93,9 +93,7 @@ const SplashScreenAnimated = ({ loadingStates }) => {
 
   }, []);
 
-  const runTypeMessage = Updates.isEmbeddedLaunch
-    ? "This app is running from built-in code"
-    : "This app is running an update";
+
   return (
     <View style={styles.container}>
       <View style={styles.animationContainer}>
