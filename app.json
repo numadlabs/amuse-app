@@ -1,7 +1,7 @@
 {
   "expo": {
-    "version": "0.7.1",
-    "runtimeVersion": "0.7.1",
+    "version": "0.7.2",
+    "runtimeVersion": "0.7.2",
     "jsEngine": "hermes",
     "scheme": "acme",
     "owner": "numad-labs",
@@ -26,7 +26,7 @@
             "./src/public/fonts/Sora-Medium.otf",
             "./src/public/fonts/Sora-Bold.otf",
             "./src/public/fonts/Sora-ExtraBold.otf",
-          "./src/public/fonts/Sora-ExtraLight.otf",
+            "./src/public/fonts/Sora-ExtraLight.otf",
             "./src/public/fonts/Sora-Light.otf",
             "./src/public/fonts/Sora-Regular.otf",
             "./src/public/fonts/Sora-SemiBold.otf",
@@ -46,7 +46,6 @@
         "NSLocationAlwaysUsageDescription": "We use location data to assist you in locating restaurants participating in a program on the Platform.",
         "NSUserNotificationUsageDescription": "We'd like to send you notifications for important updates and new offers."
       },
-      
       "supportsTablet": false,
       "bundleIdentifier": "com.numadLabs.amuseApp",
       "config": {
@@ -80,14 +79,12 @@
       "fallbackToCacheTimeout": 0,
       "checkAutomatically": "ON_LOAD",
       "enabled": true,
-
       "requestHeaders": {
         "expo-channel-name": "production",
-        "expo-runtime-version": "0.7.1",
+        "expo-runtime-version": "0.7.2",
         "expo-platform": "ios",
         "channel-name": "production"
-      },
-     
+      }
     }
   }
 }
