@@ -286,7 +286,11 @@ function Login() {
                       </TouchableOpacity>
                     </View>
                   </LinearGradient>
-
+                  <Button onPress={() => { throw new Error('Hello, again, Sentry!'); }}>
+                    <Text>
+                      Hellodjsao
+                    </Text>
+                  </Button>
                   <Button
                     variant="primary"
                     style={{ marginTop: 12 }}
