@@ -23,20 +23,28 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
     hour12: true,
   }).format(new Date(createdAt));
 
-  const getNotificationIcon = (type: string) => {
+  const getTransactionIcon = (type: string) => {
     switch (type) {
       case 'PURCHASE':
-       
-        return <Import size={24} color={Color.System.systemSuccess} />;
+        return <Import size={24} color={Color.System.systemError} />;
       default:
-        return <Export size={24} color={Color.System.systemError} />;
+        return <Export size={24} color={Color.System.systemSuccess} />;
     }
+  }
+
+  const getTransactionType = (type: string) => {
+    return type === "PURCHASE" ? "Purchase" : "Withdraw";
+  }
+
+  const getTransactionAmount = (type: string, amount: number) => {
+    const formattedAmount = amount.toFixed(5);
+    return type === "PURCHASE" ? `-${formattedAmount}` : `+${formattedAmount}`;
   }
 
   return (
     <View style={styles.body}>
       <View style={styles.icon}>
-        {getNotificationIcon(type)}
+        {getTransactionIcon(type)}
       </View>
       <View style={{ gap: 8, width: "50%" }}>
         <Text
@@ -46,7 +54,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
             textAlign: "left",
           }}
         >
-          {type === "PURCHASE" ? "Reward" : "Withdraw"}
+          {getTransactionType(type)}
         </Text>
         <Text
           style={{
@@ -65,8 +73,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
           color: Color.Gray.gray50,
         }}
       >
-        {type === "PURCHASE" ? `+${amount.toFixed(5)}` : `-${amount.toFixed(5)} `}{" "}
-        BTC
+        {getTransactionAmount(type, amount)} BTC
       </Text>
     </View>
   );

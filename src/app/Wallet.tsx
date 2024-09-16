@@ -77,7 +77,6 @@ const Wallet = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <GestureHandlerRootView>
         <Header title="Wallet" />
-
         <View style={styles.body}>
           <Balance
             amount={user?.user?.balance}

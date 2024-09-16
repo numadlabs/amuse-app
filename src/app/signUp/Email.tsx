@@ -15,7 +15,6 @@ import Steps from "@/components/atom/Steps";
 import { LinearGradient } from "expo-linear-gradient";
 import { useMutation } from "@tanstack/react-query";
 import Header from "@/components/layout/Header";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { sendOtp } from "@/lib/service/mutationHelper";
 import { router } from "expo-router";
 import { useSignUpStore } from "@/lib/store/signUpStore";
@@ -32,54 +31,85 @@ function Email() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
+  // const handleNavigation = async () => {
+  //   try {
+  //     if (email && !isButtonDisabled) {
+  //       setLoading(true);
+  //       setIsButtonDisabled(true);
+  //       emailSchema.parse(email);
+  //       await checkEmailMutation({
+  //         email: email,
+  //       })
+  //         .then((response) => {
+  //           if (response.success === false) {
+  //             setError("This email is already registered.");
+  //             throw new Error("Email already registered");
+  //           } else {
+  //             return sendOtpMutation({
+  //               email: email,
+  //             });
+  //           }
+  //         })
+  //         .then((otpResponse) => {
+  //           if (otpResponse) {
+              // router.push({
+              //   pathname: "/signUp/Otp",
+              // });
+  //           }
+  //         })
+  //         .catch((error) => {
+  //           console.log(error);
+  //           setError("This email is already registered.");
+  //           reset();
+  //         })
+  //         .finally(() => {
+  //           setLoading(false);
+  //           setIsButtonDisabled(false);
+  //         });
+  //     }
+  //   } catch (error) {
+  //     if (error instanceof ZodError) {
+  //       const formattedErrors = error.issues.map((issue) => {
+  //         return `${issue.message}`;
+  //       });
+  //       setError(formattedErrors.join("\n"));
+  //       setLoading(false);
+  //       setIsButtonDisabled(false);
+  //       setTimeout(() => {
+  //         setError("");
+  //       }, 4000);
+  //     }
+  //   }
+  // };
+
   const handleNavigation = async () => {
+    if (!email) {
+      setError("Please enter an email address.");
+      return;
+    }
+
     try {
-      if (email && !isButtonDisabled) {
-        setLoading(true);
-        setIsButtonDisabled(true);
-        emailSchema.parse(email);
-        await checkEmailMutation({
-          email: email,
-        })
-          .then((response) => {
-            if (response.success === false) {
-              setError("This email is already registered.");
-              throw new Error("Email already registered");
-            } else {
-              return sendOtpMutation({
-                email: email,
-              });
-            }
-          })
-          .then((otpResponse) => {
-            if (otpResponse) {
-              router.push({
-                pathname: "/signUp/Otp",
-              });
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-            setError("This email is already registered.");
-            reset();
-          })
-          .finally(() => {
-            setLoading(false);
-            setIsButtonDisabled(false);
-          });
+      setLoading(true);
+      setError(""); // Clear any previous errors
+
+      const response = await checkEmailMutation({ email });
+      console.log("API Response:", response); // For debugging
+      
+      if (response === false) {
+        await sendOtpMutation({ email });
+        router.push({
+          pathname: "/signUp/Otp",
+        });
+      } else if (response === true) {
+        setError("Email is already signed up");
+      } else {
+        throw new Error("Invalid response from server");
       }
     } catch (error) {
-      if (error instanceof ZodError) {
-        const formattedErrors = error.issues.map((issue) => {
-          return `${issue.message}`;
-        });
-        setError(formattedErrors.join("\n"));
-        setLoading(false);
-        setIsButtonDisabled(false);
-        setTimeout(() => {
-          setError("");
-        }, 4000);
-      }
+      console.error("Error in forgot password flow:", error);
+      setError("An unexpected error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -170,7 +200,10 @@ function Email() {
                           width: "100%",
                         }}
                         value={email}
-                        onChangeText={setEmail}
+                        onChangeText={(text) => {
+                          setEmail(text);
+                          setError("");
+                        }}
                       />
                     </View>
                   </LinearGradient>

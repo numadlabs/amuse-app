@@ -1,12 +1,12 @@
 {
   "cli": {
-    "version": ">= 7.2.0"
+    "version": ">= 7.2.0",
+    "appVersionSource": "remote"
   },
   "build": {
     "development-simulator": {
       "developmentClient": true,
       "distribution": "internal",
-     
       "ios": {
         "simulator": true
       },
@@ -37,8 +37,8 @@
       }
     },
     "staging": {
-       "channel": "main",
-       "env": {
+      "channel": "main",
+      "env": {
         "EXPO_IOS_GOOGLE_API_KEY": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
       }
     }

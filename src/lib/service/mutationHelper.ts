@@ -197,6 +197,11 @@ export async function checkOtp({
 
 export async function checkEmail({ email }: { email: string }) {
   return axiosClient.post("/auth/checkEmail", { email }).then((response) => {
-    return response.data;
+    if(response.data.success) {
+      return response.data.data.isEmailRegistered;
+      
+    }else{
+      throw new Error(response.data.error);
+    }
   });
 }
