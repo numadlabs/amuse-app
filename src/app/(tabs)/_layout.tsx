@@ -14,7 +14,6 @@ import { usePushNotifications } from "@/hooks/usePushNotification";
 import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 import * as Location from "expo-location";
-import { ErrorBoundary } from "@sentry/react-native";
 
 type LayoutProps = {
   navigation: any;
@@ -115,9 +114,6 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   }
 
   return (
-    <ErrorBoundary>
-
-
       <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
         <Tabs.Screen
           name="index"
@@ -152,7 +148,6 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         />
         <Tabs.Screen name="Acards" options={{ headerShown: false }} />
       </Tabs>
-    </ErrorBoundary>
   );
 };
 
