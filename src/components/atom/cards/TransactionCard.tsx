@@ -33,7 +33,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
   }
 
   const getTransactionType = (type: string) => {
-    return type === "PURCHASE" ? "Purchase" : "Withdraw";
+    return type === "PURCHASE" ? "Purchase" : "Reward";
   }
 
   const getTransactionAmount = (type: string, amount: number) => {
