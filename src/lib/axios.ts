@@ -4,7 +4,6 @@ import { SERVER_SETTING } from "../constants/serverSettings";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import Config from "config";
-import { useAuth } from "@/context/AuthContext";
 
 // Constants.manifest2.
 const isRunningInExpoGo = Constants.appOwnership === "expo";
@@ -19,8 +18,6 @@ const isRunningInExpoGo = Constants.appOwnership === "expo";
 const uri = `${Config.apiUrl}/api`;
 
 export const baseUrl = uri;
-
-const { onLogout } = useAuth();
 
 export const axiosClient = axios.create({ baseURL: baseUrl });
 
@@ -59,12 +56,12 @@ axiosClient.interceptors.response.use(
             return axiosClient(originalRequest);
           }
         } else {
-          onLogout();
+          router.replace("/Login");
         }
       } catch (err) {
         // If the refresh token is invalid or expired, redirect to login page
         console.log(err);
-        onLogout();
+        router.replace("/Login");
       }
     }
     // If the error is not related to token, reject the promise

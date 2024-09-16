@@ -51,7 +51,7 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         try {
           const updateCheck = await Promise.race([
             Updates.checkForUpdateAsync(),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('Update check timed out')), 8000))
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Update check timed out')), 5000))
           ]);
 
           if (updateCheck && typeof updateCheck === 'object' && 'isAvailable' in updateCheck) {
