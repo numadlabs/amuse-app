@@ -6,7 +6,8 @@ export const SERVER_SETTING = {
   PERK_FREQUENCY: 3,
   API_URL_PROD: "https://api.amusebouche.io",
   CDN_LINK: "https://d2fovtzya8mbko.cloudfront.net/restaurant/",
-  PROFILE_PIC_LINK: "https://d2fovtzya8mbko.cloudfront.net/user/"
+  PROFILE_PIC_LINK: "https://d2fovtzya8mbko.cloudfront.net/user/",
+  SENTRY_DSN_LINK: "https://af2ab7438305a106d064d42b000f92c2@o4507961781780480.ingest.de.sentry.io/4507961788792912"
 };
 
 export const mapStyle = [

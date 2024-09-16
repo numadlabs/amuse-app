@@ -14,6 +14,7 @@ import { usePushNotifications } from "@/hooks/usePushNotification";
 import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 import * as Location from "expo-location";
+import { ErrorBoundary } from "@sentry/react-native";
 
 type LayoutProps = {
   navigation: any;
@@ -82,9 +83,9 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
       if (currentLocation == null) {
         setLoadingStates(prev => ({ ...prev, location: true }));
         await getLocation();
-        if(permissionStatus === Location.PermissionStatus.DENIED)
-       
-        setLoadingStates(prev => ({ ...prev, location: false }));
+        if (permissionStatus === Location.PermissionStatus.DENIED)
+
+          setLoadingStates(prev => ({ ...prev, location: false }));
       }
     } catch (error) {
       console.error("Error preparing app:", error);
@@ -114,40 +115,44 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   }
 
   return (
-    <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          headerStyle: {
-            shadowOpacity: 0,
-            backgroundColor: Color.Gray.gray600,
-          },
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => router.push("/profileSection/Profile")}
-            >
-              <View style={{ paddingHorizontal: 20 }}>
-                <User color={Color.base.White} />
+    <ErrorBoundary>
+
+
+      <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
+        <Tabs.Screen
+          name="index"
+          options={{
+            headerStyle: {
+              shadowOpacity: 0,
+              backgroundColor: Color.Gray.gray600,
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => router.push("/profileSection/Profile")}
+              >
+                <View style={{ paddingHorizontal: 20 }}>
+                  <User color={Color.base.White} />
+                </View>
+              </TouchableOpacity>
+            ),
+            headerTitle: () => (
+              <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                <Logo />
               </View>
-            </TouchableOpacity>
-          ),
-          headerTitle: () => (
-            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-              <Logo />
-            </View>
-          ),
-          headerRight: () => (
-            <TouchableOpacity onPress={() => router.push("/Notification")}>
-              <View style={{ paddingHorizontal: 20 }}>
-                <Notification color={Color.base.White} />
-              </View>
-            </TouchableOpacity>
-          ),
-          headerTitleAlign: "center",
-        }}
-      />
-      <Tabs.Screen name="Acards" options={{ headerShown: false }} />
-    </Tabs>
+            ),
+            headerRight: () => (
+              <TouchableOpacity onPress={() => router.push("/Notification")}>
+                <View style={{ paddingHorizontal: 20 }}>
+                  <Notification color={Color.base.White} />
+                </View>
+              </TouchableOpacity>
+            ),
+            headerTitleAlign: "center",
+          }}
+        />
+        <Tabs.Screen name="Acards" options={{ headerShown: false }} />
+      </Tabs>
+    </ErrorBoundary>
   );
 };
 

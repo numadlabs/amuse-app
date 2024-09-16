@@ -10,6 +10,18 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import ErrorBoundary from './ErrorBoundary';
 
+import * as Sentry from '@sentry/react-native';
+import { SERVER_SETTING } from '@/constants/serverSettings';
+
+
+Sentry.init({
+  dsn: SERVER_SETTING.SENTRY_DSN_LINK,
+  tracesSampleRate: 1.0,
+  _experiments: {
+    profilesSampleRate: 1.0,
+  },
+});
+
 
 // Create QueryClient outside of the component to avoid recreating it on each render
 const queryClient = new QueryClient({
@@ -24,7 +36,8 @@ const queryClient = new QueryClient({
 // Keep SplashScreen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
-export default function Layout() {
+
+const Layout = () => {
   const [fontsLoaded] = useFonts({
     Sora: require("@/public/fonts/Sora-Regular.otf"),
     SoraBold: require("@/public/fonts/Sora-Bold.otf"),
@@ -43,11 +56,12 @@ export default function Layout() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
-          <StatusBar style="light" />
-          <ErrorBoundary>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
+            <StatusBar style="light" />
+
             <Stack
               screenOptions={{
                 headerShown: false,
@@ -87,9 +101,12 @@ export default function Layout() {
                 options={{ presentation: "modal" }} />
             </Stack>
             <Toast config={toastConfig} />
-          </ErrorBoundary>
-        </View>
-      </AuthProvider>
-    </QueryClientProvider>
+
+          </View>
+        </AuthProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
+
+export default Sentry.wrap(Layout);

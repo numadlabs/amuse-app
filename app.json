@@ -1,7 +1,7 @@
 {
   "expo": {
-    "version": "0.7.4",
-    "runtimeVersion": "0.7.4",
+    "version": "0.7.5",
+    "runtimeVersion": "0.7.5",
     "jsEngine": "hermes",
     "scheme": "acme",
     "owner": "numad-labs",
@@ -16,6 +16,14 @@
         "expo-router",
         {
           "origin": "https://n"
+        }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "numad-labs",
+          "project": "amuse-app",
+          "url": "https://sentry.io/"
         }
       ],
       "expo-secure-store",
@@ -81,7 +89,7 @@
       "enabled": true,
       "requestHeaders": {
         "expo-channel-name": "production",
-        "expo-runtime-version": "0.7.4",
+        "expo-runtime-version": "0.7.5",
         "expo-platform": "ios",
         "channel-name": "production"
       }
