@@ -54,6 +54,8 @@ axiosClient.interceptors.response.use(
             originalRequest.headers.Authorization = `Bearer ${res.data.data.accessToken}`;
             // Retry the original request with the new token
             return axiosClient(originalRequest);
+          }else{
+            router.replace("/Login");
           }
         } else {
           router.replace("/Login");
