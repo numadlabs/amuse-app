@@ -11,24 +11,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import * as Sentry from '@sentry/react-native';
 import { SERVER_SETTING } from '@/constants/serverSettings';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { type ErrorBoundaryProps } from 'expo-router';
+import ErrorBoundary from './ErrorBoundary';
 
-// Error Boundary Component
-export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
-  React.useEffect(() => {
-    Sentry.captureException(error);
-  }, [error]);
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Oops! Something went wrong.</Text>
-      <Text style={styles.message}>{error.message}</Text>
-      <TouchableOpacity style={styles.button} onPress={retry}>
-        <Text style={styles.buttonText}>Try Again</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
 
 // Initialize Sentry
 Sentry.init({
@@ -72,52 +56,60 @@ const Layout = () => {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
-          <StatusBar style="light" />
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              contentStyle: {
-                backgroundColor: "transparent",
-              },
-            }}
-          >
-            <Stack.Screen
-              name="restaurants/[id]"
-              options={{ presentation: "modal" }}
-            />
-            <Stack.Screen
-              name="(modals)/MyQrModal"
-              options={{ presentation: "modal" }}
-            />
-            <Stack.Screen name="PrivacyPolicy" />
-            <Stack.Screen name="profileSection/UpdateScreen" />
-            <Stack.Screen name="MyAcards" />
-            <Stack.Screen name="Wallet" />
-            <Stack.Screen name="TermsAndCondo" />
-            <Stack.Screen name="Faq" />
-            <Stack.Screen name="Tier" />
-            <Stack.Screen name="PerkScreen" />
-            <Stack.Screen
-              name="PerkMarket"
-              options={{ presentation: "modal" }} />
-            <Stack.Screen
-              name="PowerUp"
-              options={{ presentation: "modal" }} />
-            <Stack.Screen
-              name="FollowingPerk"
-              options={{ presentation: "modal" }}
-            />
-            <Stack.Screen
-              name="PerkBuy"
-              options={{ presentation: "modal" }} />
-          </Stack>
-          <Toast config={toastConfig} />
-        </View>
-      </AuthProvider>
-    </QueryClientProvider>
+    <>
+
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <ErrorBoundary>
+
+
+            <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
+              <StatusBar style="light" />
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                  contentStyle: {
+                    backgroundColor: "transparent",
+                  },
+                }}
+              >
+                <Stack.Screen
+                  name="restaurants/[id]"
+                  options={{ presentation: "modal" }}
+                />
+                <Stack.Screen
+                  name="(modals)/MyQrModal"
+                  options={{ presentation: "modal" }}
+                />
+                <Stack.Screen name="PrivacyPolicy" />
+                <Stack.Screen name="profileSection/UpdateScreen" />
+                <Stack.Screen name="MyAcards" />
+                <Stack.Screen name="Wallet" />
+                <Stack.Screen name="TermsAndCondo" />
+                <Stack.Screen name="Faq" />
+                <Stack.Screen name="Tier" />
+                <Stack.Screen name="PerkScreen" />
+                <Stack.Screen
+                  name="PerkMarket"
+                  options={{ presentation: "modal" }} />
+                <Stack.Screen
+                  name="PowerUp"
+                  options={{ presentation: "modal" }} />
+                <Stack.Screen
+                  name="FollowingPerk"
+                  options={{ presentation: "modal" }}
+                />
+                <Stack.Screen
+                  name="PerkBuy"
+                  options={{ presentation: "modal" }} />
+              </Stack>
+              <Toast config={toastConfig} />
+            </View>
+
+          </ErrorBoundary>
+        </AuthProvider>
+      </QueryClientProvider>
+    </>
   );
 }
 
