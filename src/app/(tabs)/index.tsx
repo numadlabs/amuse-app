@@ -227,9 +227,7 @@ const Page = () => {
           <View
             style={{ width: "100%", alignItems: "center", marginBottom: 120 }}
           >
-            <TouchableOpacity onPress={() => {
-              throw Error("Test")
-            }}>
+            <TouchableOpacity onPress={() => router.push("/MyAcards")}>
               <View
                 style={{
                   backgroundColor: Color.Gray.gray300,
