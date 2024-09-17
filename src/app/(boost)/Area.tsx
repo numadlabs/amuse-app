@@ -104,40 +104,6 @@ const Area = () => {
                     end={[1, 0]}
                     style={styles.inputGradient}
                   >
-                    {/* <View style={styles.inputWrapper}>
-                      <GooglePlacesAutocomplete
-                        placeholder="Area (ex. Prague)"
-                        // placeholderTextColor="white"
-                        onPress={(data, details = null) => {
-                          setArea(data.description);
-                        }}
-                        textInputProps={{
-                          placeholderTextColor: Color.Gray.gray100,
-                          returnKeyType: "search"
-                        }}
-                        query={{
-                          key: "AIzaSyD6P0kwuwr_7RTb5_2UZLNteryotRLItCM",
-                          language: "en",
-                          components: "country:cz",
-                        }}
-                        fetchDetails={true}
-                        onFail={(error) => console.error(error)}
-                        styles={{
-                          separator: styles.separator,
-                          textInput: styles.textInput,
-                          listView: styles.listView,
-                          row: styles.row,
-                          poweredContainer: styles.poweredContainer,
-                        }}
-                        renderRow={(rowData) => (
-                          <Text style={styles.suggestion}>
-                            {rowData.description}
-                          </Text>
-                        )}
-                        listViewDisplayed="auto"
-                        renderDescription={(rowData) => rowData.description}
-                      />
-                    </View> */}
                     <View>
                       <TouchableOpacity
                         style={styles.input}
