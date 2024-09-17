@@ -28,7 +28,7 @@ import Accordion from "@/components/ui/Accordion";
 import { DocumentDownload, Warning2, CloseCircle } from "iconsax-react-native";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
-import { useAuth } from "@/context/AuthContext";
+import { logoutHandler, useAuth } from "@/context/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteUser, updateUserInfo } from "@/lib/service/mutationHelper";
 import { getUserById } from "@/lib/service/queryHelper";
@@ -36,7 +36,7 @@ import { router } from "expo-router";
 import { SERVER_SETTING } from "@/constants/serverSettings";
 import { userKeys } from "@/lib/service/keysHelper";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 const TermsAndConditions = () => {
   const [showProfilePicture, setShowProfilePicture] = useState(true);
@@ -44,7 +44,7 @@ const TermsAndConditions = () => {
   const [showArea, setShowArea] = useState(true);
   const [isBottomTabOpen, setIsBottomTabOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [currentSetting, setCurrentSetting] = useState('');
+  const [currentSetting, setCurrentSetting] = useState("");
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
 
@@ -94,7 +94,10 @@ const TermsAndConditions = () => {
 
   const handleToggle = (setting, value) => {
     if (value) {
-      saveSetting(`show${setting.charAt(0).toUpperCase() + setting.slice(1)}`, true);
+      saveSetting(
+        `show${setting.charAt(0).toUpperCase() + setting.slice(1)}`,
+        true
+      );
       switch (setting) {
         case "profilePicture":
           setShowProfilePicture(true);
@@ -132,11 +135,16 @@ const TermsAndConditions = () => {
       }
       await updateUserInfoMutation({
         userId: authState.userId,
-        data: dataToUpdate
+        data: dataToUpdate,
       });
 
       queryClient.invalidateQueries({ queryKey: userKeys.info });
-      saveSetting(`show${currentSetting.charAt(0).toUpperCase() + currentSetting.slice(1)}`, false);
+      saveSetting(
+        `show${
+          currentSetting.charAt(0).toUpperCase() + currentSetting.slice(1)
+        }`,
+        false
+      );
     } catch (error) {
       console.error(`Error updating ${currentSetting}:`, error);
     } finally {
@@ -151,8 +159,15 @@ const TermsAndConditions = () => {
 
   const generateCSV = (userData) => {
     const headers = [
-      "Nickname", "Email", "Location", "Date of Birth", "Balance",
-      "Converted Balance", "Created At", "Visit Count", "Profile Picture Link"
+      "Nickname",
+      "Email",
+      "Location",
+      "Date of Birth",
+      "Balance",
+      "Converted Balance",
+      "Created At",
+      "Visit Count",
+      "Profile Picture Link",
     ];
 
     const profilePicLink = userData.user.profilePicture
@@ -197,15 +212,22 @@ const TermsAndConditions = () => {
 
   const handleDeleteUser = async () => {
     setLoading(true);
+    setIsDeleteModalOpen(false);
+
     try {
-      await deleteUserMutation();
-      router.replace("/Login");
+      const response = await deleteUserMutation();
+      console.log("🚀 ~ handleDeleteUser ~ response:", response);
+      if (response.success) {
+        // Perform logout and clear all data
+        await logoutHandler();
+      } else {
+        throw new Error("Cannot delete user: " + response.error);
+      }
     } catch (error) {
-      console.error("Error deleting user:", error);
-      alert("Failed to delete user account");
+      console.log("Error deleting user:", error);
+      alert(`Failed to delete user account ${error}`);
     } finally {
       setLoading(false);
-      setIsDeleteModalOpen(false);
     }
   };
 
@@ -213,7 +235,10 @@ const TermsAndConditions = () => {
     <View style={styles.item}>
       <Text style={styles.label}>{label}</Text>
       <Switch
-        trackColor={{ false: Color.Gray.gray300, true: Color.System.systemSuccess }}
+        trackColor={{
+          false: Color.Gray.gray300,
+          true: Color.System.systemSuccess,
+        }}
         thumbColor={value ? Color.base.White : Color.Gray.gray100}
         value={value}
         onValueChange={onValueChange}
@@ -233,23 +258,23 @@ const TermsAndConditions = () => {
   const data = [
     {
       title: "Data Collection",
-      text: `a. The Platform collects two types of data from its users: necessary data collection which cannot be disabled and optional data collection which may be enabled/disabled at your discretion.  
+      text: `a. The Platform collects two types of data from its users: necessary data collection which cannot be disabled and optional data collection which may be enabled/disabled at your discretion.
 
-b. Necessary Data Collection 
-	I. Location: We use location data to assist you in locating restaurants participating in a program on the Platform. We may store location data to improve and optimize the Platform. 
+b. Necessary Data Collection
+	I. Location: We use location data to assist you in locating restaurants participating in a program on the Platform. We may store location data to improve and optimize the Platform.
 	II. Email: We will store and use your email for account creation, user login, password management and Platform-to-user communications.
 
 c. Optional Data Collection
-	I. Birthday: We use birthday data to allow us to offer you a special birthday promotion or reward. 
+	I. Birthday: We use birthday data to allow us to offer you a special birthday promotion or reward.
 	II. Profile Picture: You may opt to add a profile picture in order to personalize your profile. If added, the Platform will automatically store the data. `,
     },
     {
       title: "General Data Protection Regulation",
       text: `a. Our legal basis for collecting and using the data is for one or more of the following purposes:
 	I. We need to perform a contract with you.
-	II. You have given us permission to do so. 
-	III. The processing is in our legitimate interest, and it is not overridden by your rights. 
-	IV. It is necessary for payment processing purposes. 
+	II. You have given us permission to do so.
+	III. The processing is in our legitimate interest, and it is not overridden by your rights.
+	IV. It is necessary for payment processing purposes.
 	V. It is necessary to comply with the law. `,
     },
     {
@@ -257,8 +282,8 @@ c. Optional Data Collection
       text: `a. We will retain data only for as long as is necessary for the purposes as stated in this policy.
 
 b. Disclosure of your data may occur for one or more of the following reasons:
-	I. The Platform is involved in a merger, acquisition or asset sale. 
-	II. We are required by law to disclose your data. 
+	I. The Platform is involved in a merger, acquisition or asset sale.
+	II. We are required by law to disclose your data.
 	III. We have a good faith belief that it is necessary to disclose your data in relation to the protection of the Platform and/or legal matters, both potential and active. `,
     },
     {
@@ -267,13 +292,13 @@ b. Disclosure of your data may occur for one or more of the following reasons:
     },
     {
       title: "User Rights",
-      text: `a. You have the following rights regarding your data: 
-	I. Access: You can request access to the data of yours that we have collected. 
+      text: `a. You have the following rights regarding your data:
+	I. Access: You can request access to the data of yours that we have collected.
 	II. Rectification: You have the right to have your information corrected
-that information is inaccurate or incomplete. 
-	III. Objection: You have the right to request that we restrict the processing of your data. 
-	IV. Portability: You have the right to be provided with a copy of your data that we have collected. 
-	V. Withdraw Consent: You have the right to withdraw your consent at any time to the collection of your data. 
+that information is inaccurate or incomplete.
+	III. Objection: You have the right to request that we restrict the processing of your data.
+	IV. Portability: You have the right to be provided with a copy of your data that we have collected.
+	V. Withdraw Consent: You have the right to withdraw your consent at any time to the collection of your data.
 `,
     },
   ];
@@ -288,8 +313,9 @@ that information is inaccurate or incomplete.
         <ScrollView style={styles.scrollViewContainer}>
           <Text style={styles.sectionHeader}>Disclaimer</Text>
           <Text style={styles.sectionBody}>
-            By using the Amuse Bouche application platform ("Platform"), you agree to the collection
-            and use of information in accordance with this policy.
+            By using the Amuse Bouche application platform ("Platform"), you
+            agree to the collection and use of information in accordance with
+            this policy.
           </Text>
 
           {data.map((item, index) => (
@@ -300,12 +326,19 @@ that information is inaccurate or incomplete.
 
           <Text style={styles.sectionHeader}>Optional Data</Text>
           <Text style={styles.sectionBody}>
-            To maintain data privacy, you have the option to disable specific fields.
+            To maintain data privacy, you have the option to disable specific
+            fields.
           </Text>
 
-          {renderToggleItem("Profile picture", showProfilePicture, (value) => handleToggle('profilePicture', value))}
-          {renderToggleItem("Date of birth", showDateOfBirth, (value) => handleToggle('dateOfBirth', value))}
-          {renderToggleItem("Country", showArea, (value) => handleToggle('area', value))}
+          {renderToggleItem("Profile picture", showProfilePicture, (value) =>
+            handleToggle("profilePicture", value)
+          )}
+          {renderToggleItem("Date of birth", showDateOfBirth, (value) =>
+            handleToggle("dateOfBirth", value)
+          )}
+          {renderToggleItem("Country", showArea, (value) =>
+            handleToggle("area", value)
+          )}
 
           {renderButton(
             exportUserData,
@@ -336,15 +369,26 @@ that information is inaccurate or incomplete.
         >
           <View style={styles.bottomTabContent}>
             <Warning2 size={62} color={Color.System.systemWarning} />
-            <View style={{ alignItems: 'center', gap: 8 }}>
+            <View style={{ alignItems: "center", gap: 8 }}>
               <Text style={styles.bottomTabTitle}>Are you sure?</Text>
               <Text style={styles.bottomTabText}>
-                This action will permanently delete the information you've provided.
+                This action will permanently delete the information you've
+                provided.
               </Text>
             </View>
             <View style={styles.bottomTabButtons}>
-              {renderButton(cancelToggleOff, null, "Cancel", styles.cancelButton)}
-              {renderButton(confirmToggleOff, null, "Yes, Turn off", styles.confirmButton)}
+              {renderButton(
+                cancelToggleOff,
+                null,
+                "Cancel",
+                styles.cancelButton
+              )}
+              {renderButton(
+                confirmToggleOff,
+                null,
+                "Yes, Turn off",
+                styles.confirmButton
+              )}
             </View>
           </View>
         </Animated.View>
@@ -366,17 +410,35 @@ that information is inaccurate or incomplete.
           </View>
           <Text style={styles.bottomTabTitle}>IMPORTANT NOTICE</Text>
 
-            <Text style={styles.bottomTabText}>
-              The Pilot Program for Amuse Bouche is still ongoing. If you proceed with deleting your account, you will forfeit all bitcoin accumulated in your Amuse Bouche account. Once deleted, you will not be able to recover or transfer your bitcoin.
-            </Text>
-            <Text style={styles.bottomTabText}>
-              However, your bitcoin will not be forfeited if you maintain your account until the completion of the Pilot Program and the full launch of the Application. You will then be able to transfer your bitcoin at your discretion. Please note that deleting your account will also result in the permanent erasure of all your data. By deleting your account, you acknowledge and accept these terms.
-            </Text>
+          <Text style={styles.bottomTabText}>
+            The Pilot Program for Amuse Bouche is still ongoing. If you proceed
+            with deleting your account, you will forfeit all bitcoin accumulated
+            in your Amuse Bouche account. Once deleted, you will not be able to
+            recover or transfer your bitcoin.
+          </Text>
+          <Text style={styles.bottomTabText}>
+            However, your bitcoin will not be forfeited if you maintain your
+            account until the completion of the Pilot Program and the full
+            launch of the Application. You will then be able to transfer your
+            bitcoin at your discretion. Please note that deleting your account
+            will also result in the permanent erasure of all your data. By
+            deleting your account, you acknowledge and accept these terms.
+          </Text>
           <View style={styles.bottomTabButtons}>
-            {renderButton(() => setIsDeleteModalOpen(false), null, "Cancel", styles.cancelButton)}
-            {renderButton(handleDeleteUser, null, "Delete My Account", styles.confirmButton)}
+            {renderButton(
+              () => setIsDeleteModalOpen(false),
+              null,
+              "Cancel",
+              styles.cancelButton
+            )}
+            {renderButton(
+              handleDeleteUser,
+              null,
+              "Delete My Account",
+              styles.confirmButton
+            )}
           </View>
-          </Animated.View>
+        </Animated.View>
       </Modal>
 
       {loading && (
@@ -422,9 +484,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   item: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 12,
     borderColor: Color.Gray.gray300,
   },
@@ -474,28 +536,28 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   bottomTabContent: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    justifyContent: "space-between",
+    alignItems: "center",
     gap: 32,
   },
   bottomTabTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: Color.base.White,
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   bottomTabText: {
     fontSize: 14,
     lineHeight: 18,
-    textAlign: 'center',
+    textAlign: "center",
     color: Color.Gray.gray50,
     marginBottom: 24,
   },
   bottomTabButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
   },
   cancelButton: {
     paddingVertical: 12,
@@ -505,7 +567,7 @@ const styles = StyleSheet.create({
     borderRadius: 48,
     flex: 1,
     marginRight: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   confirmButton: {
     backgroundColor: Color.Gray.gray400,
@@ -514,7 +576,7 @@ const styles = StyleSheet.create({
     borderRadius: 48,
     flex: 1,
     marginLeft: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   modalContent: {
     backgroundColor: Color.Gray.gray600,
@@ -527,18 +589,18 @@ const styles = StyleSheet.create({
     maxHeight: height * 0.9,
   },
   iconContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 16,
   },
   loadingOverlay: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     top: 0,
     bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     zIndex: 1000,
   },
 });
