@@ -121,7 +121,9 @@ export async function forgotPassword({
     });
 }
 export async function deleteUser() {
-  return axiosClient.delete("/users");
+  return axiosClient.delete("/users").then((response) => {
+    return response.data;
+  });
 }
 export async function updatePassword({
   prefix,
@@ -197,10 +199,9 @@ export async function checkOtp({
 
 export async function checkEmail({ email }: { email: string }) {
   return axiosClient.post("/auth/checkEmail", { email }).then((response) => {
-    if(response.data.success) {
+    if (response.data.success) {
       return response.data.data.isEmailRegistered;
-      
-    }else{
+    } else {
       throw new Error(response.data.error);
     }
   });

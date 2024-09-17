@@ -2,12 +2,14 @@ export const SERVER_SETTING = {
   TOKEN_KEY: "JWT",
   REFRESH_TOKEN_KEY: "REFRESH_TOKEN_KEY",
   USER_ID: "USER_ID",
-  API_URL: "https://amuse-backend-staging-478fc2297634.herokuapp.com",
+  API_URL: "http://localhost:3001",
+  // API_URL: "https://amuse-backend-staging-478fc2297634.herokuapp.com",
   PERK_FREQUENCY: 3,
   API_URL_PROD: "https://api.amusebouche.io",
   CDN_LINK: "https://d2fovtzya8mbko.cloudfront.net/restaurant/",
   PROFILE_PIC_LINK: "https://d2fovtzya8mbko.cloudfront.net/user/",
-  SENTRY_DSN_LINK: "https://af2ab7438305a106d064d42b000f92c2@o4507961781780480.ingest.de.sentry.io/4507961788792912"
+  SENTRY_DSN_LINK:
+    "https://af2ab7438305a106d064d42b000f92c2@o4507961781780480.ingest.de.sentry.io/4507961788792912",
 };
 
 export const mapStyle = [
