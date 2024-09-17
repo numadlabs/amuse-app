@@ -36,25 +36,6 @@ const Birthday = () => {
   const [temporaryDate, setTemporaryDate] = useState(new Date());
   const { authState } = useAuth();
 
-  useEffect(() => {
-    // Add keyboard listeners to adjust button position
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => setButtonPosition("top"),
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => setButtonPosition("bottom"),
-    );
-
-    // Clean up listeners on component unmount
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
   // Handler for date change in the picker
   const onDateChange = (event, selectedDate) => {
     if (selectedDate) {

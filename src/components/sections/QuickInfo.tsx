@@ -72,7 +72,7 @@ const QuickInfo = ({ user, onPress }) => {
             <ProgressBar
               isActive={true}
               progress={progress}
-              width={"97%"}
+              width={"90%"}
               height={8}
             />
             <Text

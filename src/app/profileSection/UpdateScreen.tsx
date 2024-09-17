@@ -15,6 +15,8 @@ import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/dat
 import { useUpdateEmailStore } from '@/lib/store/emailStore';
 import OtpInputEmail from '@/components/atom/OtpInputEmail';
 import Animated, { FadeInLeft } from 'react-native-reanimated';
+import { Picker } from '@react-native-picker/picker';
+import { height } from '@/lib/utils';
 
 interface Country {
   id: string;
@@ -29,6 +31,23 @@ type UpdateScreenParams = {
   value: string;
 };
 
+const months = [
+  { label: 'January', value: 1 },
+  { label: 'February', value: 2 },
+  { label: 'March', value: 3 },
+  { label: 'April', value: 4 },
+  { label: 'May', value: 5 },
+  { label: 'June', value: 6 },
+  { label: 'July', value: 7 },
+  { label: 'August', value: 8 },
+  { label: 'September', value: 9 },
+  { label: 'October', value: 10 },
+  { label: 'November', value: 11 },
+  { label: 'December', value: 12 },
+];
+const currentYear = new Date().getFullYear();
+const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
+
 const UpdateScreen: React.FC = () => {
   const { screenName, field, value } = useLocalSearchParams<UpdateScreenParams>();
   const [newValue, setNewValue] = useState<string>(value || '');
@@ -42,12 +61,26 @@ const UpdateScreen: React.FC = () => {
   const [otpValue, setOtpValue] = useState<string>('');
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 18);
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
 
   const [countries, setCountries] = useState<Country[]>([]);
   const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);
   const [showCountryList, setShowCountryList] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<{ id: string; name: string } | null>(null);
 
+  const pickerStyle = {
+    height: Platform.OS === 'android' ? 100 : 400,
+    width: '50%',
+    backgroundColor: Platform.OS === 'android' ? Color.Gray.gray200 : Color.Gray.gray600,
+    color: Color.Gray.gray100
+  };
+
+  const pickerItemStyle = {
+    color: 'white', // equivalent to Tailwind's gray-100
+
+    fontSize: 17,
+  };
   const { data: countriesData } = useQuery({
     queryKey: ['countries'],
     queryFn: getCountries,
@@ -132,7 +165,7 @@ const UpdateScreen: React.FC = () => {
           return;
         }
         setLoading(true);
-        const dataToUpdate = { 
+        const dataToUpdate = {
           birthYear: date.getFullYear(),
           birthMonth: date.getMonth() + 1 // Adding 1 because getMonth() returns 0-11
         };
@@ -221,14 +254,38 @@ const UpdateScreen: React.FC = () => {
           <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
             <Text style={styles.dateButtonText}>{formatDate(date)}</Text>
           </TouchableOpacity>
+
           {showDatePicker && (
-            <DateTimePicker
-              value={date}
-              mode="date"
-              display="spinner"
-              onChange={onDateChange}
-              maximumDate={maxDate}
-            />
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+              <Picker
+                selectedValue={selectedMonth}
+                onValueChange={(itemValue) => {
+                  setSelectedMonth(itemValue);
+
+                }}
+                style={pickerStyle}
+                itemStyle={pickerItemStyle}
+              >
+                <Picker.Item label="Select a month" value="" />
+                {months.map((month) => (
+                  <Picker.Item key={month.value} label={month.label} value={month.value} />
+                ))}
+              </Picker>
+              <Picker
+                selectedValue={selectedYear}
+                onValueChange={(itemValue) => {
+                  setSelectedYear(itemValue);
+
+                }}
+                style={pickerStyle}
+                itemStyle={pickerItemStyle}
+              >
+                <Picker.Item label="Select a year" value="" />
+                {years.map((year) => (
+                  <Picker.Item key={year} label={year.toString()} value={year} />
+                ))}
+              </Picker>
+            </View>
           )}
         </>
       );
