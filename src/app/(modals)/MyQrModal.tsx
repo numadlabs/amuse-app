@@ -28,6 +28,7 @@ const markerSize = 250;
 const halfMarkerSize = markerSize / 2;
 
 const MyQrModal = () => {
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { authState } = useAuth();
   const [qrData, setQrdata] = useState("");
@@ -53,7 +54,10 @@ const MyQrModal = () => {
         router.push({
           pathname: `/restaurants/${data?.restaurantId}`,
         });
-      } else {
+      } else if (data?.data?.isInTapLock === true) {
+        setError("User is already checked-in.")
+      }
+      else {
         router.back();
         router.navigate({
           pathname: "/PerkScreen",
@@ -153,6 +157,11 @@ const MyQrModal = () => {
               size={width / 1.3}
               value={`data:image/png;base64,${qrData}`}
             />
+            {error && (
+              <Text style={{...BODY_2_REGULAR, color: Color.System.systemError }}>
+                {error}
+              </Text>
+            )}
           </LinearGradient>
           {/* </TouchableOpacity> */}
           <View style={{ marginHorizontal: 32 }}>

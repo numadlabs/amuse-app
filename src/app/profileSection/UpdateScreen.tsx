@@ -261,9 +261,13 @@ const UpdateScreen: React.FC = () => {
                 selectedValue={selectedMonth}
                 onValueChange={(itemValue) => {
                   setSelectedMonth(itemValue);
-
                 }}
-                style={pickerStyle}
+                style={{
+                  height: Platform.OS === 'android' ? 100 : 400,
+                  width: '50%',
+                  backgroundColor: Platform.OS === 'android' ? Color.Gray.gray600 : Color.Gray.gray600,
+                  color: Color.Gray.gray100
+                }}
                 itemStyle={pickerItemStyle}
               >
                 <Picker.Item label="Select a month" value="" />
@@ -277,7 +281,11 @@ const UpdateScreen: React.FC = () => {
                   setSelectedYear(itemValue);
 
                 }}
-                style={pickerStyle}
+                style={{
+                  height: Platform.OS === 'android' ? 100 : 400,
+                  width: '50%',
+                  color: Color.Gray.gray100
+                }}
                 itemStyle={pickerItemStyle}
               >
                 <Picker.Item label="Select a year" value="" />
