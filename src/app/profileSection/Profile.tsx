@@ -7,6 +7,7 @@ import {
   NoteText,
   Sms,
   User,
+  Warning2,
 } from "iconsax-react-native";
 import React, { useState } from "react";
 import {
@@ -89,7 +90,10 @@ const Profile = () => {
                 borderRadius: 16,
               }}
             >
-              <TouchableOpacity onPress={() => router.push("/Tier")}>
+              <TouchableOpacity onPress={() =>
+                // router.push("/Tier")
+                ""
+              }>
                 <LinearGradient
                   colors={[Color.Brand.card.start, Color.Brand.card.end]}
                   start={{ x: 1, y: 0 }}
@@ -148,9 +152,9 @@ const Profile = () => {
                         Tier: {userTierData?.name}
                       </Text>
                     </View>
-                    <View>
+                    {/* <View>
                       <ArrowRight2 color={Color.Gray.gray100} />
-                    </View>
+                    </View> */}
                   </View>
                 </LinearGradient>
               </TouchableOpacity>
@@ -353,6 +357,35 @@ const Profile = () => {
                   </View>
                   <ArrowRight2 color={Color.Gray.gray100} />
                 </TouchableOpacity>
+              </LinearGradient>
+
+              <LinearGradient
+                colors={[Color.Brand.card.start, Color.Brand.card.end]}
+                start={{ x: 1, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{ borderRadius: 16 }}
+              >
+                <TouchableOpacity
+                  style={styles.configContainer}
+                  onPress={() => router.push("BugReport")}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 12,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Warning2 size={24} color={Color.Gray.gray100} />
+                    <Text
+                      style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}
+                    >
+                      Report a Bug
+                    </Text>
+                  </View>
+                  <ArrowRight2 color={Color.Gray.gray100} />
+                </TouchableOpacity>
+
               </LinearGradient>
 
               <TouchableOpacity onPress={onLogout}>

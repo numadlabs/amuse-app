@@ -52,21 +52,26 @@ const MyQrModal = () => {
       if (!userCard) {
         router.back();
         router.push({
-          pathname: `/restaurants/${data?.restaurantId}`,
+          pathname: `/restaurants/${data?.data?.restaurantId}`,
         });
-      } else if (data?.data?.isInTapLock === true) {
-        setError("User is already checked-in.")
       }
       else {
-        router.back();
-        router.navigate({
-          pathname: "/PerkScreen",
-          params: {
-            restaurantId: data?.data?.restaurantId,
-            btcAmount: data.data?.increment,
-            powerUp: data.data?.bonus?.name,
-          },
-        });
+        if (data?.isInTapLock === true) {
+          router.back();
+          router.push({
+            pathname: `/AlreadyCheckedIn`,
+          });
+        } else {
+          router.back();
+          router.navigate({
+            pathname: "/PerkScreen",
+            params: {
+              restaurantId: data?.data?.restaurantId,
+              btcAmount: data.data?.increment,
+              powerUp: data.data?.bonus?.name,
+            },
+          });
+        }
       }
     },
     [cards, router]
@@ -158,7 +163,7 @@ const MyQrModal = () => {
               value={`data:image/png;base64,${qrData}`}
             />
             {error && (
-              <Text style={{...BODY_2_REGULAR, color: Color.System.systemError }}>
+              <Text style={{ ...BODY_2_REGULAR, color: Color.System.systemError }}>
                 {error}
               </Text>
             )}

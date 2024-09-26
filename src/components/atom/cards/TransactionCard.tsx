@@ -26,9 +26,9 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
   const getTransactionIcon = (type: string) => {
     switch (type) {
       case 'PURCHASE':
-        return <Import size={24} color={Color.System.systemError} />;
-      default:
-        return <Export size={24} color={Color.System.systemSuccess} />;
+        return <Export size={24} color={Color.System.systemError} />;
+        default:
+        return <Import size={24} color={Color.System.systemSuccess} />;
     }
   }
 

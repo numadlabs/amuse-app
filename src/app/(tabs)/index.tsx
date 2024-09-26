@@ -39,12 +39,12 @@ import Animated, {
 import { height, width } from "@/lib/utils";
 import Button from "@/components/ui/Button";
 import Close from "@/components/icons/Close";
-import { usePushNotifications } from "@/hooks/usePushNotification";
 import moment from "moment";
-import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 import { BODY_2_MEDIUM, BODY_2_REGULAR, BUTTON_40, H6 } from "@/constants/typography";
-import DiscoverFloatRestCard from "@/components/sections/DiscoverFloatRestCard";
+import DiscoverFloatRestCard from "@/components/atom/cards/DiscoverFloatRestCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import RestaurantListGrowing from "@/components/atom/cards/RestaurantListGrowing";
+import BitcoinWithdrawals from "@/components/atom/cards/BitcoinWithdrawals";
 
 const Page = () => {
   const router = useRouter();
@@ -55,9 +55,8 @@ const Page = () => {
   const pressed = useSharedValue(false);
   const { authState } = useAuth();
   const profilePictureSetting = AsyncStorage.getItem('showProfilePicture');
-  const { currentLocation } = useLocationStore();
   const currentTime = moment().format("HH:mm:ss");
-  const { data: user, isSuccess } = useQuery({
+  const { data: user } = useQuery({
     queryKey: userKeys.info,
     queryFn: () => {
       return getUserById(authState.userId);
@@ -139,7 +138,7 @@ const Page = () => {
             Featured
           </Text>
           {restaurantsArray?.length > 0 && (
-            <View style={{ alignItems: "center", gap: 8, width }}>
+            <View style={{ alignItems: "center", gap: 16, width }}>
               {restaurantsArray?.length > 0 && (
                 <Animated.ScrollView
                   snapToAlignment="center"
@@ -164,16 +163,13 @@ const Page = () => {
                         profilePictureSetting
                         ? null
                         : isQuickInfoVisible && (
-                          <QuickInfo
-                            onPress={() => setIsQuickInfoVisible(false)}
-                            user={user?.user}
-                          />
+                         null
                         )}
 
                     <FlatList
                       style={{ gap: 10, flex: 1 }}
                       ItemSeparatorComponent={() => (
-                        <View style={{ width: 8 }} />
+                        <View style={{ width: 16 }} />
                       )}
                       data={filteredRestaurantsArray}
                       horizontal
@@ -187,6 +183,8 @@ const Page = () => {
                         />
                       )}
                     />
+                    <RestaurantListGrowing/>
+                    <BitcoinWithdrawals/>
                     <DiscoverFloatRestCard
                       onPress={() => setIsQuickInfoVisible(false)}
                     />

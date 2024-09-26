@@ -86,11 +86,16 @@ const Layout = () => {
                 <Stack.Screen name="MyAcards" />
                 <Stack.Screen name="Wallet" />
                 <Stack.Screen name="TermsAndCondo" />
+                <Stack.Screen name="BugReport" />
                 <Stack.Screen name="Faq" />
                 <Stack.Screen name="Tier" />
                 <Stack.Screen name="PerkScreen" />
+                <Stack.Screen name="NoInternet" />
                 <Stack.Screen
                   name="PerkMarket"
+                  options={{ presentation: "modal" }} />
+                <Stack.Screen
+                  name="AlreadyCheckedIn"
                   options={{ presentation: "modal" }} />
                 <Stack.Screen
                   name="PowerUp"

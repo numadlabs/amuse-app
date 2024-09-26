@@ -14,7 +14,6 @@ import { usePushNotifications } from "@/hooks/usePushNotification";
 import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 import * as Location from "expo-location";
-import * as Sentry from '@sentry/react-native';
 import ErrorBoundary from "../ErrorBoundary";
 
 type LayoutProps = {
