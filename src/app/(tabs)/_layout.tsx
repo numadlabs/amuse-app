@@ -51,15 +51,21 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   const checkInternetConnection = useCallback(async () => {
     const networkState = await Network.getNetworkStateAsync();
     setIsConnected(networkState.isConnected);
+    return networkState.isConnected;
   }, []);
 
   const prepareApp = useCallback(async () => {
     try {
-      await checkInternetConnection();
+      const isOnline = await checkInternetConnection();
+
+      if (!isOnline) {
+        console.log("No internet connection. Skipping app preparation.");
+        return <NoInternet onPress={Updates.reloadAsync} />;
+      }
 
       if (!__DEV__) {
         setLoadingStates(prev => ({ ...prev, updates: true }));
-        
+
         try {
           const updateCheck = await Promise.race([
             Updates.checkForUpdateAsync(),
@@ -117,7 +123,7 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   }, [authState.loading, currentLocation]);
 
   useEffect(() => {
-    const intervalId = setInterval(checkInternetConnection, 5000); 
+    const intervalId = setInterval(checkInternetConnection, 5000);
     return () => clearInterval(intervalId);
   }, [checkInternetConnection]);
 
@@ -129,9 +135,7 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     return <Redirect href="/Login" />;
   }
 
-  if (!isConnected) {
-    return <NoInternet onPress={Updates.reloadAsync}/>;
-  }
+
 
   return (
     <>
