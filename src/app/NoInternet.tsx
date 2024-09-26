@@ -8,7 +8,7 @@ import Button from '@/components/ui/Button'
 
 const NoInternet = ({ onPress }) => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor:Color.Gray.gray600 }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <View style={{ padding: 16, backgroundColor: Color.Gray.gray500, borderRadius: 16 }}>
           <EmojiSad size={48} color={Color.Gray.gray100} />
@@ -24,7 +24,7 @@ const NoInternet = ({ onPress }) => {
       </View>
 
       <View style={{ padding: 16 }}>
-        <Button onPress={onPress}>
+        <Button variant='disabled' onPress={onPress}>
           <Text>
             Try again
           </Text>
