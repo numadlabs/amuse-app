@@ -183,6 +183,34 @@ export async function verifyEmailOtp({
     });
 }
 
+export async function bugReport({
+  deviceModel,
+  appVersion,
+  osVersion,
+  reason,
+  description,
+}: {
+  deviceModel: string;
+  appVersion: string;
+  osVersion: string | number;
+  reason: string;
+  description: string;
+}) {
+  const response = await axiosClient.post("/bug-reports", {
+    deviceModel,
+    appVersion,
+    osVersion,
+    reason,
+    description,
+  });
+
+  if (response.data.success) {
+    return response.data.data;
+  } else {
+    throw new Error(response.data.error);
+  }
+}
+
 export async function checkOtp({
   email,
   verificationCode,

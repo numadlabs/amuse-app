@@ -7,7 +7,7 @@ import {
     Image,
   } from "react-native";
   import React from "react";
-  import Color from "../../constants/Color";
+  import Color from "../../../constants/Color";
   import { router } from "expo-router";
   import { width } from "@/lib/utils";
   import { LinearGradient } from "expo-linear-gradient";
@@ -56,10 +56,11 @@ import {
     borderWidth: 1,
     borderColor: Color.Gray.gray400,
     height: "90%",
+    width: width - 32,
     overflow: "hidden",
   },
   gradientContainer: {
-    width: width - 32,
+    flex:1,
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderRadius: 20,

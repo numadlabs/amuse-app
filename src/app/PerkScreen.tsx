@@ -13,7 +13,6 @@ import Color from "@/constants/Color";
 import moment from "moment";
 import { BODY_2_REGULAR, H5 } from "@/constants/typography";
 
-
 const PerkScreen = () => {
   const { restaurantId, powerUp, btcAmount } = useLocalSearchParams();
   const queryClient = useQueryClient();
@@ -54,20 +53,8 @@ const PerkScreen = () => {
         </View>
       )}
 
-      {!isLoading && card && (
+      {!isLoading && (
         <>
-          {/* <View style={{ marginBottom: 300, marginTop: 20 }}>
-            <APassCard
-              name={card.name}
-              image={card.logo}
-              nftImage={card.nftImageUrl}
-              onPress={() => ""}
-              category={card.category}
-              hasBonus={card.hasBonus}
-              visitCount={card.visitCount}
-              target={card.target}
-            />
-          </View> */}
           <Animated.View
             style={{ marginBottom: 80, gap: 16 }}
             entering={SlideInDown.springify().damping(20).delay(200)}
@@ -85,24 +72,39 @@ const PerkScreen = () => {
                 alignItems: "center",
                 borderWidth: 1,
                 borderColor: Color.Gray.gray400,
+                padding: 16,
               }}
             >
               <Text
                 style={{
-                  ...H5,
-                  color: Color.base.White,
-                }}
-              >
-                +{Number(btcAmount).toFixed(2)} EUR of Bitcoin
-              </Text>
-              <Text
-                style={{
                   ...BODY_2_REGULAR,
                   color: Color.Gray.gray50,
+                  textAlign: 'center',
                 }}
               >
                 Check-in successful.
               </Text>
+              {Number(btcAmount) === 0 ? (
+                <Text
+                  style={{
+                    ...H5,
+                    color: Color.base.White,
+                    textAlign: 'center',
+                  }}
+                >
+                  No bitcoin awarded, contact our Help desk if necessary
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    ...H5,
+                    color: Color.base.White,
+                    textAlign: 'center',
+                  }}
+                >
+                  +{Number(btcAmount).toFixed(2)} EUR of Bitcoin
+                </Text>
+              )}
             </LinearGradient>
             {powerUp ? (
               <Animated.View
@@ -114,9 +116,7 @@ const PerkScreen = () => {
                   onPress={() => router.navigate("/PowerUp")}
                 />
               </Animated.View>
-            ) : (
-              ""
-            )}
+            ) : null}
           </Animated.View>
           <Button
             variant="primary"
