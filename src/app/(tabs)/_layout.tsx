@@ -15,8 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 import * as Location from "expo-location";
 import ErrorBoundary from "../ErrorBoundary";
-import * as Network from 'expo-network';
-import NoInternet from "../NoInternet";
+
 
 type LayoutProps = {
   navigation: any;
@@ -42,30 +41,19 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     location: false,
     fonts: false,
   });
-  const [isConnected, setIsConnected] = useState<boolean>(true);
 
   const { mutateAsync: sendPushToken } = useMutation({
     mutationFn: registerDeviceNotification,
   });
 
-  const checkInternetConnection = useCallback(async () => {
-    const networkState = await Network.getNetworkStateAsync();
-    setIsConnected(networkState.isConnected);
-    return networkState.isConnected;
-  }, []);
 
   const prepareApp = useCallback(async () => {
     try {
-      const isOnline = await checkInternetConnection();
 
-      if (!isOnline) {
-        console.log("No internet connection. Skipping app preparation.");
-        return <NoInternet onPress={Updates.reloadAsync} />;
-      }
 
       if (!__DEV__) {
         setLoadingStates(prev => ({ ...prev, updates: true }));
-
+        
         try {
           const updateCheck = await Promise.race([
             Updates.checkForUpdateAsync(),
@@ -106,7 +94,7 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     } catch (error) {
       console.error("Error preparing app:", error);
     }
-  }, [expoPushToken, currentLocation, getLocation, sendPushToken, checkInternetConnection]);
+  }, [expoPushToken, currentLocation, getLocation, sendPushToken]);
 
   useEffect(() => {
     prepareApp();
@@ -122,10 +110,6 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     }
   }, [authState.loading, currentLocation]);
 
-  useEffect(() => {
-    const intervalId = setInterval(checkInternetConnection, 5000);
-    return () => clearInterval(intervalId);
-  }, [checkInternetConnection]);
 
   if (!appIsReady) {
     return <SplashScreenAnimated loadingStates={loadingStates} />;
@@ -134,7 +118,6 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   if (authState.authenticated === false) {
     return <Redirect href="/Login" />;
   }
-
 
 
   return (
