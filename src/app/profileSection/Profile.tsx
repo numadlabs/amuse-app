@@ -41,6 +41,7 @@ import {
   H5,
   H6,
 } from "@/constants/typography";
+import ProfileLayout from "../layouts/profilelayout";
 
 const Profile = () => {
   const { currentLocation } = useLocationStore();
@@ -79,9 +80,7 @@ const Profile = () => {
   );
   return (
     <>
-      <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
-        <Header title="Profile" />
-        <ScrollView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+      <ProfileLayout>
           <View style={styles.body}>
             <View
               style={{
@@ -403,8 +402,7 @@ const Profile = () => {
               </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
-      </SafeAreaView>
+        </ProfileLayout>
     </>
   );
 };

@@ -21,6 +21,7 @@ import { useMutation } from '@tanstack/react-query';
 import Constants from 'expo-constants';
 import { bugReport } from '@/lib/service/mutationHelper';
 import { router } from 'expo-router';
+import ProfileLayout from './layouts/profilelayout';
 
 const BugReportButton = () => {
   const [reason, setReason] = useState('');
@@ -70,10 +71,8 @@ const BugReportButton = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-
+    <ProfileLayout>
           <ScrollView contentContainerStyle={styles.scrollViewContent}>
-            <Header title="Help Us Improve" />
             <View style={styles.content}>
               <Text style={styles.description}>
                 We'd love to hear about any issues you're experiencing or suggestions you have for our app.
@@ -117,8 +116,7 @@ const BugReportButton = () => {
               </KeyboardAvoidingView>
             </View>
           </ScrollView>
-     
-    </SafeAreaView>
+    </ProfileLayout>
   );
 };
 

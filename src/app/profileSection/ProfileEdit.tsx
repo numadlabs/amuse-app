@@ -24,6 +24,7 @@ import * as ImagePicker from "expo-image-picker";
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { updateUserInfo } from '@/lib/service/mutationHelper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ProfileLayout from '../layouts/profilelayout';
 
 interface User {
   nickname?: string;
@@ -141,9 +142,7 @@ const ProfileEdit: React.FC = () => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header title="Account" />
-      <ScrollView style={styles.scrollView}>
+    <ProfileLayout>
         <LinearGradient
           style={styles.gradientContainer}
           colors={[Color.Brand.card.start, Color.Brand.card.end]}
@@ -217,8 +216,7 @@ const ProfileEdit: React.FC = () => {
             disabled={!showDateOfBirth}
           />
         </LinearGradient>
-      </ScrollView>
-    </SafeAreaView>
+      </ProfileLayout>
   );
 };
 

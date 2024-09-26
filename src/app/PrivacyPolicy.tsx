@@ -35,6 +35,8 @@ import { getUserById } from "@/lib/service/queryHelper";
 import { router } from "expo-router";
 import { SERVER_SETTING } from "@/constants/serverSettings";
 import { userKeys } from "@/lib/service/keysHelper";
+import { SafeAreaView } from "react-native-safe-area-context";
+import ProfileLayout from "./layouts/profilelayout";
 
 const { width, height } = Dimensions.get("window");
 
@@ -304,11 +306,7 @@ that information is inaccurate or incomplete.
   ];
 
   return (
-    <>
-      <Header
-        title="Privacy policy & Settings"
-        titleStyle={{ fontFamily: "Sora", fontWeight: 600 }}
-      />
+    <ProfileLayout>
       <View style={styles.container}>
         <ScrollView style={styles.scrollViewContainer}>
           <Text style={styles.sectionHeader}>Disclaimer</Text>
@@ -446,7 +444,7 @@ that information is inaccurate or incomplete.
           <ActivityIndicator size="large" color={Color.base.White} />
         </View>
       )}
-    </>
+    </ProfileLayout>
   );
 };
 

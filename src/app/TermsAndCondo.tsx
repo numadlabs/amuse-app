@@ -4,6 +4,8 @@ import Header from "@/components/layout/Header";
 import Color from "@/constants/Color";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BODY_2_REGULAR } from "@/constants/typography";
+import ProfileEdit from "./profileSection/ProfileEdit";
+import ProfileLayout from "./layouts/profilelayout";
 
 const TermsAndCondo = () => {
   const data = [
@@ -22,9 +24,8 @@ const TermsAndCondo = () => {
   ];
 
   return (
-    <SafeAreaView style={{flex: 1,  backgroundColor: Color.Gray.gray600}}>
+    <ProfileLayout>
     <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
-      <Header title="Terms and Conditions" />
       <ScrollView style={styles.container}>
         {/* {data.map((item, index) => (
           <Accordion key={index} title={item.title} text={item.text} />
@@ -77,7 +78,7 @@ const TermsAndCondo = () => {
 
       </ScrollView>
     </View>
-    </SafeAreaView>
+    </ProfileLayout>
   );
 };
 
