@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/context/AuthContext";
@@ -7,7 +7,9 @@ import Toast from "react-native-toast-message";
 import { toastConfig } from "@/constants/ToasterConfig";
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-
+import * as Updates from "expo-updates";
+import * as Network from 'expo-network';
+import NoInternet from './NoInternet';
 import * as Sentry from '@sentry/react-native';
 import { SERVER_SETTING } from '@/constants/serverSettings';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
@@ -38,6 +40,15 @@ SplashScreen.preventAutoHideAsync();
 
 // Main Layout Component
 const Layout = () => {
+  const [isConnected, setIsConnected] = useState<boolean>(true);
+
+  const checkInternetConnection = useCallback(async () => {
+    const networkState = await Network.getNetworkStateAsync();
+    setIsConnected(networkState.isConnected);
+    return networkState.isConnected;
+  }, []);
+
+
   const [fontsLoaded] = useFonts({
     Sora: require("@/public/fonts/Sora-Regular.otf"),
     SoraBold: require("@/public/fonts/Sora-Bold.otf"),
@@ -53,6 +64,17 @@ const Layout = () => {
 
   if (!fontsLoaded) {
     return null;
+  }
+
+  useEffect(() => {
+    const intervalId = setInterval(checkInternetConnection, 5000); 
+    return () => clearInterval(intervalId);
+  }, [checkInternetConnection]);
+
+
+
+  if (!isConnected) {
+    return <NoInternet onPress={Updates.reloadAsync}/>;
   }
 
   return (
