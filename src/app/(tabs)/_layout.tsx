@@ -15,6 +15,8 @@ import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 import * as Location from "expo-location";
 import ErrorBoundary from "../ErrorBoundary";
+import * as Network from 'expo-network';
+import NoInternet from "../NoInternet";
 
 type LayoutProps = {
   navigation: any;
@@ -40,15 +42,24 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     location: false,
     fonts: false,
   });
+  const [isConnected, setIsConnected] = useState<boolean>(true);
 
   const { mutateAsync: sendPushToken } = useMutation({
     mutationFn: registerDeviceNotification,
   });
 
+  const checkInternetConnection = useCallback(async () => {
+    const networkState = await Network.getNetworkStateAsync();
+    setIsConnected(networkState.isConnected);
+  }, []);
+
   const prepareApp = useCallback(async () => {
     try {
+      await checkInternetConnection();
+
       if (!__DEV__) {
         setLoadingStates(prev => ({ ...prev, updates: true }));
+        
         try {
           const updateCheck = await Promise.race([
             Updates.checkForUpdateAsync(),
@@ -84,13 +95,12 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         setLoadingStates(prev => ({ ...prev, location: true }));
         await getLocation();
         if (permissionStatus === Location.PermissionStatus.DENIED)
-
           setLoadingStates(prev => ({ ...prev, location: false }));
       }
     } catch (error) {
       console.error("Error preparing app:", error);
     }
-  }, [expoPushToken, currentLocation, getLocation, sendPushToken]);
+  }, [expoPushToken, currentLocation, getLocation, sendPushToken, checkInternetConnection]);
 
   useEffect(() => {
     prepareApp();
@@ -106,12 +116,21 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     }
   }, [authState.loading, currentLocation]);
 
+  useEffect(() => {
+    const intervalId = setInterval(checkInternetConnection, 5000); 
+    return () => clearInterval(intervalId);
+  }, [checkInternetConnection]);
+
   if (!appIsReady) {
     return <SplashScreenAnimated loadingStates={loadingStates} />;
   }
 
   if (authState.authenticated === false) {
     return <Redirect href="/Login" />;
+  }
+
+  if (!isConnected) {
+    return <NoInternet onPress={Updates.reloadAsync}/>;
   }
 
   return (
