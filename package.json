@@ -56,7 +56,8 @@
     "zod": "^3.22.4",
     "zustand": "^4.5.0",
     "@sentry/react-native": "~5.22.0",
-    "@react-native-picker/picker": "2.7.5"
+    "@react-native-picker/picker": "2.7.5",
+    "expo-network": "~6.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
