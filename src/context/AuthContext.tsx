@@ -227,7 +227,7 @@ export const AuthProvider = ({ children }: any) => {
       userId: null,
     });
 
-    await logoutHandler();
+    await logoutHandler(axiosClient);
   };
 
   const value = {
