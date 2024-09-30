@@ -214,7 +214,7 @@ function Login() {
                         }}
                         autoCapitalize="none"
                         value={email}
-                        onChangeText={(text) =>{
+                        onChangeText={(text) => {
                           setEmail(text)
                           setError("")
                         }}
@@ -222,7 +222,7 @@ function Login() {
                     </View>
                   </LinearGradient>
                   {error && (
-                    <Animated.View entering={FadeIn} exiting={FadeOut} style={{flex:1,}}>
+                    <Animated.View entering={FadeIn} exiting={FadeOut} style={{ flex: 1, }}>
                       <Text
                         style={{
                           color: Color.System.systemError,
@@ -406,10 +406,6 @@ function Login() {
                       Welcome to {"\n"}Amuse Bouche!
                     </Text>
 
-
-                    <Text style={styles.paragraph}>
-                      Welcome to Amuse Bouche! We are excited to welcome you to our growing community! {"\n"}
-                    </Text>
                     <Text style={styles.paragraph}>
                       We’re thrilled to have you join our Pilot Program, and we greatly
                       appreciate your participation. This program allows us to refine Amuse
@@ -442,6 +438,14 @@ function Login() {
                     </Text>
 
                     <Text style={styles.paragraph}>
+                      Disclaimer: The Amuse Bouche Application is solely a platform for
+                      third-parties to engage with users. Any offerings of rewards or
+                      securities accessible through the Application are provided by third-
+                      parties. Hash2 Labs LLC, the developer of the Application, is not liable
+                      for any offers, rewards or any associated claims, damages or losses.
+                    </Text>
+
+                    <Text style={styles.paragraph}>
                       One final note, to ensure security and smooth operations during the
                       Pilot Program, some features will be limited. Specifically, you won’t be
                       able to withdraw or transfer any bitcoin earned until the Pilot Program
@@ -452,9 +456,7 @@ function Login() {
                     <Text style={[styles.paragraph, { marginTop: 44 }]}>
                       We are excited to have you as a part of our growing community!
                     </Text>
-
-
-
+                    
                   </ScrollView>
                   <Button variant="primary" onPress={dismissWelcomeMessage}>
                     <Text style={{ color: Color.base.White, ...BUTTON_48 }}>I understand</Text>

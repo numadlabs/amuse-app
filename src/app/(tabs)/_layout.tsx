@@ -77,6 +77,23 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     }
   }, [expoPushToken, sendPushToken]);
 
+  const handleLocationPermission = useCallback(async (): Promise<void> => {
+    setLoadingStates(prev => ({ ...prev, location: true }));
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === Location.PermissionStatus.GRANTED) {
+        await getLocation();
+        console.log("Location permission granted and location fetched");
+      } else {
+        console.log("Location permission denied");
+      }
+    } catch (error) {
+      console.error("Error handling location permission:", error);
+    } finally {
+      setLoadingStates(prev => ({ ...prev, location: false }));
+    }
+  }, [getLocation]);
+
   const prepareApp = useCallback(async () => {
     try {
       const isOnline = await checkInternetConnection();
@@ -110,22 +127,18 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         }
       }
 
+      // Handle push notifications first
       await handlePushNotifications();
 
-      if (currentLocation == null) {
-        setLoadingStates(prev => ({ ...prev, location: true }));
-        await getLocation();
-        if (permissionStatus === Location.PermissionStatus.DENIED) {
-          setLoadingStates(prev => ({ ...prev, location: false }));
-          console.log("Location permission denied");
-        }
-      }
+      // Then handle location permission
+      await handleLocationPermission();
+
     } catch (error) {
       console.error("Error preparing app:", error);
     } finally {
       setAppIsReady(true);
     }
-  }, [checkInternetConnection, handlePushNotifications, currentLocation, getLocation, permissionStatus]);
+  }, [checkInternetConnection, handlePushNotifications, handleLocationPermission]);
 
   useEffect(() => {
     prepareApp();
