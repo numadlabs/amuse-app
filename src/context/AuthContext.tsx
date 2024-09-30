@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
-import { QueryCache } from "@tanstack/react-query";
 import { axiosClient } from "../lib/axios";
 import { useRouter } from "expo-router";
 import { SERVER_SETTING } from "../constants/serverSettings";
@@ -9,32 +8,7 @@ import {
   loadUserId,
   saveUserId,
 } from "../lib/service/asyncStorageHelper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router } from "expo-router";
-
-const queryCache = new QueryCache();
-
-/**
- * Logs out the user by deleting the access and refresh tokens from secure storage and navigating to the login screen.
- *
- * @remarks
- * This function is called when the user's access token has expired and a refresh token is available.
- * It deletes the tokens from secure storage, clears the axios client's authorization header, and redirects the user to the login screen.
- *
- * @returns {Promise<void>} - A promise that resolves when the logout process is complete.
- */
-export async function logoutHandler() {
-  // Update HTTP Headers
-  axiosClient.defaults.headers.common["Authorization"] = "";
-  await SecureStore.deleteItemAsync(SERVER_SETTING.TOKEN_KEY);
-  await SecureStore.deleteItemAsync(SERVER_SETTING.REFRESH_TOKEN_KEY);
-  //TODO key object dotroos duudah
-  await AsyncStorage.removeItem("hasSeenWelcomeMessage");
-  await deleteUserId();
-  queryCache.clear();
-
-  router.replace("/Login");
-}
+import { logoutHandler } from "@/lib/auth-utils";
 
 interface AuthProps {
   authState?: {

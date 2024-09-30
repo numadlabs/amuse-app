@@ -1,20 +1,19 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 import { Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/context/AuthContext";
 import { StatusBar } from "expo-status-bar";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "@/constants/ToasterConfig";
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 import * as Updates from "expo-updates";
-import * as Network from 'expo-network';
-import NoInternet from './NoInternet';
-import * as Sentry from '@sentry/react-native';
-import { SERVER_SETTING } from '@/constants/serverSettings';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import ErrorBoundary from './ErrorBoundary';
-
+import * as Network from "expo-network";
+import NoInternet from "./NoInternet";
+import * as Sentry from "@sentry/react-native";
+import { SERVER_SETTING } from "@/constants/serverSettings";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import ErrorBoundary from "./ErrorBoundary";
 
 // Initialize Sentry
 Sentry.init({
@@ -48,7 +47,6 @@ const Layout = () => {
     return networkState.isConnected;
   }, []);
 
-
   const [fontsLoaded] = useFonts({
     Sora: require("@/public/fonts/Sora-Regular.otf"),
     SoraBold: require("@/public/fonts/Sora-Bold.otf"),
@@ -62,29 +60,23 @@ const Layout = () => {
     }
   }, [fontsLoaded]);
 
-  if (!fontsLoaded) {
-    return null;
-  }
-
   useEffect(() => {
-    const intervalId = setInterval(checkInternetConnection, 5000); 
+    const intervalId = setInterval(checkInternetConnection, 5000);
     return () => clearInterval(intervalId);
   }, [checkInternetConnection]);
 
-
-
+  if (!fontsLoaded) {
+    return null;
+  }
   if (!isConnected) {
-    return <NoInternet onPress={Updates.reloadAsync}/>;
+    return <NoInternet onPress={Updates.reloadAsync} />;
   }
 
   return (
     <>
-
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <ErrorBoundary>
-
-
             <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
               <StatusBar style="light" />
               <Stack
@@ -115,61 +107,64 @@ const Layout = () => {
                 <Stack.Screen name="NoInternet" />
                 <Stack.Screen
                   name="PerkMarket"
-                  options={{ presentation: "modal" }} />
+                  options={{ presentation: "modal" }}
+                />
                 <Stack.Screen
                   name="AlreadyCheckedIn"
-                  options={{ presentation: "modal" }} />
+                  options={{ presentation: "modal" }}
+                />
                 <Stack.Screen
                   name="PowerUp"
-                  options={{ presentation: "modal" }} />
+                  options={{ presentation: "modal" }}
+                />
                 <Stack.Screen
                   name="FollowingPerk"
                   options={{ presentation: "modal" }}
                 />
                 <Stack.Screen
                   name="PerkBuy"
-                  options={{ presentation: "modal" }} />
+                  options={{ presentation: "modal" }}
+                />
               </Stack>
               <Toast config={toastConfig} />
             </View>
-
           </ErrorBoundary>
         </AuthProvider>
       </QueryClientProvider>
     </>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: "#f8f8f8",
   },
   title: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    color: '#333',
+    color: "#333",
   },
   message: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 20,
-    color: '#666',
+    color: "#666",
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: "#007AFF",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

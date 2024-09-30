@@ -3,7 +3,8 @@ import Constants from "expo-constants";
 import { SERVER_SETTING } from "../constants/serverSettings";
 import * as SecureStore from "expo-secure-store";
 import Config from "config";
-import { logoutHandler } from "@/context/AuthContext";
+import { logoutHandler } from "./auth-utils";
+// import { logoutHandler } from "@/context/AuthContext";
 
 // Constants.manifest2.
 const isRunningInExpoGo = Constants.appOwnership === "expo";
@@ -61,7 +62,7 @@ axiosClient.interceptors.response.use(
         }
       } catch (err) {
         console.error("Error refreshing token:", err);
-        await logoutHandler();
+        await logoutHandler(axiosClient);
         return Promise.reject(error);
       }
     }
