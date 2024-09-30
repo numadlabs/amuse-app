@@ -71,9 +71,10 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         return true;
       } else {
         console.log('Push notification token not available');
-        return new Promise((resolve) => {
+        return new Promise<boolean>((resolve) => {
           setShowPermissionModal(true);
-          // The resolution of this promise is handled in the Modal's buttons
+          // Store the resolve function to call it later when user responds
+          (global as any).resolvePermission = resolve;
         });
       }
     } catch (error) {
@@ -86,16 +87,21 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
 
   const handlePermissionResponse = async (granted: boolean) => {
     setShowPermissionModal(false);
+    let finalResult = false;
     if (granted) {
       const { status } = await Notifications.requestPermissionsAsync();
       if (status === 'granted') {
         // The hook should automatically fetch the token after permissions are granted
         setPushNotificationsEnabled(true);
-        return true;
+        finalResult = true;
       }
     }
-    setPushNotificationsEnabled(false);
-    return false;
+    setPushNotificationsEnabled(finalResult);
+    // Resolve the promise stored earlier
+    if ((global as any).resolvePermission) {
+      (global as any).resolvePermission(finalResult);
+      (global as any).resolvePermission = null;
+    }
   };
 
   const prepareApp = useCallback(async () => {
@@ -132,7 +138,8 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         }
       }
 
-      await handlePushNotifications();
+      const notificationsEnabled = await handlePushNotifications();
+      console.log("Push notifications enabled:", notificationsEnabled);
 
       if (currentLocation == null) {
         setLoadingStates(prev => ({ ...prev, location: true }));
@@ -144,18 +151,14 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
       }
     } catch (error) {
       console.error("Error preparing app:", error);
+    } finally {
+      setAppIsReady(true);
     }
   }, [checkInternetConnection, handlePushNotifications, currentLocation, getLocation, permissionStatus]);
 
   useEffect(() => {
     prepareApp();
   }, [prepareApp]);
-
-  useEffect(() => {
-    if (!authState.loading && currentLocation !== null) {
-      setAppIsReady(true);
-    }
-  }, [authState.loading, currentLocation]);
 
   useEffect(() => {
     const intervalId = setInterval(checkInternetConnection, 5000); 
@@ -216,7 +219,7 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         animationType="slide"
         transparent={true}
         visible={showPermissionModal}
-        onRequestClose={() => setShowPermissionModal(false)}
+        onRequestClose={() => handlePermissionResponse(false)}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
