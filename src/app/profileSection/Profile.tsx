@@ -75,7 +75,7 @@ const Profile = () => {
   });
 
   const userTierData = userTier.find(
-    (tier) => tier.id === user?.user?.userTierId
+    (tier) => tier.id === user?.user?.userTierId,
   );
   return (
     <>
@@ -90,10 +90,12 @@ const Profile = () => {
                 borderRadius: 16,
               }}
             >
-              <TouchableOpacity onPress={() =>
-                // router.push("/Tier")
-                ""
-              }>
+              <TouchableOpacity
+                onPress={() =>
+                  // router.push("/Tier")
+                  ""
+                }
+              >
                 <LinearGradient
                   colors={[Color.Brand.card.start, Color.Brand.card.end]}
                   start={{ x: 1, y: 0 }}
@@ -256,9 +258,7 @@ const Profile = () => {
               >
                 <TouchableOpacity
                   style={styles.configContainer}
-                  onPress={() =>
-                    Linking.openURL("mailto:info@amusebouche.io")
-                  }
+                  onPress={() => Linking.openURL("mailto:info@amusebouche.io")}
                 >
                   <View
                     style={{
@@ -385,7 +385,6 @@ const Profile = () => {
                   </View>
                   <ArrowRight2 color={Color.Gray.gray100} />
                 </TouchableOpacity>
-
               </LinearGradient>
 
               <TouchableOpacity onPress={onLogout}>

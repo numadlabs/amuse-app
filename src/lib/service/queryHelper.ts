@@ -13,7 +13,7 @@ export async function getRestaurants({
 }) {
   return axiosClient
     .get(
-      `/restaurants?page=${page}&limit=${limit}&time=${time}&dayNoOfTheWeek=${dayNoOfTheWeek}`
+      `/restaurants?page=${page}&limit=${limit}&time=${time}&dayNoOfTheWeek=${dayNoOfTheWeek}`,
     )
     .then((response) => {
       if (response.data.success) {
@@ -25,15 +25,13 @@ export async function getRestaurants({
 }
 
 export async function getUserCard() {
-  return axiosClient
-    .get(`/users/cards`)
-    .then((response) => {
-      if (response.data.success) {
-        return response?.data;
-      } else {
-        throw new Error(response.data.error);
-      }
-    });
+  return axiosClient.get(`/users/cards`).then((response) => {
+    if (response.data.success) {
+      return response?.data;
+    } else {
+      throw new Error(response.data.error);
+    }
+  });
 }
 
 export async function getUserNotification() {
@@ -42,7 +40,6 @@ export async function getUserNotification() {
     return response.data.data;
   }
 }
-
 
 export async function getUserTransaction(id) {
   return axiosClient.get(`/transactions/${id}/user`).then((response) => {
@@ -128,7 +125,7 @@ export async function getUserTiers() {
   });
 }
 
-export async function getCountries(){
+export async function getCountries() {
   return axiosClient.get("/countries").then((response) => {
     if (response.data.success) {
       return response?.data.data.countries;

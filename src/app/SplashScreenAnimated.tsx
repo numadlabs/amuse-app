@@ -19,11 +19,12 @@ const INITIAL_TRANSLATE_X = -width / 8;
 const INITIAL_TRANSLATE_Y = height / 32;
 const INITIAL_TRANSLATE_X2 = width / 2.8;
 const INITIAL_TRANSLATE_Y2 = height / 32;
-const ANIMATION_DURATION = 300;
+const ANIMATION_DURATION = 500;
 
 const SplashScreenAnimated = ({ loadingStates }) => {
 
   const getLoadingMessage = () => {
+    if (loadingStates.internet) return "Checking for internet...";
     if (loadingStates.updates) return "Checking for updates...";
     if (loadingStates.pushNotification) return "Setting up notifications...";
     if (loadingStates.location) return "Getting your location...";
