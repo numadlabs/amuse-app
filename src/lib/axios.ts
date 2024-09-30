@@ -37,7 +37,7 @@ axiosClient.interceptors.response.use(
           throw new Error("No refresh token available");
         }
 
-        const res = await axiosClient.post(`/auth/refreshToken`, {
+        const res = await axios.post(`${baseUrl}/auth/refreshToken`, {
           refreshToken,
         });
 
@@ -61,7 +61,7 @@ axiosClient.interceptors.response.use(
           throw new Error("Failed to refresh token");
         }
       } catch (err) {
-        console.error("Error refreshing token:", err);
+        console.log("Error refreshing token:", err);
         await logoutHandler(axiosClient);
         return Promise.reject(error);
       }
