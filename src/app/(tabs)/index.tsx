@@ -114,7 +114,9 @@ const Page = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        <Animated.View entering={SlideOutDown}>
+      <Animated.View
+          entering={SlideOutDown.withInitialValues({ originY: 0 })}
+        >
           {user && (
             <TouchableOpacity onPress={() => router.push('/Wallet')}>
               <Balance

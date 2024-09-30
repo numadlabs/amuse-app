@@ -142,10 +142,10 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
 
   useEffect(() => {
     prepareApp();
-  }, [prepareApp]);
+  }, []);
 
   useEffect(() => {
-    const intervalId = setInterval(checkInternetConnection, 5000); 
+    const intervalId = setInterval(checkInternetConnection, 5000);
     return () => clearInterval(intervalId);
   }, [checkInternetConnection]);
 
@@ -158,7 +158,7 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   }
 
   if (!isConnected) {
-    return <NoInternet onPress={Updates.reloadAsync}/>;
+    return <NoInternet onPress={Updates.reloadAsync} />;
   }
 
   return (
