@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Redirect, Tabs, router } from "expo-router";
-import { View, TouchableOpacity, Modal, Text, StyleSheet } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Footer from "@/components/layout/Footer";
 import { Notification, User } from "iconsax-react-native";
@@ -37,7 +37,7 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState<boolean>(false);
   const { currentLocation, permissionStatus, getLocation } = useLocationStore();
-  const { expoPushToken, notification } = usePushNotifications();
+  const { expoPushToken } = usePushNotifications();
   const [loadingStates, setLoadingStates] = useState<LoadingStates>({
     internet: false,
     updates: false,
@@ -46,8 +46,6 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     fonts: false,
   });
   const [isConnected, setIsConnected] = useState<boolean>(true);
-  const [pushNotificationsEnabled, setPushNotificationsEnabled] = useState<boolean>(true);
-  const [showPermissionModal, setShowPermissionModal] = useState<boolean>(false);
 
   const { mutateAsync: sendPushToken } = useMutation({
     mutationFn: registerDeviceNotification,
@@ -59,7 +57,7 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     return networkState.isConnected;
   }, []);
 
-  const handlePushNotifications = useCallback(async (): Promise<boolean> => {
+  const handlePushNotifications = useCallback(async (): Promise<void> => {
     setLoadingStates(prev => ({ ...prev, pushNotification: true }));
     try {
       if (expoPushToken?.data) {
@@ -68,35 +66,33 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
           await sendPushToken({ pushToken: expoPushToken.data });
           await AsyncStorage.setItem(PUSH_TOKEN_KEY, expoPushToken.data);
         }
-        return true;
+        console.log("Push notifications enabled");
       } else {
-        console.log('Push notification token not available');
-        return new Promise((resolve) => {
-          setShowPermissionModal(true);
-          // The resolution of this promise is handled in the Modal's buttons
-        });
+        console.log("Push notifications not available or permission denied");
       }
     } catch (error) {
       console.error("Error handling push notifications:", error);
-      return false;
     } finally {
       setLoadingStates(prev => ({ ...prev, pushNotification: false }));
     }
-  }, [expoPushToken, sendPushToken, setLoadingStates]);
+  }, [expoPushToken, sendPushToken]);
 
-  const handlePermissionResponse = async (granted: boolean) => {
-    setShowPermissionModal(false);
-    if (granted) {
-      const { status } = await Notifications.requestPermissionsAsync();
-      if (status === 'granted') {
-        // The hook should automatically fetch the token after permissions are granted
-        setPushNotificationsEnabled(true);
-        return true;
+  const handleLocationPermission = useCallback(async (): Promise<void> => {
+    setLoadingStates(prev => ({ ...prev, location: true }));
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === Location.PermissionStatus.GRANTED) {
+        await getLocation();
+        console.log("Location permission granted and location fetched");
+      } else {
+        console.log("Location permission denied");
       }
+    } catch (error) {
+      console.error("Error handling location permission:", error);
+    } finally {
+      setLoadingStates(prev => ({ ...prev, location: false }));
     }
-    setPushNotificationsEnabled(false);
-    return false;
-  };
+  }, [getLocation]);
 
   const prepareApp = useCallback(async () => {
     try {
@@ -110,7 +106,6 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
 
       if (!__DEV__) {
         setLoadingStates(prev => ({ ...prev, updates: true }));
-        
         try {
           const updateCheck = await Promise.race([
             Updates.checkForUpdateAsync(),
@@ -132,30 +127,22 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         }
       }
 
+      // Handle push notifications first
       await handlePushNotifications();
 
-      if (currentLocation == null) {
-        setLoadingStates(prev => ({ ...prev, location: true }));
-        await getLocation();
-        if (permissionStatus === Location.PermissionStatus.DENIED) {
-          setLoadingStates(prev => ({ ...prev, location: false }));
-          // Handle location permission denial if needed
-        }
-      }
+      // Then handle location permission
+      await handleLocationPermission();
+
     } catch (error) {
       console.error("Error preparing app:", error);
+    } finally {
+      setAppIsReady(true);
     }
-  }, [checkInternetConnection, handlePushNotifications, currentLocation, getLocation, permissionStatus]);
+  }, [checkInternetConnection, handlePushNotifications, handleLocationPermission]);
 
   useEffect(() => {
     prepareApp();
   }, [prepareApp]);
-
-  useEffect(() => {
-    if (!authState.loading && currentLocation !== null) {
-      setAppIsReady(true);
-    }
-  }, [authState.loading, currentLocation]);
 
   useEffect(() => {
     const intervalId = setInterval(checkInternetConnection, 5000); 
@@ -175,122 +162,43 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   }
 
   return (
-    <>
-      <ErrorBoundary>
-        <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
-          <Tabs.Screen
-            name="index"
-            options={{
-              headerStyle: {
-                shadowOpacity: 0,
-                backgroundColor: Color.Gray.gray600,
-              },
-              headerLeft: () => (
-                <TouchableOpacity
-                  onPress={() => router.push("/profileSection/Profile")}
-                >
-                  <View style={{ paddingHorizontal: 20 }}>
-                    <User color={Color.base.White} />
-                  </View>
-                </TouchableOpacity>
-              ),
-              headerTitle: () => (
-                <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                  <Logo />
+    <ErrorBoundary>
+      <Tabs tabBar={(props) => <Footer {...props} navigation={navigation} />}>
+        <Tabs.Screen
+          name="index"
+          options={{
+            headerStyle: {
+              shadowOpacity: 0,
+              backgroundColor: Color.Gray.gray600,
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => router.push("/profileSection/Profile")}
+              >
+                <View style={{ paddingHorizontal: 20 }}>
+                  <User color={Color.base.White} />
                 </View>
-              ),
-              headerRight: () => (
-                <TouchableOpacity onPress={() => router.push("/Notification")}>
-                  <View style={{ paddingHorizontal: 20 }}>
-                    <Notification color={Color.base.White} />
-                  </View>
-                </TouchableOpacity>
-              ),
-              headerTitleAlign: "center",
-            }}
-          />
-          <Tabs.Screen name="Acards" options={{ headerShown: false }} />
-        </Tabs>
-      </ErrorBoundary>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={showPermissionModal}
-        onRequestClose={() => setShowPermissionModal(false)}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Push notifications are important for receiving updates. Would you like to enable them?</Text>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={[styles.button, styles.buttonCancel]}
-                onPress={() => handlePermissionResponse(false)}
-              >
-                <Text style={styles.textStyle}>No, thanks</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, styles.buttonConfirm]}
-                onPress={() => handlePermissionResponse(true)}
-              >
-                <Text style={styles.textStyle}>Yes, enable</Text>
+            ),
+            headerTitle: () => (
+              <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                <Logo />
+              </View>
+            ),
+            headerRight: () => (
+              <TouchableOpacity onPress={() => router.push("/Notification")}>
+                <View style={{ paddingHorizontal: 20 }}>
+                  <Notification color={Color.base.White} />
+                </View>
               </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-    </>
+            ),
+            headerTitleAlign: "center",
+          }}
+        />
+        <Tabs.Screen name="Acards" options={{ headerShown: false }} />
+      </Tabs>
+    </ErrorBoundary>
   );
 };
-
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginTop: 20,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    minWidth: 100,
-  },
-  buttonCancel: {
-    backgroundColor: "#FF0000",
-  },
-  buttonConfirm: {
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center"
-  }
-});
 
 export default Layout;

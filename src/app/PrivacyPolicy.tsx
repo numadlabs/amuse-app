@@ -28,13 +28,15 @@ import Accordion from "@/components/ui/Accordion";
 import { DocumentDownload, Warning2, CloseCircle } from "iconsax-react-native";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
-import { logoutHandler, useAuth } from "@/context/AuthContext";
+import { logoutHandler } from "@/lib/auth-utils";
+import { useAuth } from "@/context/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteUser, updateUserInfo } from "@/lib/service/mutationHelper";
 import { getUserById } from "@/lib/service/queryHelper";
 import { router } from "expo-router";
 import { SERVER_SETTING } from "@/constants/serverSettings";
 import { userKeys } from "@/lib/service/keysHelper";
+import { axiosClient } from "@/lib/axios";
 
 const { width, height } = Dimensions.get("window");
 
@@ -140,8 +142,7 @@ const TermsAndConditions = () => {
 
       queryClient.invalidateQueries({ queryKey: userKeys.info });
       saveSetting(
-        `show${
-          currentSetting.charAt(0).toUpperCase() + currentSetting.slice(1)
+        `show${currentSetting.charAt(0).toUpperCase() + currentSetting.slice(1)
         }`,
         false
       );
@@ -219,7 +220,7 @@ const TermsAndConditions = () => {
       console.log("🚀 ~ handleDeleteUser ~ response:", response);
       if (response.success) {
         // Perform logout and clear all data
-        await logoutHandler();
+        await logoutHandler(axiosClient)
       } else {
         throw new Error("Cannot delete user: " + response.error);
       }
@@ -412,17 +413,18 @@ that information is inaccurate or incomplete.
 
           <Text style={styles.bottomTabText}>
             The Pilot Program for Amuse Bouche is still ongoing. If you proceed
-            with deleting your account, you will forfeit all bitcoin accumulated
-            in your Amuse Bouche account. Once deleted, you will not be able to
+            with deleting your account, you will forfeit all bitcoin accumulated in
+            your Amuse Bouche account. Once deleted, you will not be able to
             recover or transfer your bitcoin.
           </Text>
           <Text style={styles.bottomTabText}>
             However, your bitcoin will not be forfeited if you maintain your
-            account until the completion of the Pilot Program and the full
-            launch of the Application. You will then be able to transfer your
-            bitcoin at your discretion. Please note that deleting your account
-            will also result in the permanent erasure of all your data. By
-            deleting your account, you acknowledge and accept these terms.
+            account until the completion of the Pilot Program and the full launch
+            of the Application. You will then be able to transfer your bitcoin at your
+            discretion. Please note that deleting your account will also result in
+            the permanent erasure of all your data. {"\n"}
+
+            By deleting your account, you acknowledge and accept these terms.
           </Text>
           <View style={styles.bottomTabButtons}>
             {renderButton(
