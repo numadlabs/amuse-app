@@ -4,14 +4,12 @@ import {
   View,
   Text,
   TextInput,
-  SafeAreaView,
   Platform,
   Alert,
-  TouchableWithoutFeedback,
-  Keyboard,
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/context/AuthContext';
 import Header from '@/components/layout/Header';
 import { Picker } from '@react-native-picker/picker';
@@ -64,60 +62,59 @@ const BugReportButton = () => {
     });
   };
 
-  const pickerItemStyle = {
-    color: 'white',
-    fontSize: 17,
-  };
-
   return (
     <SafeAreaView style={styles.container}>
-
-          <ScrollView contentContainerStyle={styles.scrollViewContent}>
-            <Header title="Help Us Improve" />
-            <View style={styles.content}>
-              <Text style={styles.description}>
-                We'd love to hear about any issues you're experiencing or suggestions you have for our app.
-              </Text>
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>What's the issue?</Text>
-                <Picker
-                  selectedValue={reason}
-                  onValueChange={(itemValue) => setReason(itemValue)}
-                  style={styles.picker}
-                  itemStyle={pickerItemStyle}
-                >
-                  {reasonOptions.map((option) => (
-                    <Picker.Item key={option.value} label={option.label} value={option.value} />
-                  ))}
-                </Picker>
-              </View>
-      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>Tell us more</Text>
-                <TextInput
-                  value={description}
-                  onChangeText={setDescription}
-                  multiline
-                  numberOfLines={5}
-                  style={styles.textArea}
-                  placeholder="Please provide any additional details that might help us understand and address the issue."
-                  placeholderTextColor={Color.Gray.gray400}
-                />
-              </View>
-              <Button 
-                onPress={handleSubmit} 
-                variant={reason && description ? 'primary' : 'disabled'}
-                disabled={!reason || !description}
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <Header title="Help Us Improve" />
+        <View style={styles.content}>
+          <Text style={styles.description}>
+            We'd love to hear about any issues you're experiencing or suggestions you have for our app.
+          </Text>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>What's the issue?</Text>
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={reason}
+                onValueChange={(itemValue) => setReason(itemValue)}
+                style={styles.picker}
+                dropdownIconColor={Color.base.White}
               >
-                <Text style={styles.submitButtonText}>
-                  Submit Feedback
-                </Text>
-              </Button>
-              </KeyboardAvoidingView>
+                {reasonOptions.map((option) => (
+                  <Picker.Item 
+                    key={option.value} 
+                    label={option.label} 
+                    value={option.value}
+                    color={Platform.OS === 'android' ? Color.base.Black : Color.base.White} 
+                  />
+                ))}
+              </Picker>
             </View>
-          </ScrollView>
-     
+          </View>
+          <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Tell us more</Text>
+              <TextInput
+                value={description}
+                onChangeText={setDescription}
+                multiline
+                numberOfLines={5}
+                style={styles.textArea}
+                placeholder="Please provide any additional details that might help us understand and address the issue."
+                placeholderTextColor={Color.Gray.gray100}
+              />
+            </View>
+            <Button 
+              onPress={handleSubmit} 
+              variant={reason && description ? 'primary' : 'disabled'}
+              disabled={!reason || !description}
+            >
+              <Text style={styles.submitButtonText}>
+                Submit Feedback
+              </Text>
+            </Button>
+          </KeyboardAvoidingView>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -126,9 +123,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
-  },
-  keyboardAvoidingView: {
-    flex: 1,
   },
   scrollViewContent: {
     flexGrow: 1,
@@ -150,11 +144,15 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     color: Color.base.White,
   },
-  picker: {
+  pickerContainer: {
     backgroundColor: Color.Gray.gray600,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: Color.Gray.gray400
+    borderColor: Color.Gray.gray400,
+    overflow: 'hidden',  // This ensures the Picker doesn't overflow the container
+  },
+  picker: {
+    color: Color.base.White,  // Set text color to white
   },
   textArea: {
     backgroundColor: Color.Gray.gray600,

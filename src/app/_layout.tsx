@@ -87,6 +87,7 @@ const Layout = () => {
                   },
                 }}
               >
+                <Stack.Screen name="(tabs)"/>
                 <Stack.Screen
                   name="restaurants/[id]"
                   options={{ presentation: "modal" }}
