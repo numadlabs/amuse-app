@@ -90,7 +90,6 @@
       "requestHeaders": {
         "expo-channel-name": "production",
         "expo-runtime-version": "0.7.7",
-        "expo-platform": "ios",
         "channel-name": "production"
       }
     }
