@@ -16,6 +16,7 @@ import useLocationStore from "@/lib/store/userLocation";
 import { userKeys } from "@/lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
 import Close from "@/components/icons/Close";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { io } from "socket.io-client";
 import { useAuth } from "@/context/AuthContext";
 import QRCode from "react-native-qrcode-svg";

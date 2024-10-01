@@ -17,7 +17,6 @@ import * as Location from "expo-location";
 import ErrorBoundary from "../ErrorBoundary";
 import * as Network from 'expo-network';
 import NoInternet from "../NoInternet";
-import * as Notifications from 'expo-notifications';
 
 type LayoutProps = {
   navigation: any;
@@ -36,7 +35,7 @@ const PUSH_TOKEN_KEY = '@PushToken';
 const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState<boolean>(false);
-  const { currentLocation, permissionStatus, getLocation } = useLocationStore();
+  const { getLocation } = useLocationStore();
   const { expoPushToken } = usePushNotifications();
   const [loadingStates, setLoadingStates] = useState<LoadingStates>({
     internet: false,

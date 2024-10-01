@@ -219,7 +219,7 @@ const Page = () => {
           </TouchableOpacity>
         </View>
         <View style={{ paddingHorizontal: 16 }}>
-          <StackedCard key={refreshPage.toString()} />
+          <StackedCard/>
         </View>
         {cards?.data?.cards.length === 0 ? (
           ""

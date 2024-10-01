@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import Header from "@/components/layout/Header";
 import Color from "@/constants/Color";
 import Accordion from "@/components/ui/Accordion";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Faq = () => {
   const data = [

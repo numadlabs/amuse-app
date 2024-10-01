@@ -12,7 +12,7 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
 } from "react-native-reanimated";
-import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
+import { userKeys } from "@/lib/service/keysHelper";
 import { LinearGradient } from "expo-linear-gradient";
 
 import SearchGradient from "../icons/SearchGradient";
@@ -26,10 +26,7 @@ const StackedCard = () => {
   const { data: cards = [], isLoading } = useQuery({
     queryKey: userKeys.cards,
     queryFn: () => {
-      return getUserCard({
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
-      });
+      return getUserCard();
     },
     enabled: !!currentLocation,
   });
