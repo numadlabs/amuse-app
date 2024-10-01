@@ -114,7 +114,9 @@ const Page = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        <Animated.View entering={SlideOutDown}>
+      <Animated.View
+          entering={SlideOutDown.withInitialValues({ originY: 0 })}
+        >
           {user && (
             <TouchableOpacity onPress={() => router.push('/Wallet')}>
               <Balance
@@ -217,7 +219,7 @@ const Page = () => {
           </TouchableOpacity>
         </View>
         <View style={{ paddingHorizontal: 16 }}>
-          <StackedCard key={refreshPage.toString()} />
+          <StackedCard/>
         </View>
         {cards?.data?.cards.length === 0 ? (
           ""

@@ -25,7 +25,8 @@ const passwordSchema = z.string()
   .min(8, "Password must be at least 8 characters long")
   .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
   .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-  .regex(/\d/, "Password must contain at least one number");
+  .regex(/\d/, "Password must contain at least one number")
+  .max(128, "Maximum number of characters reached")
 
 const Password = () => {
   const [confirmPassword, setConfirmPassword] = useState("");

@@ -33,7 +33,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteUser, updateUserInfo } from "@/lib/service/mutationHelper";
 import { getUserById } from "@/lib/service/queryHelper";
-import { router } from "expo-router";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { SERVER_SETTING } from "@/constants/serverSettings";
 import { userKeys } from "@/lib/service/keysHelper";
 import { axiosClient } from "@/lib/axios";
@@ -305,7 +305,7 @@ that information is inaccurate or incomplete.
   ];
 
   return (
-    <>
+    <SafeAreaView style={{flex:1}}>
       <Header
         title="Privacy policy & Settings"
         titleStyle={{ fontFamily: "Sora", fontWeight: 600 }}
@@ -448,7 +448,7 @@ that information is inaccurate or incomplete.
           <ActivityIndicator size="large" color={Color.base.White} />
         </View>
       )}
-    </>
+    </SafeAreaView>
   );
 };
 

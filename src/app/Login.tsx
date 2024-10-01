@@ -170,7 +170,7 @@ function Login() {
                     marginBottom: 24,
                   }}
                 >
-                  Welcomee
+                  Welcome
                 </Text>
 
                 <View style={{ gap: 12 }}>
