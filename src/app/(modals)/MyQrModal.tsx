@@ -142,7 +142,7 @@ const MyQrModal = () => {
   }, [userId, handleTapScan, createTapMutation]);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {loading ? (
         <ActivityIndicator style={styles.loader} />
       ) : (
@@ -201,7 +201,7 @@ const MyQrModal = () => {
       >
         <Close />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
   closeButton: {
     position: "absolute",
     right: "0%",
-    top: "0%",
+    top: "5%",
     margin: 16,
   },
   instruction: {
