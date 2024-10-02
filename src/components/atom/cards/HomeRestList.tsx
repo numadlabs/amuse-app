@@ -112,7 +112,7 @@ const HomeRestList: React.FC<ResListCardProp> = ({ marker, onPress }) => {
                 size="small"
                 style={{
                   alignItems: "center",
-                  height: 36,
+                  height: "auto",
                   justifyContent: "center",
                   borderWidth: 1,
                   borderRadius: 16,

@@ -35,7 +35,7 @@ const Accordion = ({ text, title }) => {
         }}
       >
         <Text
-          style={{ ...BODY_1_MEDIUM, color: Color.base.White, fontSize:14 }}
+          style={{ ...BODY_1_MEDIUM, color: Color.base.White, fontSize:14, width: "90%" }}
         >
           {title}
         </Text>
