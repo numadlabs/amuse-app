@@ -42,15 +42,46 @@ import {
   H6,
 } from "@/constants/typography";
 
+const ContactOptions = ({ onEmailPress, onWhatsAppPress }) => (
+  <View style={styles.contactOptionsContainer}>
+    <TouchableOpacity style={styles.contactOption} onPress={onEmailPress}>
+      <Text style={styles.contactOptionText}>Email</Text>
+    </TouchableOpacity>
+    <View style={styles.contactOptionDivider} />
+    <TouchableOpacity style={styles.contactOption} onPress={onWhatsAppPress}>
+      <Text style={styles.contactOptionText}>WhatsApp</Text>
+    </TouchableOpacity>
+  </View>
+);
+
+const ProfileConfigItem = ({ icon, title, onPress }) => (
+  <LinearGradient
+    colors={[Color.Brand.card.start, Color.Brand.card.end]}
+    start={{ x: 1, y: 0 }}
+    end={{ x: 1, y: 1 }}
+    style={{ borderRadius: 16 }}
+  >
+    <TouchableOpacity style={styles.configContainer} onPress={onPress}>
+      <View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}>
+        {icon}
+        <Text style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}>
+          {title}
+        </Text>
+      </View>
+      <ArrowRight2 color={Color.Gray.gray100} />
+    </TouchableOpacity>
+  </LinearGradient>
+);
+
 const Profile = () => {
   const { currentLocation } = useLocationStore();
   const { authState, onLogout } = useAuth();
   const router = useRouter();
+  const [showContactOptions, setShowContactOptions] = useState(false);
+
   const { data: taps = [] } = useQuery({
     queryKey: userKeys.taps,
-    queryFn: () => {
-      return getUserTaps();
-    },
+    queryFn: () => getUserTaps(),
   });
 
   const { data: userTier = [], isLoading: isUserTierLoading } = useQuery({
@@ -61,354 +92,148 @@ const Profile = () => {
 
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
-    queryFn: () => {
-      return getUserCard();
-    },
+    queryFn: () => getUserCard(),
     enabled: !!currentLocation,
   });
 
   const { data: user = [] } = useQuery({
     queryKey: userKeys.info,
-    queryFn: () => {
-      return getUserById(authState.userId);
-    },
+    queryFn: () => getUserById(authState.userId),
   });
 
   const userTierData = userTier.find(
     (tier) => tier.id === user?.user?.userTierId,
   );
+
+  const openWhatsApp = () => {
+    Linking.openURL(SERVER_SETTING.WHATSAPP_LINK);
+  };
+
+  const toggleContactOptions = () => {
+    setShowContactOptions(!showContactOptions);
+  };
+
   return (
-    <>
-      <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
-        <Header title="Profile" />
-        <ScrollView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
-          <View style={styles.body}>
-            <View
-              style={{
-                borderWidth: 1,
-                borderColor: Color.Gray.gray300,
-                borderRadius: 16,
-              }}
-            >
-              <TouchableOpacity
-                onPress={() =>
-                  // router.push("/Tier")
-                  ""
-                }
+    <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+      <Header title="Profile" />
+      <ScrollView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+        <View style={styles.body}>
+          <View style={styles.profileCard}>
+            <TouchableOpacity onPress={() => router.push("/Tier")}>
+              <LinearGradient
+                colors={[Color.Brand.card.start, Color.Brand.card.end]}
+                start={{ x: 1, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.profileCardGradient}
               >
-                <LinearGradient
-                  colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                  start={{ x: 1, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={{
-                    padding: 16,
-                    borderRadius: 16,
-                    alignItems: "center",
-                    alignContent: "center",
-                    flexDirection: "row",
-                    gap: 20,
-                    borderWidth: 1,
-                    borderColor: Color.Gray.gray300,
-                  }}
-                >
-                  <View style={styles.profilePic}>
-                    {user?.user?.profilePicture ? (
-                      <Image
-                        source={{
-                          uri: `${SERVER_SETTING.PROFILE_PIC_LINK}${user?.user?.profilePicture}`,
-                        }}
-                        style={{ width: 72, height: 72, borderRadius: 48 }}
-                      />
-                    ) : (
-                      <User size={36} color={Color.Gray.gray50} />
-                    )}
-                  </View>
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <View
-                      style={{
-                        alignContent: "center",
-                        justifyContent: "center",
-                        gap: 8,
+                <View style={styles.profilePic}>
+                  {user?.user?.profilePicture ? (
+                    <Image
+                      source={{
+                        uri: `${SERVER_SETTING.PROFILE_PIC_LINK}${user?.user?.profilePicture}`,
                       }}
-                    >
-                      <Text
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                        style={styles.profileName}
-                      >
-                        {user?.user?.nickname}
-                      </Text>
-                      <Text
-                        style={{
-                          ...BODY_2_REGULAR,
-                          color: Color.Gray.gray100,
-                        }}
-                      >
-                        Tier: {userTierData?.name}
-                      </Text>
-                    </View>
-                    {/* <View>
-                      <ArrowRight2 color={Color.Gray.gray100} />
-                    </View> */}
-                  </View>
-                </LinearGradient>
-              </TouchableOpacity>
-              <View style={styles.profileStatsContainer}>
-                <View style={styles.profileStats}>
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      gap: 8,
-                      alignItems: "center",
-                      paddingHorizontal: 10,
-                    }}
-                  >
-                    <Text
-                      style={{ color: Color.Gray.gray100, ...BODY_2_REGULAR }}
-                    >
-                      Check-ins
-                    </Text>
-                    <Text
-                      style={{
-                        color: Color.Gray.gray50,
-                        ...H5,
-                      }}
-                    >
-                      {taps?.data?.taps.length === 0
-                        ? "00"
-                        : taps?.data?.taps.length}
-                    </Text>
-                  </View>
+                      style={{ width: 72, height: 72, borderRadius: 48 }}
+                    />
+                  ) : (
+                    <User size={36} color={Color.Gray.gray50} />
+                  )}
                 </View>
-                <View
-                  style={{ width: 1, backgroundColor: Color.Gray.gray300 }}
-                />
-                <TouchableOpacity
-                  style={styles.profileStats}
-                  onPress={() => router.push("/MyAcards")}
-                >
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      gap: 8,
-                      alignItems: "center",
-                      paddingHorizontal: 10,
-                    }}
-                  >
-                    <Text
-                      style={{ color: Color.Gray.gray100, ...BODY_2_REGULAR }}
-                    >
-                      Memberships
-                    </Text>
-                    <Text
-                      style={{
-                        color: Color.Gray.gray50,
-                        ...H5,
-                      }}
-                    >
-                      {cards?.data?.cards.length === 0
-                        ? "00"
-                        : cards?.data?.cards.length}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <View style={styles.profileConfig}>
-              <LinearGradient
-                colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                start={{ x: 1, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{ borderRadius: 16 }}
-              >
-                <TouchableOpacity
-                  style={styles.configContainer}
-                  onPress={() => router.push("profileSection/ProfileEdit")}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 12,
-                      alignItems: "center",
-                    }}
-                  >
-                    <User size={24} color={Color.Gray.gray100} />
-                    <Text
-                      style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}
-                    >
-                      Account
-                    </Text>
-                  </View>
-                  <ArrowRight2 color={Color.Gray.gray100} />
-                </TouchableOpacity>
-              </LinearGradient>
-              <LinearGradient
-                colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                start={{ x: 1, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{ borderRadius: 16 }}
-              >
-                <TouchableOpacity
-                  style={styles.configContainer}
-                  onPress={() => Linking.openURL("mailto:info@amusebouche.io")}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 12,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Sms size={24} color={Color.Gray.gray100} />
-                    <Text
-                      style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}
-                    >
-                      Contact
-                    </Text>
-                  </View>
-                  <ArrowRight2 color={Color.Gray.gray100} />
-                </TouchableOpacity>
-              </LinearGradient>
-              <LinearGradient
-                colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                start={{ x: 1, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{ borderRadius: 16 }}
-              >
-                <TouchableOpacity
-                  style={styles.configContainer}
-                  onPress={() => router.navigate("/Faq")}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 12,
-                      alignItems: "center",
-                    }}
-                  >
-                    <MessageQuestion size={24} color={Color.Gray.gray100} />
-                    <Text
-                      style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}
-                    >
-                      FAQ
-                    </Text>
-                  </View>
-                  <ArrowRight2 color={Color.Gray.gray100} />
-                </TouchableOpacity>
-              </LinearGradient>
-              <LinearGradient
-                colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                start={{ x: 1, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{ borderRadius: 16 }}
-              >
-                <TouchableOpacity
-                  style={styles.configContainer}
-                  onPress={() => router.navigate("/TermsAndCondo")}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 12,
-                      alignItems: "center",
-                    }}
-                  >
-                    <NoteText size={24} color={Color.Gray.gray100} />
-                    <Text
-                      style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}
-                    >
-                      Terms and Conditions
-                    </Text>
-                  </View>
-                  <ArrowRight2 color={Color.Gray.gray100} />
-                </TouchableOpacity>
-              </LinearGradient>
-              <LinearGradient
-                colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                start={{ x: 1, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{ borderRadius: 16 }}
-              >
-                <TouchableOpacity
-                  style={styles.configContainer}
-                  onPress={() => router.push("PrivacyPolicy")}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 12,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Lock size={24} color={Color.Gray.gray100} />
-                    <Text
-                      style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}
-                    >
-                      Privacy
-                    </Text>
-                  </View>
-                  <ArrowRight2 color={Color.Gray.gray100} />
-                </TouchableOpacity>
-              </LinearGradient>
-
-              <LinearGradient
-                colors={[Color.Brand.card.start, Color.Brand.card.end]}
-                start={{ x: 1, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{ borderRadius: 16 }}
-              >
-                <TouchableOpacity
-                  style={styles.configContainer}
-                  onPress={() => router.push("BugReport")}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 12,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Warning2 size={24} color={Color.Gray.gray100} />
-                    <Text
-                      style={{ ...BODY_1_REGULAR, color: Color.Gray.gray50 }}
-                    >
-                      Report a Bug
-                    </Text>
-                  </View>
-                  <ArrowRight2 color={Color.Gray.gray100} />
-                </TouchableOpacity>
-              </LinearGradient>
-
-              <TouchableOpacity onPress={onLogout}>
-                <View style={styles.logout}>
-                  <LogoutCurve color={Color.Gray.gray100} />
+                <View style={styles.profileInfo}>
                   <Text
-                    style={{
-                      color: Color.Gray.gray50,
-                      ...BUTTON_48,
-                    }}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    style={styles.profileName}
                   >
-                    Log out
+                    {user?.user?.nickname}
+                  </Text>
+                  <Text style={styles.profileTier}>
+                    Tier: {userTierData?.name}
                   </Text>
                 </View>
+              </LinearGradient>
+            </TouchableOpacity>
+            <View style={styles.profileStatsContainer}>
+              <View style={styles.profileStats}>
+                <Text style={styles.statsLabel}>Check-ins</Text>
+                <Text style={styles.statsValue}>
+                  {taps?.data?.taps.length === 0
+                    ? "00"
+                    : taps?.data?.taps.length}
+                </Text>
+              </View>
+              <View style={styles.statsDivider} />
+              <TouchableOpacity
+                style={styles.profileStats}
+                onPress={() => router.push("/MyAcards")}
+              >
+                <Text style={styles.statsLabel}>Memberships</Text>
+                <Text style={styles.statsValue}>
+                  {cards?.data?.cards.length === 0
+                    ? "00"
+                    : cards?.data?.cards.length}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
+
+          <View style={styles.profileConfig}>
+            <ProfileConfigItem
+              icon={<User size={24} color={Color.Gray.gray100} />}
+              title="Account"
+              onPress={() => router.push("profileSection/ProfileEdit")}
+            />
+
+            <ProfileConfigItem
+              icon={<Sms size={24} color={Color.Gray.gray100} />}
+              title="Contact Us"
+              onPress={toggleContactOptions}
+            />
+
+            {showContactOptions && (
+              <ContactOptions
+                onEmailPress={() =>
+                  Linking.openURL("mailto:info@amusebouche.io")
+                }
+                onWhatsAppPress={openWhatsApp}
+              />
+            )}
+
+            <ProfileConfigItem
+              icon={<MessageQuestion size={24} color={Color.Gray.gray100} />}
+              title="FAQ"
+              onPress={() => router.navigate("/Faq")}
+            />
+
+            <ProfileConfigItem
+              icon={<NoteText size={24} color={Color.Gray.gray100} />}
+              title="Terms and Conditions"
+              onPress={() => router.navigate("/TermsAndCondo")}
+            />
+
+            <ProfileConfigItem
+              icon={<Lock size={24} color={Color.Gray.gray100} />}
+              title="Privacy"
+              onPress={() => router.push("PrivacyPolicy")}
+            />
+
+            <ProfileConfigItem
+              icon={<Warning2 size={24} color={Color.Gray.gray100} />}
+              title="Report a Bug"
+              onPress={() => router.push("BugReport")}
+            />
+
+            <TouchableOpacity onPress={onLogout}>
+              <View style={styles.logout}>
+                <LogoutCurve color={Color.Gray.gray100} />
+                <Text style={styles.logoutText}>Log out</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
-
-export default Profile;
 
 const styles = StyleSheet.create({
   body: {
@@ -416,61 +241,66 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray600,
     paddingHorizontal: 16,
   },
-  container: {
-    flex: 1,
+  profileCard: {
     marginTop: 16,
-
     borderRadius: 16,
-
     borderWidth: 1,
-    borderColor: Color.Gray.gray400,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
+    borderColor: Color.Gray.gray300,
+    overflow: "hidden",
   },
-  logout: {
-    borderRadius: 48,
-    justifyContent: "center",
+  profileCardGradient: {
+    padding: 16,
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
-    backgroundColor: Color.Gray.gray400,
-    paddingVertical: 12,
-    marginBottom: 24,
+    gap: 20,
   },
   profilePic: {
     alignItems: "center",
     justifyContent: "center",
     width: 72,
     height: 72,
-    padding: 10,
-    borderRadius: 200,
+    borderRadius: 36,
     backgroundColor: Color.Gray.gray300,
+  },
+  profileInfo: {
+    flex: 1,
   },
   profileName: {
     ...H6,
     color: Color.base.White,
   },
-  profileContainer: {
-    alignItems: "center",
+  profileTier: {
+    ...BODY_2_REGULAR,
+    color: Color.Gray.gray100,
+    marginTop: 8,
   },
   profileStatsContainer: {
     flexDirection: "row",
     paddingVertical: 18,
     justifyContent: "center",
+    borderTopWidth: 1,
+    borderTopColor: Color.Gray.gray300,
   },
   profileStats: {
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
   },
+  statsLabel: {
+    ...BODY_2_REGULAR,
+    color: Color.Gray.gray100,
+  },
+  statsValue: {
+    ...H5,
+    color: Color.Gray.gray50,
+    marginTop: 8,
+  },
+  statsDivider: {
+    width: 1,
+    backgroundColor: Color.Gray.gray300,
+  },
   profileConfig: {
     gap: 16,
-
     marginTop: 24,
   },
   configContainer: {
@@ -482,4 +312,40 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: "center",
   },
+  contactOptionsContainer: {
+    flexDirection: "row",
+    backgroundColor: Color.Gray.gray500,
+    borderRadius: 16,
+    overflow: "hidden",
+    marginTop: 8,
+  },
+  contactOption: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+  contactOptionText: {
+    ...BODY_1_REGULAR,
+    color: Color.Gray.gray50,
+  },
+  contactOptionDivider: {
+    width: 1,
+    backgroundColor: Color.Gray.gray300,
+  },
+  logout: {
+    borderRadius: 48,
+    justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    backgroundColor: Color.Gray.gray400,
+    paddingVertical: 12,
+    marginBottom: 24,
+  },
+  logoutText: {
+    color: Color.Gray.gray50,
+    ...BUTTON_48,
+  },
 });
+
+export default Profile;

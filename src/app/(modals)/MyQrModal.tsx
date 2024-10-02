@@ -48,19 +48,22 @@ const MyQrModal = () => {
     (data) => {
       console.log("Tap scan emitted: ", data);
       const userCard = cards?.data?.cards.find(
-        (card) => card.restaurantId === data?.data?.restaurantId
+        (card) => card.restaurantId === data?.data?.restaurantId,
       );
       if (!userCard) {
         router.back();
         router.push({
           pathname: `/restaurants/${data?.data?.restaurantId}`,
         });
-      }
-      else {
+      } else {
         if (data?.isInTapLock === true) {
+          console.log("data", data);
           router.back();
           router.push({
             pathname: `/AlreadyCheckedIn`,
+            params: {
+              tappedAt: data?.data?.tappedAt,
+            },
           });
         } else {
           router.back();
@@ -75,7 +78,7 @@ const MyQrModal = () => {
         }
       }
     },
-    [cards, router]
+    [cards, router],
   );
 
   // Mutation for creating a tap
@@ -164,7 +167,9 @@ const MyQrModal = () => {
               value={`data:image/png;base64,${qrData}`}
             />
             {error && (
-              <Text style={{ ...BODY_2_REGULAR, color: Color.System.systemError }}>
+              <Text
+                style={{ ...BODY_2_REGULAR, color: Color.System.systemError }}
+              >
                 {error}
               </Text>
             )}

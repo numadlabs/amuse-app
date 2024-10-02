@@ -21,11 +21,11 @@ export async function logoutHandler(axiosClient) {
   axiosClient.defaults.headers.common["Authorization"] = "";
   await SecureStore.deleteItemAsync(SERVER_SETTING.TOKEN_KEY);
   await SecureStore.deleteItemAsync(SERVER_SETTING.REFRESH_TOKEN_KEY);
-  queryCache.clear()
+  queryCache.clear();
   //TODO key object dotroos duudah
   await AsyncStorage.removeItem("hasSeenWelcomeMessage");
-  await deleteUserId();
   queryCache.clear();
+  await deleteUserId();
 
   router.replace("/Login");
 }
