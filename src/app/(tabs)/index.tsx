@@ -40,11 +40,17 @@ import { height, width } from "@/lib/utils";
 import Button from "@/components/ui/Button";
 import Close from "@/components/icons/Close";
 import moment from "moment";
-import { BODY_2_MEDIUM, BODY_2_REGULAR, BUTTON_40, H6 } from "@/constants/typography";
+import {
+  BODY_2_MEDIUM,
+  BODY_2_REGULAR,
+  BUTTON_40,
+  H6,
+} from "@/constants/typography";
 import DiscoverFloatRestCard from "@/components/atom/cards/DiscoverFloatRestCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RestaurantListGrowing from "@/components/atom/cards/RestaurantListGrowing";
 import BitcoinWithdrawals from "@/components/atom/cards/BitcoinWithdrawals";
+import { updatePushToken } from "@/lib/service/mutationHelper";
 
 const Page = () => {
   const router = useRouter();
@@ -54,7 +60,7 @@ const Page = () => {
   const [isQuickInfoVisible, setIsQuickInfoVisible] = useState(true);
   const pressed = useSharedValue(false);
   const { authState } = useAuth();
-  const profilePictureSetting = AsyncStorage.getItem('showProfilePicture');
+  const profilePictureSetting = AsyncStorage.getItem("showProfilePicture");
   const currentTime = moment().format("HH:mm:ss");
   const { data: user } = useQuery({
     queryKey: userKeys.info,
@@ -64,6 +70,9 @@ const Page = () => {
     enabled: !!authState.userId,
   });
 
+  const { mutateAsync: updatePushTokenMutation } = useMutation({
+    mutationFn: updatePushToken,
+  });
 
   const { data: cards = [] } = useQuery({
     queryKey: userKeys.cards,
@@ -108,17 +117,17 @@ const Page = () => {
 
   const restaurantsArray = restaurantsData?.data?.restaurants || [];
   const filteredRestaurantsArray = restaurantsArray.filter(
-    (restaurant) => !restaurant.isOwned
+    (restaurant) => !restaurant.isOwned,
   );
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <Animated.View
+        <Animated.View
           entering={SlideOutDown.withInitialValues({ originY: 0 })}
         >
           {user && (
-            <TouchableOpacity onPress={() => router.push('/Wallet')}>
+            <TouchableOpacity onPress={() => router.push("/Wallet")}>
               <Balance
                 amount={user?.user?.balance}
                 convertedAmount={user?.convertedBalance}
@@ -159,14 +168,11 @@ const Page = () => {
                       paddingRight: 32,
                     }}
                   >
-                    {
-                      user?.user?.dateOfBirth &&
-                        user?.user?.location &&
-                        profilePictureSetting
-                        ? null
-                        : isQuickInfoVisible && (
-                         null
-                        )}
+                    {user?.user?.dateOfBirth &&
+                    user?.user?.location &&
+                    profilePictureSetting
+                      ? null
+                      : isQuickInfoVisible && null}
 
                     <FlatList
                       style={{ gap: 10, flex: 1 }}
@@ -185,8 +191,8 @@ const Page = () => {
                         />
                       )}
                     />
-                    <RestaurantListGrowing/>
-                    <BitcoinWithdrawals/>
+                    <RestaurantListGrowing />
+                    <BitcoinWithdrawals />
                     <DiscoverFloatRestCard
                       onPress={() => setIsQuickInfoVisible(false)}
                     />
@@ -219,7 +225,7 @@ const Page = () => {
           </TouchableOpacity>
         </View>
         <View style={{ paddingHorizontal: 16 }}>
-          <StackedCard/>
+          <StackedCard />
         </View>
         {cards?.data?.cards.length === 0 ? (
           ""
