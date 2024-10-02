@@ -104,7 +104,7 @@ const RestListCard: React.FC<ResListCardProp> = ({ marker, onPress }) => {
                 size="small"
                 style={{
                   alignItems: "center",
-                  height: "auto",
+                  height: 36,
                   justifyContent: "center",
                   borderWidth: 1,
                   borderRadius: 16,
