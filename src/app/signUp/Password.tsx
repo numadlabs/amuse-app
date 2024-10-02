@@ -1,9 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -11,7 +12,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { z } from 'zod';
 import Steps from "@/components/atom/Steps";
 import Tick from "@/components/icons/Tick";
 import Button from "@/components/ui/Button";
@@ -20,13 +20,15 @@ import { useSignUpStore } from "@/lib/store/signUpStore";
 import { LinearGradient } from "expo-linear-gradient";
 import Header from "@/components/layout/Header";
 import { BODY_1_REGULAR, CAPTION_1_REGULAR, H5 } from "@/constants/typography";
+import { z } from "zod";
 
-const passwordSchema = z.string()
+const passwordSchema = z
+  .string()
   .min(8, "Password must be at least 8 characters long")
   .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
   .regex(/[a-z]/, "Password must contain at least one lowercase letter")
   .regex(/\d/, "Password must contain at least one number")
-  .max(128, "Maximum number of characters reached")
+  .max(128, "Maximum number of characters reached");
 
 const Password = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -35,32 +37,15 @@ const Password = () => {
     "password" | "confirmPassword" | null
   >(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [validationErrors, setValidationErrors] = useState<string[]>([]);
-  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
 
-  const validatePassword = useCallback((pass: string) => {
-    const result = passwordSchema.safeParse(pass);
-    if (!result.success) {
-      setValidationErrors(result.error.issues.map(issue => issue.message));
-      setIsPasswordValid(false);
-    } else {
-      setValidationErrors([]);
-      setIsPasswordValid(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    validatePassword(password);
-  }, [password, validatePassword]);
-
+  const isPasswordValid = passwordSchema.safeParse(password).success;
   const doPasswordsMatch = password === confirmPassword;
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-
-  const handlePasswordChange = (newPassword: string) => {
-    setPassword(newPassword);
+  const isRuleSatisfied = (rule: RegExp): boolean => {
+    return rule.test(password);
   };
 
   const handleNavigation = () => {
@@ -96,6 +81,7 @@ const Password = () => {
                   <Text style={styles.topText}>Create password</Text>
                 </View>
                 <View style={styles.inputContainer}>
+                  {/* Password input field */}
                   <LinearGradient
                     colors={
                       focusedInput === "password"
@@ -135,7 +121,7 @@ const Password = () => {
                           color: Color.base.White,
                         }}
                         value={password}
-                        onChangeText={handlePasswordChange}
+                        onChangeText={setPassword}
                       />
                       <TouchableOpacity onPress={toggleShowPassword}>
                         <Ionicons
@@ -148,6 +134,7 @@ const Password = () => {
                       </TouchableOpacity>
                     </View>
                   </LinearGradient>
+                  {/* Confirm Password input field */}
                   <LinearGradient
                     colors={
                       focusedInput === "confirmPassword"
@@ -205,17 +192,51 @@ const Password = () => {
                   <Text style={styles.errorText}>Password doesn't match</Text>
                 )}
                 <View style={styles.ruleContainer}>
-                  {validationErrors.map((error, index) => (
-                    <View key={index} style={{ flexDirection: "row" }}>
-                      <Tick size={18} color={Color.Gray.gray100} />
-                      <Text style={styles.ruleText}>{error}</Text>
-                    </View>
-                  ))}
-                  {isPasswordValid && (
-                    <Text style={[styles.ruleText, styles.greenRuleText]}>
-                      Password meets all requirements
+                  {/* Password rules */}
+                  <View style={{ flexDirection: "row" }}>
+                    <Tick size={18} color={Color.Gray.gray100} />
+                    <Text
+                      style={[
+                        styles.ruleText,
+                        isRuleSatisfied(/.{8,}/) && styles.greenRuleText,
+                      ]}
+                    >
+                      {"At least 8 characters"}
                     </Text>
-                  )}
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Tick size={18} color={Color.Gray.gray100} />
+                    <Text
+                      style={[
+                        styles.ruleText,
+                        isRuleSatisfied(/[A-Z]/) && styles.greenRuleText,
+                      ]}
+                    >
+                      {"At least 1 upper case letter (A-Z)"}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Tick size={18} color={Color.Gray.gray100} />
+                    <Text
+                      style={[
+                        styles.ruleText,
+                        isRuleSatisfied(/[a-z]/) && styles.greenRuleText,
+                      ]}
+                    >
+                      {"At least 1 lower case letter (a-z)"}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Tick size={18} color={Color.Gray.gray100} />
+                    <Text
+                      style={[
+                        styles.ruleText,
+                        isRuleSatisfied(/\d/) && styles.greenRuleText,
+                      ]}
+                    >
+                      {"At least 1 number (0-9)"}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </LinearGradient>

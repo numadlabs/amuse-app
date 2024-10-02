@@ -1,6 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { ActivityIndicator, Image, KeyboardAvoidingView, Modal, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  KeyboardAvoidingView,
+  Modal,
+  StyleSheet,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { ZodError } from "zod";
 import {
@@ -12,14 +18,19 @@ import {
   View,
   ScrollView,
 } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Divider from "@/components/atom/Divider";
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/context/AuthContext";
 import Color from "@/constants/Color";
 import { LinearGradient } from "expo-linear-gradient";
 import LoginSchema from "@/validators/LoginSchema";
-import { BODY_1_REGULAR, BODY_2_REGULAR, BUTTON_48, H5 } from "@/constants/typography";
+import {
+  BODY_1_REGULAR,
+  BODY_2_REGULAR,
+  BUTTON_48,
+  H5,
+} from "@/constants/typography";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -27,14 +38,16 @@ import Animated, {
   Easing,
   FadeIn,
   FadeOut,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 import { height } from "@/lib/utils";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [focusedInput, setFocusedInput] = useState<"Email" | "Password" | null>(null);
+  const [focusedInput, setFocusedInput] = useState<"Email" | "Password" | null>(
+    null,
+  );
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
@@ -53,8 +66,10 @@ function Login() {
 
   const checkWelcomeMessageStatus = async () => {
     try {
-      const hasSeenWelcome = await AsyncStorage.getItem('hasSeenWelcomeMessage');
-      if (hasSeenWelcome !== 'true') {
+      const hasSeenWelcome = await AsyncStorage.getItem(
+        "hasSeenWelcomeMessage",
+      );
+      if (hasSeenWelcome !== "true") {
         setShowWelcomeMessage(true);
         bottomTabHeight.value = withTiming(height / 1.1, {
           duration: 800,
@@ -62,20 +77,20 @@ function Login() {
         });
       }
     } catch (error) {
-      console.error('Error checking welcome message status:', error);
+      console.error("Error checking welcome message status:", error);
     }
   };
 
   const dismissWelcomeMessage = async () => {
     try {
-      await AsyncStorage.setItem('hasSeenWelcomeMessage', 'true');
+      await AsyncStorage.setItem("hasSeenWelcomeMessage", "true");
       bottomTabHeight.value = withTiming(0, {
         duration: 500,
         easing: Easing.in(Easing.exp),
       });
       setTimeout(() => setShowWelcomeMessage(false), 500);
     } catch (error) {
-      console.error('Error saving welcome message status:', error);
+      console.error("Error saving welcome message status:", error);
     }
   };
 
@@ -90,7 +105,8 @@ function Login() {
       if (result.success) {
         router.replace("/(tabs)");
       } else {
-        setError(result.error);
+        setError(result.msg);
+        console.log("error", result);
       }
     } catch (err) {
       console.error("Error during login:", err);
@@ -215,24 +231,13 @@ function Login() {
                         autoCapitalize="none"
                         value={email}
                         onChangeText={(text) => {
-                          setEmail(text)
-                          setError("")
+                          setEmail(text);
+                          setError("");
                         }}
                       />
                     </View>
                   </LinearGradient>
-                  {error && (
-                    <Animated.View entering={FadeIn} exiting={FadeOut} style={{ flex: 1, }}>
-                      <Text
-                        style={{
-                          color: Color.System.systemError,
-                          paddingHorizontal: 16,
-                        }}
-                      >
-                        {error}
-                      </Text>
-                    </Animated.View>
-                  )}
+
                   <LinearGradient
                     colors={
                       focusedInput === "Password"
@@ -286,6 +291,23 @@ function Login() {
                       </TouchableOpacity>
                     </View>
                   </LinearGradient>
+
+                  {error && (
+                    <Animated.View
+                      entering={FadeIn}
+                      exiting={FadeOut}
+                      style={{ flex: 1 }}
+                    >
+                      <Text
+                        style={{
+                          color: Color.System.systemError,
+                          paddingHorizontal: 16,
+                        }}
+                      >
+                        {error}
+                      </Text>
+                    </Animated.View>
+                  )}
 
                   <Button
                     variant="primary"
@@ -378,9 +400,10 @@ function Login() {
               exiting={FadeOut}
               style={{
                 flex: 1,
-                backgroundColor: 'rgba(0, 0, 0, 0.25)',
-                justifyContent: 'flex-end',
-              }}>
+                backgroundColor: "rgba(0, 0, 0, 0.25)",
+                justifyContent: "flex-end",
+              }}
+            >
               <TouchableOpacity
                 style={{ flex: 1 }}
                 onPress={toggleBalanceBottomSheet}
@@ -395,71 +418,88 @@ function Login() {
                     padding: 20,
                     zIndex: 1000,
                     marginTop: 25,
-                    flexGrow: 1
+                    flexGrow: 1,
                   },
                   animatedStyles,
                 ]}
               >
-                <View style={{ flex: 1, justifyContent: 'space-between', }}>
+                <View style={{ flex: 1, justifyContent: "space-between" }}>
                   <ScrollView style={{ marginBottom: 20 }}>
-                    <Text style={{ color: Color.base.White, ...BODY_2_REGULAR, fontSize: 24, lineHeight: 32, fontWeight: 'bold', textAlign: 'left' }}>
+                    <Text
+                      style={{
+                        color: Color.base.White,
+                        ...BODY_2_REGULAR,
+                        fontSize: 24,
+                        lineHeight: 32,
+                        fontWeight: "bold",
+                        textAlign: "left",
+                      }}
+                    >
                       Welcome to {"\n"}Amuse Bouche!
                     </Text>
 
                     <Text style={styles.paragraph}>
-                      We’re thrilled to have you join our Pilot Program, and we greatly
-                      appreciate your participation. This program allows us to refine Amuse
-                      Bouche’s features, ensuring it becomes the best experience possible
-                      for our entire community, including you!
+                      We’re thrilled to have you join our Pilot Program, and we
+                      greatly appreciate your participation. This program allows
+                      us to refine Amuse Bouche’s features, ensuring it becomes
+                      the best experience possible for our entire community,
+                      including you!
                     </Text>
 
                     <Text style={styles.paragraph}>
-                      Here at Amuse Bouche, we value transparency with our users. So,
-                      please note that while using the Amuse Bouche Application, certain
-                      user data will be collected. To enable account creation and continued
-                      user access, it is necessary that user email data is collected.
-                      Additionally, user experience is unique to each location, which
-                      requires user location data to also be collected.
+                      Here at Amuse Bouche, we value transparency with our
+                      users. So, please note that while using the Amuse Bouche
+                      Application, certain user data will be collected. To
+                      enable account creation and continued user access, it is
+                      necessary that user email data is collected. Additionally,
+                      user experience is unique to each location, which requires
+                      user location data to also be collected.
                     </Text>
 
                     <Text style={styles.paragraph}>
-                      Aside from user email and location data collection, the rest is up to
-                      you! You can opt to allow the collection of data such as your birthday
-                      and profile picture. Opting-in allows us here at Amuse Bouche to
-                      continue to improve the Application so we can provide a more
-                      seamless and tailored user experience for you.
+                      Aside from user email and location data collection, the
+                      rest is up to you! You can opt to allow the collection of
+                      data such as your birthday and profile picture. Opting-in
+                      allows us here at Amuse Bouche to continue to improve the
+                      Application so we can provide a more seamless and tailored
+                      user experience for you.
                     </Text>
 
                     <Text style={styles.paragraph}>
-                      Your privacy is important, and what data you choose to disclose is
-                      totally up to you! To change your data collection preferences, you can
-                      go to the privacy section of the settings menu and view the data
-                      collection options.
+                      Your privacy is important, and what data you choose to
+                      disclose is totally up to you! To change your data
+                      collection preferences, you can go to the privacy section
+                      of the settings menu and view the data collection options.
                     </Text>
 
                     <Text style={styles.paragraph}>
-                      Disclaimer: The Amuse Bouche Application is solely a platform for
-                      third-parties to engage with users. Any offerings of rewards or
-                      securities accessible through the Application are provided by third-
-                      parties. Hash2 Labs LLC, the developer of the Application, is not liable
-                      for any offers, rewards or any associated claims, damages or losses.
+                      Disclaimer: The Amuse Bouche Application is solely a
+                      platform for third-parties to engage with users. Any
+                      offerings of rewards or securities accessible through the
+                      Application are provided by third- parties. Hash2 Labs
+                      LLC, the developer of the Application, is not liable for
+                      any offers, rewards or any associated claims, damages or
+                      losses.
                     </Text>
 
                     <Text style={styles.paragraph}>
-                      One final note, to ensure security and smooth operations during the
-                      Pilot Program, some features will be limited. Specifically, you won’t be
-                      able to withdraw or transfer any bitcoin earned until the Pilot Program
-                      ends. We’ll notify all users via email and app notification as soon as
+                      One final note, to ensure security and smooth operations
+                      during the Pilot Program, some features will be limited.
+                      Specifically, you won’t be able to withdraw or transfer
+                      any bitcoin earned until the Pilot Program ends. We’ll
+                      notify all users via email and app notification as soon as
                       the Pilot Program is completed.
                     </Text>
 
                     <Text style={[styles.paragraph, { marginTop: 44 }]}>
-                      We are excited to have you as a part of our growing community!
+                      We are excited to have you as a part of our growing
+                      community!
                     </Text>
-                    
                   </ScrollView>
                   <Button variant="primary" onPress={dismissWelcomeMessage}>
-                    <Text style={{ color: Color.base.White, ...BUTTON_48 }}>I understand</Text>
+                    <Text style={{ color: Color.base.White, ...BUTTON_48 }}>
+                      I understand
+                    </Text>
                   </Button>
                 </View>
               </Animated.View>
@@ -471,7 +511,6 @@ function Login() {
   );
 }
 
-
 const styles = StyleSheet.create({
   paragraph: {
     lineHeight: 18,
@@ -480,6 +519,6 @@ const styles = StyleSheet.create({
     color: Color.Gray.gray100, // Assuming this is close to Color.Gray.gray100
     marginBottom: 5, // Adding some space between paragraphs
   },
-})
+});
 
 export default Login;

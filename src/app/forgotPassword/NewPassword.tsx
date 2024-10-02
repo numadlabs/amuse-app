@@ -1,11 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
-  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -14,6 +13,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { z } from "zod";
 import Steps from "@/components/atom/Steps";
 import Tick from "@/components/icons/Tick";
 import Button from "@/components/ui/Button";
@@ -25,25 +25,22 @@ import { useMutation } from "@tanstack/react-query";
 import { forgotPassword } from "@/lib/service/mutationHelper";
 import { BODY_1_REGULAR, CAPTION_1_REGULAR, H5 } from "@/constants/typography";
 
-const validatePassword = (password: string): boolean => {
-  if (password.length < 8) {
-    return false;
-  }
-  if (!/[A-Z]/.test(password)) {
-    return false;
-  }
-  if (!/[a-z]/.test(password)) {
-    return false;
-  }
-
-  if (!/\d/.test(password)) {
-    return false;
-  }
-  return true;
-};
+const passwordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters long")
+      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+      .regex(/\d/, "Password must contain at least one number"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 const Password = () => {
-  const [buttonPosition, setButtonPosition] = useState("bottom");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { email, verificationCode, password, setPassword } = usePasswordStore();
   const [focusedInput, setFocusedInput] = useState<
@@ -51,42 +48,42 @@ const Password = () => {
   >(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<z.ZodIssue[]>([]);
 
-  const isPasswordValid = validatePassword(password);
-  const doPasswordsMatch = password === confirmPassword;
-
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-  const isRuleSatisfied = (rule: RegExp): boolean => {
-    return rule.test(password);
-  };
+  const toggleShowPassword = () => setShowPassword(!showPassword);
+  const isRuleSatisfied = (rule: RegExp): boolean => rule.test(password);
 
   const { mutateAsync: forgotPasswordMutation } = useMutation({
     mutationFn: forgotPassword,
   });
 
+  const validatePasswords = () => {
+    const result = passwordSchema.safeParse({ password, confirmPassword });
+    if (!result.success) {
+      setValidationErrors(result.error.issues);
+      return false;
+    }
+    setValidationErrors([]);
+    return true;
+  };
+
   const handleNavigation = async () => {
     try {
-      if (isPasswordValid && doPasswordsMatch) {
+      if (validatePasswords()) {
         setLoading(true);
-
         await forgotPasswordMutation({
-          email: email,
-          verificationCode: verificationCode,
-          password: password,
+          email,
+          verificationCode,
+          password,
         });
-
-        router.replace({
-          pathname: "/forgotPassword/Success",
-        });
-        setLoading(false);
-      } else {
-        console.log(
-          "Password does not meet the validation rules or passwords do not match.",
-        );
+        router.replace({ pathname: "/forgotPassword/Success" });
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Password reset failed:", error);
+      // Here you could set an error state and display it to the user
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -98,18 +95,14 @@ const Password = () => {
           <View style={styles.body}>
             <LinearGradient
               colors={[Color.Brand.card.start, Color.Brand.card.end]}
-              style={{
-                borderWidth: 1,
-                borderColor: Color.Gray.gray400,
-                marginTop: 16,
-                borderRadius: 32,
-              }}
+              style={styles.gradientContainer}
             >
               <View style={styles.container}>
                 <View style={styles.textContainer}>
                   <Text style={styles.topText}>Create password</Text>
                 </View>
                 <View style={styles.inputContainer}>
+                  {/* Password Input */}
                   <LinearGradient
                     colors={
                       focusedInput === "password"
@@ -118,36 +111,16 @@ const Password = () => {
                     }
                     start={[0, 1]}
                     end={[1, 0]}
-                    style={{
-                      marginTop: 10,
-                      borderRadius: 16,
-                      padding: 1,
-                    }}
+                    style={styles.inputGradient}
                   >
-                    <View
-                      style={{
-                        alignItems: "center",
-                        gap: 12,
-                        alignContent: "center",
-                        flexDirection: "row",
-                        height: 48,
-                        paddingHorizontal: 16,
-                        width: "100%",
-                        backgroundColor: Color.Gray.gray500,
-                        borderRadius: 16,
-                      }}
-                    >
+                    <View style={styles.inputWrapper}>
                       <TextInput
                         secureTextEntry={!showPassword}
-                        placeholder={"Password"}
+                        placeholder="Password"
                         placeholderTextColor={Color.Gray.gray100}
                         onFocus={() => setFocusedInput("password")}
                         onBlur={() => setFocusedInput(null)}
-                        style={{
-                          ...BODY_1_REGULAR,
-                          flex: 1,
-                          color: Color.base.White,
-                        }}
+                        style={styles.input}
                         value={password}
                         onChangeText={setPassword}
                       />
@@ -162,6 +135,7 @@ const Password = () => {
                       </TouchableOpacity>
                     </View>
                   </LinearGradient>
+                  {/* Confirm Password Input */}
                   <LinearGradient
                     colors={
                       focusedInput === "confirmPassword"
@@ -170,36 +144,16 @@ const Password = () => {
                     }
                     start={[0, 1]}
                     end={[1, 0]}
-                    style={{
-                      marginTop: 10,
-                      borderRadius: 16,
-                      padding: 1,
-                    }}
+                    style={styles.inputGradient}
                   >
-                    <View
-                      style={{
-                        alignItems: "center",
-                        gap: 12,
-                        alignContent: "center",
-                        flexDirection: "row",
-                        height: 48,
-                        paddingHorizontal: 16,
-                        width: "100%",
-                        backgroundColor: Color.Gray.gray500,
-                        borderRadius: 16,
-                      }}
-                    >
+                    <View style={styles.inputWrapper}>
                       <TextInput
                         secureTextEntry={!showPassword}
-                        placeholder={"Password"}
+                        placeholder="Confirm Password"
                         placeholderTextColor={Color.Gray.gray100}
                         onFocus={() => setFocusedInput("confirmPassword")}
                         onBlur={() => setFocusedInput(null)}
-                        style={{
-                          flex: 1,
-                          ...BODY_1_REGULAR,
-                          color: Color.base.White,
-                        }}
+                        style={styles.input}
                         value={confirmPassword}
                         onChangeText={setConfirmPassword}
                       />
@@ -215,65 +169,38 @@ const Password = () => {
                     </View>
                   </LinearGradient>
                 </View>
-                {!doPasswordsMatch && (
-                  <Text style={styles.errorText}>Password doesn't match</Text>
-                )}
+                {validationErrors.map((error, index) => (
+                  <Text key={index} style={styles.errorText}>
+                    {error.message}
+                  </Text>
+                ))}
                 <View style={styles.ruleContainer}>
-                  <View style={{ flexDirection: "row" }}>
-                    <Tick size={18} color={Color.Gray.gray100} />
-                    <Text
-                      style={[
-                        styles.ruleText,
-                        isRuleSatisfied(/.{8,}/) && styles.greenRuleText,
-                      ]}
-                    >
-                      {"At least 8 characters"}
-                    </Text>
-                  </View>
-                  <View style={{ flexDirection: "row" }}>
-                    <Tick size={18} color={Color.Gray.gray100} />
-                    <Text
-                      style={[
-                        styles.ruleText,
-                        isRuleSatisfied(/[A-Z]/) && styles.greenRuleText,
-                      ]}
-                    >
-                      {"At least 1 upper case letter (A-Z)"}
-                    </Text>
-                  </View>
-                  <View style={{ flexDirection: "row" }}>
-                    <Tick size={18} color={Color.Gray.gray100} />
-                    <Text
-                      style={[
-                        styles.ruleText,
-                        isRuleSatisfied(/[a-z]/) && styles.greenRuleText,
-                      ]}
-                    >
-                      {"At least 1 lower case letter (a-z)"}
-                    </Text>
-                  </View>
-                  <View style={{ flexDirection: "row" }}>
-                    <Tick size={18} color={Color.Gray.gray100} />
-                    <Text
-                      style={[
-                        styles.ruleText,
-                        isRuleSatisfied(/\d/) && styles.greenRuleText,
-                      ]}
-                    >
-                      {"At least 1 number (0-9)"}
-                    </Text>
-                  </View>
+                  {/* Password Rules */}
+                  <PasswordRule
+                    satisfied={isRuleSatisfied(/.{8,}/)}
+                    text="At least 8 characters"
+                  />
+                  <PasswordRule
+                    satisfied={isRuleSatisfied(/[A-Z]/)}
+                    text="At least 1 upper case letter (A-Z)"
+                  />
+                  <PasswordRule
+                    satisfied={isRuleSatisfied(/[a-z]/)}
+                    text="At least 1 lower case letter (a-z)"
+                  />
+                  <PasswordRule
+                    satisfied={isRuleSatisfied(/\d/)}
+                    text="At least 1 number (0-9)"
+                  />
                 </View>
               </View>
             </LinearGradient>
 
             <View style={[styles.bottomPosition, styles.buttonContainer]}>
               <Button
-                variant={
-                  isPasswordValid && doPasswordsMatch ? "primary" : "disabled"
-                }
+                variant={validationErrors.length === 0 ? "primary" : "disabled"}
                 textStyle={
-                  isPasswordValid && doPasswordsMatch ? "primary" : "disabled"
+                  validationErrors.length === 0 ? "primary" : "disabled"
                 }
                 size="default"
                 onPress={handleNavigation}
@@ -288,68 +215,82 @@ const Password = () => {
   );
 };
 
+const PasswordRule = ({
+  satisfied,
+  text,
+}: {
+  satisfied: boolean;
+  text: string;
+}) => (
+  <View style={{ flexDirection: "row" }}>
+    <Tick size={18} color={Color.Gray.gray100} />
+    <Text style={[styles.ruleText, satisfied && styles.greenRuleText]}>
+      {text}
+    </Text>
+  </View>
+);
+
 const styles = StyleSheet.create({
   body: {
     backgroundColor: Color.Gray.gray600,
     height: "100%",
     paddingHorizontal: 16,
   },
-
+  gradientContainer: {
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
+    marginTop: 16,
+    borderRadius: 32,
+  },
   container: {
     paddingHorizontal: 16,
     paddingTop: 24,
     paddingBottom: 16,
   },
-
   textContainer: {
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 24,
   },
-
   topText: {
     ...H5,
     color: Color.base.White,
   },
-
   inputContainer: {
     gap: 12,
   },
-
+  inputGradient: {
+    marginTop: 10,
+    borderRadius: 16,
+    padding: 1,
+  },
+  inputWrapper: {
+    alignItems: "center",
+    gap: 12,
+    alignContent: "center",
+    flexDirection: "row",
+    height: 48,
+    paddingHorizontal: 16,
+    width: "100%",
+    backgroundColor: Color.Gray.gray500,
+    borderRadius: 16,
+  },
   input: {
-    height: 48,
-    borderWidth: 1,
-    borderRadius: 16,
-    borderColor: Color.Gray.gray100,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
     ...BODY_1_REGULAR,
+    flex: 1,
+    color: Color.base.White,
   },
-
-  inputFocused: {
-    height: 48,
-    borderWidth: 1,
-    borderRadius: 16,
-    borderColor: Color.Gray.gray600,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    ...BODY_1_REGULAR,
-  },
-
   ruleContainer: {
     marginTop: 16,
     gap: 6,
   },
-
   ruleText: {
     ...CAPTION_1_REGULAR,
     color: Color.Gray.gray100,
   },
-
   greenRuleText: {
     color: Color.System.systemSuccess,
   },
-
   errorText: {
     ...CAPTION_1_REGULAR,
     color: Color.System.systemError,
