@@ -119,7 +119,7 @@ const Profile = () => {
       <ScrollView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
         <View style={styles.body}>
           <View style={styles.profileCard}>
-            <TouchableOpacity onPress={() => router.push("/Tier")}>
+            <TouchableOpacity onPress={() => ""}>
               <LinearGradient
                 colors={[Color.Brand.card.start, Color.Brand.card.end]}
                 start={{ x: 1, y: 0 }}

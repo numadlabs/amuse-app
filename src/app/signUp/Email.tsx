@@ -31,57 +31,6 @@ function Email() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
-  // const handleNavigation = async () => {
-  //   try {
-  //     if (email && !isButtonDisabled) {
-  //       setLoading(true);
-  //       setIsButtonDisabled(true);
-  //       emailSchema.parse(email);
-  //       await checkEmailMutation({
-  //         email: email,
-  //       })
-  //         .then((response) => {
-  //           if (response.success === false) {
-  //             setError("This email is already registered.");
-  //             throw new Error("Email already registered");
-  //           } else {
-  //             return sendOtpMutation({
-  //               email: email,
-  //             });
-  //           }
-  //         })
-  //         .then((otpResponse) => {
-  //           if (otpResponse) {
-              // router.push({
-              //   pathname: "/signUp/Otp",
-              // });
-  //           }
-  //         })
-  //         .catch((error) => {
-  //           console.log(error);
-  //           setError("This email is already registered.");
-  //           reset();
-  //         })
-  //         .finally(() => {
-  //           setLoading(false);
-  //           setIsButtonDisabled(false);
-  //         });
-  //     }
-  //   } catch (error) {
-  //     if (error instanceof ZodError) {
-  //       const formattedErrors = error.issues.map((issue) => {
-  //         return `${issue.message}`;
-  //       });
-  //       setError(formattedErrors.join("\n"));
-  //       setLoading(false);
-  //       setIsButtonDisabled(false);
-  //       setTimeout(() => {
-  //         setError("");
-  //       }, 4000);
-  //     }
-  //   }
-  // };
-
   const handleNavigation = async () => {
     if (!email) {
       setError("Please enter an email address.");
@@ -94,7 +43,7 @@ function Email() {
 
       const response = await checkEmailMutation({ email });
       console.log("API Response:", response); // For debugging
-      
+
       if (response === false) {
         await sendOtpMutation({ email });
         router.push({
@@ -133,6 +82,7 @@ function Email() {
       setError("Error sending OTP. Please try again.");
     },
   });
+
   return (
     <>
       <Header title="Sign up" />
@@ -204,9 +154,15 @@ function Email() {
                           setEmail(text);
                           setError("");
                         }}
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
                       />
                     </View>
                   </LinearGradient>
+                  <Text style={styles.disclaimerText}>
+                    For a more seamless experience, we recommend using
+                    mainstream email services like Gmail, Yahoo, and Outlook.
+                  </Text>
                   {error && (
                     <Animated.View
                       entering={FadeIn}
@@ -261,7 +217,6 @@ const styles = StyleSheet.create({
   bottomPosition: {
     justifyContent: "flex-end",
   },
-
   topText: {
     color: Color.base.White,
     ...H5,
@@ -271,6 +226,12 @@ const styles = StyleSheet.create({
     color: Color.Gray.gray100,
     ...CAPTION_1_REGULAR,
     textAlign: "center",
+  },
+  disclaimerText: {
+    color: Color.Gray.gray100,
+    ...CAPTION_1_REGULAR,
+    textAlign: "center",
+    marginTop: 8,
   },
 });
 
