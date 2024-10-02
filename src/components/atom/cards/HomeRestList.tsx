@@ -126,7 +126,6 @@ const HomeRestList: React.FC<ResListCardProp> = ({ marker, onPress }) => {
                     justifyContent: "center",
                     alignItems: "center",
                     marginLeft: 8,
-                    paddingVertical: 2,
                   }}
                 >
                   <Text style={{ ...BUTTON_32, color: Color.base.White }}>
