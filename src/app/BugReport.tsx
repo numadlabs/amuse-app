@@ -50,8 +50,8 @@ const BugReportButton = () => {
 
   const handleSubmit = async () => {
     const deviceModel = Platform.OS === 'ios' ? 'iPhone' : 'Android';
-    const appVersion = Constants.expoConfig?.version ?? '1.0.0';
-    const osVersion = Platform.Version;
+    const appVersion = Constants.expoConfig?.version;
+    const osVersion = Platform.Version.toString();
 
     await submitBugReport({
       deviceModel,

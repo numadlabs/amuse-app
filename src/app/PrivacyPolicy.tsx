@@ -305,7 +305,7 @@ that information is inaccurate or incomplete.
   ];
 
   return (
-    <SafeAreaView style={{flex:1}}>
+    <SafeAreaView style={{flex:1, backgroundColor:Color.Gray.gray600}}>
       <Header
         title="Privacy policy & Settings"
         titleStyle={{ fontFamily: "Sora", fontWeight: 600 }}
