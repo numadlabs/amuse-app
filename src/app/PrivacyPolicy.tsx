@@ -30,10 +30,15 @@ import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { logoutHandler } from "@/lib/auth-utils";
 import { useAuth } from "@/context/AuthContext";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  QueryCache,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { deleteUser, updateUserInfo } from "@/lib/service/mutationHelper";
 import { getUserById } from "@/lib/service/queryHelper";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from "react-native-safe-area-context";
 import { SERVER_SETTING } from "@/constants/serverSettings";
 import { userKeys } from "@/lib/service/keysHelper";
 import { axiosClient } from "@/lib/axios";
@@ -98,7 +103,7 @@ const TermsAndConditions = () => {
     if (value) {
       saveSetting(
         `show${setting.charAt(0).toUpperCase() + setting.slice(1)}`,
-        true
+        true,
       );
       switch (setting) {
         case "profilePicture":
@@ -142,9 +147,10 @@ const TermsAndConditions = () => {
 
       queryClient.invalidateQueries({ queryKey: userKeys.info });
       saveSetting(
-        `show${currentSetting.charAt(0).toUpperCase() + currentSetting.slice(1)
+        `show${
+          currentSetting.charAt(0).toUpperCase() + currentSetting.slice(1)
         }`,
-        false
+        false,
       );
     } catch (error) {
       console.error(`Error updating ${currentSetting}:`, error);
@@ -220,7 +226,8 @@ const TermsAndConditions = () => {
       console.log("🚀 ~ handleDeleteUser ~ response:", response);
       if (response.success) {
         // Perform logout and clear all data
-        await logoutHandler(axiosClient)
+
+        await logoutHandler(axiosClient);
       } else {
         throw new Error("Cannot delete user: " + response.error);
       }
@@ -305,7 +312,7 @@ that information is inaccurate or incomplete.
   ];
 
   return (
-    <SafeAreaView style={{flex:1, backgroundColor:Color.Gray.gray600}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <Header
         title="Privacy policy & Settings"
         titleStyle={{ fontFamily: "Sora", fontWeight: 600 }}
@@ -332,27 +339,27 @@ that information is inaccurate or incomplete.
           </Text>
 
           {renderToggleItem("Profile picture", showProfilePicture, (value) =>
-            handleToggle("profilePicture", value)
+            handleToggle("profilePicture", value),
           )}
           {renderToggleItem("Date of birth", showDateOfBirth, (value) =>
-            handleToggle("dateOfBirth", value)
+            handleToggle("dateOfBirth", value),
           )}
           {renderToggleItem("Country", showArea, (value) =>
-            handleToggle("area", value)
+            handleToggle("area", value),
           )}
 
           {renderButton(
             exportUserData,
             <DocumentDownload size={24} color={Color.base.White} />,
             "Download Data",
-            styles.downloadButton
+            styles.downloadButton,
           )}
 
           {renderButton(
             () => setIsDeleteModalOpen(true),
             <CloseCircle size={24} color={Color.System.systemError} />,
             "Delete Account",
-            styles.deleteButton
+            styles.deleteButton,
           )}
         </ScrollView>
       </View>
@@ -382,13 +389,13 @@ that information is inaccurate or incomplete.
                 cancelToggleOff,
                 null,
                 "Cancel",
-                styles.cancelButton
+                styles.cancelButton,
               )}
               {renderButton(
                 confirmToggleOff,
                 null,
                 "Yes, Turn off",
-                styles.confirmButton
+                styles.confirmButton,
               )}
             </View>
           </View>
@@ -413,17 +420,16 @@ that information is inaccurate or incomplete.
 
           <Text style={styles.bottomTabText}>
             The Pilot Program for Amuse Bouche is still ongoing. If you proceed
-            with deleting your account, you will forfeit all bitcoin accumulated in
-            your Amuse Bouche account. Once deleted, you will not be able to
+            with deleting your account, you will forfeit all bitcoin accumulated
+            in your Amuse Bouche account. Once deleted, you will not be able to
             recover or transfer your bitcoin.
           </Text>
           <Text style={styles.bottomTabText}>
             However, your bitcoin will not be forfeited if you maintain your
-            account until the completion of the Pilot Program and the full launch
-            of the Application. You will then be able to transfer your bitcoin at your
-            discretion. Please note that deleting your account will also result in
-            the permanent erasure of all your data. {"\n"}
-
+            account until the completion of the Pilot Program and the full
+            launch of the Application. You will then be able to transfer your
+            bitcoin at your discretion. Please note that deleting your account
+            will also result in the permanent erasure of all your data. {"\n"}
             By deleting your account, you acknowledge and accept these terms.
           </Text>
           <View style={styles.bottomTabButtons}>
@@ -431,13 +437,13 @@ that information is inaccurate or incomplete.
               () => setIsDeleteModalOpen(false),
               null,
               "Cancel",
-              styles.cancelButton
+              styles.cancelButton,
             )}
             {renderButton(
               handleDeleteUser,
               null,
               "Delete My Account",
-              styles.confirmButton
+              styles.confirmButton,
             )}
           </View>
         </Animated.View>

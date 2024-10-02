@@ -9,6 +9,7 @@ import {
   saveUserId,
 } from "../lib/service/asyncStorageHelper";
 import { logoutHandler } from "@/lib/auth-utils";
+import { QueryCache } from "@tanstack/react-query";
 
 interface AuthProps {
   authState?: {
@@ -35,7 +36,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: any) => {
   const router = useRouter();
-
+  const queryCache = new QueryCache();
   const [authState, setAuthState] = useState<{
     token: string | null;
     authenticated: boolean | null;
@@ -159,10 +160,13 @@ export const AuthProvider = ({ children }: any) => {
 
   const login = async (email, password: string) => {
     try {
+      queryCache.clear();
       const result = await axiosClient.post(`/auth/login`, {
         email,
         password,
       });
+
+      console.log("onLogib", result);
       if (result && result.data.data && result.data.data.auth) {
         // Successful login
         setAuthState({
@@ -195,11 +199,13 @@ export const AuthProvider = ({ children }: any) => {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.error(
-          "Server responded with error status:",
-          error.response.status,
-        );
-        return { error: true, msg: "Server error. Please try again later." };
+        console.error("Server responded with error status:", error.response);
+        return {
+          error: true,
+          msg:
+            error.response.data.error ??
+            "Server error. Please try again later.",
+        };
       } else if (error.request) {
         // The request was made but no response was received
         console.error("No response received from server.");
@@ -223,6 +229,7 @@ export const AuthProvider = ({ children }: any) => {
       loading: false,
       userId: null,
     });
+    queryCache.clear();
 
     await logoutHandler(axiosClient);
   };

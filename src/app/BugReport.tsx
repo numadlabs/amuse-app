@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -8,49 +8,71 @@ import {
   Alert,
   KeyboardAvoidingView,
   ScrollView,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAuth } from '@/context/AuthContext';
-import Header from '@/components/layout/Header';
-import { Picker } from '@react-native-picker/picker';
-import Color from '@/constants/Color';
-import Button from '@/components/ui/Button';
-import { useMutation } from '@tanstack/react-query';
-import Constants from 'expo-constants';
-import { bugReport } from '@/lib/service/mutationHelper';
-import { router } from 'expo-router';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Picker } from "@react-native-picker/picker";
+import { useMutation } from "@tanstack/react-query";
+import Constants from "expo-constants";
+import { router } from "expo-router";
 
-const BugReportButton = () => {
-  const [reason, setReason] = useState('');
-  const [description, setDescription] = useState('');
+import { useAuth } from "@/context/AuthContext";
+import Header from "@/components/layout/Header";
+import Color from "@/constants/Color";
+import Button from "@/components/ui/Button";
+import { bugReport } from "@/lib/service/mutationHelper";
+
+const BugReportScreen = () => {
+  const [reason, setReason] = useState("");
+  const [description, setDescription] = useState("");
 
   const reasonOptions = [
-    { label: 'Select an issue', value: '' },
-    { label: 'Issues with loyalty program or rewards', value: 'loyalty_program' },
-    { label: 'Problems finding or viewing restaurant information', value: 'restaurant_info' },
-    { label: 'Trouble with my account or profile', value: 'account_issues' },
-    { label: 'Difficulty using or navigating the app', value: 'app_navigation' },
-    { label: 'App is slow or unresponsive', value: 'app_performance' },
-    { label: 'Other issue not listed here', value: 'other' },
+    { label: "Select an issue", value: "" },
+    {
+      label: "Issues with loyalty program or rewards",
+      value: "loyalty_program",
+    },
+    {
+      label: "Problems finding or viewing restaurant information",
+      value: "restaurant_info",
+    },
+    { label: "Trouble with my account or profile", value: "account_issues" },
+    {
+      label: "Difficulty using or navigating the app",
+      value: "app_navigation",
+    },
+    { label: "App is slow or unresponsive", value: "app_performance" },
+    { label: "Other issue not listed here", value: "other" },
   ];
 
-  const { mutateAsync: submitBugReport } = useMutation({
+  const { mutateAsync: submitBugReport, isLoading } = useMutation({
     mutationFn: bugReport,
     onSuccess: () => {
-      setReason('');
-      setDescription('');
-      Alert.alert('Success', 'Your report has been submitted. We will review and address your issue as soon as possible.');
-      router.back()
+      Alert.alert(
+        "Success",
+        "Your report has been submitted. We will review and address your issue as soon as possible.",
+        [{ text: "OK", onPress: () => router.back() }],
+      );
     },
     onError: (error) => {
-      console.error('Error submitting bug report:', error);
-      Alert.alert('Error', 'We encountered an issue while submitting your report. Please try again later.');
+      console.error("Error submitting bug report:", error);
+      Alert.alert(
+        "Error",
+        "We encountered an issue while submitting your report. Please try again later.",
+      );
     },
   });
 
   const handleSubmit = async () => {
-    const deviceModel = Platform.OS === 'ios' ? 'iPhone' : 'Android';
-    const appVersion = Constants.expoConfig?.version;
+    if (!reason || !description) {
+      Alert.alert(
+        "Missing Information",
+        "Please select an issue and provide a description.",
+      );
+      return;
+    }
+
+    const deviceModel = Platform.OS === "ios" ? "iPhone" : "Android";
+    const appVersion = Constants.expoConfig?.version ?? "Unknown";
     const osVersion = Platform.Version.toString();
 
     await submitBugReport({
@@ -65,32 +87,40 @@ const BugReportButton = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <Header title="Help Us Improve" />
-        <View style={styles.content}>
-          <Text style={styles.description}>
-            We'd love to hear about any issues you're experiencing or suggestions you have for our app.
-          </Text>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>What's the issue?</Text>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={reason}
-                onValueChange={(itemValue) => setReason(itemValue)}
-                style={styles.picker}
-                dropdownIconColor={Color.base.White}
-              >
-                {reasonOptions.map((option) => (
-                  <Picker.Item 
-                    key={option.value} 
-                    label={option.label} 
-                    value={option.value}
-                    color={Platform.OS === 'android' ? Color.base.Black : Color.base.White} 
-                  />
-                ))}
-              </Picker>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.keyboardAvoidingView}
+        >
+          <Header title="Help Us Improve" />
+          <View style={styles.content}>
+            <Text style={styles.description}>
+              We'd love to hear about any issues you're experiencing or
+              suggestions you have for our app.
+            </Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>What's the issue?</Text>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={reason}
+                  onValueChange={setReason}
+                  style={styles.picker}
+                  dropdownIconColor={Color.base.White}
+                >
+                  {reasonOptions.map((option) => (
+                    <Picker.Item
+                      key={option.value}
+                      label={option.label}
+                      value={option.value}
+                      color={
+                        Platform.OS === "android"
+                          ? Color.base.Black
+                          : Color.base.White
+                      }
+                    />
+                  ))}
+                </Picker>
+              </View>
             </View>
-          </View>
-          <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Tell us more</Text>
               <TextInput
@@ -103,17 +133,17 @@ const BugReportButton = () => {
                 placeholderTextColor={Color.Gray.gray100}
               />
             </View>
-            <Button 
-              onPress={handleSubmit} 
-              variant={reason && description ? 'primary' : 'disabled'}
-              disabled={!reason || !description}
+            <Button
+              onPress={handleSubmit}
+              variant={reason && description ? "primary" : "disabled"}
+              disabled={!reason || !description || isLoading}
             >
               <Text style={styles.submitButtonText}>
-                Submit Feedback
+                {isLoading ? "Submitting..." : "Submit Feedback"}
               </Text>
             </Button>
-          </KeyboardAvoidingView>
-        </View>
+          </View>
+        </KeyboardAvoidingView>
       </ScrollView>
     </SafeAreaView>
   );
@@ -127,6 +157,9 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     flexGrow: 1,
   },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
   content: {
     padding: 20,
     flex: 1,
@@ -137,11 +170,11 @@ const styles = StyleSheet.create({
     color: Color.Gray.gray100,
   },
   inputContainer: {
-    marginVertical: 20,
+    marginBottom: 20,
   },
   label: {
     fontSize: 16,
-    marginVertical: 5,
+    marginBottom: 5,
     color: Color.base.White,
   },
   pickerContainer: {
@@ -149,10 +182,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: Color.Gray.gray400,
-    overflow: 'hidden',  // This ensures the Picker doesn't overflow the container
+    overflow: "hidden",
   },
   picker: {
-    color: Color.base.White,  // Set text color to white
+    color: Color.base.White,
   },
   textArea: {
     backgroundColor: Color.Gray.gray600,
@@ -162,13 +195,13 @@ const styles = StyleSheet.create({
     padding: 10,
     color: Color.base.White,
     height: 100,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   submitButtonText: {
-    color: '#fff',
+    color: Color.base.White,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 
-export default BugReportButton;
+export default BugReportScreen;
