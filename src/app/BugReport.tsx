@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   StyleSheet,
   View,
@@ -44,7 +44,7 @@ const BugReportScreen = () => {
     { label: "Other issue not listed here", value: "other" },
   ];
 
-  const { mutateAsync: submitBugReport, isLoading } = useMutation({
+  const { mutateAsync: submitBugReport } = useMutation({
     mutationFn: bugReport,
     onSuccess: () => {
       Alert.alert(
@@ -62,7 +62,7 @@ const BugReportScreen = () => {
     },
   });
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (!reason || !description) {
       Alert.alert(
         "Missing Information",
@@ -75,22 +75,26 @@ const BugReportScreen = () => {
     const appVersion = Constants.expoConfig?.version ?? "Unknown";
     const osVersion = Platform.Version.toString();
 
-    await submitBugReport({
-      deviceModel,
-      appVersion,
-      osVersion,
-      reason,
-      description,
-    });
-  };
+    try {
+      await submitBugReport({
+        deviceModel,
+        appVersion,
+        osVersion,
+        reason,
+        description,
+      });
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
+    }
+  }, [reason, description, submitBugReport]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.keyboardAvoidingView}
-        >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardAvoidingView}
+      >
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <Header title="Help Us Improve" />
           <View style={styles.content}>
             <Text style={styles.description}>
@@ -136,15 +140,13 @@ const BugReportScreen = () => {
             <Button
               onPress={handleSubmit}
               variant={reason && description ? "primary" : "disabled"}
-              disabled={!reason || !description || isLoading}
+              disabled={!reason || !description}
             >
-              <Text style={styles.submitButtonText}>
-                {isLoading ? "Submitting..." : "Submit Feedback"}
-              </Text>
+              <Text style={styles.submitButtonText}>{"Submit"}</Text>
             </Button>
           </View>
-        </KeyboardAvoidingView>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
