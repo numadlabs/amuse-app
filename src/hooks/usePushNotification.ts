@@ -4,6 +4,9 @@ import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 import { PermissionStatus } from "expo-modules-core";
+import { useMutation } from "@tanstack/react-query";
+import { updatePushToken } from "@/lib/service/mutationHelper";
+import { useAuth } from "@/context/AuthContext";
 
 export interface PushNotificationState {
   expoPushToken?: Notifications.ExpoPushToken;
@@ -12,6 +15,11 @@ export interface PushNotificationState {
 }
 
 export const usePushNotifications = (): PushNotificationState => {
+  const { authState } = useAuth();
+  const { mutateAsync: updatePushTokenMutation } = useMutation({
+    mutationFn: updatePushToken,
+  });
+
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldPlaySound: false,
@@ -27,7 +35,7 @@ export const usePushNotifications = (): PushNotificationState => {
     Notifications.Notification | undefined
   >();
   const [permissionStatus, setPermissionStatus] = useState<PermissionStatus>(
-    PermissionStatus.UNDETERMINED
+    PermissionStatus.UNDETERMINED,
   );
 
   const notificationListener = useRef<Notifications.Subscription>();
@@ -41,7 +49,8 @@ export const usePushNotifications = (): PushNotificationState => {
     }
 
     try {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
 
       if (existingStatus !== PermissionStatus.GRANTED) {
@@ -69,6 +78,16 @@ export const usePushNotifications = (): PushNotificationState => {
           lightColor: "#FF231F7C",
         });
       }
+
+      if (
+        authState.authenticated === true &&
+        finalStatus === PermissionStatus.GRANTED
+      ) {
+        await updatePushTokenMutation({
+          userId: authState.userId,
+          token: expoPushToken.data,
+        });
+      }
     } catch (error) {
       console.error("Error in registerForPushNotificationsAsync:", error);
       setPermissionStatus(PermissionStatus.DENIED);
@@ -78,23 +97,38 @@ export const usePushNotifications = (): PushNotificationState => {
   useEffect(() => {
     registerForPushNotificationsAsync();
 
-    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-      setNotification(notification);
-    });
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+      });
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log(response);
-    });
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
 
     return () => {
       if (notificationListener.current) {
-        Notifications.removeNotificationSubscription(notificationListener.current);
+        Notifications.removeNotificationSubscription(
+          notificationListener.current,
+        );
       }
       if (responseListener.current) {
         Notifications.removeNotificationSubscription(responseListener.current);
       }
     };
   }, []);
+
+  // Handle token updates when auth state changes and permission is granted
+  useEffect(() => {
+    if (
+      authState.authenticated &&
+      expoPushToken &&
+      permissionStatus === PermissionStatus.GRANTED
+    ) {
+      updatePushTokenMutation({ token: expoPushToken.data });
+    }
+  }, [authState.authenticated, expoPushToken, permissionStatus]);
 
   return {
     expoPushToken,

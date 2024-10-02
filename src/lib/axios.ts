@@ -31,29 +31,28 @@ axiosClient.interceptors.response.use(
 
       try {
         const refreshToken = await SecureStore.getItemAsync(
-          SERVER_SETTING.REFRESH_TOKEN_KEY
+          SERVER_SETTING.REFRESH_TOKEN_KEY,
         );
         if (!refreshToken) {
           throw new Error("No refresh token available");
         }
 
-        const res = await axios.post(`${baseUrl}/auth/refreshToken`, {
+        const res = await axios.post(`${baseUrl}/auth/refresh-token`, {
           refreshToken,
         });
 
         if (res.status === 200) {
           await SecureStore.setItemAsync(
             SERVER_SETTING.TOKEN_KEY,
-            res.data.data.accessToken
+            res.data.data.accessToken,
           );
           await SecureStore.setItemAsync(
             SERVER_SETTING.REFRESH_TOKEN_KEY,
-            res.data.data.refreshToken
+            res.data.data.refreshToken,
           );
 
-          axiosClient.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${res.data.data.accessToken}`;
+          axiosClient.defaults.headers.common["Authorization"] =
+            `Bearer ${res.data.data.accessToken}`;
           originalRequest.headers.Authorization = `Bearer ${res.data.data.accessToken}`;
 
           return axiosClient(originalRequest);
@@ -68,5 +67,5 @@ axiosClient.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
