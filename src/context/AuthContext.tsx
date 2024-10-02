@@ -166,7 +166,6 @@ export const AuthProvider = ({ children }: any) => {
         password,
       });
 
-      console.log("onLogib", result);
       if (result && result.data.data && result.data.data.auth) {
         // Successful login
         setAuthState({

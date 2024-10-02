@@ -146,9 +146,9 @@ const Profile = () => {
                   >
                     {user?.user?.nickname}
                   </Text>
-                  <Text style={styles.profileTier}>
+                  {/* <Text style={styles.profileTier}>
                     Tier: {userTierData?.name}
-                  </Text>
+                  </Text> */}
                 </View>
               </LinearGradient>
             </TouchableOpacity>
