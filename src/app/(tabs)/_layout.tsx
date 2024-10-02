@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Redirect, Tabs, router } from "expo-router";
 import { View, TouchableOpacity } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Footer from "@/components/layout/Footer";
 import { Notification, User } from "iconsax-react-native";
 import Logo from "@/components/icons/Logo";
@@ -15,7 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import { registerDeviceNotification } from "@/lib/service/mutationHelper";
 import * as Location from "expo-location";
 import ErrorBoundary from "../ErrorBoundary";
-import * as Network from 'expo-network';
+import * as Network from "expo-network";
 import NoInternet from "../NoInternet";
 
 type LayoutProps = {
@@ -30,7 +30,7 @@ type LoadingStates = {
   fonts: boolean;
 };
 
-const PUSH_TOKEN_KEY = '@PushToken';
+const PUSH_TOKEN_KEY = "@PushToken";
 
 const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   const { authState } = useAuth();
@@ -57,7 +57,7 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   }, []);
 
   const handlePushNotifications = useCallback(async (): Promise<void> => {
-    setLoadingStates(prev => ({ ...prev, pushNotification: true }));
+    setLoadingStates((prev) => ({ ...prev, pushNotification: true }));
     try {
       if (expoPushToken?.data) {
         const storedToken = await AsyncStorage.getItem(PUSH_TOKEN_KEY);
@@ -72,12 +72,12 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     } catch (error) {
       console.error("Error handling push notifications:", error);
     } finally {
-      setLoadingStates(prev => ({ ...prev, pushNotification: false }));
+      setLoadingStates((prev) => ({ ...prev, pushNotification: false }));
     }
   }, [expoPushToken, sendPushToken]);
 
   const handleLocationPermission = useCallback(async (): Promise<void> => {
-    setLoadingStates(prev => ({ ...prev, location: true }));
+    setLoadingStates((prev) => ({ ...prev, location: true }));
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status === Location.PermissionStatus.GRANTED) {
@@ -89,7 +89,7 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     } catch (error) {
       console.error("Error handling location permission:", error);
     } finally {
-      setLoadingStates(prev => ({ ...prev, location: false }));
+      setLoadingStates((prev) => ({ ...prev, location: false }));
     }
   }, [getLocation]);
 
@@ -101,17 +101,26 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         console.log("No internet connection. Skipping app preparation.");
         return;
       }
-      setLoadingStates(prev => ({ ...prev, internet: false }));
+      setLoadingStates((prev) => ({ ...prev, internet: false }));
 
       if (!__DEV__) {
-        setLoadingStates(prev => ({ ...prev, updates: true }));
+        setLoadingStates((prev) => ({ ...prev, updates: true }));
         try {
           const updateCheck = await Promise.race([
             Updates.checkForUpdateAsync(),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('Update check timed out')), 5000))
+            new Promise((_, reject) =>
+              setTimeout(
+                () => reject(new Error("Update check timed out")),
+                5000,
+              ),
+            ),
           ]);
 
-          if (updateCheck && typeof updateCheck === 'object' && 'isAvailable' in updateCheck) {
+          if (
+            updateCheck &&
+            typeof updateCheck === "object" &&
+            "isAvailable" in updateCheck
+          ) {
             if (updateCheck.isAvailable) {
               await Updates.fetchUpdateAsync();
               await Updates.reloadAsync();
@@ -122,7 +131,7 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
         } catch (error) {
           console.error("Error checking for updates:", error);
         } finally {
-          setLoadingStates(prev => ({ ...prev, updates: false }));
+          setLoadingStates((prev) => ({ ...prev, updates: false }));
         }
       }
 
@@ -131,13 +140,16 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
 
       // Then handle location permission
       await handleLocationPermission();
-
     } catch (error) {
       console.error("Error preparing app:", error);
     } finally {
       setAppIsReady(true);
     }
-  }, [checkInternetConnection, handlePushNotifications, handleLocationPermission]);
+  }, [
+    checkInternetConnection,
+    handlePushNotifications,
+    handleLocationPermission,
+  ]);
 
   useEffect(() => {
     prepareApp();
@@ -180,7 +192,13 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
               </TouchableOpacity>
             ),
             headerTitle: () => (
-              <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <Logo />
               </View>
             ),

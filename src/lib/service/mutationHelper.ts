@@ -16,10 +16,18 @@ export function registerDeviceNotification({
   });
 }
 
-export async function updatePushToken({ userId }: { userId: string }) {
-  return axiosClient.put(`/devices/${userId}/user`).then((response) => {
-    return response;
-  });
+export async function updatePushToken({
+  userId,
+  token,
+}: {
+  userId: string;
+  token: string;
+}) {
+  return axiosClient
+    .put(`/devices/${userId}/user`, { token })
+    .then((response) => {
+      return response;
+    });
 }
 
 export function generatePerkQr({ id }: { id: string }) {

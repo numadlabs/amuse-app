@@ -22,7 +22,6 @@ const INITIAL_TRANSLATE_Y2 = height / 32;
 const ANIMATION_DURATION = 500;
 
 const SplashScreenAnimated = ({ loadingStates }) => {
-
   const getLoadingMessage = () => {
     if (loadingStates.internet) return "Checking for internet...";
     if (loadingStates.updates) return "Checking for updates...";
@@ -31,7 +30,6 @@ const SplashScreenAnimated = ({ loadingStates }) => {
     if (loadingStates.fonts) return "Loading fonts...";
     return "Preparing your experience...";
   };
-
 
   const translateX = useSharedValue(INITIAL_TRANSLATE_X);
   const translateY = useSharedValue(INITIAL_TRANSLATE_Y);
@@ -47,20 +45,20 @@ const SplashScreenAnimated = ({ loadingStates }) => {
     translateX.value = withRepeat(
       withSequence(withTiming(width / 2.8, { duration: ANIMATION_DURATION })),
       -1,
-      true
+      true,
     );
     translateX2.value = withRepeat(
       withSequence(withTiming(-width / 8, { duration: ANIMATION_DURATION })),
       -1,
-      true
+      true,
     );
     translateY.value = withSequence(
       withTiming(0, { duration: ANIMATION_DURATION }),
-      withTiming(height / 4.3, { duration: ANIMATION_DURATION })
+      withTiming(height / 4.3, { duration: ANIMATION_DURATION }),
     );
     translateY2.value = withSequence(
       withTiming(40, { duration: ANIMATION_DURATION }),
-      withTiming(-height / 6, { duration: ANIMATION_DURATION })
+      withTiming(-height / 6, { duration: ANIMATION_DURATION }),
     );
   };
 
@@ -91,7 +89,6 @@ const SplashScreenAnimated = ({ loadingStates }) => {
     } catch (e) {
       console.warn(e);
     }
-
   }, []);
 
   const runTypeMessage = Updates.isEmbeddedLaunch
@@ -131,18 +128,16 @@ const SplashScreenAnimated = ({ loadingStates }) => {
           ) : (
             <BlurView
               intensity={24}
-              experimentalBlurMethod="dimezisBlurView"
+              // experimentalBlurMethod="dimezisBlurView"
               style={styles.blurView}
             >
               <AmuseBoucheLogo />
             </BlurView>
           )}
-
         </View>
       </View>
       <Text style={styles.loadingText}>{getLoadingMessage()}</Text>
     </View>
-
   );
 };
 
@@ -206,12 +201,12 @@ const styles = StyleSheet.create({
     color: "black",
   },
   loadingText: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 50,
     color: Color.base.White,
     fontSize: 16,
-    fontFamily: 'Sora',
-    textAlign: 'center',
+    fontFamily: "Sora",
+    textAlign: "center",
   },
 });
 
