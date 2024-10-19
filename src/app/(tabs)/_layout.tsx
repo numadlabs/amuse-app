@@ -12,7 +12,7 @@ import * as Updates from "expo-updates";
 import SplashScreenAnimated from "../SplashScreenAnimated";
 import { usePushNotifications } from "@/hooks/usePushNotification";
 import { useMutation } from "@tanstack/react-query";
-import { registerDeviceNotification } from "@/lib/service/mutationHelper";
+import { checkAccessToken, registerDeviceNotification } from "@/lib/service/mutationHelper";
 import * as Location from "expo-location";
 import ErrorBoundary from "../ErrorBoundary";
 import * as Network from "expo-network";
@@ -35,6 +35,8 @@ const PUSH_TOKEN_KEY = "@PushToken";
 const Layout: React.FC<LayoutProps> = ({ navigation }) => {
   const { authState } = useAuth();
   const [appIsReady, setAppIsReady] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { getLocation } = useLocationStore();
   const { expoPushToken } = usePushNotifications();
   const [loadingStates, setLoadingStates] = useState<LoadingStates>({
@@ -159,13 +161,24 @@ const Layout: React.FC<LayoutProps> = ({ navigation }) => {
     const intervalId = setInterval(checkInternetConnection, 5000);
     return () => clearInterval(intervalId);
   }, [checkInternetConnection]);
-
+  
+  useEffect(() => {
+    const checkAuth = async () => {
+      const isValid = await checkAccessToken();
+      setIsAuthenticated(isValid);
+      if (!isValid) {
+        router.replace('/(auth)/Login');
+      }
+    };
+    checkAuth();
+  }, []);
+  
   if (!appIsReady) {
     return <SplashScreenAnimated loadingStates={loadingStates} />;
   }
 
-  if (authState.authenticated === false) {
-    return <Redirect href="/Login" />;
+  if (isAuthenticated === false) {
+    return <Redirect href="/(auth)/Login" />;
   }
 
   if (!isConnected) {

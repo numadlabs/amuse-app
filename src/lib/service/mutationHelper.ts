@@ -89,6 +89,17 @@ export async function updateUserEmail({
     console.log(response.data.error);
   }
 }
+
+export async function signInWithGoogle({
+  idToken
+}: {
+  idToken: string;
+}){
+  const response = await axiosClient.post('/auth/google', {idToken})
+  if(response.data.success) {
+    return response.data.data;
+  }
+}
 export async function updateUserInfo({ userId, data }) {
   const formData = new FormData();
 
@@ -247,4 +258,14 @@ export async function checkEmail({ email }: { email: string }) {
       throw new Error(response.data.error);
     }
   });
+}
+
+export async function checkAccessToken() {
+  const response = await axiosClient.post("/auth/access-token");
+
+  if (response.data.success) {
+    return response.data
+  } else {
+    
+  }
 }

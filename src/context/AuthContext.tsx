@@ -158,6 +158,14 @@ export const AuthProvider = ({ children }: any) => {
     }
   };
 
+  const signWithGoogle = async () => {
+    try {
+      
+    } catch (error) {
+      
+    }
+  }
+
   const login = async (email, password: string) => {
     try {
       queryCache.clear();

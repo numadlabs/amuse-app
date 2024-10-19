@@ -40,6 +40,7 @@ import Animated, {
   FadeOut,
 } from "react-native-reanimated";
 import { height } from "@/lib/utils";
+import Auth from "@/components/Auth";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
@@ -342,6 +343,7 @@ function Login() {
                       Forgot password?
                     </Text>
                   </Button>
+                  <Auth/>
                   <Divider />
                   <Button
                     variant="tertiary"

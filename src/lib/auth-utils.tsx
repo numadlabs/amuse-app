@@ -25,5 +25,5 @@ export async function logoutHandler(axiosClient) {
   //TODO key object dotroos duudah
   await deleteUserId();
 
-  router.replace("/Login");
+  router.replace("/(auth)/Login");
 }
