@@ -30,7 +30,7 @@ const Faq = () => {
   ];
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600, marginBottom:100 }}>
     <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <Header title="FAQ" />
       <View style={styles.container}>

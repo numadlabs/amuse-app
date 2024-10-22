@@ -35,7 +35,7 @@ export const usePushNotifications = (): PushNotificationState => {
     Notifications.Notification | undefined
   >();
   const [permissionStatus, setPermissionStatus] = useState<PermissionStatus>(
-    PermissionStatus.UNDETERMINED,
+    PermissionStatus.UNDETERMINED
   );
 
   const notificationListener = useRef<Notifications.Subscription>();
@@ -110,7 +110,7 @@ export const usePushNotifications = (): PushNotificationState => {
     return () => {
       if (notificationListener.current) {
         Notifications.removeNotificationSubscription(
-          notificationListener.current,
+          notificationListener.current
         );
       }
       if (responseListener.current) {
@@ -126,7 +126,10 @@ export const usePushNotifications = (): PushNotificationState => {
       expoPushToken &&
       permissionStatus === PermissionStatus.GRANTED
     ) {
-      updatePushTokenMutation({ token: expoPushToken.data });
+      updatePushTokenMutation({
+        userId: authState.userId,
+        token: expoPushToken.data,
+      });
     }
   }, [authState.authenticated, expoPushToken, permissionStatus]);
 

@@ -30,7 +30,7 @@ const PerkScreen = () => {
   const handleNavigation = async () => {
     router.back();
     queryClient.invalidateQueries({ queryKey: userKeys.info });
-    queryClient.invalidateQueries({ queryKey: userKeys.cards });
+    queryClient.refetchQueries({ queryKey: userKeys.cards });
     queryClient.invalidateQueries({ queryKey: restaurantKeys.all });
     queryClient.invalidateQueries({ queryKey: userKeys.notifications });
   };

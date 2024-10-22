@@ -13,10 +13,11 @@ interface PowerUpCardProp {
 }
 const PowerUpCard: React.FC<PowerUpCardProp> = ({ title, onPress }) => {
   return (
-    <Animated.View
-      entering={SlideInDown.springify().damping(20).delay(200)}
-      exiting={SlideOutDown.springify().damping(10).delay(200)}
-    >
+    // <Animated.View
+    //   entering={SlideInDown.springify().damping(20).delay(200)}
+    //   exiting={SlideOutDown.springify().damping(10).delay(200)}
+    // >
+    <>
       <LinearGradient
         colors={[Color.Brand.card.start, Color.Brand.card.end]}
         start={{ x: 1, y: 0 }}
@@ -50,7 +51,7 @@ const PowerUpCard: React.FC<PowerUpCardProp> = ({ title, onPress }) => {
           </Text>
         </Button>
       </LinearGradient>
-    </Animated.View>
+  </>
   );
 };
 

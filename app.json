@@ -19,6 +19,12 @@
         }
       ],
       [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.102784688709-3ooh6h0ogu7c0psa8ip8708jvlkiap35"
+        }
+      ],
+      [
         "@sentry/react-native/expo",
         {
           "organization": "numad-labs",
@@ -41,7 +47,8 @@
             "./src/public/fonts/Sora-Thin.otf"
           ]
         }
-      ]
+      ],
+      "sentry-expo"
     ],
     "icon": "./src/public/images/icon.png",
     "name": "Amuse Bouche",
@@ -69,7 +76,9 @@
       }
     },
     "backgroundColor": "#1B2328",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "extra": {
       "router": {
         "origin": "https://n"
@@ -78,8 +87,12 @@
         "projectId": "648167f4-9c73-40b4-8123-d4b1eeea1c63"
       },
       "fonts": {
-        "Sora-Regular": ["./public/fonts/Sora-Regular.ttf"],
-        "Sora-Bold": ["./public/fonts/Sora-Bold.ttf"]
+        "Sora-Regular": [
+          "./public/fonts/Sora-Regular.ttf"
+        ],
+        "Sora-Bold": [
+          "./public/fonts/Sora-Bold.ttf"
+        ]
       }
     },
     "updates": {

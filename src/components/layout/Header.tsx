@@ -26,7 +26,7 @@ const Header: React.FC<NavbarProps> = ({ title, titleStyle}) => {
       <SafeAreaView style={{ backgroundColor: Color.Gray.gray600 }}>
         <View style={styles.container}>
           <TouchableOpacity onPress={() => router.back()} style={styles.icon}>
-            <View style={{padding:16}}>
+            <View style={{}}>
             <ArrowLeft size={24} color={Color.Gray.gray50} />
             </View>
           
