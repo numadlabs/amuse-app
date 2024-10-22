@@ -13,7 +13,7 @@ import PerkGradient from "../../icons/PerkGradient";
 import { router } from "expo-router";
 import PowerUpCard from "../../atom/cards/PowerUpCard";
 import DetailsSheet from "../DetailsSheet";
-import { Add, InfoCircle, TicketStar } from "iconsax-react-native";
+import { Add, InfoCircle, Menu, TicketStar } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, { SlideInDown } from "react-native-reanimated";
 import { RestaurantType } from "@/lib/types";
@@ -145,6 +145,19 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
     });
   };
 
+  const handleMenuItemPress = (item: MenuItem) => {
+    router.push({
+      pathname: `/Menu/${item.id}`,
+      params: {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        price: item.price,
+        category: item.category,
+      },
+    });
+  };
+
   const toggleView = (view: boolean) => {
     if (hasPerks || !view) {
       setShowPerks(view);
@@ -243,7 +256,17 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
         <View key={categoryIndex} style={styles.menuCategory}>
           <Text style={styles.categoryTitle}>{category.name}</Text>
           {category.items.map((item) => (
-            <MenuCard name={item.name} image={item.image} description={item.description} price={item.price}/>
+            <TouchableOpacity
+              key={item.id}
+              onPress={() => handleMenuItemPress(item)}
+            >
+              <MenuCard 
+                name={item.name} 
+                image={item.image} 
+                description={item.description} 
+                price={item.price}
+              />
+            </TouchableOpacity> 
           ))}
         </View>
       ))}
