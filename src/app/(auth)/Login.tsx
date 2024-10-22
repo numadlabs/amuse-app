@@ -343,21 +343,21 @@ function Login() {
                       Forgot password?
                     </Text>
                   </Button>
-                  <Auth/>
                   <Divider />
                   <Button
                     variant="tertiary"
                     onPress={() => router.push("/signUp/Email")}
-                  >
+                    >
                     <Text
                       style={{
                         color: Color.base.White,
                         ...BUTTON_48,
                       }}
-                    >
+                      >
                       Sign up
                     </Text>
                   </Button>
+                      <Auth/>
                 </View>
               </View>
             </LinearGradient>

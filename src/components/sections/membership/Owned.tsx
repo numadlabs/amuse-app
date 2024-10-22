@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  Image
 } from "react-native";
 import Color from "@/constants/Color";
 import { LinearGradient } from "expo-linear-gradient";
@@ -29,8 +30,11 @@ import {
   BUTTON_48,
   CAPTION_1_REGULAR,
 } from "@/constants/typography";
+import MenuCard from "@/components/atom/cards/MenuCard";
 
 interface OwnedProps {
+  userCardId: [],
+  followingPerk: [],
   data: RestaurantType;
   cardId: string;
   isLoading: boolean;
@@ -39,9 +43,73 @@ interface OwnedProps {
   marker: RestaurantType;
 }
 
+interface MenuItem {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  category: string;
+  image: string; // Add image property
+}
+
+const menuImages = {
+  salmon: require('../../../public/images/salmon.jpg'),
+  steak: require('../../../public/images/steak.jpg'),
+  salad: require('../../../public/images/salad.jpg'),
+  bruschetta: require('../../../public/images/bruschetta.jpg'),
+};
+
+const mockMenuData = {
+  categories: [
+    {
+      name: "Main Course",
+      items: [
+        {
+          id: "1",
+          name: "Grilled Salmon",
+          description: "Fresh salmon with herbs and lemon",
+          price: "$24.99",
+          category: "Main Course",
+          image: menuImages.salmon
+        },
+        {
+          id: "2",
+          name: "Steak Frites",
+          description: "Prime beef with truffle fries",
+          price: "$29.99",
+          category: "Main Course",
+          image: menuImages.steak
+        }
+      ]
+    },
+    {
+      name: "Appetizers",
+      items: [
+        {
+          id: "3",
+          name: "Caesar Salad",
+          description: "Classic caesar with parmesan",
+          price: "$12.99",
+          category: "Appetizers",
+          image: menuImages.salad
+        },
+        {
+          id: "4",
+          name: "Bruschetta",
+          description: "Toasted bread with tomatoes and basil",
+          price: "$9.99",
+          category: "Appetizers",
+          image: menuImages.bruschetta
+        }
+      ]
+    }
+  ]
+};
+
 const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
   const [showPerks, setShowPerks] = useState(true);
   const currentLocation = useLocationStore();
+  const [activeTab, setActiveTab] = useState<'perks' | 'menu' | 'details'>('perks');
 
   const { data: perks = [] } = useQuery({
     queryKey: restaurantKeys.perks(data?.id as string),
@@ -51,11 +119,11 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
 
   const hasPerks = perks && (perks.userBonuses?.length > 0 || perks.followingBonus);
 
-  useEffect(() => {
-    if (!hasPerks) {
-      setShowPerks(false);
-    }
-  }, [hasPerks]);
+  // useEffect(() => {
+  //   if (!hasPerks) {
+  //     setShowPerks(false);
+  //   }
+  // }, [hasPerks]);
 
   const handleNavigation = () => {
     router.push({
@@ -133,9 +201,10 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
           </TouchableOpacity>
         </>
       ) : (
-        <Animated.View
-          entering={SlideInDown.springify().damping(20).delay(200)}
-        >
+        // <Animated.View
+        //   entering={SlideInDown.springify().damping(20).delay(200)}
+        // >
+        <>
           <LinearGradient
             colors={[Color.Brand.card.start, Color.Brand.card.end]}
             style={styles.gradientContainer}
@@ -157,46 +226,67 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
               <Text style={styles.addPerkText}>Add Perk</Text>
             </View>
           </TouchableOpacity>
-        </Animated.View>
+        </>
+        // </Animated.View>
       )}
     </View>
   );
 
   const renderDetails = () => (
     <View style={styles.detailsContainer}>
-      <DetailsSheet data={data}/>
+      <DetailsSheet data={data} />
+    </View>
+  );
+  const renderMenu = () => (
+    <View style={styles.powerUpGrid}>
+      {mockMenuData.categories.map((category, categoryIndex) => (
+        <View key={categoryIndex} style={styles.menuCategory}>
+          <Text style={styles.categoryTitle}>{category.name}</Text>
+          {category.items.map((item) => (
+            <MenuCard name={item.name} image={item.image} description={item.description} price={item.price}/>
+          ))}
+        </View>
+      ))}
     </View>
   );
 
   return (
     <GestureHandlerRootView style={styles.attrContainer}>
-      {hasPerks && (
-        <View>
-          <Animated.View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[styles.toggleButton, showPerks && styles.activeButton]}
-              onPress={() => toggleView(true)}
-            >
-              <Text style={[styles.buttonText, !showPerks && styles.activeText]}>
-                Perks
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.toggleButton, !showPerks && styles.activeButton]}
-              onPress={() => toggleView(false)}
-            >
-              <Text style={[styles.buttonText, showPerks && styles.activeText]}>
-                Details
-              </Text>
-            </TouchableOpacity>
-          </Animated.View>
-        </View>
-      )}
+      <View>
+        <Animated.View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.toggleButton, activeTab === 'perks' && styles.activeButton]}
+            onPress={() => setActiveTab('perks')}
+          >
+            <Text style={[styles.buttonText, activeTab !== 'perks' && styles.activeText]}>
+              Perks
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.toggleButton, activeTab === 'menu' && styles.activeButton]}
+            onPress={() => setActiveTab('menu')}
+          >
+            <Text style={[styles.buttonText, activeTab !== 'menu' && styles.activeText]}>
+              Menu
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.toggleButton, activeTab === 'details' && styles.activeButton]}
+            onPress={() => setActiveTab('details')}
+          >
+            <Text style={[styles.buttonText, activeTab !== 'details' && styles.activeText]}>
+              Details
+            </Text>
+          </TouchableOpacity>
+        </Animated.View>
+      </View>
       <View style={styles.contentContainer}>
         {isLoading ? (
           <ActivityIndicator color={Color.Gray.gray600} />
-        ) : showPerks && hasPerks ? (
+        ) : activeTab === 'perks' ? (
           renderPerks()
+        ) : activeTab === 'menu' ? (
+          renderMenu()
         ) : (
           renderDetails()
         )}
@@ -213,19 +303,24 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between", // Changed from space-around
     backgroundColor: Color.Gray.gray500,
     paddingVertical: 4,
+    paddingHorizontal: 4, // Added padding
     borderRadius: 48,
   },
   toggleButton: {
     paddingVertical: 12,
     alignItems: "center",
-    width: "48%",
+    width: "32%", // Changed from 48% to fit three buttons
   },
   activeButton: {
     backgroundColor: Color.Gray.gray400,
     borderRadius: 48,
+  },
+  menuContainer: {
+    flex: 1,
+    gap: 15,
   },
   buttonText: {
     ...BUTTON_40,
@@ -325,6 +420,62 @@ const styles = StyleSheet.create({
     flex: 1,
     flexGrow: 1,
     marginBottom: 450,
+  },
+  menuItemContainer: {
+    backgroundColor: Color.Gray.gray500,
+    borderRadius: 16,
+    marginBottom: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400,
+  },
+  menuItemContent: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  menuItemImageContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: Color.Gray.gray400, // Added background color for image placeholder
+  },
+  menuItemImage: {
+    width: '100%',
+    height: '100%',
+  },
+  menuItemDetails: {
+    flex: 1,
+    justifyContent: 'center',
+    gap: 8,
+  },
+  menuCategory: {
+    marginBottom: 24,
+  },
+  categoryTitle: {
+    ...BODY_1_BOLD,
+    color: Color.base.White,
+    marginBottom: 16,
+  },
+  menuItemHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  menuItemName: {
+    ...BODY_2_MEDIUM,
+    color: Color.base.White,
+    flex: 1,
+    marginRight: 8,
+  },
+  menuItemPrice: {
+    ...BODY_2_MEDIUM,
+    color: Color.base.White,
+    fontWeight: '600',
+  },
+  menuItemDescription: {
+    ...CAPTION_1_REGULAR,
+    color: Color.Gray.gray50,
   },
 });
 

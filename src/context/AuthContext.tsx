@@ -9,8 +9,14 @@ import {
   saveUserId,
 } from "../lib/service/asyncStorageHelper";
 import { logoutHandler } from "@/lib/auth-utils";
-import { QueryCache } from "@tanstack/react-query";
 
+import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';  
+import { QueryClient, useMutation } from '@tanstack/react-query';
+import { QueryCache } from "@tanstack/react-query";
+import { signInWithGoogle } from "@/lib/service/mutationHelper";
+
+
+const queryClient = new QueryClient()
 interface AuthProps {
   authState?: {
     token: string | null;
@@ -25,6 +31,7 @@ interface AuthProps {
     verificationCode: number,
   ) => Promise<any>;
   onLogin?: (email: string, password: string) => Promise<any>;
+  onGoogleSignIn?: () => Promise<any>;
   onLogout?: () => Promise<any>;
 }
 
@@ -37,6 +44,13 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: any) => {
   const router = useRouter();
   const queryCache = new QueryCache();
+  
+  const [state, setState] = useState({
+    isSignedIn: false,
+    userInfo: null,
+    isInProgress: false,
+  });
+
   const [authState, setAuthState] = useState<{
     token: string | null;
     authenticated: boolean | null;
@@ -48,6 +62,7 @@ export const AuthProvider = ({ children }: any) => {
     loading: true,
     userId: null,
   });
+  
 
   useEffect(() => {
     const loadToken = async () => {
@@ -56,7 +71,7 @@ export const AuthProvider = ({ children }: any) => {
         if (token) {
           const userId = await loadUserId();
           axiosClient.defaults.headers.common["Authorization"] =
-            `Bearer ${token}`;
+          `Bearer ${token}`;
           setAuthState({
             token: token,
             authenticated: true,
@@ -157,14 +172,67 @@ export const AuthProvider = ({ children }: any) => {
       }
     }
   };
+  
 
-  const signWithGoogle = async () => {
+  const signInWithGoogle = async () => {
+    GoogleSignin.configure({
+      webClientId: '102784688709-4au2h4ad48bf6un169fmc0gq6g30neqg.apps.googleusercontent.com', // client ID of type WEB for your server
+      scopes: ['profile', 'email'], // what API you want to access on behalf of the user
+      iosClientId: '102784688709-3ooh6h0ogu7c0psa8ip8708jvlkiap35.apps.googleusercontent.com', // [iOS] if you want to specify the client ID of type iOS
+    });
+    const { mutateAsync: googleSignInMutation } = useMutation({
+      mutationFn: signInWithGoogle
+    })
+    
     try {
-      
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log('User signed in!', userInfo.data);
+      console.log('User signed in!', userInfo.data.idToken);
+      setState({
+        userInfo,
+        isSignedIn: true,
+        isInProgress: false,
+      });
+      const response = await googleSignInMutation({ idToken: userInfo.data.idToken })
+      if (response) {
+        console.log("logged", response);
+        axiosClient.defaults.headers.common["Authorization"] =
+          `Bearer ${response.auth.accessToken}`;
+        await SecureStore.setItemAsync(
+          SERVER_SETTING.TOKEN_KEY,
+          response.auth.accessToken
+        );
+        await SecureStore.setItemAsync(
+          SERVER_SETTING.REFRESH_TOKEN_KEY,
+          response.auth.refreshToken
+        );
+        await saveUserId(response.user.id);
+
+        setAuthState({
+          token: response.auth.accessToken,
+          authenticated: true,
+          loading: false,
+          userId: response.user.id,
+        });
+        // router.replace('(tabs)/')
+        return response;
+      }
     } catch (error) {
-      
+      setState(prevState => ({ ...prevState, isInProgress: false }));
+
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log('User cancelled the login flow');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log('Operation is in progress already');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log('Play services not available or outdated');
+      } else {
+        console.log('Some other error happened:', error.message);
+      }
     }
-  }
+  };
+
 
   const login = async (email, password: string) => {
     try {
@@ -245,7 +313,9 @@ export const AuthProvider = ({ children }: any) => {
     onRegister: register,
     onLogin: login,
     onLogout: logout,
+    onGoogleSignIn: signInWithGoogle,
     authState,
+    setAuthState: setAuthState
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
