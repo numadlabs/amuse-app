@@ -149,8 +149,8 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
     router.push({
       pathname: `/Menu/${item.id}`,
       params: {
-        id: item.id,
         name: item.name,
+        image: item.image,
         description: item.description,
         price: item.price,
         category: item.category,
@@ -256,17 +256,14 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
         <View key={categoryIndex} style={styles.menuCategory}>
           <Text style={styles.categoryTitle}>{category.name}</Text>
           {category.items.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              onPress={() => handleMenuItemPress(item)}
-            >
               <MenuCard 
+                key={item.id}
                 name={item.name} 
                 image={item.image} 
                 description={item.description} 
                 price={item.price}
+                onPress={() => handleMenuItemPress(item)}
               />
-            </TouchableOpacity> 
           ))}
         </View>
       ))}

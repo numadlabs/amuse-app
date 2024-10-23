@@ -137,7 +137,10 @@ const Layout = () => {
                   <Stack.Screen
                     name="restaurants/[id]"
                     // options={{ presentation: "modal" }}
-                  />
+                  /><Stack.Screen
+                  name="Menu/[id]"
+                  options={{ presentation: "modal" }}
+                />
                   <Stack.Screen
                     name="(modals)/MyQrModal"
                     options={{ presentation: "modal" }}

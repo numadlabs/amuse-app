@@ -8,13 +8,15 @@ interface MenuItemProps {
   image: number;
   price: string;
   description: string;
+  onPress: () => void;
 }
 
-const MenuCard:React.FC<MenuItemProps> = ({name, image, price, description}) => {
+const MenuCard:React.FC<MenuItemProps> = ({name, image, price, description, onPress}) => {
   return (
     <View>
       <TouchableOpacity
         style={styles.menuItemContainer}
+        onPress={onPress}
       >
         <View style={styles.menuItemContent}>
           <View style={styles.menuItemImageContainer}>
