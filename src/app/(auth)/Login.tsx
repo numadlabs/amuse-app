@@ -357,7 +357,7 @@ function Login() {
                       Sign up
                     </Text>
                   </Button>
-                      <Auth/>
+                      {/* <Auth/> */}
                 </View>
               </View>
             </LinearGradient>

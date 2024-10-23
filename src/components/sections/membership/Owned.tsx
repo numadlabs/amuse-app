@@ -472,7 +472,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 12,
     overflow: 'hidden',
-    backgroundColor: Color.Gray.gray400, // Added background color for image placeholder
+    backgroundColor: Color.Gray.gray400,
   },
   menuItemImage: {
     width: '100%',

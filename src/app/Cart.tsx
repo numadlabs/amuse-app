@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Pressable, Linking, Modal, GestureResponderEvent } from 'react-native';
 import Color from '@/constants/Color';
 import { useMenuStore } from '@/lib/store/menuStore';
 import { Minus, Add, MinusCirlce, CloseCircle } from 'iconsax-react-native';
@@ -7,6 +7,7 @@ import { BODY_1_BOLD, BODY_2_MEDIUM, BUTTON_48, CAPTION_1_REGULAR } from '@/cons
 import Header from '@/components/layout/Header';
 
 const Cart = () => {
+  const [ isOpen, setIsOpen ] = useState (false)
   const { 
     selectedItems, 
     removeItem, 
@@ -14,7 +15,9 @@ const Cart = () => {
     getTotalPrice,
     clearItems
   } = useMenuStore();
-
+  const handlePayment = () => {
+    setIsOpen(!isOpen);
+  } 
   const handleIncreaseQuantity = (itemId: string, currentQuantity: number) => {
     updateItemQuantity(itemId, currentQuantity + 1);
   };
@@ -36,6 +39,67 @@ const Cart = () => {
 
   const formatPrice = (price: string) => {
     return parseFloat(price.replace('$', '')).toFixed(2);
+  };
+  const [selectedPayment, setSelectedPayment] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(180); // 3 minutes in seconds
+
+  useEffect(() => {
+    let timer;
+    if (selectedPayment === 'qpay' && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft(prev => prev - 1);
+      }, 1000);
+    }
+
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [selectedPayment, timeLeft]);
+  
+  useEffect(() => {
+    if (selectedPayment === 'qpay') {
+      setTimeLeft(180);
+    }
+  }, [selectedPayment]);
+
+  const handleMetaMaskPress = async () => {
+    setSelectedPayment('metamask');
+    
+    // MetaMask deep linking
+    const metamaskUrl = 'metamask://'; // Replace with your specific MetaMask deep link
+    try {
+      const supported = await Linking.canOpenURL(metamaskUrl);
+      if (supported) {
+        await Linking.openURL(metamaskUrl);
+      } else {
+        // Handle case where MetaMask is not installed
+        const appStoreUrl = 'https://metamask.io/download/';
+        await Linking.openURL(appStoreUrl);
+      }
+    } catch (error) {
+      console.error('Error opening MetaMask:', error);
+      // Handle error - maybe show an alert to user
+    }
+  };
+  const handleQPayPress = () => {
+    setSelectedPayment(selectedPayment === 'qpay' ? null : 'qpay');
+  };
+
+  const handleQRPress = async () => {
+    try {
+      // Try to open Khanbank app directly using package name
+      await Linking.openURL('khanbank://q?qPay_QRcode=');
+    } catch (error) {
+      console.error('Error opening Khanbank:', error);
+      // If app is not installed, open Play Store
+      await Linking.openURL('https://play.google.com/store/apps/details?id=com.khanbank.retail');
+    }
+  };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -121,13 +185,93 @@ const Cart = () => {
               <TouchableOpacity 
                 style={styles.checkoutButton}
                 onPress={() => {
-                  // Handle checkout logic
+                  handlePayment()
                 }}
               >
+                
                 <Text style={styles.checkoutButtonText}>Checkout</Text>
               </TouchableOpacity>
+              
             </View>
+                {isOpen && (
+                  <View style={styles.paymentContainer}>
+                    <Text style={styles.paymentTitle}>Payment method</Text>
+                    
+                    {/* MetaMask Option */}
+                    <Pressable
+                      onPress={handleMetaMaskPress}
+                      style={({ pressed }) => ({
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        padding: 16,
+                        backgroundColor: pressed ? Color.Gray.gray500 : Color.Gray.gray400,
+                        borderRadius: 8,
+                        borderWidth: 1,
+                        borderColor: selectedPayment === 'metamask' ? Color.Gray.gray200 : Color.Gray.gray400,
+                        marginBottom: 12
+                      })}>
+                      <Image 
+                        source={require('../public/images/MetaMask_Fox.png')}
+                        style={{ width: 36, height: 36, marginRight: 12 }}
+                      />
+                      <View>
+                        <Text style={{ fontSize: 16, fontWeight: '500', color: Color.base.White }}>
+                          MetaMask
+                        </Text>
+                        <Text style={{ fontSize: 14, color: Color.Gray.gray200 }}>
+                          Pay with cryptocurrency
+                        </Text>
+                      </View>
+                    </Pressable>
+                    
+                    {/* QPay Option */}
+        <Pressable
+          onPress={handleQPayPress}
+          style={({ pressed }) => ({
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 16,
+            backgroundColor: pressed ? Color.Gray.gray500 : Color.Gray.gray400,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: selectedPayment === 'qpay' ? Color.Gray.gray200 : Color.Gray.gray400,
+            marginBottom: selectedPayment === 'qpay' ? 12 : 8
+          })}>
+          <Image 
+            source={require('../public/images/qpay.jpg')}
+            style={{ width: 36, height: 36, marginRight: 12 }}
+          />
+          <View>
+            <Text style={{ fontSize: 16, fontWeight: '500', color: Color.base.White }}>
+              QPay
+            </Text>
+            <Text style={{ fontSize: 14, color: Color.Gray.gray200 }}>
+              Fast and secure local payment
+            </Text>
+          </View>
+        </Pressable>
+        
+        {/* QR Code with Timer */}
+        {selectedPayment === 'qpay' && (
+          <View style={styles.qrContainer}>
+            <Pressable onPress={handleQRPress}>
+              <Image 
+                source={require('../public/images/qr-code.png')}
+                style={styles.qrImage}
+                resizeMode="contain"
+              />
+            </Pressable>
+            <View style={styles.timerContainer}>
+              <Text style={styles.timerText}>
+                Time remaining: {formatTime(timeLeft)}
+              </Text>
+            </View>
+          </View>
+        )}
+              </View>
+            )}
           </>
+          
         )}
       </ScrollView>
     </View>
@@ -150,6 +294,11 @@ const styles = StyleSheet.create({
   },
   itemsContainer: {
     gap: 16,
+  },
+  qrImage: {
+    width: 200,
+    height: 200,
+    backgroundColor: 'white',
   },
   cartItem: {
     flexDirection: 'row',
@@ -291,6 +440,36 @@ const styles = StyleSheet.create({
     color: Color.Gray.gray50,
     textAlign: 'center',
   },
+  paymentContainer: {
+    padding: 16,
+    backgroundColor: Color.Gray.gray500,
+    borderRadius: 8,
+    marginVertical: 8
+  },
+  qrContainer: {
+    padding: 16,
+    backgroundColor: Color.Gray.gray400,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  paymentTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: Color.Gray.gray50,
+    marginBottom: 16,
+  },
+  timerContainer: {
+    marginTop: 12,
+    padding: 8,
+    borderRadius: 4,
+    backgroundColor: Color.Gray.gray500,
+  },
+  timerText: {
+    color: Color.base.White,
+    fontSize: 16,
+    fontWeight: '500',
+  }
+
 });
 
 export default Cart;
