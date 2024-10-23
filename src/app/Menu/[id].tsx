@@ -5,6 +5,9 @@ import { Add, ArrowLeft, Minus } from 'iconsax-react-native';
 import Color from '@/constants/Color';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '@/components/ui/Button';
+import { useMenuStore } from '@/lib/store/menuStore';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import { BODY_1_BOLD, BODY_2_MEDIUM, BUTTON_48, CAPTION_1_REGULAR } from '@/constants/typography';
 
 interface MenuModalParams extends Record<string, string> {
   id: string;
@@ -20,25 +23,64 @@ const IMAGE_HEIGHT = SCREEN_WIDTH * 0.75;
 
 export default function MenuModal() {
   const [quantity, setQuantity] = useState(1);
-
-  const handleIncrease = () => setQuantity(prev => prev + 1);
-  const handleDecrease = () => setQuantity(prev => prev > 1 ? prev - 1 : 1);
-
+  const [showAddedFeedback, setShowAddedFeedback] = useState(false);
   const params = useLocalSearchParams<MenuModalParams>();
   const router = useRouter(); 
+  const { addItem } = useMenuStore();
 
   const imageSource = params.image ? JSON.parse(params.image) : null;
 
+  const handleIncrease = () => setQuantity(prev => prev + 1);
+  
+  const handleDecrease = () => setQuantity(prev => prev > 1 ? prev - 1 : 1);
+
+  const handleAddToCart = () => {
+    // Add item to cart with current quantity
+    addItem({
+      id: params.id,
+      name: params.name,
+      image: imageSource,
+      price: params.price,
+      description: params.description,
+      quantity: quantity
+    });
+
+    // Show feedback
+    setShowAddedFeedback(true);
+    setTimeout(() => {
+      setShowAddedFeedback(false);
+      router.back();
+    }, 1500);
+  };
+
+  const calculateTotal = () => {
+    const basePrice = parseFloat(params.price?.replace('$', '') || '0');
+    return (basePrice * quantity).toFixed(2);
+  };
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+<>
       <View style={styles.container}>
-        <View style={styles.container1}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.icon}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <ArrowLeft size={24} color={Color.Gray.gray50} />
           </TouchableOpacity>
         </View>
         
-        <ScrollView bounces={false} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        {showAddedFeedback && (
+          <Animated.View 
+            entering={FadeIn.duration(200)}
+            style={styles.feedbackContainer}
+          >
+            <Text style={styles.feedbackText}>Added to cart!</Text>
+          </Animated.View>
+        )}
+        
+        <ScrollView 
+          bounces={false} 
+          showsVerticalScrollIndicator={false} 
+          contentContainerStyle={styles.scrollContent}
+        >
           {imageSource && (
             <View style={styles.imageContainer}>
               <Image
@@ -52,15 +94,22 @@ export default function MenuModal() {
           <View style={styles.content}>
             <View style={styles.headerSection}>
               {params.category && (
-                <Text style={styles.category}>{params.category.toUpperCase()}</Text>
+                <Text style={styles.category}>
+                  {params.category.toUpperCase()}
+                </Text>
               )}
-              {params.name && <Text style={styles.name}>{params.name}</Text>}
+              {params.name && (
+                <Text style={styles.name}>{params.name}</Text>
+              )}
             </View>
 
             <View style={styles.priceSection}>
               {params.price && (
                 <Text style={styles.price}>{params.price}</Text>
               )}
+              <Text style={styles.totalPrice}>
+                Total: ${calculateTotal()}
+              </Text>
             </View>
 
             {params.description && (
@@ -69,16 +118,25 @@ export default function MenuModal() {
                 <Text style={styles.description}>{params.description}</Text>
               </View>
             )}
-          </View>
 
-          <View style={styles.quantityContainer}>
-            <TouchableOpacity onPress={handleDecrease} style={styles.quantityButton}>
-              <Minus size={24} color={Color.Gray.gray50} ></Minus>
-            </TouchableOpacity>
-            <Text style={styles.quantityText}>{quantity}</Text>
-            <TouchableOpacity onPress={handleIncrease} style={styles.quantityButton}>
-              <Add size={24} color={Color.Gray.gray50}></Add>
-            </TouchableOpacity>
+            <View style={styles.quantityContainer}>
+              <TouchableOpacity 
+                onPress={handleDecrease} 
+                style={[
+                  styles.quantityButton,
+                  quantity === 1 && styles.quantityButtonDisabled
+                ]}
+              >
+                <Minus size={24} color={Color.Gray.gray50} />
+              </TouchableOpacity>
+              <Text style={styles.quantityText}>{quantity}</Text>
+              <TouchableOpacity 
+                onPress={handleIncrease} 
+                style={styles.quantityButton}
+              >
+                <Add size={24} color={Color.Gray.gray50} />
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
 
@@ -88,21 +146,26 @@ export default function MenuModal() {
             textStyle="primary"
             size="default"
             style={styles.orderButton}
+            onPress={handleAddToCart}
           >
-            Order
+            Add to Cart - ${calculateTotal()}
           </Button>
         </View>
       </View>
-    </SafeAreaView>
+  </>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: Color.Gray.gray600,
+  },
   container: {
     flex: 1,
     backgroundColor: Color.Gray.gray600,
   },
-  container1: {
+  header: {
     height: 56,
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -110,6 +173,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     backgroundColor: Color.Gray.gray600,
+  },
+  backButton: {
+    position: "absolute",
+    left: 16,
+    padding: 8,
+  },
+  feedbackContainer: {
+    position: 'absolute',
+    top: 80,
+    left: 20,
+    right: 20,
+    backgroundColor: Color.Gray.gray100,
+    padding: 16,
+    borderRadius: 8,
+    zIndex: 1000,
+    alignItems: 'center',
+  },
+  feedbackText: {
+    ...BODY_2_MEDIUM,
+    color: Color.base.White,
+  },
+  scrollContent: {
+    paddingBottom: 100,
   },
   imageContainer: {
     alignSelf: 'center',
@@ -130,14 +216,20 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray500,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    marginTop: 0, 
   },
   headerSection: {
     marginBottom: 16,
   },
+  category: {
+    ...CAPTION_1_REGULAR,
+    textTransform: 'uppercase',
+    letterSpacing: 1.2,
+    marginBottom: 8,
+    textAlign: 'center',
+    color: Color.Gray.gray50,
+  },
   name: {
-    fontSize: 24,
-    fontWeight: '700',
+    ...BODY_1_BOLD,
     color: Color.Gray.gray50,
     marginBottom: 8,
     letterSpacing: 0.3,
@@ -148,9 +240,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   price: {
-    fontSize: 22,
-    fontWeight: '600',
+    ...BODY_1_BOLD,
     color: Color.base.White,
+  },
+  totalPrice: {
+    ...BODY_2_MEDIUM,
+    color: Color.Gray.gray200,
+    marginTop: 4,
   },
   descriptionContainer: {
     marginTop: 16,
@@ -159,43 +255,24 @@ const styles = StyleSheet.create({
     borderTopColor: Color.Gray.gray300,
   },
   descriptionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
+    ...BODY_1_BOLD,
     color: Color.Gray.gray50,
     marginBottom: 8,
     letterSpacing: 0.2,
     textAlign: 'center',
   },
   description: {
-    fontSize: 16,
+    ...BODY_2_MEDIUM,
     lineHeight: 22,
     color: Color.Gray.gray200,
     textAlign: 'center',
   },
-  icon: {
-    position: "absolute",
-    left: 16,
-  },
-  scrollContent: {
-    paddingBottom: 100,
-  },
-  orderButtonContainer: {
-    position: 'absolute',
-    bottom: 20,
-    width: '100%',
-    paddingHorizontal: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  orderButton: {
-    width: "100%",
-  },
   quantityContainer: {
-    backgroundColor: Color.Gray.gray500,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 24,
+    gap: 16,
   },
   quantityButton: {
     width: 40,
@@ -207,24 +284,21 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray50,
     backgroundColor: Color.Gray.gray500,
   },
-  quantityButtonText: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Color.Gray.gray50,
+  quantityButtonDisabled: {
+    opacity: 0.5,
   },
   quantityText: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginHorizontal: 16, 
+    ...BODY_1_BOLD,
     color: Color.Gray.gray50,
   },
-  category: {
-    fontSize: 14,
-    textTransform: 'uppercase',
-    letterSpacing: 1.2,
-    marginBottom: 8,
-    fontWeight: '600',
-    textAlign: 'center', 
-    color: Color.Gray.gray50,
+  orderButtonContainer: {
+    position: 'absolute',
+    bottom: 20,
+    width: '100%',
+    paddingHorizontal: 20,
+    backgroundColor: Color.Gray.gray600,
+  },
+  orderButton: {
+    width: "100%",
   },
 });

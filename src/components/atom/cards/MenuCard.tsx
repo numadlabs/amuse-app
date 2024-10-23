@@ -3,7 +3,7 @@ import React from 'react'
 import Color from '@/constants/Color'
 import { BODY_1_BOLD, BODY_2_MEDIUM, CAPTION_1_REGULAR } from '@/constants/typography';
 
-interface MenuItemProps {
+interface MenuItem {
   name: string;
   image: number;
   price: string;
@@ -11,7 +11,7 @@ interface MenuItemProps {
   onPress: () => void;
 }
 
-const MenuCard:React.FC<MenuItemProps> = ({name, image, price, description, onPress}) => {
+const MenuCard:React.FC<MenuItem> = ({name, image, price, description, onPress}) => {
   return (
     <View>
       <TouchableOpacity

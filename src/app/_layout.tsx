@@ -153,8 +153,7 @@ const Layout = () => {
                   <Stack.Screen name="BugReport" />
                   <Stack.Screen name="Faq" />
                   <Stack.Screen name="Tier" />
-                  <Stack.Screen name="Cart" 
-                   options={{ presentation: "modal" }}/>
+                  <Stack.Screen name="Cart" />
                   <Stack.Screen name="PerkScreen" />
                   <Stack.Screen name="NoInternet" />
                   <Stack.Screen

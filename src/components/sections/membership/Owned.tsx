@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
-  Image
 } from "react-native";
 import Color from "@/constants/Color";
 import { LinearGradient } from "expo-linear-gradient";
@@ -31,6 +30,7 @@ import {
   CAPTION_1_REGULAR,
 } from "@/constants/typography";
 import MenuCard from "@/components/atom/cards/MenuCard";
+import { useMenuStore } from "@/lib/store/menuStore";
 
 interface OwnedProps {
   userCardId: [],
@@ -109,6 +109,7 @@ const mockMenuData = {
 const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
   const [showPerks, setShowPerks] = useState(true);
   const currentLocation = useLocationStore();
+  const { addItem, getTotalQuantity } = useMenuStore();
   const [activeTab, setActiveTab] = useState<'perks' | 'menu' | 'details'>('perks');
 
   const { data: perks = [] } = useQuery({
@@ -118,6 +119,19 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
   });
 
   const hasPerks = perks && (perks.userBonuses?.length > 0 || perks.followingBonus);
+
+
+  const handleMenuItemClick = (item: MenuItem) => {
+    // Add item to store
+    addItem({
+      id: item.id,
+      name: item.name,
+      image: item.image,
+      price: item.price,
+      description: item.description
+    });
+
+  };
 
   // useEffect(() => {
   //   if (!hasPerks) {
