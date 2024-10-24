@@ -3,7 +3,7 @@ import { create } from "zustand";
 interface MenuItem {
   id: string;
   name: string;
-  image: string;
+  image: string | null;
   price: string;
   description: string;
   quantity?: number;
@@ -24,23 +24,22 @@ export const useMenuStore = create<MenuStore>((set, get) => ({
   selectedItems: [],
 
   addItem: (item: MenuItem) => set((state) => {
-    const existingItemIndex = state.selectedItems.findIndex(
-      (i) => i.id === item.id
-    );
+    const existingItem = state.selectedItems.find((i) => i.id === item.id);
 
-    if (existingItemIndex > -1) {
-      // Item exists, increment quantity
-      const updatedItems = [...state.selectedItems];
-      updatedItems[existingItemIndex] = {
-        ...updatedItems[existingItemIndex],
-        quantity: (updatedItems[existingItemIndex].quantity || 1) + 1
+    if (existingItem) {
+      // If item exists, update its quantity
+      return {
+        selectedItems: state.selectedItems.map((i) =>
+          i.id === item.id
+            ? { ...i, quantity: (i.quantity || 0) + (item.quantity || 1) }
+            : i
+        ),
       };
-      return { selectedItems: updatedItems };
     }
 
     // New item, add with quantity 1
     return {
-      selectedItems: [...state.selectedItems, { ...item, quantity: 1 }]
+      selectedItems: [...state.selectedItems, { ...item, quantity: item.quantity || 1 }],
     };
   }),
 
@@ -72,7 +71,7 @@ export const useMenuStore = create<MenuStore>((set, get) => ({
   getTotalPrice: () => {
     return get().selectedItems.reduce((total, item) => {
       const price = parseFloat(item.price.replace('$', ''));
-      return total + price * (item.quantity || 0);
+      return total + price * (item.quantity || 1);
     }, 0);
   }
 }));
