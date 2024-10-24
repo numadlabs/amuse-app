@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import Color from "@/constants/Color";
 import { LinearGradient } from "expo-linear-gradient";
@@ -12,14 +13,12 @@ import PerkGradient from "../../icons/PerkGradient";
 import { router } from "expo-router";
 import PowerUpCard from "../../atom/cards/PowerUpCard";
 import DetailsSheet from "../DetailsSheet";
-import { Add, InfoCircle, Menu, TicketStar } from "iconsax-react-native";
+import { Add, InfoCircle, TicketStar } from "iconsax-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Animated, { SlideInDown } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { RestaurantType } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
-import {
-  getPerksByRestaurant,
-} from "@/lib/service/queryHelper";
+import { getPerksByRestaurant } from "@/lib/service/queryHelper";
 import { restaurantKeys } from "@/lib/service/keysHelper";
 import useLocationStore from "@/lib/store/userLocation";
 import {
@@ -31,10 +30,12 @@ import {
 } from "@/constants/typography";
 import MenuCard from "@/components/atom/cards/MenuCard";
 import { useMenuStore } from "@/lib/store/menuStore";
+import CartSummary from "./CartSummary";
+import { height } from "@/lib/utils";
 
 interface OwnedProps {
-  userCardId: [],
-  followingPerk: [],
+  userCardId: [];
+  followingPerk: [];
   data: RestaurantType;
   cardId: string;
   isLoading: boolean;
@@ -49,7 +50,7 @@ interface MenuItem {
   description: string;
   price: string;
   category: string;
-  image: string; // Add image property
+  image: any;
 }
 
 const menuImages = {
@@ -108,8 +109,9 @@ const mockMenuData = {
 
 const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
   const [showPerks, setShowPerks] = useState(true);
+  const [showCart, setShowCart] = useState(false);
   const currentLocation = useLocationStore();
-  const { addItem, getTotalQuantity } = useMenuStore();
+  const { addItem, removeItem, getTotalQuantity } = useMenuStore();
   const [activeTab, setActiveTab] = useState<'perks' | 'menu' | 'details'>('perks');
 
   const { data: perks = [] } = useQuery({
@@ -119,25 +121,6 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
   });
 
   const hasPerks = perks && (perks.userBonuses?.length > 0 || perks.followingBonus);
-
-
-  const handleMenuItemClick = (item: MenuItem) => {
-    // Add item to store
-    addItem({
-      id: item.id,
-      name: item.name,
-      image: item.image,
-      price: item.price,
-      description: item.description
-    });
-
-  };
-
-  // useEffect(() => {
-  //   if (!hasPerks) {
-  //     setShowPerks(false);
-  //   }
-  // }, [hasPerks]);
 
   const handleNavigation = () => {
     router.push({
@@ -157,25 +140,6 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
         name: perks?.followingBonus?.name,
       },
     });
-  };
-
-  const handleMenuItemPress = (item: MenuItem) => {
-    router.push({
-      pathname: `/Menu/${item.id}`,
-      params: {
-        name: item.name,
-        image: item.image,
-        description: item.description,
-        price: item.price,
-        category: item.category,
-      },
-    });
-  };
-
-  const toggleView = (view: boolean) => {
-    if (hasPerks || !view) {
-      setShowPerks(view);
-    }
   };
 
   const renderPerks = () => (
@@ -228,9 +192,6 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
           </TouchableOpacity>
         </>
       ) : (
-        // <Animated.View
-        //   entering={SlideInDown.springify().damping(20).delay(200)}
-        // >
         <>
           <LinearGradient
             colors={[Color.Brand.card.start, Color.Brand.card.end]}
@@ -254,7 +215,6 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
             </View>
           </TouchableOpacity>
         </>
-        // </Animated.View>
       )}
     </View>
   );
@@ -264,25 +224,77 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
       <DetailsSheet data={data} />
     </View>
   );
-  const renderMenu = () => (
-    <View style={styles.powerUpGrid}>
-      {mockMenuData.categories.map((category, categoryIndex) => (
-        <View key={categoryIndex} style={styles.menuCategory}>
-          <Text style={styles.categoryTitle}>{category.name}</Text>
-          {category.items.map((item) => (
-              <MenuCard 
-                key={item.id}
-                name={item.name} 
-                image={item.image} 
-                description={item.description} 
-                price={item.price}
-                onPress={() => handleMenuItemPress(item)}
-              />
+
+  const renderMenu = () => {
+    const totalItems = getTotalQuantity();
+
+    const handleAdd = (item: MenuItem) => {
+      addItem({
+        id: item.id,
+        name: item.name,
+        image: item.image,
+        price: item.price,
+        description: item.description,
+        quantity: 1
+      });
+    };
+
+    const handleMinus = (itemId: string) => {
+      removeItem(itemId);
+    };
+
+    const handleCardPress = (item: MenuItem) => {
+      router.push({
+        pathname: `/Menu/${item.id}`,
+        params: {
+          name: item.name,
+          image: JSON.stringify(item.image),
+          description: item.description,
+          price: item.price,
+          category: item.category,
+        },
+      });
+    };
+
+    return (
+      <>
+      <View style={styles.menuWrapper}>
+        <ScrollView
+          style={styles.menuScrollView}
+          contentContainerStyle={[
+            styles.menuContent,
+            totalItems > 0 && styles.menuContentWithCart
+          ]}
+          showsVerticalScrollIndicator={false}
+        >
+          {mockMenuData.categories.map((category, categoryIndex) => (
+            <View key={categoryIndex} style={styles.menuCategory}>
+              <Text style={styles.categoryTitle}>{category.name}</Text>
+              {category.items.map((item) => (
+                <MenuCard
+                  key={item.id}
+                  name={item.name}
+                  image={item.image}
+                  description={item.description}
+                  price={item.price}
+                  onPress={() => handleCardPress(item)}
+                  onAdd={() => handleAdd(item)}
+                  onMinus={() => handleMinus(item.id)}
+                />
+              ))}
+            </View>
           ))}
-        </View>
-      ))}
-    </View>
-  );
+        </ScrollView>
+      
+      </View>
+        {totalItems > 0 && (
+          <View style={{position:'absolute',width:'100%', bottom:30}}>
+            <CartSummary />
+          </View>
+        )}
+        </>
+    );
+  };
 
   return (
     <GestureHandlerRootView style={styles.attrContainer}>
@@ -335,26 +347,39 @@ const styles = StyleSheet.create({
     marginTop: 32,
     marginBottom: 40,
   },
+  menuWrapper: {
+    flex: 1,
+    position: 'relative',
+  },
+  menuScrollView: {
+
+  },
+  menuContent: {
+    paddingBottom: 16,
+  },
+  menuContentWithCart: {
+    paddingBottom: 100, // Adjust this value based on your cart summary height
+  },
+  cartPadding: {
+    height: 100,
+  },
+
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-between", // Changed from space-around
+    justifyContent: "space-between",
     backgroundColor: Color.Gray.gray500,
     paddingVertical: 4,
-    paddingHorizontal: 4, // Added padding
+    paddingHorizontal: 4,
     borderRadius: 48,
   },
   toggleButton: {
     paddingVertical: 12,
     alignItems: "center",
-    width: "32%", // Changed from 48% to fit three buttons
+    width: "32%",
   },
   activeButton: {
     backgroundColor: Color.Gray.gray400,
     borderRadius: 48,
-  },
-  menuContainer: {
-    flex: 1,
-    gap: 15,
   },
   buttonText: {
     ...BUTTON_40,
@@ -365,7 +390,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    flexGrow: 1,
     marginTop: 24,
   },
   powerUpGrid: {
@@ -452,36 +476,7 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     flex: 1,
-    flexGrow: 1,
     marginBottom: 450,
-  },
-  menuItemContainer: {
-    backgroundColor: Color.Gray.gray500,
-    borderRadius: 16,
-    marginBottom: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: Color.Gray.gray400,
-  },
-  menuItemContent: {
-    flexDirection: 'row',
-    gap: 16,
-  },
-  menuItemImageContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
-    overflow: 'hidden',
-    backgroundColor: Color.Gray.gray400,
-  },
-  menuItemImage: {
-    width: '100%',
-    height: '100%',
-  },
-  menuItemDetails: {
-    flex: 1,
-    justifyContent: 'center',
-    gap: 8,
   },
   menuCategory: {
     marginBottom: 24,
@@ -490,26 +485,6 @@ const styles = StyleSheet.create({
     ...BODY_1_BOLD,
     color: Color.base.White,
     marginBottom: 16,
-  },
-  menuItemHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  menuItemName: {
-    ...BODY_2_MEDIUM,
-    color: Color.base.White,
-    flex: 1,
-    marginRight: 8,
-  },
-  menuItemPrice: {
-    ...BODY_2_MEDIUM,
-    color: Color.base.White,
-    fontWeight: '600',
-  },
-  menuItemDescription: {
-    ...CAPTION_1_REGULAR,
-    color: Color.Gray.gray50,
   },
 });
 
