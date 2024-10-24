@@ -174,7 +174,7 @@ const Cart = () => {
               </View>
             </View>
 
-            <View style={styles.buttonsContainer}>
+            {/* <View style={styles.buttonsContainer}>
               <TouchableOpacity 
                 style={styles.clearButton}
                 onPress={clearItems}
@@ -192,8 +192,7 @@ const Cart = () => {
                 <Text style={styles.checkoutButtonText}>Checkout</Text>
               </TouchableOpacity>
               
-            </View>
-                {isOpen && (
+            </View> */}
                   <View style={styles.paymentContainer}>
                     <Text style={styles.paymentTitle}>Payment method</Text>
                     
@@ -269,7 +268,6 @@ const Cart = () => {
           </View>
         )}
               </View>
-            )}
           </>
           
         )}
@@ -362,7 +360,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray500,
     borderRadius: 16,
     padding: 16,
-    marginTop: 24,
+    marginVertical: 24,
     gap: 12,
     borderWidth: 1,
     borderColor: Color.Gray.gray400,

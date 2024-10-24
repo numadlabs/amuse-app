@@ -1,7 +1,7 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet, Animated } from 'react-native'
-import React, { useState, useRef, useEffect } from 'react'
-import Color from '@/constants/Color'
-import { BODY_1_BOLD, BODY_2_MEDIUM, CAPTION_1_MEDIUM, CAPTION_1_REGULAR, CAPTION_2_REGULAR } from '@/constants/typography';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Animated } from 'react-native';
+import React, { useState, useRef } from 'react';
+import Color from '@/constants/Color';
+import { BODY_1_BOLD, BODY_2_MEDIUM, CAPTION_1_MEDIUM, CAPTION_2_REGULAR } from '@/constants/typography';
 import { Add, Minus } from 'iconsax-react-native';
 
 interface MenuItem {
@@ -19,16 +19,16 @@ const MenuCard: React.FC<MenuItem> = ({ name, image, price, description, onPress
   const [quantity, setQuantity] = useState(1);
   const expandAnim = useRef(new Animated.Value(0)).current;
 
-  const toggleQuantityControl = () => {
+  const toggleQuantityControl = (event?: any) => {
+    event?.stopPropagation();
+    
     const toValue = isExpanded ? 0 : 1;
     
     if (!isExpanded) {
-      // When expanding, add first item
       onAdd();
     } else {
-      // When collapsing, remove all items
       onMinus();
-      setQuantity(1); // Reset quantity
+      setQuantity(1);
     }
     
     setIsExpanded(!isExpanded);
@@ -39,24 +39,26 @@ const MenuCard: React.FC<MenuItem> = ({ name, image, price, description, onPress
     }).start();
   };
 
-  const handleIncrement = () => {
+  const handleIncrement = (event?: any) => {
+    event?.stopPropagation();
+    
     setQuantity(prev => prev + 1);
     onAdd();
   };
 
-  const handleDecrement = () => {
+  const handleDecrement = (event?: any) => {
+    event?.stopPropagation();
+    
     if (quantity > 1) {
       setQuantity(prev => prev - 1);
       onMinus();
     } else {
-      toggleQuantityControl(); // Collapse and remove item
+      toggleQuantityControl();
     }
   };
 
   const handleCardPress = () => {
-    if (!isExpanded) {
-      onPress();
-    }
+    onPress();
   };
 
   const quantityControlScale = expandAnim.interpolate({
@@ -65,78 +67,80 @@ const MenuCard: React.FC<MenuItem> = ({ name, image, price, description, onPress
   });
 
   return (
-    <TouchableOpacity
-      style={styles.menuItemContainer}
-      onPress={handleCardPress}
-      activeOpacity={0.7}
-    >
-      <Image
-        source={image}
-        style={styles.menuItemImage}
-        resizeMode="cover"
-      />
+    <View style={styles.menuItemContainer}>
+      <TouchableOpacity
+        style={styles.cardTouchable}
+        onPress={handleCardPress}
+        activeOpacity={0.7}
+      >
+        <Image
+          source={image}
+          style={styles.menuItemImage}
+          resizeMode="cover"
+        />
 
-      <View style={styles.mainContent}>
-        <View style={styles.textContent}>
-          <Text style={styles.menuItemName}>{name}</Text>
-          <Text style={styles.menuItemDescription} numberOfLines={1}>
-            {description}
-          </Text>
-        </View>
+        <View style={styles.mainContent}>
+          <View style={styles.textContent}>
+            <Text style={styles.menuItemName}>{name}</Text>
+            <Text style={styles.menuItemDescription} numberOfLines={1}>
+              {description}
+            </Text>
+          </View>
 
-        <View style={styles.bottomContent}>
-          <Text style={styles.menuItemPrice}>{price} USD</Text>
-
-          <View style={styles.quantityControlContainer}>
-            {isExpanded ? (
-              <Animated.View
-                style={[
-                  styles.quantityControl,
-                  { transform: [{ scale: quantityControlScale }] }
-                ]}
-              >
-                <TouchableOpacity
-                  onPress={handleDecrement}
-                  style={styles.quantityButton}
-                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                >
-                  <Minus size={16} color={Color.base.White} />
-                </TouchableOpacity>
-                <Text style={styles.quantityText}>{quantity}</Text>
-                <TouchableOpacity
-                  onPress={handleIncrement}
-                  style={styles.quantityButton}
-                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                >
-                  <Add size={16} color={Color.base.White} />
-                </TouchableOpacity>
-              </Animated.View>
-            ) : (
-              <TouchableOpacity
-                onPress={toggleQuantityControl}
-                style={styles.addButton}
-                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              >
-                <Add size={16} color={Color.base.White} />
-              </TouchableOpacity>
-            )}
+          <View style={styles.bottomContent}>
+            <Text style={styles.menuItemPrice}>{price} USD</Text>
           </View>
         </View>
+      </TouchableOpacity>
+
+      <View style={styles.quantityControlContainer}>
+        {isExpanded ? (
+          <Animated.View
+            style={[
+              styles.quantityControl,
+              { transform: [{ scale: quantityControlScale }] }
+            ]}
+          >
+            <TouchableOpacity
+              onPress={handleDecrement}
+              style={styles.quantityButton}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Minus size={16} color={Color.base.White} />
+            </TouchableOpacity>
+            <Text style={styles.quantityText}>{quantity}</Text>
+            <TouchableOpacity
+              onPress={handleIncrement}
+              style={styles.quantityButton}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Add size={16} color={Color.base.White} />
+            </TouchableOpacity>
+          </Animated.View>
+        ) : (
+          <TouchableOpacity
+            onPress={toggleQuantityControl}
+            style={styles.addButton}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Add size={16} color={Color.base.White} />
+          </TouchableOpacity>
+        )}
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
-
-export default MenuCard
 
 const styles = StyleSheet.create({
   menuItemContainer: {
     backgroundColor: Color.Gray.gray500,
     borderRadius: 24,
     marginBottom: 12,
-    flexDirection: 'row',
     overflow: 'hidden',
     padding: 12,
+  },
+  cardTouchable: {
+    flexDirection: 'row',
     gap: 16,
   },
   menuItemImage: {
@@ -177,7 +181,9 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   quantityControlContainer: {
-    alignSelf: 'center',
+    position: 'absolute',
+    right: 12,
+    bottom: 12,
   },
   addButton: {
     borderRadius: 24,
@@ -210,4 +216,6 @@ const styles = StyleSheet.create({
     color: Color.base.White,
     marginHorizontal: 8,
   },
-})
+});
+
+export default MenuCard;

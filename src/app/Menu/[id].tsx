@@ -7,8 +7,10 @@
   import Button from '@/components/ui/Button';
   import { useMenuStore } from '@/lib/store/menuStore';
   import Animated, { FadeIn } from 'react-native-reanimated';
-  import { BODY_1_BOLD, BODY_2_MEDIUM, BODY_2_REGULAR, BUTTON_48, CAPTION_1_REGULAR, H6 } from '@/constants/typography';
+  import { BODY_1_BOLD, BODY_1_MEDIUM, BODY_2_MEDIUM, BODY_2_REGULAR, BUTTON_48, CAPTION_1_REGULAR, H6 } from '@/constants/typography';
   import { LinearGradient } from 'expo-linear-gradient';
+import Close from '@/components/icons/Close';
+import CartButton from '@/components/atom/CartButton';
 
   interface MenuModalParams extends Record<string, string> {
     id: string;
@@ -23,7 +25,7 @@
   const IMAGE_HEIGHT = SCREEN_WIDTH * 0.75;
 
   export default function MenuModal() {
-    const [quantity, setQuantity] = useState(1);
+    const [quantity, setQuantity] = useState(0);
     const [showAddedFeedback, setShowAddedFeedback] = useState(false);
     const params = useLocalSearchParams<MenuModalParams>();
     const router = useRouter();
@@ -33,7 +35,7 @@
 
     const handleIncrease = () => setQuantity(prev => prev + 1);
     
-    const handleDecrease = () => setQuantity(prev => prev > 1 ? prev - 1 : 1);
+    const handleDecrease = () => setQuantity(prev => prev > 1 ? prev - 1 : 0);
 
     const handleAddToCart = () => {
       addItem({
@@ -61,8 +63,10 @@
       <>
         <View style={styles.container}>
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-              <ArrowLeft size={24} color={Color.Gray.gray50} />
+            <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
+              <View style={{}}>
+                <Close />
+              </View>
             </TouchableOpacity>
           </View>
           
@@ -113,63 +117,55 @@
             
             <View style={styles.content}>
               <View style={styles.headerSection}>
-                {params.category && (
-                  <Text style={styles.category}>
-                    {params.category.toUpperCase()}
-                  </Text>
-                )}
                 {params.name && (
                   <Text style={styles.name}>{params.name}</Text>
                 )}
-              </View>
-
-              <View style={styles.priceSection}>
-                {params.price && (
-                  <Text style={styles.price}>{params.price}</Text>
+                {params.description && (
+                    <Text style={styles.description}>{params.description}</Text>
                 )}
-                <Text style={styles.totalPrice}>
-                  Total: ${calculateTotal()}
-                </Text>
-              </View>
-
-              {params.description && (
-                <View style={styles.descriptionContainer}>
-                  <Text style={styles.descriptionTitle}>Description</Text>
-                  <Text style={styles.description}>{params.description}</Text>
-                </View>
-              )}
-
-              <View style={styles.quantityContainer}>
-                <TouchableOpacity 
-                  onPress={handleDecrease} 
-                  style={[
-                    styles.quantityButton,
-                    quantity === 1 && styles.quantityButtonDisabled
-                  ]}
-                >
-                  <Minus size={24} color={Color.Gray.gray50} />
-                </TouchableOpacity>
-                <Text style={styles.quantityText}>{quantity}</Text>
-                <TouchableOpacity 
-                  onPress={handleIncrease} 
-                  style={styles.quantityButton}
-                >
-                  <Add size={24} color={Color.Gray.gray50} />
-                </TouchableOpacity>
               </View>
             </View>
           </ScrollView>
 
           <View style={styles.orderButtonContainer}>
-            <Button
-              variant="primary"
-              textStyle="primary"
-              size="default"
-              style={styles.orderButton}  
-              onPress={handleAddToCart}
+            <LinearGradient
+              colors={[Color.Brand.card.start, Color.Brand.card.end]}
+              style={{borderRadius: 16}}
             >
-              Add to Cart - ${calculateTotal()}
-            </Button>
+              <View style={styles.quantityContainer}>
+                <View style={styles.totalContainer}>
+                  <Text style={styles.totalText}>
+                    Price: 
+                  </Text>
+                  <Text style={styles.totalPrice}>
+                    ${calculateTotal()} USD
+                  </Text>
+                </View>
+                <View style={styles.quantitySection}>
+                  <TouchableOpacity 
+                    onPress={handleDecrease} 
+                    style={[
+                      styles.quantityButton,
+                      quantity === 0 && styles.quantityButtonDisabled
+                    ]}
+                  >
+                    <Minus size={24} color={Color.Gray.gray50} />
+                  </TouchableOpacity>
+                  <Text style={styles.quantityText}>{quantity}</Text>
+                  <TouchableOpacity 
+                    onPress={handleIncrease} 
+                    style={styles.quantityButton}
+                  >
+                    <Add size={24} color={Color.Gray.gray50} />
+                  </TouchableOpacity>
+                </View>
+                  
+              </View>
+            </LinearGradient>
+          <CartButton 
+            quantity={quantity} 
+            onAddToCart={handleAddToCart} 
+          />
           </View>
         </View>
       </>
@@ -188,13 +184,14 @@
       justifyContent: "center",
       alignItems: "center",
       flexDirection: "row",
-      backgroundColor: "transparent",
       zIndex: 2,
     },
-    backButton: {
+    closeButton: {
       position: "absolute",
-      left: 16,
-      padding: 8,
+      right: 16,
+      padding: 12,
+      backgroundColor: Color.Gray.gray400,
+      borderRadius: 32
     },
     feedbackContainer: {
       position: 'absolute',
@@ -214,6 +211,9 @@
     scrollContent: {
       paddingBottom: 100,
     },
+    totalContainer: {
+      gap: 8,
+    },
     imageWrapper: {
       alignSelf: 'center',
       width: SCREEN_WIDTH * 0.65,
@@ -228,6 +228,12 @@
       top: '-20%',
       left: '-20%',
       overflow: 'hidden',
+    },
+    quantitySection:{
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 8,
     },
     blurredImage: {
       width: '120%',
@@ -258,6 +264,7 @@
     },
     headerSection: {
       marginBottom: 16,
+      gap: 12,
     },
     category: {
       ...CAPTION_1_REGULAR,
@@ -270,8 +277,6 @@
     name: {
       ...H6,
       color: Color.Gray.gray50,
-      marginBottom: 8,
-      letterSpacing: 0.3,
       textAlign: 'center',
     },
     priceSection: {
@@ -282,16 +287,15 @@
       ...BODY_1_BOLD,
       color: Color.base.White,
     },
-    totalPrice: {
-      ...BODY_2_MEDIUM,
-      color: Color.Gray.gray200,
+    totalText: {
+      ...CAPTION_1_REGULAR,
+      color: Color.Gray.gray100,
       marginTop: 4,
     },
-    descriptionContainer: {
-      marginTop: 16,
-      paddingTop: 16,
-      borderTopWidth: 1,
-      borderTopColor: Color.Gray.gray300,
+    totalPrice: {
+      ...BODY_1_MEDIUM,
+      color: Color.base.White,
+      marginTop: 4,
     },
     descriptionTitle: {
       ...BODY_1_BOLD,
@@ -308,20 +312,24 @@
     },
     quantityContainer: {
       flexDirection: 'row',
-      justifyContent: 'center',
+      justifyContent: 'space-between',
       alignItems: 'center',
       paddingVertical: 24,
-      gap: 16,
+      padding: 16,
+      gap: 8,
+      borderWidth: 1,
+      borderColor: Color.Gray.gray400,
+      borderRadius: 16,
     },
     quantityButton: {
       width: 40,
       height: 40,
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 8,
-      borderWidth: 1,
-      borderColor: Color.Gray.gray50,
-      backgroundColor: "transparent",
+      borderRadius: 32,
+      gap: 16,
+      padding: 10,
+      backgroundColor: Color.Gray.gray400,
     },
     quantityButtonDisabled: {
       opacity: 0.5,
@@ -329,6 +337,9 @@
     quantityText: {
       ...BODY_1_BOLD,
       color: Color.Gray.gray50,
+      width: 32,
+      textAlign: 'center',
+      height: 20,
     },
     orderButtonContainer: {
       position: 'absolute',
@@ -337,6 +348,7 @@
       paddingHorizontal: 20,
       backgroundColor: 'transparent',
       zIndex: 2,
+      gap: 32,
     },
     orderButton: {
       width: "100%",
