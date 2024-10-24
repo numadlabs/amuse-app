@@ -114,7 +114,7 @@ const Restaurant = () => {
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
         <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
-          <RestaurantHeader title={restaurantsData?.name}/>
+            <Header title={restaurantsData?.name}/>
           {/* <View style={styles.closeButtonContainer}>
             <TouchableOpacity
               style={[styles.button, styles.closeButton]}

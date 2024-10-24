@@ -31,11 +31,11 @@ const RestaurantHeader: React.FC<NavbarProps> = ({ title, titleStyle}) => {
             </View>
           </TouchableOpacity>
           <Text style={[styles.title, titleStyle]}>{title}</Text>
-          <TouchableOpacity onPress={() => router.navigate('/Cart')}>
+          {/* <TouchableOpacity onPress={() => router.navigate('/Cart')}>
             <View style={{}}>
             <ShoppingCart size={24} color={Color.Gray.gray50} />
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </SafeAreaView>
     </>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     height: 56,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
     backgroundColor: Color.Gray.gray600,
