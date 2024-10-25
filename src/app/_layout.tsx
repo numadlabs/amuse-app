@@ -1,6 +1,9 @@
+
+
 import React, { useCallback, useEffect, useState } from "react";
 import { Stack, router } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import { AuthProvider } from "@/context/AuthContext";
 import { StatusBar } from "expo-status-bar";
 import Toast from "react-native-toast-message";
@@ -12,7 +15,7 @@ import * as Network from "expo-network";
 import NoInternet from "./NoInternet";
 import * as Sentry from "@sentry/react-native";
 import { SERVER_SETTING } from "@/constants/serverSettings";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Linking } from "react-native";
 import ErrorBoundary from "./ErrorBoundary";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -84,7 +87,7 @@ async function checkAccessToken() {
 // Main Layout Component
 const Layout = () => {
   const [isConnected, setIsConnected] = useState<boolean>(true);
-  
+
   const checkInternetConnection = useCallback(async () => {
     const networkState = await Network.getNetworkStateAsync();
     setIsConnected(networkState.isConnected);
@@ -97,6 +100,15 @@ const Layout = () => {
     SoraMedium: require("@/public/fonts/Sora-Medium.otf"),
     SoraSemiBold: require("@/public/fonts/Sora-SemiBold.otf"),
   });
+  const sdkOptions = {
+    dappMetadata: {
+      name: 'Demo React Native App',
+      url: 'https://yourdapp.com',
+      iconUrl: 'https://yourdapp.com/icon.png',
+      scheme: 'yourappscheme',
+    },
+  };
+
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -109,7 +121,7 @@ const Layout = () => {
     return () => clearInterval(intervalId);
   }, [checkInternetConnection]);
 
- 
+
   if (!fontsLoaded) {
     return null;
   }
@@ -119,69 +131,70 @@ const Layout = () => {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ErrorBoundary>
-          <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
-            <StatusBar style="light" />
-            
-                <Stack
-                  screenOptions={{
-                    headerShown: false,
-                    contentStyle: {
-                      backgroundColor: "transparent",
-                    },
-                  }}
-                >
-                  <Stack.Screen name="(tabs)" />
-                  <Stack.Screen
-                    name="restaurants/[id]"
-                    // options={{ presentation: "modal" }}
-                  /><Stack.Screen
+
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <ErrorBoundary>
+            <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
+              <StatusBar style="light" />
+
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                  contentStyle: {
+                    backgroundColor: "transparent",
+                  },
+                }}
+              >
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen
+                  name="restaurants/[id]"
+                // options={{ presentation: "modal" }}
+                /><Stack.Screen
                   name="Menu/[id]"
                   options={{ presentation: "modal" }}
                 />
-                  <Stack.Screen
-                    name="(modals)/MyQrModal"
-                    options={{ presentation: "modal" }}
-                  />
-                  <Stack.Screen name="PrivacyPolicy" />
-                  <Stack.Screen name="profileSection/UpdateScreen" />
-                  <Stack.Screen name="MyAcards" />
-                  <Stack.Screen name="Wallet" />
-                  <Stack.Screen name="TermsAndCondo" />
-                  <Stack.Screen name="BugReport" />
-                  <Stack.Screen name="Faq" />
-                  <Stack.Screen name="Tier" />
-                  <Stack.Screen name="Cart" />
-                  <Stack.Screen name="PerkScreen" />
-                  <Stack.Screen name="NoInternet" />
-                  <Stack.Screen
-                    name="PerkMarket"
-                    options={{ presentation: "modal" }}
-                  />
-                  <Stack.Screen
-                    name="AlreadyCheckedIn"
-                    options={{ presentation: "modal" }}
-                  />
-                  <Stack.Screen
-                    name="PowerUp"
-                    options={{ presentation: "modal" }}
-                  />
-                  <Stack.Screen
-                    name="FollowingPerk"
-                    options={{ presentation: "modal" }}
-                  />
-                  <Stack.Screen
-                    name="PerkBuy"
-                    options={{ presentation: "modal" }}
-                  />
-                </Stack>
-                <Toast config={toastConfig} />
-          </View>
-        </ErrorBoundary>
-      </AuthProvider>
-    </QueryClientProvider>
+                <Stack.Screen
+                  name="(modals)/MyQrModal"
+                  options={{ presentation: "modal" }}
+                />
+                <Stack.Screen name="PrivacyPolicy" />
+                <Stack.Screen name="profileSection/UpdateScreen" />
+                <Stack.Screen name="MyAcards" />
+                <Stack.Screen name="Wallet" />
+                <Stack.Screen name="TermsAndCondo" />
+                <Stack.Screen name="BugReport" />
+                <Stack.Screen name="Faq" />
+                <Stack.Screen name="Tier" />
+                <Stack.Screen name="Cart" />
+                <Stack.Screen name="PerkScreen" />
+                <Stack.Screen name="NoInternet" />
+                <Stack.Screen
+                  name="PerkMarket"
+                  options={{ presentation: "modal" }}
+                />
+                <Stack.Screen
+                  name="AlreadyCheckedIn"
+                  options={{ presentation: "modal" }}
+                />
+                <Stack.Screen
+                  name="PowerUp"
+                  options={{ presentation: "modal" }}
+                />
+                <Stack.Screen
+                  name="FollowingPerk"
+                  options={{ presentation: "modal" }}
+                />
+                <Stack.Screen
+                  name="PerkBuy"
+                  options={{ presentation: "modal" }}
+                />
+              </Stack>
+              <Toast config={toastConfig} />
+            </View>
+          </ErrorBoundary>
+        </AuthProvider>
+      </QueryClientProvider>
   );
 };
 

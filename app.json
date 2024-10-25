@@ -1,7 +1,7 @@
 {
   "expo": {
-    "version": "0.7.8",
-    "runtimeVersion": "0.7.8",
+    "version": "0.8.2",
+    "runtimeVersion": "0.8.2",
     "jsEngine": "hermes",
     "scheme": "acme",
     "owner": "numad-labs",
@@ -50,8 +50,8 @@
       ],
       "sentry-expo"
     ],
-    "icon": "./src/public/images/icon.png",
-    "name": "Amuse Bouche",
+    "icon": "./src/public/images/Lumi.jpg",
+    "name": "Lumi",
     "slug": "amuse-app",
     "ios": {
       "infoPlist": {
@@ -81,7 +81,7 @@
     ],
     "extra": {
       "router": {
-        "origin": "https://n"
+        "origin": false
       },
       "eas": {
         "projectId": "648167f4-9c73-40b4-8123-d4b1eeea1c63"
@@ -102,7 +102,7 @@
       "enabled": true,
       "requestHeaders": {
         "expo-channel-name": "production",
-        "expo-runtime-version": "0.7.8",
+        "expo-runtime-version": "0.8.1",
         "channel-name": "production"
       }
     }
