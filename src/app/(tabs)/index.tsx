@@ -18,7 +18,11 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getUserById, getUserCard } from "@/lib/service/queryHelper";
-import useLocationStore from "@/lib/store/userLocation";
+
+// import "node-libs-react-native/globals"
+import "react-native-url-polyfill/auto"
+import "react-native-get-random-values"
+
 import { RestaurantType } from "@/lib/types";
 import { GetRestaurantsResponseType } from "@/lib/types/apiResponseType";
 import { restaurantKeys, userKeys } from "@/lib/service/keysHelper";
@@ -49,6 +53,7 @@ import {
 import DiscoverFloatRestCard from "@/components/atom/cards/DiscoverFloatRestCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RestaurantListGrowing from "@/components/atom/cards/RestaurantListGrowing";
+
 import BitcoinWithdrawals from "@/components/atom/cards/BitcoinWithdrawals";
 import { updatePushToken } from "@/lib/service/mutationHelper";
 
@@ -186,7 +191,7 @@ const Page = () => {
                         <HomeRestList
                           isClaimLoading={true}
                           marker={item}
-                          key={item.id as string}
+                         
                           onPress={() => handleNavigation(item)}
                         />
                       )}
