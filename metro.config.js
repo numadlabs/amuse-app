@@ -20,10 +20,6 @@ module.exports = {
   resolver: {
     ...config.resolver,
     extraNodeModules: {
-      ...config.resolver.extraNodeModules, // This is the correct way to spread existing extraNodeModules
-      ...extraNodeModules,
-      ...require('node-libs-expo'),
-      ...require('node-libs-react-native')
     }
   }
 };

@@ -1,4 +1,4 @@
-# Amuse Bouche mobile app project
+# Lumi mobile app project
 
 ## How to start
 

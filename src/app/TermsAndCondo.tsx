@@ -30,7 +30,7 @@ const TermsAndCondo = () => {
           <Accordion key={index} title={item.title} text={item.text} />
         ))} */}
           <Text style={styles.paragraph}>
-            Welcome to Amuse Bouche! {"\n"}
+            Welcome to Lumi! {"\n"}
           </Text>
           <Text style={styles.paragraph}>
             We’re thrilled to have you join our Pilot Program, and we greatly
@@ -40,8 +40,8 @@ const TermsAndCondo = () => {
           </Text>
 
           <Text style={styles.paragraph}>
-            Here at Amuse Bouche, we value transparency with our users. So,
-            please note that while using the Amuse Bouche Application, certain
+            Here at Lumi, we value transparency with our users. So,
+            please note that while using the Lumi Application, certain
             user data will be collected. To enable account creation and continued
             user access, it is necessary that user email data is collected.
             Additionally, user experience is unique to each location, which
@@ -51,7 +51,7 @@ const TermsAndCondo = () => {
           <Text style={styles.paragraph}>
             Aside from user email and location data collection, the rest is up to
             you! You can opt to allow the collection of data such as your birthday
-            and profile picture. Opting-in allows us here at Amuse Bouche to
+            and profile picture. Opting-in allows us here at Lumi to
             continue to improve the Application so we can provide a more
             seamless and tailored user experience for you.
           </Text>
@@ -63,7 +63,7 @@ const TermsAndCondo = () => {
             collection options.
           </Text>
           <Text style={styles.paragraph}>
-            Disclaimer: The Amuse Bouche Application is solely a platform for
+            Disclaimer: The Lumi Application is solely a platform for
             third-parties to engage with users. Any offerings of rewards or
             securities accessible through the Application are provided by third-
             parties. Hash2 Labs LLC, the developer of the Application, is not liable
