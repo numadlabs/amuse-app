@@ -19,9 +19,6 @@ import { useRouter } from "expo-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getUserById, getUserCard } from "@/lib/service/queryHelper";
 
-// import "node-libs-react-native/globals"
-import "react-native-url-polyfill/auto"
-import "react-native-get-random-values"
 
 import { RestaurantType } from "@/lib/types";
 import { GetRestaurantsResponseType } from "@/lib/types/apiResponseType";
@@ -198,9 +195,9 @@ const Page = () => {
                     />
                     <RestaurantListGrowing />
                     <BitcoinWithdrawals />
-                    <DiscoverFloatRestCard
+                    {/* <DiscoverFloatRestCard
                       onPress={() => setIsQuickInfoVisible(false)}
-                    />
+                    /> */}
                   </Animated.View>
                 </Animated.ScrollView>
               )}

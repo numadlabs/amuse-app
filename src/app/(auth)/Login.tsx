@@ -174,8 +174,8 @@ function Login() {
                   }}
                 >
                   <Image
-                    source={require("@/public/images/LogoDark.png")}
-                    style={{ width: 96, height: 96 }}
+                    source={require("@/public/images/Lumi.jpg")}
+                    style={{ width: 96, height: 96, borderRadius:24}}
                   />
                 </View>
 
@@ -380,7 +380,7 @@ function Login() {
                 marginBottom: 0,
               }}
             >
-              By continuing, I agree with Amuse-Bouche's
+              By continuing, I agree with Lumi's
             </Text>
             <TouchableOpacity onPress={() => router.navigate("/TermsAndCondo")}>
               <Text
@@ -437,20 +437,20 @@ function Login() {
                         textAlign: "left",
                       }}
                     >
-                      Welcome to {"\n"}Amuse Bouche!
+                      Welcome to {"\n"}Lumi!
                     </Text>
 
                     <Text style={styles.paragraph}>
                       We’re thrilled to have you join our Pilot Program, and we
                       greatly appreciate your participation. This program allows
-                      us to refine Amuse Bouche’s features, ensuring it becomes
+                      us to refine Lumi’s features, ensuring it becomes
                       the best experience possible for our entire community,
                       including you!
                     </Text>
 
                     <Text style={styles.paragraph}>
-                      Here at Amuse Bouche, we value transparency with our
-                      users. So, please note that while using the Amuse Bouche
+                      Here at Lumi, we value transparency with our
+                      users. So, please note that while using the Lumi
                       Application, certain user data will be collected. To
                       enable account creation and continued user access, it is
                       necessary that user email data is collected. Additionally,
@@ -462,7 +462,7 @@ function Login() {
                       Aside from user email and location data collection, the
                       rest is up to you! You can opt to allow the collection of
                       data such as your birthday and profile picture. Opting-in
-                      allows us here at Amuse Bouche to continue to improve the
+                      allows us here at Lumi to continue to improve the
                       Application so we can provide a more seamless and tailored
                       user experience for you.
                     </Text>
@@ -475,7 +475,7 @@ function Login() {
                     </Text>
 
                     <Text style={styles.paragraph}>
-                      Disclaimer: The Amuse Bouche Application is solely a
+                      Disclaimer: The Lumi Application is solely a
                       platform for third-parties to engage with users. Any
                       offerings of rewards or securities accessible through the
                       Application are provided by third- parties. Hash2 Labs

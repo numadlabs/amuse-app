@@ -321,7 +321,7 @@ that information is inaccurate or incomplete.
         <ScrollView style={styles.scrollViewContainer}>
           <Text style={styles.sectionHeader}>Disclaimer</Text>
           <Text style={styles.sectionBody}>
-            By using the Amuse Bouche application platform ("Platform"), you
+            By using the Lumi application platform ("Platform"), you
             agree to the collection and use of information in accordance with
             this policy.
           </Text>
@@ -419,9 +419,9 @@ that information is inaccurate or incomplete.
           <Text style={styles.bottomTabTitle}>IMPORTANT NOTICE</Text>
 
           <Text style={styles.bottomTabText}>
-            The Pilot Program for Amuse Bouche is still ongoing. If you proceed
+            The Pilot Program for Lumi is still ongoing. If you proceed
             with deleting your account, you will forfeit all bitcoin accumulated
-            in your Amuse Bouche account. Once deleted, you will not be able to
+            in your Lumi account. Once deleted, you will not be able to
             recover or transfer your bitcoin.
           </Text>
           <Text style={styles.bottomTabText}>

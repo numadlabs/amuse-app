@@ -8,15 +8,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const Faq = () => {
   const data = [
     {
-      title: "What is Amuse Bouche?",
-      text: "Amuse Bouche is a restaurant loyalty app where users earn bitcoin for checking into restaurants and receive perks for being regular customers.",
+      title: "What is Lumi?",
+      text: "Lumi is a restaurant loyalty app where users earn bitcoin for checking into restaurants and receive perks for being regular customers.",
     },
     {
       title: "What are Membership Cards?",
       text: "Membership Cards represent subscriptions to your favorite restaurants. Easily browse and add Membership Cards on the Discover page to explore participating restaurants in your area.",
     },
     {
-      title: "How do I earn rewards with Amuse Bouche?",
+      title: "How do I earn rewards with Lumi?",
       text: "You earn bitcoin and extra perks by scanning a QR code and thereby checking into restaurants on the check-in page. The more you visit, the more you'll be rewarded.",
     },
     {
