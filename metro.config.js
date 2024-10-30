@@ -1,4 +1,4 @@
-const { getSentryExpoConfig } = require('@sentry/react-native/metro');
+const { getSentryExpoConfig } = require("@sentry/react-native/metro");
 
 // Define extraNodeModules before using it
 const extraNodeModules = {
@@ -7,19 +7,24 @@ const extraNodeModules = {
 
 const config = getSentryExpoConfig(__dirname);
 
-config.transformer.getTransformOptions = async () => ({
-  transform: {
-    experimentalImportSupport: false,
-    inlineRequires: true,
-  },
-});
+config.resolver.unstable_enablePackageExports = true;
+config.resolver.unstable_conditionNames = [
+  "react-native",
+  "browser",
+  "require",
+];
 
+// config.transformer.getTransformOptions = async () => ({
+//   transform: {
+//     experimentalImportSupport: false,
+//     inlineRequires: true,
+//   },
+// });
 
 module.exports = {
   ...config,
   resolver: {
     ...config.resolver,
-    extraNodeModules: {
-    }
-  }
+    extraNodeModules: {},
+  },
 };

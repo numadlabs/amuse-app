@@ -18,7 +18,8 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getUserById, getUserCard } from "@/lib/service/queryHelper";
-
+import "@thirdweb-dev/react-native-adapter";
+import "expo-router/entry";
 
 import { RestaurantType } from "@/lib/types";
 import { GetRestaurantsResponseType } from "@/lib/types/apiResponseType";
