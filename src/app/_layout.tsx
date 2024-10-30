@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Stack, router } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
+import { ThirdwebProvider } from "thirdweb/react";
 import { AuthProvider } from "@/context/AuthContext";
 import { StatusBar } from "expo-status-bar";
 import Toast from "react-native-toast-message";
@@ -131,7 +131,9 @@ const Layout = () => {
   }
 
   return (
+    <ThirdwebProvider>
 
+   
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <ErrorBoundary>
@@ -195,6 +197,8 @@ const Layout = () => {
           </ErrorBoundary>
         </AuthProvider>
       </QueryClientProvider>
+      </ThirdwebProvider>
+
   );
 };
 

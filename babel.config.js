@@ -13,8 +13,18 @@ module.exports = function (api) {
           whitelist: null,
           safe: false,
           allowUndefined: true,
-        },
+        }
       ],
-    ],
+      [
+        'module-resolver',
+        {
+          alias: {
+            'crypto': 'react-native-quick-crypto',
+            'stream': 'stream-browserify',
+            'buffer': '@craftzdog/react-native-buffer',
+          }
+        }
+      ]
+    ]
   };
 };

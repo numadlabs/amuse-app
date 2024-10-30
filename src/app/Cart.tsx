@@ -5,6 +5,10 @@ import { useMenuStore } from '@/lib/store/menuStore';
 import { Minus, Add, MinusCirlce, CloseCircle } from 'iconsax-react-native';
 import { BODY_1_BOLD, BODY_2_MEDIUM, BUTTON_48, CAPTION_1_REGULAR } from '@/constants/typography';
 import Header from '@/components/layout/Header';
+import { client } from '@/lib/web3/client';
+import { ConnectButton } from "thirdweb/react";
+import { createWallet } from 'thirdweb/dist/types/exports/wallets.native';
+
 
 const Cart = () => {
   const [ isOpen, setIsOpen ] = useState (false)
@@ -222,6 +226,10 @@ const Cart = () => {
                         </Text>
                       </View>
                     </Pressable>
+
+                    <ConnectButton client={client} wallets={[
+                      createWallet("io.metamask")
+                    ]} />
                     
                     {/* QPay Option */}
         <Pressable
