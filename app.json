@@ -18,7 +18,14 @@
           "origin": "https://n"
         }
       ],
-      
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 26
+          }
+        }
+      ],
       [
         "@react-native-google-signin/google-signin",
         {
@@ -103,7 +110,7 @@
       "enabled": true,
       "requestHeaders": {
         "expo-channel-name": "production",
-        "expo-runtime-version": "0.8.1",
+        "expo-runtime-version": "0.8.3",
         "channel-name": "production"
       }
     }
