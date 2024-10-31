@@ -1,13 +1,13 @@
-// CartSummary.tsx
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Platform } from 'react-native';
 import { router } from 'expo-router';
 import Color from '@/constants/Color';
-import { BODY_1_BOLD, BODY_2_MEDIUM, BUTTON_48 } from '@/constants/typography';
-import { ShoppingCart } from 'iconsax-react-native';
+import { BODY_1_BOLD, CAPTION_1_REGULAR } from '@/constants/typography';
 import { useMenuStore } from '@/lib/store/menuStore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
+import Button from '@/components/ui/Button';
+import LinearGradient from 'react-native-linear-gradient';
 
 interface CartSummaryProps {
   onClose?: () => void;
@@ -23,25 +23,29 @@ const CartSummary: React.FC<CartSummaryProps> = ({ onClose }) => {
     <Animated.View 
       entering={SlideInDown.springify().damping(15)}
       exiting={SlideOutDown.springify().damping(15)}
-      style={[
-        styles.container, 
-        { paddingBottom: insets.bottom || 16 }
-      ]}
+      style={styles.container}
     >
-      <View style={styles.content}>
-        <TouchableOpacity 
-          style={styles.mainButton}
-          onPress={() => router.push('/Cart')}
-          activeOpacity={0.7}
-        >
-          <View style={styles.leftSection}>
-            <ShoppingCart size={24} color={Color.base.White} />
-            <View style={styles.verticalDivider} />
-            <Text style={styles.itemCount}>{getTotalQuantity()} items</Text>
+      <LinearGradient
+        colors={['#242E35EE', '#242E35FF']}
+        style={styles.gradient}
+      >
+        <View style={[styles.content, { paddingBottom: insets.bottom }]}>
+          <View style={styles.mainContent}>
+            <View style={styles.leftSection}>
+              <Text style={styles.total}>${getTotalPrice().toFixed(2)} USD</Text>
+              <Text style={styles.itemCount}>{getTotalQuantity()} items</Text>
+            </View>
+            <Button 
+              style={styles.CartButton} 
+              variant='primary' 
+              textStyle="primary" 
+              onPress={() => router.push('/Cart')}
+            >
+              <Text>Go to Cart</Text>
+            </Button>
           </View>
-          <Text style={styles.total}>${getTotalPrice().toFixed(2)}</Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </LinearGradient>
     </Animated.View>
   );
 };
@@ -52,51 +56,44 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'transparent',
-    paddingHorizontal: 16,
+    height: 100,
     zIndex: 1000,
+  },
+  gradient: {
+    width: '100%',
+    height: 200,
+    backgroundColor: 'transparent',
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: Color.Gray.gray400
   },
   content: {
     width: '100%',
-    backgroundColor: Color.Gray.gray500,
-    borderRadius: 48,
+    backgroundColor: 'transparent',
     padding: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
-  mainButton: {
-    backgroundColor: Color.Gray.gray500,
+  mainContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    alignItems: 'flex-start',
+    padding: 24,
     borderRadius: 48,
+    height: '100%',
   },
   leftSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  verticalDivider: {
-    width: 1,
-    height: 24,
-    backgroundColor: Color.Gray.gray200,
-    opacity: 0.3,
+    flexDirection: 'column',
+    gap: 8,
   },
   itemCount: {
-    ...BODY_2_MEDIUM,
-    color: Color.base.White,
+    ...CAPTION_1_REGULAR,
+    color: Color.Gray.gray50,
   },
   total: {
     ...BODY_1_BOLD,
     color: Color.base.White,
+  },
+  CartButton: {
+    // Your existing button styles
   },
 });
 

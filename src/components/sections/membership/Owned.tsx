@@ -287,11 +287,6 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
         </ScrollView>
       
       </View>
-        {totalItems > 0 && (
-          <View style={{position:'absolute',width:'100%', bottom:30}}>
-            <CartSummary />
-          </View>
-        )}
         </>
     );
   };

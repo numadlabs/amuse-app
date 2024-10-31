@@ -7,6 +7,7 @@ import { BODY_1_BOLD, BODY_2_MEDIUM, BUTTON_48, CAPTION_1_REGULAR } from '@/cons
 import Header from '@/components/layout/Header';
 import { client } from '@/lib/web3/client';
 import { ConnectButton } from "thirdweb/react";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Cart = () => {
   const [ isOpen, setIsOpen ] = useState (false)
@@ -105,6 +106,7 @@ const Cart = () => {
   };
 
   return (
+    <SafeAreaView style={{flex: 1}}>
     <View style={styles.container}>
       <Header title='Cart'/>
       {/* <Text style={styles.title}>Your Order</Text> */}
@@ -277,6 +279,7 @@ const Cart = () => {
         )}
       </ScrollView>
     </View>
+    </SafeAreaView>
   );
 };
 

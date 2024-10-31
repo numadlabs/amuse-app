@@ -40,6 +40,8 @@ import { BODY_2_REGULAR, BUTTON_48, H6 } from "@/constants/typography";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "@/components/layout/Header";
 import RestaurantHeader from "@/components/layout/RestaurantHeader";
+import { useMenuStore } from "@/lib/store/menuStore";
+import CartSummary from "@/components/sections/membership/CartSummary";
 
 const Restaurant = () => {
   const { id } = useLocalSearchParams();
@@ -50,8 +52,9 @@ const Restaurant = () => {
   const [perkId, setPerkId] = useState<string>("");
   const currentTime = moment().format("HH:mm:ss");
   const currentDayOfWeek = moment().isoWeekday();
+  const { getTotalQuantity } = useMenuStore();
 
-
+  const totalItems = getTotalQuantity();
   const { data: restaurantsData, isLoading } = useQuery({
     queryKey: restaurantKeys.detail(id as string),
     queryFn: () => getRestaurantId(id, currentTime, currentDayOfWeek),
@@ -310,6 +313,12 @@ const Restaurant = () => {
             </Modal>
           )}
         </View>
+        
+        {totalItems > 0 && (
+          <View style={{position:'absolute',width:'100%', bottom:30}}>
+            <CartSummary />
+          </View>
+        )}
       </SafeAreaView>
     </>
   );
