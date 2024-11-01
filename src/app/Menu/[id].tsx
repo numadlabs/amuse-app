@@ -60,7 +60,7 @@ import CartButton from '@/components/atom/CartButton';
     };
 
     return (
-      <>
+      <SafeAreaView style={{flex: 1}}>
         <View style={styles.container}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
@@ -168,7 +168,7 @@ import CartButton from '@/components/atom/CartButton';
           />
           </View>
         </View>
-      </>
+      </SafeAreaView>
     );
   }
 
