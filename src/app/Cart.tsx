@@ -10,17 +10,17 @@ import { ConnectButton } from "thirdweb/react";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Cart = () => {
-  const [ isOpen, setIsOpen ] = useState (false)
-  const { 
-    selectedItems, 
-    removeItem, 
+  const [isOpen, setIsOpen] = useState(false)
+  const {
+    selectedItems,
+    removeItem,
     updateItemQuantity,
     getTotalPrice,
     clearItems
   } = useMenuStore();
   const handlePayment = () => {
     setIsOpen(!isOpen);
-  } 
+  }
   const handleIncreaseQuantity = (itemId: string, currentQuantity: number) => {
     updateItemQuantity(itemId, currentQuantity + 1);
   };
@@ -58,7 +58,7 @@ const Cart = () => {
       if (timer) clearInterval(timer);
     };
   }, [selectedPayment, timeLeft]);
-  
+
   useEffect(() => {
     if (selectedPayment === 'qpay') {
       setTimeLeft(180);
@@ -67,7 +67,7 @@ const Cart = () => {
 
   const handleMetaMaskPress = async () => {
     setSelectedPayment('metamask');
-    
+
     // MetaMask deep linking
     const metamaskUrl = 'metamask://'; // Replace with your specific MetaMask deep link
     try {
@@ -106,79 +106,79 @@ const Cart = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-    <View style={styles.container}>
-      <Header title='Cart'/>
-      {/* <Text style={styles.title}>Your Order</Text> */}
-      
-      <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        {selectedItems.length === 0 ? (
-          renderEmptyCart()
-        ) : (
-          <>
-            <View style={styles.itemsContainer}>
-              {selectedItems.map((item) => (
-                <View key={item.id} style={styles.cartItem}>
-                  <View style={styles.itemImageContainer}>
-                    <Image source={item.image} style={styles.itemImage} />
-                  </View>
-                  
-                  <View style={styles.itemDetails}>
-                    <View style={styles.itemHeader}>
-                      <Text style={styles.itemName}>{item.name}</Text>
-                      <TouchableOpacity 
-                        onPress={() => handleRemoveItem(item.id)}
-                        style={styles.removeButton}
-                      >
-                        <CloseCircle size={24} color={Color.Gray.gray50} />
-                      </TouchableOpacity>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <Header title='Cart' />
+        {/* <Text style={styles.title}>Your Order</Text> */}
+
+        <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+          {selectedItems.length === 0 ? (
+            renderEmptyCart()
+          ) : (
+            <>
+              <View style={styles.itemsContainer}>
+                {selectedItems.map((item) => (
+                  <View key={item.id} style={styles.cartItem}>
+                    <View style={styles.itemImageContainer}>
+                      <Image source={item.image} style={styles.itemImage} />
                     </View>
-                    
-                    <Text style={styles.itemPrice}>
-                      ${formatPrice(item.price)}
-                    </Text>
-                    
-                    <View style={styles.quantityContainer}>
-                      <TouchableOpacity 
-                        onPress={() => handleDecreaseQuantity(item.id, item.quantity || 1)}
-                        style={styles.quantityButton}
-                      >
-                        <Minus size={20} color={Color.base.White} />
-                      </TouchableOpacity>
-                      
-                      <Text style={styles.quantityText}>
-                        {item.quantity || 1}
+
+                    <View style={styles.itemDetails}>
+                      <View style={styles.itemHeader}>
+                        <Text style={styles.itemName}>{item.name}</Text>
+                        <TouchableOpacity
+                          onPress={() => handleRemoveItem(item.id)}
+                          style={styles.removeButton}
+                        >
+                          <CloseCircle size={24} color={Color.Gray.gray50} />
+                        </TouchableOpacity>
+                      </View>
+
+                      <Text style={styles.itemPrice}>
+                        ${formatPrice(item.price)}
                       </Text>
-                      
-                      <TouchableOpacity 
-                        onPress={() => handleIncreaseQuantity(item.id, item.quantity || 1)}
-                        style={styles.quantityButton}
-                      >
-                        <Add size={20} color={Color.base.White} />
-                      </TouchableOpacity>
+
+                      <View style={styles.quantityContainer}>
+                        <TouchableOpacity
+                          onPress={() => handleDecreaseQuantity(item.id, item.quantity || 1)}
+                          style={styles.quantityButton}
+                        >
+                          <Minus size={20} color={Color.base.White} />
+                        </TouchableOpacity>
+
+                        <Text style={styles.quantityText}>
+                          {item.quantity || 1}
+                        </Text>
+
+                        <TouchableOpacity
+                          onPress={() => handleIncreaseQuantity(item.id, item.quantity || 1)}
+                          style={styles.quantityButton}
+                        >
+                          <Add size={20} color={Color.base.White} />
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
+                ))}
+              </View>
+
+              <View style={styles.summaryContainer}>
+                <View style={styles.summaryRow}>
+                  <Text style={styles.summaryLabel}>Subtotal</Text>
+                  <Text style={styles.summaryValue}>
+                    ${getTotalPrice().toFixed(2)}
+                  </Text>
                 </View>
-              ))}
-            </View>
-
-            <View style={styles.summaryContainer}>
-              <View style={styles.summaryRow}>
-                <Text style={styles.summaryLabel}>Subtotal</Text>
-                <Text style={styles.summaryValue}>
-                  ${getTotalPrice().toFixed(2)}
-                </Text>
+                {/* Add more summary rows here (tax, delivery, etc.) if needed */}
+                <View style={styles.totalRow}>
+                  <Text style={styles.totalLabel}>Total</Text>
+                  <Text style={styles.totalValue}>
+                    ${getTotalPrice().toFixed(2)}
+                  </Text>
+                </View>
               </View>
-              {/* Add more summary rows here (tax, delivery, etc.) if needed */}
-              <View style={styles.totalRow}>
-                <Text style={styles.totalLabel}>Total</Text>
-                <Text style={styles.totalValue}>
-                  ${getTotalPrice().toFixed(2)}
-                </Text>
-              </View>
-            </View>
 
-            {/* <View style={styles.buttonsContainer}>
+              {/* <View style={styles.buttonsContainer}>
               <TouchableOpacity 
                 style={styles.clearButton}
                 onPress={clearItems}
@@ -197,11 +197,11 @@ const Cart = () => {
               </TouchableOpacity>
               
             </View> */}
-                  <View style={styles.paymentContainer}>
-                    <Text style={styles.paymentTitle}>Payment method</Text>
-                    
-                    {/* MetaMask Option */}
-                    <Pressable
+              <View style={styles.paymentContainer}>
+                <Text style={styles.paymentTitle}>Payment method</Text>
+
+                {/* MetaMask Option */}
+                {/* <Pressable
                       onPress={handleMetaMaskPress}
                       style={({ pressed }) => ({
                         flexDirection: 'row',
@@ -225,60 +225,60 @@ const Cart = () => {
                           Pay with cryptocurrency
                         </Text>
                       </View>
-                    </Pressable>
+                    </Pressable> */}
+                <View style={{ marginBottom: 12 }}>
 
-                    <ConnectButton client={client} />
-                    
-                    {/* QPay Option */}
-        <Pressable
-          onPress={handleQPayPress}
-          style={({ pressed }) => ({
-            flexDirection: 'row',
-            alignItems: 'center',
-            padding: 16,
-            backgroundColor: pressed ? Color.Gray.gray500 : Color.Gray.gray400,
-            borderRadius: 8,
-            borderWidth: 1,
-            borderColor: selectedPayment === 'qpay' ? Color.Gray.gray200 : Color.Gray.gray400,
-            marginBottom: selectedPayment === 'qpay' ? 12 : 8
-          })}>
-          <Image 
-            source={require('../public/images/qpay.jpg')}
-            style={{ width: 36, height: 36, marginRight: 12 }}
-          />
-          <View>
-            <Text style={{ fontSize: 16, fontWeight: '500', color: Color.base.White }}>
-              QPay
-            </Text>
-            <Text style={{ fontSize: 14, color: Color.Gray.gray200 }}>
-              Fast and secure local payment
-            </Text>
-          </View>
-        </Pressable>
-        
-        {/* QR Code with Timer */}
-        {selectedPayment === 'qpay' && (
-          <View style={styles.qrContainer}>
-            <Pressable onPress={handleQRPress}>
-              <Image 
-                source={require('../public/images/qr-code.png')}
-                style={styles.qrImage}
-                resizeMode="contain"
-              />
-            </Pressable>
-            <View style={styles.timerContainer}>
-              <Text style={styles.timerText}>
-                Time remaining: {formatTime(timeLeft)}
-              </Text>
-            </View>
-          </View>
-        )}
+                  <ConnectButton client={client} />
+                </View>
+                <Pressable
+                  onPress={handleQPayPress}
+                  style={({ pressed }) => ({
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    padding: 16,
+                    backgroundColor: pressed ? Color.Gray.gray500 : Color.Gray.gray400,
+                    borderRadius: 8,
+                    borderWidth: 1,
+                    borderColor: selectedPayment === 'qpay' ? Color.Gray.gray200 : Color.Gray.gray400,
+                    marginBottom: selectedPayment === 'qpay' ? 12 : 8
+                  })}>
+                  <Image
+                    source={require('../public/images/qpay.jpg')}
+                    style={{ width: 36, height: 36, marginRight: 12 }}
+                  />
+                  <View>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: Color.base.White }}>
+                      QPay
+                    </Text>
+                    <Text style={{ fontSize: 14, color: Color.Gray.gray200 }}>
+                      Fast and secure local payment
+                    </Text>
+                  </View>
+                </Pressable>
+
+                {/* QR Code with Timer */}
+                {selectedPayment === 'qpay' && (
+                  <View style={styles.qrContainer}>
+                    <Pressable onPress={handleQRPress}>
+                      <Image
+                        source={require('../public/images/qr-code.png')}
+                        style={styles.qrImage}
+                        resizeMode="contain"
+                      />
+                    </Pressable>
+                    <View style={styles.timerContainer}>
+                      <Text style={styles.timerText}>
+                        Time remaining: {formatTime(timeLeft)}
+                      </Text>
+                    </View>
+                  </View>
+                )}
               </View>
-          </>
-          
-        )}
-      </ScrollView>
-    </View>
+            </>
+
+          )}
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
