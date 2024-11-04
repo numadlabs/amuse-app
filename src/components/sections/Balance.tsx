@@ -11,12 +11,12 @@ interface BalanceProps {
   amount?: number;
   convertedAmount: number;
   currencyName: string;
-  handleToggle: () => void;
+  // handleToggle: () => void;
 }
 
 const Balance: React.FC<BalanceProps> = ({
   amount,
-  handleToggle,
+  // handleToggle,
   convertedAmount,
   currencyName,
 }) => {
@@ -76,7 +76,7 @@ const Balance: React.FC<BalanceProps> = ({
               alignItems: "center",
             }}
           >
-            <View
+            {/* <View
               style={{ flexDirection: "row", gap: 4, alignItems: "center" }}
             >
               <Text
@@ -97,12 +97,12 @@ const Balance: React.FC<BalanceProps> = ({
                   ...CAPTION_1_REGULAR,
                 }}
               >
-                {amount?.toFixed(8)} Bitcoin
+                {amount?.toFixed(8)} points
               </Text>
-            </View>
-            <TouchableOpacity onPress={handleToggle}>
+            </View> */}
+            {/* <TouchableOpacity onPress={handleToggle}>
               <InfoCircle size={16} color={Color.Gray.gray50} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </LinearGradient>

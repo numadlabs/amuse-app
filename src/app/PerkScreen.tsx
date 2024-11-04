@@ -92,7 +92,7 @@ const PerkScreen = () => {
                     textAlign: 'center',
                   }}
                 >
-                  No bitcoin awarded, contact our Help desk if necessary
+                  No points awarded, contact our Help desk if necessary
                 </Text>
               ) : (
                 <Text
@@ -102,7 +102,7 @@ const PerkScreen = () => {
                     textAlign: 'center',
                   }}
                 >
-                  +{Number(btcAmount).toFixed(2)} EUR of Bitcoin
+                  +{Number(btcAmount).toFixed(2)} points
                 </Text>
               )}
             </LinearGradient>

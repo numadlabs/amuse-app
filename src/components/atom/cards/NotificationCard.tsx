@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import Color from '@/constants/Color'
-import { Bitcoin, ScanBarcode, TicketStar } from 'iconsax-react-native'
+import { Add, Bitcoin, ScanBarcode, TicketStar } from 'iconsax-react-native'
 import { BODY_2_MEDIUM, CAPTION_1_REGULAR, CAPTION_2_REGULAR } from '@/constants/typography'
 
 
@@ -22,9 +22,9 @@ const NotificationCard: React.FC<NotificationProps> = ({title,type, time, descri
       case 'TAP':
         return <ScanBarcode size={20} color="#fff" />;
       case 'BONUS':
-        return <Bitcoin size={20} color="#fff" />;
+        return <Add size={20} color="#fff" />;
       default:
-        return <Bitcoin size={20} color="#fff" />;
+        return <Add size={20} color="#fff" />;
     }
   }
   return (
