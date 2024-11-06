@@ -1,10 +1,36 @@
 {
   "expo": {
+    "version": "0.1.1",
+    "runtimeVersion": "0.1.1",
     "extra": {
       "eas": {
         "projectId": "e1ade013-0e79-414a-b787-4dd400d28d1b"
       }
     },
-    "owner": "numad-labs"
+    "owner": "numad-labs",
+    "icon": "./src/public/images/Lumi.jpg",
+    "name": "Lumi Mongolia",
+    "ios": {
+      "bundleIdentifier": "com.numadlabs.lumimongolia",
+      "supportsTablet": false,
+      "config": {
+        "googleMapsApiKey": "AIzaSyDRmZj1kAxRzMazOVn-RNBPPuV3INqunw8"
+      },
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "The app accesses your photos to let you share them with your friends.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "We use location data to assist you in locating restaurants participating in a program on the Platform.",
+        "NSLocationWhenInUseUsageDescription": "We use location data to assist you in locating restaurants participating in a program on the Platform.",
+        "NSLocationAlwaysUsageDescription": "We use location data to assist you in locating restaurants participating in a program on the Platform.",
+        "NSUserNotificationUsageDescription": "We'd like to send you notifications for important updates and new offers."
+      }
+    },
+    "android": {
+      "package": "com.numadlabs.lumimongolia",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCu-Ixr9LgDblIrwqWIIbXc_HEnXJBSiPs"
+        }
+      }
+    }
   }
 }
