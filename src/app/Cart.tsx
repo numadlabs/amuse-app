@@ -8,6 +8,8 @@ import Header from '@/components/layout/Header';
 import { client } from '@/lib/web3/client';
 import { ConnectButton } from "thirdweb/react";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useMutation } from '@tanstack/react-query';
+import { createBasket } from '@/lib/service/mutationHelper';
 
 const Cart = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -32,6 +34,18 @@ const Cart = () => {
   const handleRemoveItem = (itemId: string) => {
     removeItem(itemId);
   };
+
+  
+  const { mutateAsync: createBasketMutation } = useMutation({
+    mutationFn: createBasket,
+  });
+
+  const handleBuyProduct = () => {
+    const response = createBasketMutation({productId: '48e4f04a-95dd-4e45-9292-c76bfff35023', quantity: 1, userId: '915be01f-9f02-4544-8926-6a57aa663cb4'})
+    if(response){
+      console.log(response);
+    }
+  }
 
   const renderEmptyCart = () => (
     <View style={styles.emptyContainer}>
@@ -233,7 +247,7 @@ const Cart = () => {
 
                 {/* QPay Option */}
                 <Pressable
-                  onPress={handleQPayPress}
+                  onPress={handleBuyProduct}
                   style={({ pressed }) => ({
                     flexDirection: 'row',
                     alignItems: 'center',

@@ -50,7 +50,7 @@ const TermsAndCondo = () => {
             Disclaimer: The Lumi Application is solely a platform for
             third-parties to engage with users. Any offerings of rewards or
             securities accessible through the Application are provided by third-
-            parties. Hash2 Labs LLC, the developer of the Application, is not liable
+            parties. Numad Labs LLC, the developer of the Application, is not liable
             for any offers, rewards or any associated claims, damages or losses.
           </Text>
 
