@@ -98,6 +98,26 @@ const Cart = () => {
     }
   }, [selectedPayment]);
 
+  const handleMetaMaskPress = async () => {
+    setSelectedPayment('metamask');
+
+    // MetaMask deep linking
+    const metamaskUrl = 'metamask://'; // Replace with your specific MetaMask deep link
+    try {
+      const supported = await Linking.canOpenURL(metamaskUrl);
+      if (supported) {
+        await Linking.openURL(metamaskUrl);
+      } else {
+        // Handle case where MetaMask is not installed
+        const appStoreUrl = 'https://metamask.io/download/';
+        await Linking.openURL(appStoreUrl);
+      }
+    } catch (error) {
+      console.error('Error opening MetaMask:', error);
+      // Handle error - maybe show an alert to user
+    }
+  };
+
   const handleQPayPress = () => {
     setSelectedPayment(selectedPayment === "qpay" ? null : "qpay");
   };
@@ -124,13 +144,10 @@ const Cart = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Header title="Cart" />
+        <Header title='Cart' />
         {/* <Text style={styles.title}>Your Order</Text> */}
 
-        <ScrollView
-          style={styles.scrollContainer}
-          showsVerticalScrollIndicator={false}
-        >
+        <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
           {selectedItems.length === 0 ? (
             renderEmptyCart()
           ) : (
