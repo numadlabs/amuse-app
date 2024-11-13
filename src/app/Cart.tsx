@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -6,10 +6,6 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  Pressable,
-  Linking,
-  Modal,
-  GestureResponderEvent,
 } from "react-native";
 import Color from "@/constants/Color";
 import { useMenuStore } from "@/lib/store/menuStore";
@@ -21,22 +17,13 @@ import {
   CAPTION_1_REGULAR,
 } from "@/constants/typography";
 import Header from "@/components/layout/Header";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useMutation } from "@tanstack/react-query";
-import { createBasket } from "@/lib/service/mutationHelper";
+import { client } from "@/lib/web3/client";
+import { ConnectButton } from "thirdweb/react";
 
 const Cart = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const {
-    selectedItems,
-    removeItem,
-    updateItemQuantity,
-    getTotalPrice,
-    clearItems,
-  } = useMenuStore();
-  const handlePayment = () => {
-    setIsOpen(!isOpen);
-  };
+  const { selectedItems, removeItem, updateItemQuantity, getTotalPrice } =
+    useMenuStore();
+
   const handleIncreaseQuantity = (itemId: string, currentQuantity: number) => {
     updateItemQuantity(itemId, currentQuantity + 1);
   };
@@ -47,21 +34,6 @@ const Cart = () => {
 
   const handleRemoveItem = (itemId: string) => {
     removeItem(itemId);
-  };
-
-  const { mutateAsync: createBasketMutation } = useMutation({
-    mutationFn: createBasket,
-  });
-
-  const handleBuyProduct = () => {
-    const response = createBasketMutation({
-      productId: "48e4f04a-95dd-4e45-9292-c76bfff35023",
-      quantity: 1,
-      userId: "915be01f-9f02-4544-8926-6a57aa663cb4",
-    });
-    if (response) {
-      console.log(response);
-    }
   };
 
   const renderEmptyCart = () => (
@@ -76,211 +48,90 @@ const Cart = () => {
   const formatPrice = (price: string) => {
     return parseFloat(price.replace("$", "")).toFixed(2);
   };
-  const [selectedPayment, setSelectedPayment] = useState(null);
-  const [timeLeft, setTimeLeft] = useState(180); // 3 minutes in seconds
-
-  useEffect(() => {
-    let timer;
-    if (selectedPayment === "qpay" && timeLeft > 0) {
-      timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-    }
-
-    return () => {
-      if (timer) clearInterval(timer);
-    };
-  }, [selectedPayment, timeLeft]);
-
-  useEffect(() => {
-    if (selectedPayment === "qpay") {
-      setTimeLeft(180);
-    }
-  }, [selectedPayment]);
-
-  const handleMetaMaskPress = async () => {
-    setSelectedPayment('metamask');
-
-    // MetaMask deep linking
-    const metamaskUrl = 'metamask://'; // Replace with your specific MetaMask deep link
-    try {
-      const supported = await Linking.canOpenURL(metamaskUrl);
-      if (supported) {
-        await Linking.openURL(metamaskUrl);
-      } else {
-        // Handle case where MetaMask is not installed
-        const appStoreUrl = 'https://metamask.io/download/';
-        await Linking.openURL(appStoreUrl);
-      }
-    } catch (error) {
-      console.error('Error opening MetaMask:', error);
-      // Handle error - maybe show an alert to user
-    }
-  };
-
-  const handleQPayPress = () => {
-    setSelectedPayment(selectedPayment === "qpay" ? null : "qpay");
-  };
-
-  const handleQRPress = async () => {
-    try {
-      // Try to open Khanbank app directly using package name
-      await Linking.openURL("khanbank://q?qPay_QRcode=");
-    } catch (error) {
-      console.error("Error opening Khanbank:", error);
-      // If app is not installed, open Play Store
-      await Linking.openURL(
-        "https://play.google.com/store/apps/details?id=com.khanbank.retail",
-      );
-    }
-  };
-
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <Header title='Cart' />
-        {/* <Text style={styles.title}>Your Order</Text> */}
+    <View style={styles.container}>
+      <Header title="Cart" />
+      <ScrollView
+        style={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        {selectedItems.length === 0 ? (
+          renderEmptyCart()
+        ) : (
+          <>
+            <View style={styles.itemsContainer}>
+              {selectedItems.map((item) => (
+                <View key={item.id} style={styles.cartItem}>
+                  <View style={styles.itemImageContainer}>
+                    <Image source={item.image} style={styles.itemImage} />
+                  </View>
 
-        <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-          {selectedItems.length === 0 ? (
-            renderEmptyCart()
-          ) : (
-            <>
-              <View style={styles.itemsContainer}>
-                {selectedItems.map((item) => (
-                  <View key={item.id} style={styles.cartItem}>
-                    <View style={styles.itemImageContainer}>
-                      <Image source={item.image} style={styles.itemImage} />
+                  <View style={styles.itemDetails}>
+                    <View style={styles.itemHeader}>
+                      <Text style={styles.itemName}>{item.name}</Text>
+                      <TouchableOpacity
+                        onPress={() => handleRemoveItem(item.id)}
+                        style={styles.removeButton}
+                      >
+                        <CloseCircle size={24} color={Color.Gray.gray50} />
+                      </TouchableOpacity>
                     </View>
 
-                    <View style={styles.itemDetails}>
-                      <View style={styles.itemHeader}>
-                        <Text style={styles.itemName}>{item.name}</Text>
-                        <TouchableOpacity
-                          onPress={() => handleRemoveItem(item.id)}
-                          style={styles.removeButton}
-                        >
-                          <CloseCircle size={24} color={Color.Gray.gray50} />
-                        </TouchableOpacity>
-                      </View>
+                    <Text style={styles.itemPrice}>
+                      ${formatPrice(item.price)}
+                    </Text>
 
-                      <Text style={styles.itemPrice}>
-                        ${formatPrice(item.price)}
+                    <View style={styles.quantityContainer}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          handleDecreaseQuantity(item.id, item.quantity || 1)
+                        }
+                        style={styles.quantityButton}
+                      >
+                        <Minus size={20} color={Color.base.White} />
+                      </TouchableOpacity>
+
+                      <Text style={styles.quantityText}>
+                        {item.quantity || 1}
                       </Text>
 
-                      <View style={styles.quantityContainer}>
-                        <TouchableOpacity
-                          onPress={() =>
-                            handleDecreaseQuantity(item.id, item.quantity || 1)
-                          }
-                          style={styles.quantityButton}
-                        >
-                          <Minus size={20} color={Color.base.White} />
-                        </TouchableOpacity>
-
-                        <Text style={styles.quantityText}>
-                          {item.quantity || 1}
-                        </Text>
-
-                        <TouchableOpacity
-                          onPress={() =>
-                            handleIncreaseQuantity(item.id, item.quantity || 1)
-                          }
-                          style={styles.quantityButton}
-                        >
-                          <Add size={20} color={Color.base.White} />
-                        </TouchableOpacity>
-                      </View>
+                      <TouchableOpacity
+                        onPress={() =>
+                          handleIncreaseQuantity(item.id, item.quantity || 1)
+                        }
+                        style={styles.quantityButton}
+                      >
+                        <Add size={20} color={Color.base.White} />
+                      </TouchableOpacity>
                     </View>
                   </View>
-                ))}
-              </View>
-
-              <View style={styles.summaryContainer}>
-                <View style={styles.summaryRow}>
-                  <Text style={styles.summaryLabel}>Subtotal</Text>
-                  <Text style={styles.summaryValue}>
-                    ${getTotalPrice().toFixed(2)}
-                  </Text>
                 </View>
-                {/* Add more summary rows here (tax, delivery, etc.) if needed */}
-                <View style={styles.totalRow}>
-                  <Text style={styles.totalLabel}>Total</Text>
-                  <Text style={styles.totalValue}>
-                    ${getTotalPrice().toFixed(2)}
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.paymentContainer}>
-                <Text style={styles.paymentTitle}>Payment method</Text>
-                {/* QPay Option */}
-                <Pressable
-                  onPress={handleBuyProduct}
-                  style={({ pressed }) => ({
-                    flexDirection: "row",
-                    alignItems: "center",
-                    padding: 16,
-                    backgroundColor: pressed
-                      ? Color.Gray.gray500
-                      : Color.Gray.gray400,
-                    borderRadius: 8,
-                    borderWidth: 1,
-                    borderColor:
-                      selectedPayment === "qpay"
-                        ? Color.Gray.gray200
-                        : Color.Gray.gray400,
-                    marginBottom: selectedPayment === "qpay" ? 12 : 8,
-                  })}
-                >
-                  <Image
-                    source={require("../public/images/qpay.jpg")}
-                    style={{ width: 36, height: 36, marginRight: 12 }}
-                  />
-                  <View>
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        fontWeight: "500",
-                        color: Color.base.White,
-                      }}
-                    >
-                      QPay
-                    </Text>
-                    <Text style={{ fontSize: 14, color: Color.Gray.gray200 }}>
-                      Fast and secure local payment
-                    </Text>
-                  </View>
-                </Pressable>
+              ))}
+            </View>
 
-                {/* QR Code with Timer */}
-                {selectedPayment === "qpay" && (
-                  <View style={styles.qrContainer}>
-                    <Pressable onPress={handleQRPress}>
-                      <Image
-                        source={require("../public/images/qr-code.png")}
-                        style={styles.qrImage}
-                        resizeMode="contain"
-                      />
-                    </Pressable>
-                    <View style={styles.timerContainer}>
-                      <Text style={styles.timerText}>
-                        Time remaining: {formatTime(timeLeft)}
-                      </Text>
-                    </View>
-                  </View>
-                )}
+            <View style={styles.summaryContainer}>
+              <View style={styles.summaryRow}>
+                <Text style={styles.summaryLabel}>Subtotal</Text>
+                <Text style={styles.summaryValue}>
+                  ${getTotalPrice().toFixed(2)}
+                </Text>
               </View>
-            </>
-          )}
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+              <View style={styles.totalRow}>
+                <Text style={styles.totalLabel}>Total</Text>
+                <Text style={styles.totalValue}>
+                  ${getTotalPrice().toFixed(2)}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.paymentContainer}>
+              <Text style={styles.paymentTitle}>Payment method</Text>
+              <ConnectButton client={client} />
+            </View>
+          </>
+        )}
+      </ScrollView>
+    </View>
   );
 };
 
