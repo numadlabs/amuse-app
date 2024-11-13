@@ -23,7 +23,14 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import { SERVER_SETTING } from "@/constants/serverSettings";
-import { BODY_1_BOLD, BODY_2_BOLD, CAPTION_1_MEDIUM, CAPTION_1_REGULAR, H3, STYLIZED_UPPERCASE_REGULAR } from "@/constants/typography";
+import {
+  BODY_1_BOLD,
+  BODY_2_BOLD,
+  CAPTION_1_MEDIUM,
+  CAPTION_1_REGULAR,
+  H3,
+  STYLIZED_UPPERCASE_REGULAR,
+} from "@/constants/typography";
 
 interface ApassProp {
   name: string;
@@ -37,7 +44,6 @@ interface ApassProp {
   isLoading: boolean;
 }
 
-
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 const SkeletonLoader: React.FC = () => {
@@ -47,7 +53,7 @@ const SkeletonLoader: React.FC = () => {
     translateX.value = withRepeat(
       withTiming(width, { duration: 1000 }),
       -1,
-      false
+      false,
     );
   }, []);
 
@@ -62,7 +68,7 @@ const SkeletonLoader: React.FC = () => {
           style={StyleSheet.absoluteFill}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
-          colors={['transparent', 'rgba(255, 255, 255, 0.3)', 'transparent']}
+          colors={["transparent", "rgba(255, 255, 255, 0.3)", "transparent"]}
         />
       </Animated.View>
       <Animated.View style={styles.skeletonHeader}>
@@ -74,15 +80,11 @@ const SkeletonLoader: React.FC = () => {
       </Animated.View>
       <Animated.View style={styles.skeletonContent}>
         <Animated.View style={styles.skeletonImage} />
-        <Animated.View style={styles.skeletonStats}/>
+        <Animated.View style={styles.skeletonStats} />
       </Animated.View>
     </Animated.View>
   );
 };
-
-
-
-
 
 const APassCard: React.FC<ApassProp> = ({
   name,
@@ -257,7 +259,7 @@ const APassCard: React.FC<ApassProp> = ({
                         </View>
                       </LinearGradient>
                     </BlurView>
-                  
+
                     {hasBonus && (
                       <View
                         style={{
@@ -354,12 +356,12 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray500,
     borderRadius: 24,
     padding: 20,
-    height: 'auto',
-    overflow: 'hidden',
+    height: "auto",
+    overflow: "hidden",
   },
   skeletonHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 20,
   },
   skeletonLogo: {
@@ -381,8 +383,8 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray400,
   },
   skeletonContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   skeletonImage: {
     width: width / 2.1,

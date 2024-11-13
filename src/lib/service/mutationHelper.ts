@@ -277,7 +277,7 @@ export async function createBasket({
 }) {
   const response = await axios.post(
     "https://wine-alpha.vercel.app/api/openapi/basket",
-    { productId, quantity, userId }
+    { productId, quantity, userId },
   );
   if (response) {
     return response.data.basketId;
@@ -297,7 +297,7 @@ export async function createOrder({
 }) {
   const response = await axios.post(
     "https://wine-alpha.vercel.app/api/openapi/orders/create",
-    { basketId, userId, locationId, status}
+    { basketId, userId, locationId, status },
   );
   if (response) {
     console.log(response.data.data.id);
@@ -306,17 +306,3 @@ export async function createOrder({
     console.error("Error creating order");
   }
 }
-
-
-// export async function createInvoice() {
-//   const response = await axios.post(
-//     "https://wine-alpha.vercel.app/api/invoice/create",
-//     { basketId, userId, locationId, status}
-//   );
-//   if (response) {
-//     console.log(response.data.data.id);
-//     return response.data.data.id;
-//   } else {
-//     console.error("Error creating order");
-//   }
-// }
