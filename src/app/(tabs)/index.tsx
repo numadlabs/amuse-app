@@ -134,8 +134,8 @@ const Page = () => {
               <Balance
                 amount={user?.user?.balance}
                 convertedAmount={user?.convertedBalance}
-                currencyName="EUR"
-                handleToggle={() => toggleBalanceBottomSheet()}
+                currencyName="points"
+              // handleToggle={() => toggleBalanceBottomSheet()}
               />
             </TouchableOpacity>
           )}

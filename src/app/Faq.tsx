@@ -9,7 +9,7 @@ const Faq = () => {
   const data = [
     {
       title: "What is Lumi?",
-      text: "Lumi is a restaurant loyalty app where users earn bitcoin for checking into restaurants and receive perks for being regular customers.",
+      text: "Lumi is a restaurant loyalty app where users earn points for checking into restaurants and receive perks for being regular customers.",
     },
     {
       title: "What are Membership Cards?",
@@ -17,11 +17,11 @@ const Faq = () => {
     },
     {
       title: "How do I earn rewards with Lumi?",
-      text: "You earn bitcoin and extra perks by scanning a QR code and thereby checking into restaurants on the check-in page. The more you visit, the more you'll be rewarded.",
+      text: "You earn points and extra perks by scanning a QR code and thereby checking into restaurants on the check-in page. The more you visit, the more you'll be rewarded.",
     },
     {
       title: "Do I need to deal with crypto wallets?",
-      text: "No, there's no need for crypto wallet complexity. Your bitcoin rewards are managed within the app.",
+      text: "No, there's no need for crypto wallet complexity. Your point rewards are managed within the app.",
     },
     {
       title: "How do I redeem my rewards?",

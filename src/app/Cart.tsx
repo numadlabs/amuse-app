@@ -1,26 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Pressable, Linking, Modal, GestureResponderEvent } from 'react-native';
-import Color from '@/constants/Color';
-import { useMenuStore } from '@/lib/store/menuStore';
-import { Minus, Add, MinusCirlce, CloseCircle } from 'iconsax-react-native';
-import { BODY_1_BOLD, BODY_2_MEDIUM, BUTTON_48, CAPTION_1_REGULAR } from '@/constants/typography';
-import Header from '@/components/layout/Header';
-import { client } from '@/lib/web3/client';
-import { ConnectButton } from "thirdweb/react";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Pressable,
+  Linking,
+  Modal,
+  GestureResponderEvent,
+} from "react-native";
+import Color from "@/constants/Color";
+import { useMenuStore } from "@/lib/store/menuStore";
+import { Minus, Add, CloseCircle } from "iconsax-react-native";
+import {
+  BODY_1_BOLD,
+  BODY_2_MEDIUM,
+  BUTTON_48,
+  CAPTION_1_REGULAR,
+} from "@/constants/typography";
+import Header from "@/components/layout/Header";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useMutation } from "@tanstack/react-query";
+import { createBasket } from "@/lib/service/mutationHelper";
 
 const Cart = () => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
   const {
     selectedItems,
     removeItem,
     updateItemQuantity,
     getTotalPrice,
-    clearItems
+    clearItems,
   } = useMenuStore();
   const handlePayment = () => {
     setIsOpen(!isOpen);
-  }
+  };
   const handleIncreaseQuantity = (itemId: string, currentQuantity: number) => {
     updateItemQuantity(itemId, currentQuantity + 1);
   };
@@ -33,24 +49,41 @@ const Cart = () => {
     removeItem(itemId);
   };
 
+  const { mutateAsync: createBasketMutation } = useMutation({
+    mutationFn: createBasket,
+  });
+
+  const handleBuyProduct = () => {
+    const response = createBasketMutation({
+      productId: "48e4f04a-95dd-4e45-9292-c76bfff35023",
+      quantity: 1,
+      userId: "915be01f-9f02-4544-8926-6a57aa663cb4",
+    });
+    if (response) {
+      console.log(response);
+    }
+  };
+
   const renderEmptyCart = () => (
     <View style={styles.emptyContainer}>
       <Text style={styles.emptyText}>Your cart is empty</Text>
-      <Text style={styles.emptySubtext}>Add some delicious items to get started</Text>
+      <Text style={styles.emptySubtext}>
+        Add some delicious items to get started
+      </Text>
     </View>
   );
 
   const formatPrice = (price: string) => {
-    return parseFloat(price.replace('$', '')).toFixed(2);
+    return parseFloat(price.replace("$", "")).toFixed(2);
   };
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [timeLeft, setTimeLeft] = useState(180); // 3 minutes in seconds
 
   useEffect(() => {
     let timer;
-    if (selectedPayment === 'qpay' && timeLeft > 0) {
+    if (selectedPayment === "qpay" && timeLeft > 0) {
       timer = setInterval(() => {
-        setTimeLeft(prev => prev - 1);
+        setTimeLeft((prev) => prev - 1);
       }, 1000);
     }
 
@@ -60,7 +93,7 @@ const Cart = () => {
   }, [selectedPayment, timeLeft]);
 
   useEffect(() => {
-    if (selectedPayment === 'qpay') {
+    if (selectedPayment === "qpay") {
       setTimeLeft(180);
     }
   }, [selectedPayment]);
@@ -84,25 +117,28 @@ const Cart = () => {
       // Handle error - maybe show an alert to user
     }
   };
+
   const handleQPayPress = () => {
-    setSelectedPayment(selectedPayment === 'qpay' ? null : 'qpay');
+    setSelectedPayment(selectedPayment === "qpay" ? null : "qpay");
   };
 
   const handleQRPress = async () => {
     try {
       // Try to open Khanbank app directly using package name
-      await Linking.openURL('khanbank://q?qPay_QRcode=');
+      await Linking.openURL("khanbank://q?qPay_QRcode=");
     } catch (error) {
-      console.error('Error opening Khanbank:', error);
+      console.error("Error opening Khanbank:", error);
       // If app is not installed, open Play Store
-      await Linking.openURL('https://play.google.com/store/apps/details?id=com.khanbank.retail');
+      await Linking.openURL(
+        "https://play.google.com/store/apps/details?id=com.khanbank.retail",
+      );
     }
   };
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   return (
@@ -140,7 +176,9 @@ const Cart = () => {
 
                       <View style={styles.quantityContainer}>
                         <TouchableOpacity
-                          onPress={() => handleDecreaseQuantity(item.id, item.quantity || 1)}
+                          onPress={() =>
+                            handleDecreaseQuantity(item.id, item.quantity || 1)
+                          }
                           style={styles.quantityButton}
                         >
                           <Minus size={20} color={Color.base.White} />
@@ -151,7 +189,9 @@ const Cart = () => {
                         </Text>
 
                         <TouchableOpacity
-                          onPress={() => handleIncreaseQuantity(item.id, item.quantity || 1)}
+                          onPress={() =>
+                            handleIncreaseQuantity(item.id, item.quantity || 1)
+                          }
                           style={styles.quantityButton}
                         >
                           <Add size={20} color={Color.base.White} />
@@ -177,77 +217,39 @@ const Cart = () => {
                   </Text>
                 </View>
               </View>
-
-              {/* <View style={styles.buttonsContainer}>
-              <TouchableOpacity 
-                style={styles.clearButton}
-                onPress={clearItems}
-              >
-                <Text style={styles.clearButtonText}>Clear Cart</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={styles.checkoutButton}
-                onPress={() => {
-                  handlePayment()
-                }}
-              >
-                
-                <Text style={styles.checkoutButtonText}>Checkout</Text>
-              </TouchableOpacity>
-              
-            </View> */}
               <View style={styles.paymentContainer}>
                 <Text style={styles.paymentTitle}>Payment method</Text>
-
-                {/* MetaMask Option */}
-                {/* <Pressable
-                      onPress={handleMetaMaskPress}
-                      style={({ pressed }) => ({
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        padding: 16,
-                        backgroundColor: pressed ? Color.Gray.gray500 : Color.Gray.gray400,
-                        borderRadius: 8,
-                        borderWidth: 1,
-                        borderColor: selectedPayment === 'metamask' ? Color.Gray.gray200 : Color.Gray.gray400,
-                        marginBottom: 12
-                      })}>
-                      <Image 
-                        source={require('../public/images/MetaMask_Fox.png')}
-                        style={{ width: 36, height: 36, marginRight: 12 }}
-                      />
-                      <View>
-                        <Text style={{ fontSize: 16, fontWeight: '500', color: Color.base.White }}>
-                          MetaMask
-                        </Text>
-                        <Text style={{ fontSize: 14, color: Color.Gray.gray200 }}>
-                          Pay with cryptocurrency
-                        </Text>
-                      </View>
-                    </Pressable> */}
-                <View style={{ marginBottom: 12 }}>
-
-                  <ConnectButton client={client} />
-                </View>
+                {/* QPay Option */}
                 <Pressable
-                  onPress={handleQPayPress}
+                  onPress={handleBuyProduct}
                   style={({ pressed }) => ({
-                    flexDirection: 'row',
-                    alignItems: 'center',
+                    flexDirection: "row",
+                    alignItems: "center",
                     padding: 16,
-                    backgroundColor: pressed ? Color.Gray.gray500 : Color.Gray.gray400,
+                    backgroundColor: pressed
+                      ? Color.Gray.gray500
+                      : Color.Gray.gray400,
                     borderRadius: 8,
                     borderWidth: 1,
-                    borderColor: selectedPayment === 'qpay' ? Color.Gray.gray200 : Color.Gray.gray400,
-                    marginBottom: selectedPayment === 'qpay' ? 12 : 8
-                  })}>
+                    borderColor:
+                      selectedPayment === "qpay"
+                        ? Color.Gray.gray200
+                        : Color.Gray.gray400,
+                    marginBottom: selectedPayment === "qpay" ? 12 : 8,
+                  })}
+                >
                   <Image
-                    source={require('../public/images/qpay.jpg')}
+                    source={require("../public/images/qpay.jpg")}
                     style={{ width: 36, height: 36, marginRight: 12 }}
                   />
                   <View>
-                    <Text style={{ fontSize: 16, fontWeight: '500', color: Color.base.White }}>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "500",
+                        color: Color.base.White,
+                      }}
+                    >
                       QPay
                     </Text>
                     <Text style={{ fontSize: 14, color: Color.Gray.gray200 }}>
@@ -257,11 +259,11 @@ const Cart = () => {
                 </Pressable>
 
                 {/* QR Code with Timer */}
-                {selectedPayment === 'qpay' && (
+                {selectedPayment === "qpay" && (
                   <View style={styles.qrContainer}>
                     <Pressable onPress={handleQRPress}>
                       <Image
-                        source={require('../public/images/qr-code.png')}
+                        source={require("../public/images/qr-code.png")}
                         style={styles.qrImage}
                         resizeMode="contain"
                       />
@@ -275,7 +277,6 @@ const Cart = () => {
                 )}
               </View>
             </>
-
           )}
         </ScrollView>
       </View>
@@ -303,10 +304,10 @@ const styles = StyleSheet.create({
   qrImage: {
     width: 200,
     height: 200,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   cartItem: {
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: Color.Gray.gray500,
     borderRadius: 16,
     padding: 16,
@@ -318,21 +319,21 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 12,
-    overflow: 'hidden',
+    overflow: "hidden",
     backgroundColor: Color.Gray.gray400,
   },
   itemImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   itemDetails: {
     flex: 1,
     gap: 8,
   },
   itemHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   itemName: {
     ...BODY_2_MEDIUM,
@@ -347,8 +348,8 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   quantityContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 16,
     marginTop: 8,
   },
@@ -361,7 +362,7 @@ const styles = StyleSheet.create({
     ...BODY_2_MEDIUM,
     color: Color.base.White,
     minWidth: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   summaryContainer: {
     backgroundColor: Color.Gray.gray500,
@@ -373,9 +374,9 @@ const styles = StyleSheet.create({
     borderColor: Color.Gray.gray400,
   },
   summaryRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   summaryLabel: {
     ...BODY_2_MEDIUM,
@@ -386,9 +387,9 @@ const styles = StyleSheet.create({
     color: Color.base.White,
   },
   totalRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: Color.Gray.gray400,
@@ -402,7 +403,7 @@ const styles = StyleSheet.create({
     color: Color.base.White,
   },
   buttonsContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
     marginTop: 24,
     marginBottom: 32,
@@ -412,7 +413,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray400,
     borderRadius: 48,
     padding: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   clearButtonText: {
     ...BUTTON_48,
@@ -423,7 +424,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.Gray.gray100,
     borderRadius: 48,
     padding: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   checkoutButtonText: {
     ...BUTTON_48,
@@ -431,8 +432,8 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 40,
   },
   emptyText: {
@@ -443,23 +444,23 @@ const styles = StyleSheet.create({
   emptySubtext: {
     ...CAPTION_1_REGULAR,
     color: Color.Gray.gray50,
-    textAlign: 'center',
+    textAlign: "center",
   },
   paymentContainer: {
     padding: 16,
     backgroundColor: Color.Gray.gray500,
     borderRadius: 8,
-    marginVertical: 8
+    marginVertical: 8,
   },
   qrContainer: {
     padding: 16,
     backgroundColor: Color.Gray.gray400,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   paymentTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Color.Gray.gray50,
     marginBottom: 16,
   },
@@ -472,9 +473,8 @@ const styles = StyleSheet.create({
   timerText: {
     color: Color.base.White,
     fontSize: 16,
-    fontWeight: '500',
-  }
-
+    fontWeight: "500",
+  },
 });
 
 export default Cart;

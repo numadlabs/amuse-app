@@ -6,21 +6,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { BODY_2_REGULAR } from "@/constants/typography";
 
 const TermsAndCondo = () => {
-  const data = [
-    {
-      title: "Section-1",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tincidunt rutrum tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec eget accumsan dolor, id consequat diam.",
-    },
-    {
-      title: "Section-2",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tincidunt rutrum tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec eget accumsan dolor, id consequat diam.",
-    },
-    {
-      title: "Section-3",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tincidunt rutrum tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec eget accumsan dolor, id consequat diam.",
-    },
-  ];
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
       <View style={{ backgroundColor: Color.Gray.gray600, flex: 1 }}>
@@ -34,8 +19,7 @@ const TermsAndCondo = () => {
           </Text>
           <Text style={styles.paragraph}>
             We’re thrilled to have you join our Pilot Program, and we greatly
-            appreciate your participation. This program allows us to refine Amuse
-            Bouche’s features, ensuring it becomes the best experience possible
+            appreciate your participation. This program allows us to refine Lumi’s features, ensuring it becomes the best experience possible
             for our entire community, including you!
           </Text>
 
@@ -66,14 +50,14 @@ const TermsAndCondo = () => {
             Disclaimer: The Lumi Application is solely a platform for
             third-parties to engage with users. Any offerings of rewards or
             securities accessible through the Application are provided by third-
-            parties. Hash2 Labs LLC, the developer of the Application, is not liable
+            parties. Numad Labs LLC, the developer of the Application, is not liable
             for any offers, rewards or any associated claims, damages or losses.
           </Text>
 
           <Text style={styles.paragraph}>
             One final note, to ensure security and smooth operations during the
             Pilot Program, some features will be limited. Specifically, you won’t be
-            able to withdraw or transfer any bitcoin earned until the Pilot Program
+            able to withdraw or transfer any points earned until the Pilot Program
             ends. We’ll notify all users via email and app notification as soon as
             the Pilot Program is completed.
           </Text>

@@ -420,15 +420,15 @@ that information is inaccurate or incomplete.
 
           <Text style={styles.bottomTabText}>
             The Pilot Program for Lumi is still ongoing. If you proceed
-            with deleting your account, you will forfeit all bitcoin accumulated
+            with deleting your account, you will forfeit all points accumulated
             in your Lumi account. Once deleted, you will not be able to
-            recover or transfer your bitcoin.
+            recover or transfer your points.
           </Text>
           <Text style={styles.bottomTabText}>
-            However, your bitcoin will not be forfeited if you maintain your
+            However, your points will not be forfeited if you maintain your
             account until the completion of the Pilot Program and the full
             launch of the Application. You will then be able to transfer your
-            bitcoin at your discretion. Please note that deleting your account
+            points at your discretion. Please note that deleting your account
             will also result in the permanent erasure of all your data. {"\n"}
             By deleting your account, you acknowledge and accept these terms.
           </Text>

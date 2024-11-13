@@ -14,13 +14,6 @@ config.resolver.unstable_conditionNames = [
   "require",
 ];
 
-// config.transformer.getTransformOptions = async () => ({
-//   transform: {
-//     experimentalImportSupport: false,
-//     inlineRequires: true,
-//   },
-// });
-
 module.exports = {
   ...config,
   resolver: {

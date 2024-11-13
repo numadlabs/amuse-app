@@ -204,7 +204,7 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
               <Text style={styles.noPerksText}>
                 You do not have any perks yet. {"\n"}
                 Check-in to unlock some, or redeem others with {"\n"}
-                your Bitcoin balance.
+                your points balance.
               </Text>
             </View>
           </LinearGradient>

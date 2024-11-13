@@ -38,7 +38,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
 
   const getTransactionAmount = (type: string, amount: number) => {
     const formattedAmount = amount.toFixed(5);
-    return type === "PURCHASE" ? `-${formattedAmount}` : `+${formattedAmount}`;
+    return type === "PURCHASE" ? `-${1}` : `+${1}`;
   }
 
   return (
@@ -69,11 +69,12 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
       <Text
         style={{
           ...BODY_2_MEDIUM,
-          textAlign: "left",
+          textAlign: "right",
+          flex:1,
           color: Color.Gray.gray50,
         }}
       >
-        {getTransactionAmount(type, amount)} BTC
+        {getTransactionAmount(type, amount)} PTS
       </Text>
     </View>
   );
