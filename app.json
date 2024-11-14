@@ -1,35 +1,108 @@
 {
   "expo": {
-    "version": "0.1.1",
-    "runtimeVersion": "0.1.1",
-    "extra": {
-      "eas": {
-        "projectId": "e1ade013-0e79-414a-b787-4dd400d28d1b"
-      }
-    },
+    "version": "0.8.3",
+    "runtimeVersion": "0.8.3",
+    "jsEngine": "hermes",
+    "scheme": "acme",
     "owner": "numad-labs",
+    "userInterfaceStyle": "dark",
+    "orientation": "portrait",
+    "platforms": ["ios", "android"],
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "origin": "https://n"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 26
+          }
+        }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.102784688709-3ooh6h0ogu7c0psa8ip8708jvlkiap35"
+        }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "numad-labs",
+          "project": "amuse-app",
+          "url": "https://sentry.io/"
+        }
+      ],
+      "expo-secure-store",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./src/public/fonts/Sora-Medium.otf",
+            "./src/public/fonts/Sora-Bold.otf",
+            "./src/public/fonts/Sora-ExtraBold.otf",
+            "./src/public/fonts/Sora-ExtraLight.otf",
+            "./src/public/fonts/Sora-Light.otf",
+            "./src/public/fonts/Sora-Regular.otf",
+            "./src/public/fonts/Sora-SemiBold.otf",
+            "./src/public/fonts/Sora-Thin.otf"
+          ]
+        }
+      ],
+      "sentry-expo"
+    ],
     "icon": "./src/public/images/Lumi.jpg",
-    "name": "Lumi Mongolia",
+    "name": "Lumi",
+    "slug": "amuse-app",
     "ios": {
-      "bundleIdentifier": "com.numadlabs.lumimongolia",
-      "supportsTablet": false,
-      "config": {
-        "googleMapsApiKey": "AIzaSyDRmZj1kAxRzMazOVn-RNBPPuV3INqunw8"
-      },
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "The app accesses your photos to let you share them with your friends.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "We use location data to assist you in locating restaurants participating in a program on the Platform.",
         "NSLocationWhenInUseUsageDescription": "We use location data to assist you in locating restaurants participating in a program on the Platform.",
         "NSLocationAlwaysUsageDescription": "We use location data to assist you in locating restaurants participating in a program on the Platform.",
         "NSUserNotificationUsageDescription": "We'd like to send you notifications for important updates and new offers."
+      },
+      "supportsTablet": false,
+      "bundleIdentifier": "com.numadLabs.amuseApp",
+      "config": {
+        "googleMapsApiKey": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
       }
     },
     "android": {
-      "package": "com.numadlabs.lumimongolia",
+      "package": "com.numadLabs.amuseApp",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyCu-Ixr9LgDblIrwqWIIbXc_HEnXJBSiPs"
+          "apiKey": "AIzaSyAR4YHRGnBXdSSm70G9GskzKntYCQkh69I"
         }
+      }
+    },
+    "backgroundColor": "#1B2328",
+    "assetBundlePatterns": ["**/*"],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "648167f4-9c73-40b4-8123-d4b1eeea1c63"
+      },
+      "fonts": {
+        "Sora-Regular": ["./public/fonts/Sora-Regular.ttf"],
+        "Sora-Bold": ["./public/fonts/Sora-Bold.ttf"]
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/648167f4-9c73-40b4-8123-d4b1eeea1c63",
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_LOAD",
+      "enabled": true,
+      "requestHeaders": {
+        "expo-channel-name": "production",
+        "expo-runtime-version": "0.8.3",
+        "channel-name": "production"
       }
     }
   }
