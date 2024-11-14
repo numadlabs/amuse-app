@@ -1,21 +1,55 @@
 {
   "cli": {
-    "version": ">= 12.6.0",
+    "version": ">= 7.2.0",
     "appVersionSource": "remote"
   },
   "build": {
+    "development-simulator": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      },
+      "channel": "development-simulator"
+    },
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "channel": "development",
+      "env": {
+        "EXPO_IOS_GOOGLE_API_KEY": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "channel": "preview",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_ANDROID_GOOGLE_API_KEY": "AIzaSyAR4YHRGnBXdSSm70G9GskzKntYCQkh69I"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "channel": "production",
+      "autoIncrement": true,
+      "env": {
+        "EXPO_IOS_GOOGLE_API_KEY": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
+      }
+    },
+    "staging": {
+      "channel": "main",
+      "env": {
+        "EXPO_IOS_GOOGLE_API_KEY": "AIzaSyDaGtKt35bKZ7uqpArsrw7G8YeADpmuGYs"
+      }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "chillingrayxxx@gmail.com",
+        "ascAppId": "6479389566"
+      }
+    }
   }
 }
