@@ -25,27 +25,25 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
 
   const getTransactionIcon = (type: string) => {
     switch (type) {
-      case 'PURCHASE':
+      case "PURCHASE":
         return <Export size={24} color={Color.System.systemError} />;
-        default:
+      default:
         return <Import size={24} color={Color.System.systemSuccess} />;
     }
-  }
+  };
 
   const getTransactionType = (type: string) => {
     return type === "PURCHASE" ? "Purchase" : "Reward";
-  }
+  };
 
   const getTransactionAmount = (type: string, amount: number) => {
     const formattedAmount = amount.toFixed(5);
-    return type === "PURCHASE" ? `-${1}` : `+${1}`;
-  }
+    return type === "PURCHASE" ? `-${formattedAmount}` : `+${formattedAmount}`;
+  };
 
   return (
     <View style={styles.body}>
-      <View style={styles.icon}>
-        {getTransactionIcon(type)}
-      </View>
+      <View style={styles.icon}>{getTransactionIcon(type)}</View>
       <View style={{ gap: 8, width: "50%" }}>
         <Text
           style={{
@@ -69,12 +67,11 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
       <Text
         style={{
           ...BODY_2_MEDIUM,
-          textAlign: "right",
-          flex:1,
+          textAlign: "left",
           color: Color.Gray.gray50,
         }}
       >
-        {getTransactionAmount(type, amount)} PTS
+        {getTransactionAmount(type, amount)} BTC
       </Text>
     </View>
   );

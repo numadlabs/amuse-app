@@ -89,7 +89,7 @@ const Tier = () => {
                 isActive={user?.user.userTierId === item.id}
                 title={item?.name}
                 perks={[
-                  `${item?.rewardMultiplier}X more points for every check-in`,
+                  `${item?.rewardMultiplier}X more bitcoin for every check-in`,
                 ]}
                 current={
                   taps?.data?.taps.length === 0 ? "0" : taps?.data?.taps.length

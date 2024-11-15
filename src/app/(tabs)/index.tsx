@@ -134,8 +134,8 @@ const Page = () => {
               <Balance
                 amount={user?.user?.balance}
                 convertedAmount={user?.convertedBalance}
-                currencyName="points"
-              // handleToggle={() => toggleBalanceBottomSheet()}
+                currencyName="EUR"
+                handleToggle={() => toggleBalanceBottomSheet()}
               />
             </TouchableOpacity>
           )}
@@ -189,7 +189,6 @@ const Page = () => {
                         <HomeRestList
                           isClaimLoading={true}
                           marker={item}
-                         
                           onPress={() => handleNavigation(item)}
                         />
                       )}

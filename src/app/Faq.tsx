@@ -9,7 +9,7 @@ const Faq = () => {
   const data = [
     {
       title: "What is Lumi?",
-      text: "Lumi is a restaurant loyalty app where users earn points for checking into restaurants and receive perks for being regular customers.",
+      text: "Lumi is a restaurant loyalty app where users earn bitcoin for checking into restaurants and receive perks for being regular customers.",
     },
     {
       title: "What are Membership Cards?",
@@ -17,7 +17,7 @@ const Faq = () => {
     },
     {
       title: "How do I earn rewards with Lumi?",
-      text: "You earn points and extra perks by scanning a QR code and thereby checking into restaurants on the check-in page. The more you visit, the more you'll be rewarded.",
+      text: "You earn bitcoin and extra perks by scanning a QR code and thereby checking into restaurants on the check-in page. The more you visit, the more you'll be rewarded.",
     },
     {
       title: "Do I need to deal with crypto wallets?",
@@ -30,15 +30,21 @@ const Faq = () => {
   ];
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Color.Gray.gray600, marginBottom:100 }}>
-    <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
-      <Header title="FAQ" />
-      <View style={styles.container}>
-        {data.map((item, index) => (
-          <Accordion key={index} title={item.title} text={item.text} />
-        ))}
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: Color.Gray.gray600,
+        marginBottom: 100,
+      }}
+    >
+      <View style={{ flex: 1, backgroundColor: Color.Gray.gray600 }}>
+        <Header title="FAQ" />
+        <View style={styles.container}>
+          {data.map((item, index) => (
+            <Accordion key={index} title={item.title} text={item.text} />
+          ))}
+        </View>
       </View>
-    </View>
     </SafeAreaView>
   );
 };

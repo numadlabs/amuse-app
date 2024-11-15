@@ -81,8 +81,8 @@ const Wallet = () => {
           <Balance
             amount={user?.user?.balance}
             convertedAmount={user?.convertedBalance}
-            currencyName="points"
-            // handleToggle={() => toggleBalanceBottomSheet()}
+            currencyName="EUR"
+            handleToggle={() => toggleBalanceBottomSheet()}
           />
 
           {/* <View style={styles.button}>
