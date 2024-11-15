@@ -22,7 +22,11 @@ const PerkScreen = () => {
   const { data: card = [], isLoading } = useQuery({
     queryKey: [restaurantKeys.detail(restaurantId as string)],
     queryFn: () => {
-      return getRestaurantId(restaurantId as string, currentTime, currentDayOfWeek);
+      return getRestaurantId(
+        restaurantId as string,
+        currentTime,
+        currentDayOfWeek,
+      );
     },
     enabled: !!restaurantId,
   });
@@ -79,7 +83,7 @@ const PerkScreen = () => {
                 style={{
                   ...BODY_2_REGULAR,
                   color: Color.Gray.gray50,
-                  textAlign: 'center',
+                  textAlign: "center",
                 }}
               >
                 Check-in successful.
@@ -89,20 +93,20 @@ const PerkScreen = () => {
                   style={{
                     ...H5,
                     color: Color.base.White,
-                    textAlign: 'center',
+                    textAlign: "center",
                   }}
                 >
-                  No points awarded, contact our Help desk if necessary
+                  No bitcoin awarded, contact our Help desk if necessary
                 </Text>
               ) : (
                 <Text
                   style={{
                     ...H5,
                     color: Color.base.White,
-                    textAlign: 'center',
+                    textAlign: "center",
                   }}
                 >
-                  +{Number(btcAmount).toFixed(2)} points
+                  +{Number(btcAmount).toFixed(2)} bitcoin
                 </Text>
               )}
             </LinearGradient>

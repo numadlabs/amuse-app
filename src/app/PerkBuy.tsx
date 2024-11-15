@@ -132,7 +132,7 @@ const PerkBuy = () => {
               textAlign: "center",
             }}
           >
-            Redeem with points and use it {"\n"} on your next visit
+            Redeem with bitcoin and use it {"\n"} on your next visit
           </Text>
           {balance && (
             <AnimatedText
@@ -158,7 +158,7 @@ const PerkBuy = () => {
               ...BUTTON_48,
               color: Color.base.White,
             }}
-          >{`Redeem for ${price} points`}</Text>
+          >{`Redeem for ${price} bitcoin`}</Text>
         )}
       </Button>
     </View>

@@ -54,10 +54,10 @@ interface MenuItem {
 }
 
 const menuImages = {
-  salmon: require('../../../public/images/salmon.jpg'),
-  steak: require('../../../public/images/steak.jpg'),
-  salad: require('../../../public/images/salad.jpg'),
-  bruschetta: require('../../../public/images/bruschetta.jpg'),
+  salmon: require("../../../public/images/salmon.jpg"),
+  steak: require("../../../public/images/steak.jpg"),
+  salad: require("../../../public/images/salad.jpg"),
+  bruschetta: require("../../../public/images/bruschetta.jpg"),
 };
 
 const mockMenuData = {
@@ -71,7 +71,7 @@ const mockMenuData = {
           description: "Fresh salmon with herbs and lemon",
           price: "$24.99",
           category: "Main Course",
-          image: menuImages.salmon
+          image: menuImages.salmon,
         },
         {
           id: "2",
@@ -79,9 +79,9 @@ const mockMenuData = {
           description: "Prime beef with truffle fries",
           price: "$29.99",
           category: "Main Course",
-          image: menuImages.steak
-        }
-      ]
+          image: menuImages.steak,
+        },
+      ],
     },
     {
       name: "Appetizers",
@@ -92,7 +92,7 @@ const mockMenuData = {
           description: "Classic caesar with parmesan",
           price: "$12.99",
           category: "Appetizers",
-          image: menuImages.salad
+          image: menuImages.salad,
         },
         {
           id: "4",
@@ -100,11 +100,11 @@ const mockMenuData = {
           description: "Toasted bread with tomatoes and basil",
           price: "$9.99",
           category: "Appetizers",
-          image: menuImages.bruschetta
-        }
-      ]
-    }
-  ]
+          image: menuImages.bruschetta,
+        },
+      ],
+    },
+  ],
 };
 
 const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
@@ -112,7 +112,9 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
   const [showCart, setShowCart] = useState(false);
   const currentLocation = useLocationStore();
   const { addItem, removeItem, getTotalQuantity } = useMenuStore();
-  const [activeTab, setActiveTab] = useState<'perks' | 'menu' | 'details'>('perks');
+  const [activeTab, setActiveTab] = useState<"perks" | "menu" | "details">(
+    "perks",
+  );
 
   const { data: perks = [] } = useQuery({
     queryKey: restaurantKeys.perks(data?.id as string),
@@ -120,7 +122,8 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
     enabled: !!currentLocation,
   });
 
-  const hasPerks = perks && (perks.userBonuses?.length > 0 || perks.followingBonus);
+  const hasPerks =
+    perks && (perks.userBonuses?.length > 0 || perks.followingBonus);
 
   const handleNavigation = () => {
     router.push({
@@ -204,7 +207,7 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
               <Text style={styles.noPerksText}>
                 You do not have any perks yet. {"\n"}
                 Check-in to unlock some, or redeem others with {"\n"}
-                your points balance.
+                your bitcoin balance.
               </Text>
             </View>
           </LinearGradient>
@@ -235,7 +238,7 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
         image: item.image,
         price: item.price,
         description: item.description,
-        quantity: 1
+        quantity: 1,
       });
     };
 
@@ -258,36 +261,35 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
 
     return (
       <>
-      <View style={styles.menuWrapper}>
-        <ScrollView
-          style={styles.menuScrollView}
-          contentContainerStyle={[
-            styles.menuContent,
-            totalItems > 0 && styles.menuContentWithCart
-          ]}
-          showsVerticalScrollIndicator={false}
-        >
-          {mockMenuData.categories.map((category, categoryIndex) => (
-            <View key={categoryIndex} style={styles.menuCategory}>
-              <Text style={styles.categoryTitle}>{category.name}</Text>
-              {category.items.map((item) => (
-                <MenuCard
-                  key={item.id}
-                  name={item.name}
-                  image={item.image}
-                  description={item.description}
-                  price={item.price}
-                  onPress={() => handleCardPress(item)}
-                  onAdd={() => handleAdd(item)}
-                  onMinus={() => handleMinus(item.id)}
-                />
-              ))}
-            </View>
-          ))}
-        </ScrollView>
-      
-      </View>
-        </>
+        <View style={styles.menuWrapper}>
+          <ScrollView
+            style={styles.menuScrollView}
+            contentContainerStyle={[
+              styles.menuContent,
+              totalItems > 0 && styles.menuContentWithCart,
+            ]}
+            showsVerticalScrollIndicator={false}
+          >
+            {mockMenuData.categories.map((category, categoryIndex) => (
+              <View key={categoryIndex} style={styles.menuCategory}>
+                <Text style={styles.categoryTitle}>{category.name}</Text>
+                {category.items.map((item) => (
+                  <MenuCard
+                    key={item.id}
+                    name={item.name}
+                    image={item.image}
+                    description={item.description}
+                    price={item.price}
+                    onPress={() => handleCardPress(item)}
+                    onAdd={() => handleAdd(item)}
+                    onMinus={() => handleMinus(item.id)}
+                  />
+                ))}
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      </>
     );
   };
 
@@ -296,26 +298,50 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
       <View>
         <Animated.View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={[styles.toggleButton, activeTab === 'perks' && styles.activeButton]}
-            onPress={() => setActiveTab('perks')}
+            style={[
+              styles.toggleButton,
+              activeTab === "perks" && styles.activeButton,
+            ]}
+            onPress={() => setActiveTab("perks")}
           >
-            <Text style={[styles.buttonText, activeTab !== 'perks' && styles.activeText]}>
+            <Text
+              style={[
+                styles.buttonText,
+                activeTab !== "perks" && styles.activeText,
+              ]}
+            >
               Perks
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.toggleButton, activeTab === 'menu' && styles.activeButton]}
-            onPress={() => setActiveTab('menu')}
+            style={[
+              styles.toggleButton,
+              activeTab === "menu" && styles.activeButton,
+            ]}
+            onPress={() => setActiveTab("menu")}
           >
-            <Text style={[styles.buttonText, activeTab !== 'menu' && styles.activeText]}>
+            <Text
+              style={[
+                styles.buttonText,
+                activeTab !== "menu" && styles.activeText,
+              ]}
+            >
               Menu
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.toggleButton, activeTab === 'details' && styles.activeButton]}
-            onPress={() => setActiveTab('details')}
+            style={[
+              styles.toggleButton,
+              activeTab === "details" && styles.activeButton,
+            ]}
+            onPress={() => setActiveTab("details")}
           >
-            <Text style={[styles.buttonText, activeTab !== 'details' && styles.activeText]}>
+            <Text
+              style={[
+                styles.buttonText,
+                activeTab !== "details" && styles.activeText,
+              ]}
+            >
               Details
             </Text>
           </TouchableOpacity>
@@ -324,9 +350,9 @@ const Owned: React.FC<OwnedProps> = ({ data, isLoading, onPress }) => {
       <View style={styles.contentContainer}>
         {isLoading ? (
           <ActivityIndicator color={Color.Gray.gray600} />
-        ) : activeTab === 'perks' ? (
+        ) : activeTab === "perks" ? (
           renderPerks()
-        ) : activeTab === 'menu' ? (
+        ) : activeTab === "menu" ? (
           renderMenu()
         ) : (
           renderDetails()
@@ -344,11 +370,9 @@ const styles = StyleSheet.create({
   },
   menuWrapper: {
     flex: 1,
-    position: 'relative',
+    position: "relative",
   },
-  menuScrollView: {
-
-  },
+  menuScrollView: {},
   menuContent: {
     paddingBottom: 16,
   },
